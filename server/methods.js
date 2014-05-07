@@ -22,7 +22,7 @@ Meteor.methods({
             Movies.remove({});
             res.forEach(function(file){
               var ex = path.extname(file);
-              if (_.contains(['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'], ex)){
+              if (!file.startsWith('.') && _.contains(['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'], ex)){
                 var re = /^(.*?)(?:\[?([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
                 var match = re.exec(path.basename(file, ex));
                 var name = year = null;
