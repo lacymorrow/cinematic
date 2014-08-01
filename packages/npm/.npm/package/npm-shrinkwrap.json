@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "movie-art": {
+      "version": "1.0.4"
+    },
+    "movie-info": {
+      "version": "1.0.1"
+    },
+    "movie-trailer": {
+      "version": "1.0.2"
+    },
+    "open": {
+      "version": "0.0.5"
+    }
+  }
+}
