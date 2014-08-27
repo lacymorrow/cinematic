@@ -11,10 +11,13 @@ Meteor.methods({
     var fut = new Future();
     Meteor.call('isDir', dirPath, function (err, res) {
       if(err){
+        console.log('err');
         fut.throw(err);
       } else if(res == false) {
+        console.log('res false');
         fut.throw("Error: not a directory");
       } else {
+        console.log('listing');
         Meteor.call('listDir', dirPath, function (err, res){
           if(err) {
             fut.throw(err);
@@ -22,7 +25,7 @@ Meteor.methods({
             Movies.remove({});
             res.forEach(function(file){
               var ex = path.extname(file);
-              if (!file.startsWith('.') && _.contains(['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'], ex)){
+              if (_.contains(['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'], ex)){ // !file.startsWith('.') &&
                 var re = /^(.*?)(?:\[?([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
                 var match = re.exec(path.basename(file, ex));
                 var name = year = null;
@@ -82,7 +85,7 @@ Meteor.methods({
     return fut.wait();
   },
   openFile: function (file) {
-    console.log("ASD");
+    console.log("I command you to open!");
     open(file);
   },
   updateImage: function(name, year) {
@@ -141,6 +144,7 @@ Meteor.methods({
     });
     return fut.wait();
   },
+
   isFile: function(file) {
     path.exists(file, function(exists){console.log("Does the file exist?", exists)});
   }
@@ -148,8 +152,11 @@ Meteor.methods({
 
 function isDirAS (dirPath, cb) {
   fs.exists(dirPath, function(exists) {
+      console.log(exists + 'hihih ' + dirPath);
       if (exists) {
           cb(null, true);
+      } else {
+        console.error('FileSystem Error: Directory does not exist.');
       }
   });
 }
@@ -160,7 +167,7 @@ function listDirAS(dirPath, cb) {
     if (err){
       cb(err, null);
       return false;
-    } 
+    }
     cb(null, files);
   });
 }

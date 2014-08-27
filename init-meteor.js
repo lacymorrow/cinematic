@@ -1,10 +1,8 @@
-DEFAULT_PATH = '/home/lacymorrow/Desktop/';
+DEFAULT_PATH = '/Users/lmorrow/Desktop/';
 Path = DEFAULT_PATH;
 Movies = new Meteor.Collection('movies');
 
-
 if (Meteor.isClient) {
-
   Template.movies.movies = function(){
     return Movies.find({}, { sort: { name: 1 }}).fetch() || '<p class="no-files">No movie files found.</p>';
   }
@@ -46,7 +44,7 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
     if (typeof console !== 'undefined')
-      console.log('----- Cinematic -----');
+      console.log('\n----- Cinematic -----');
   });
 }
 
