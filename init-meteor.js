@@ -1,5 +1,5 @@
-DEFAULT_PATH = '/Users/lmorrow/Desktop/';
-Path = DEFAULT_PATH;
+var DEFAULT_PATH = '/Users/lmorrow/Downloads/';
+var Path = DEFAULT_PATH;
 Movies = new Meteor.Collection('movies');
 
 if (Meteor.isClient) {
@@ -8,10 +8,10 @@ if (Meteor.isClient) {
   }
 
   Template.movies.path = function(){
-    return Session.get('dirPath') || DEFAULT_PATH;
+    return Path || DEFAULT_PATH;
   }
   Template.path.path = function(){
-    return Session.get('dirPath') || DEFAULT_PATH;
+    return Path || DEFAULT_PATH;
   }
 
   Template.path.events = {

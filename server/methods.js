@@ -11,13 +11,11 @@ Meteor.methods({
     var fut = new Future();
     Meteor.call('isDir', dirPath, function (err, res) {
       if(err){
-        console.log('err');
         fut.throw(err);
       } else if(res == false) {
         console.log('res false');
         fut.throw("Error: not a directory");
       } else {
-        console.log('listing');
         Meteor.call('listDir', dirPath, function (err, res){
           if(err) {
             fut.throw(err);
@@ -85,8 +83,8 @@ Meteor.methods({
     return fut.wait();
   },
   openFile: function (file) {
-    console.log("I command you to open!");
-    open(file);
+    console.log("Opening: " + file);
+    open('file://'+file);
   },
   updateImage: function(name, year) {
     var fut = new Future();
@@ -152,11 +150,10 @@ Meteor.methods({
 
 function isDirAS (dirPath, cb) {
   fs.exists(dirPath, function(exists) {
-      console.log(exists + 'hihih ' + dirPath);
       if (exists) {
           cb(null, true);
       } else {
-        console.error('FileSystem Error: Directory does not exist.');
+          cb('FileSystem Error: Directory ' + dirPath + ' does not exist.', null);
       }
   });
 }
