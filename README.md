@@ -1,4 +1,4 @@
-init-meteor
+Cinematic
 ===========
 
 Meteor experiment, but it's sweet.
