@@ -4,7 +4,15 @@ body{
 }
 
 li.movie {
-
+	a {
+		cursor: pointer;
+		color: cornflowerblue;
+		text-decoration: none;
+		&:hover,
+		&:visited {
+			color: crimson;
+		}
+	}
 }
 
 ul.row-fluid>li[class*="span"], ul.row-fluid>li[class*="span"]:first-child{

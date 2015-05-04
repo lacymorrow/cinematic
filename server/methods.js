@@ -22,8 +22,11 @@ Meteor.methods({
           } else {
             Movies.remove({});
             res.forEach(function(file){
+              if(dirPath !== Path) {
+                console.log('Path Changed');
+              }
               var ex = path.extname(file);
-              if (_.contains(['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'], ex)){ // !file.startsWith('.') &&
+              if (_.contains(['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'], ex)) { //!file.startsWith('.') &&
                 var re = /^(.*?)(?:\[?([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
                 var match = re.exec(path.basename(file, ex));
                 var name = year = null;
@@ -44,7 +47,7 @@ Meteor.methods({
                       adult: false,
                       backdrop_path: null,
                       original_title: null,
-                      release_date: null,
+                      release_date: year,
                       vote_average: null
                     }
                   });

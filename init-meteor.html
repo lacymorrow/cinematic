@@ -36,7 +36,7 @@
 					<div class="row-fluid">
 						<img class="img-polaroid span4 movie" data-src="{{path}}{{file}}" src="{{image}}">
 						<div class="span8">
-							<h3>{{name}}</h3>
+							<h3><a class="movie" href="{{path}}{{file}}" title="{{name}}">{{name}}</a></h3>
 							{{#if info.release_date}}
 								<h6><i class="icon-calendar"></i> {{info.release_date}}</h6>
 							{{/if}}
@@ -59,7 +59,7 @@
 <template name="footer">
 	<div class="container">
 		<div class="row">
-			<p>by Lacy Morrow</p>
+			<p>Cinematic</p>
 		</div>
 	</div>
 </template>

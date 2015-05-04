@@ -1,8 +1,9 @@
-var DEFAULT_PATH = '/Users/lmorrow/Downloads/';
-var Path = DEFAULT_PATH;
+DEFAULT_PATH = '/Users/lmorrow/Downloads/';
+Path = DEFAULT_PATH;
 Movies = new Meteor.Collection('movies');
 
 if (Meteor.isClient) {
+  UI._allowJavascriptUrls();
   Template.movies.movies = function(){
     return Movies.find({}, { sort: { name: 1 }}).fetch() || '<p class="no-files">No movie files found.</p>';
   }
@@ -45,6 +46,13 @@ if (Meteor.isServer) {
     // code to run on server at startup
     if (typeof console !== 'undefined')
       console.log('\n----- Cinematic -----');
+  });
+  Meteor.call('updatePath', Path, function (err, res){
+    if(err){
+      console.error(err);
+    } else {
+      console.log(res);
+    }
   });
 }
 
