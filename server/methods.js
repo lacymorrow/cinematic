@@ -1,4 +1,3 @@
-var fs = Npm.require('fs');
 var path = Npm.require('path');
 var Future = Npm.require('fibers/future');
 var open = Meteor.require('open');
