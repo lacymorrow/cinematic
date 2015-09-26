@@ -1,4 +1,4 @@
-DEFAULT_PATH = '/Users/lmorrow/Downloads/';
+DEFAULT_PATH = '/Users/lacymorrow/Downloads/';
 Path = DEFAULT_PATH;
 Movies = new Meteor.Collection('movies');
 
