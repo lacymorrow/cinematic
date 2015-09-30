@@ -1,13 +1,17 @@
 /*
  * TODO
+ * - Documentation
+ * - Preview text
+ * - Node-webkit
+ * - keyboard on small screen
+ * - popularity, country, language, awards
  * - auto rename files
  * - popular movies
  * - recent
  * - watched
+ * - newly added
  * - cache movies
  * - cache photos
- * - newly added
- * - keyboard on small screen
  */
 
 
@@ -142,6 +146,7 @@ MovieCache = new Mongo.Collection("movieCache");
 
     },
     "keyup .movie-image": function (event){
+      var magnitude = 3; // $(".keyboard-magnitude").data('id');
       if(event.which == 37){
         // left
         var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - 1;
@@ -154,12 +159,12 @@ MovieCache = new Mongo.Collection("movieCache");
         $('.movie-image[tabIndex="'+currTab+'"]').focus();
       } else if(event.which == 38){
         // up
-        var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - 3;
+        var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - magnitude;
         $('.movie-image[tabIndex="'+currTab+'"]').click();
         $('.movie-image[tabIndex="'+currTab+'"]').focus();
       } else if(event.which == 40){
         // down
-        var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + 3;
+        var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + magnitude;
         $('.movie-image[tabIndex="'+currTab+'"]').click();
         $('.movie-image[tabIndex="'+currTab+'"]').focus();
       }
@@ -339,11 +344,11 @@ if (Meteor.isServer) {
           var ex = path.extname(file);
           if (_.contains(settings.valid_types, ex)) { //!file.startsWith('.') &&
             // this is where the magic happens
-            var regex = /^(.*?)(?:\[?([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
+            var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
             var match = regex.exec(path.basename(file, ex));
             var name = year = null;
             if(!!match){
-              name = match[1];
+              name = unescape(match[1]);
               if(match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])){
                 year = match[3];
               }
@@ -389,12 +394,12 @@ if (Meteor.isServer) {
                     Plot: null,
                     Poster: null,
                     Rated: null,
-                    Released: year,
+                    Released: null,
                     Runtime: null,
                     Title: null,
                     Type: null,
                     Writer: null,
-                    Year: year,
+                    Year: null,
                     imdbID: null,
                     imdbRating: null
                   }

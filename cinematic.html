@@ -99,14 +99,38 @@
 				<p id="open" class="btn btn-primary" data-src="{{movie.path}}{{movie.file}}" role="button">Watch</p>
 				{{#if movie.intel.Genre}}<h5>{{movie.intel.Genre}}</h5>{{/if}}
 				{{#if movie.intel.Runtime}}<h5>{{movie.intel.Runtime}}</h5>{{/if}}
+				<div id="rating">
+
+					{{#if movie.info.popularity}}
+						<p><span>Popularity: </span>{{movie.info.popularity}}</p>
+					{{/if}}
+					{{#if movie.info.vote_average}}
+						<p><span>TMDB Score: </span>{{movie.info.vote_average}}</p>
+					{{/if}}
+					{{#if movie.intel.imdbRating}}
+						<p><span>IMDB Score: </span>{{movie.intel.imdbRating}}</p>
+					{{/if}}
+					{{#if movie.intel.Metascore}}
+						<p><span>Metascore: </span>{{movie.intel.Metascore}}</p>
+					{{/if}}
+				</div>
 				{{#if movie.intel.Plot}}<p>{{movie.intel.Plot}}</p>{{/if}}
 				{{#if movie.intel.Director}}<p><span>Director:</span> {{movie.intel.Director}}</p>{{/if}}
 				{{#if movie.intel.Writer}}<p><span>Writers:</span> {{movie.intel.Writer}}</p>{{/if}}
 				{{#if movie.intel.Actors}}<p><span>Stars:</span> {{movie.intel.Actors}}</p>{{/if}}
+				{{#if movie.intel.Awards}}<p><span>Awards:</span> {{movie.intel.Awards}}</p>{{/if}}
+				{{#if movie.intel.Country}}<p><span>Country:</span> {{movie.intel.Country}}</p>{{/if}}
+				{{#if movie.intel.Language}}<p><span>Language:</span> {{movie.intel.Language}}</p>{{/if}}
+				{{#if movie.info.original_language}}<p><span>TMDB Original Language:</span> {{movie.info.original_language}}</p>{{/if}}
+				{{#if movie.intel.Rated}}<p><span>Rated:</span> {{movie.intel.Rated}}</p>{{/if}}
+				{{#if movie.intel.Released}}<p><span>Released:</span> {{movie.intel.Released}}</p>{{/if}}
+				{{#if movie.info.release_date}}<p><span>TMDB Release Date:</span> {{movie.info.release_date}}</p>{{/if}}
+				{{#if movie.intel.imdbID}}<p><span>imdbID:</span> {{movie.intel.imdbID}}</p>{{/if}}
 			</div>
 		</div>
 		{{#if movie.trailer.[0].key}}
 			<div id="trailer">
+				<p class="fancy"><span>PREVIEW</span></p>
 				<iframe width="500" height="281" src="https://www.youtube-nocookie.com/embed/{{movie.trailer.[0].key}}?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
 			</div>
 		{{/if}}
@@ -123,6 +147,9 @@
 	<ul class="row">
 		{{#each movies}}
 			<li class="movie col-xs-12 col-lg-6 col-xl-4">
+				<div class="keyboard-magnitude hidden-lg hidden-xl" data-id="1"></div>
+				<div class="keyboard-magnitude hidden-xs hidden-sm hidden-xl" data-id="2"></div>
+				<div class="keyboard-magnitude hidden-xs hidden-sm hidden-lg" data-id="3"></div>
 				<div class="movie-image" tabindex="{{index}}" data-id="{{_id}}">
 					{{#if info.poster_path}}
 						<img class="img-responsive center-block" src="{{settings.secure_base_url}}{{settings.poster_size}}{{info.poster_path}}">
@@ -130,7 +157,13 @@
 						<img class="img-responsive center-block" src="no-photo.png">
 					{{/if}}
 					<div class="caption center-block">
-						<h5>{{info.title}}</h5>
+						<h5>
+							{{#if info.title}}
+								{{info.title}}
+							{{else}}
+								{{name}}
+							{{/if}}
+						</h5>
 						<h5>{{intel.Genre}}</h5>
 						<h5>{{intel.Runtime}}</h5>
 					</div>

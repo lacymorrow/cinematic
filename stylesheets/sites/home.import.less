@@ -125,6 +125,32 @@ h1 {
 			}
 		}
 	}
+	.fancy {
+		line-height: 0.5;
+		text-align: center;
+		span {
+			display: inline-block;
+			position: relative;  
+			&:before {
+				right: 100%;
+				margin-right: 15px;
+			}
+			&:after {
+				left: 100%;
+				margin-left: 15px;
+			}
+			&:before,
+			&:after {
+				content: "";
+				position: absolute;
+				height: 5px;
+				border-bottom: 1px solid white;
+				border-top: 1px solid white;
+				top: 0;
+				width: 600px;
+			}
+		}
+	}
 	#trailer {
 		position: absolute;
 		bottom: 0;
@@ -153,6 +179,7 @@ header {
 	height: 70px;
 	h2 {
 		float: left;
+		color: @color-blue;
 	}
 	#path-wrapper {
 		font-family: @font-family-light;	
