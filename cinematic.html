@@ -109,10 +109,10 @@
 				{{#if movie.intel.Genre}}<h5>{{movie.intel.Genre}}</h5>{{/if}}
 				{{#if movie.intel.Runtime}}<h5>{{movie.intel.Runtime}}</h5>{{/if}}
 					<div id="rating">
-						<h5>IMDB RATING</h5>
-						{{>bullets}}
 						{{#if movie.intel.imdbRating}}
-							<div id="imdb-rating" class="rating active">
+							<div id="imdb-rating" class="rating {{#if equals rating 0}}active{{/if}} {{#if equals rating 1}}old{{/if}}">
+								<h5>IMDB RATING</h5>
+								{{>bullets}}
 								<div class="bullet-wrap">
 									{{#each movie.imdb_rank}}
 										<span class="bullet"></span>
@@ -123,26 +123,28 @@
 						{{/if}}
 
 						{{#if movie.info.vote_average}}
-							<div id="tmdb-rating" class="rating">
+							<div id="tmdb-rating" class="rating {{#if equals rating 1}}active{{/if}} {{#if equals rating 2}}old{{/if}}">
+								<h5>TMDB RATING</h5>
+								{{>bullets}}
 								<div class="bullet-wrap">
-									<h5>tmdb Score</h5>
 									{{#each movie.tmdb_rank}}
 										<span class="bullet"></span>
 									{{/each}}
-									<h4 class="rating-text">{{movie.info.vote_average}} / 10</h4>
 								</div>
+								<h4 class="rating-text">{{movie.info.vote_average}} / 10</h4>
 							</div>
 						{{/if}}
 
 						{{#if movie.intel.Metascore}}
-							<div id="meta-rating" class="rating" data-id="2">
+							<div id="meta-rating" class="rating {{#if equals rating 2}}active{{/if}} {{#if equals rating 0}}old{{/if}}">
+								<h5>METASCORE RATING</h5>
+								{{>bullets}}
 								<div class="bullet-wrap">
-									<h5>meta Score</h5>
 									{{#each movie.meta_rank}}
 										<span class="bullet"></span>
 									{{/each}}
-									<h4 class="rating-text">{{movie.intel.Metascore}} / 100</h4>
 								</div>
+								<h4 class="rating-text">{{movie.intel.Metascore}} / 100</h4>
 							</div>
 						{{/if}}
 					</div>
@@ -199,27 +201,6 @@
 						<h5>{{intel.Genre}}</h5>
 						<h5>{{intel.Runtime}}</h5>
 					</div>
-						<!-- {{#if info.release_date}}
-							<h6><i class="icon-calendar"></i> {{info.release_date}}</h6>
-						{{/if}}
-						{{#if info.overview}}
-							<p>Overview: {{info.overview}}</p>
-						{{/if}}
-						<p>OverviewOMDB: {{intel.Plot}}</p>
-						{{#if info.vote_average}}
-							<h6>Vote Avg: {{info.vote_average}}</h6>
-						{{/if}}
-						{{#if info.backdrop_path}}
-							<h6>{{info.backdrop_path}}</h6>
-						{{/if}}
-						{{#if info.original_title}}
-							<h6>{{info.original_title}}</h6>
-						{{/if}}
-						{{#if trailer}}
-							<h4><a href="{{trailer}}">Watch Trailer <i class="icon-play-circle"></i></a></h4>
-						{{/if}}
-						<a class="movie" href="{{path}}{{file}}" title="{{name}}">{{name}}</a>
-						<p>{{intel.plot}}</p> -->
 				</div>
 			</li>
 		{{/each}}

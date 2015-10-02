@@ -169,40 +169,48 @@ h1 {
 	}
 	#rating {
 		position: relative;
-		margin: 2em 0 1em 0;
+		margin: 0 0 25px 0;
 		display: block;
 		height: 50px;
-		h5 {
-
-		}
 	}
 	.rating {
 		width: 500px;
-		display: none;
 		position: absolute;
 		top: 0;
 		left: 0;
+		opacity: 0;
+		transform: translate3d(0, 50%, 0);
+		transition: transform .4s ease-in,
+					opacity .4s ease-in;
 		h5 {
 			float: left;
+			cursor: default;
 		}
 		&.active {
 			display: block;
+			opacity: 1;
+			transform: none;
+			transition-delay: .3s;
+		}
+		&.old {
+			transform: translate3d(0, -50%, 0);
 		}
 	}
 	.rating-text {
 		margin-left: 250px;
-		margin-top: 25px;
+		margin-top: 35px;
+		cursor: default;
 	}
 	.bullet-wrap {
 		position: absolute;
 		z-index: 1;
-		top: 25px;
+		top: 35px;
 		left: 0;
 	}
 	.bullet-empty-wrap {
 		position: absolute;
 		z-index: 0;
-		top: 25px;
+		top: 35px;
 		left: 0;
 	}
 	.bullet {

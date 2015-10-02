@@ -6,13 +6,11 @@
  * - keyboard on small screens
  * - popularity, country, language, awards
  * - auto rename files
- * - popular movies
- * - recent
  * - watched
  * - newly added
  * - cache movies
  * - cache photos
- * - settings for OMDB vs TMDB
+ * - cooler rating animation
  */
 
 
@@ -20,7 +18,8 @@ var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
   cache: 0, // seconds; 604800 = 7 days
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
-  overview_length: 'short', // short, full - from omdd
+  overview_length: 'short', // "short", "full" - from omdb
+
   // http://docs.themoviedb.apiary.io/ config
   key: '9d2bff12ed955c7f1f74b83187f188ae',
   base_url: "http://image.tmdb.org/t/p/",
@@ -28,6 +27,10 @@ var settings = {
   genre_url: "http://api.themoviedb.org/3/genre/movie/list",
   backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
   poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
+
+  // app-specific -- affects how app is run and may affect performance
+  rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
+  parse_method: "parse", // "regex", "parse"
   recurse_level: 2 // how many directory levels to recursively search. higher is further down the rabbit hole.
 }
 
@@ -47,6 +50,7 @@ MovieCache = new Mongo.Collection("movieCache");
  
  if (Meteor.isClient) {
   // start page
+  Session.set('activeRating', 0);
   Session.set('currentPage', 'All');
   Session.set('movieQuery', {});
   Session.set('movieSort', { sort: { name: 1 }});
@@ -58,6 +62,8 @@ MovieCache = new Mongo.Collection("movieCache");
   Meteor.subscribe("genres");
   Meteor.subscribe("movies");
   Meteor.subscribe("movieCache");
+
+  var ratingTimer;
 
   Template.registerHelper('equals',
       function(v1, v2) {
@@ -123,6 +129,9 @@ MovieCache = new Mongo.Collection("movieCache");
 
   // define details helpers
   Template.details.helpers({
+    rating: function () {
+      return Session.get('activeRating');
+    },
     settings: function () {
       return settings;
     },
@@ -160,6 +169,12 @@ MovieCache = new Mongo.Collection("movieCache");
   });
 
   Template.details.events = {
+    "click #rating" : function (event) {
+      if(ratingTimer)
+        Meteor.clearInterval(ratingTimer);
+      ratingTimer = Meteor.setInterval(rotateRating, 4000);
+      rotateRating();
+    }, 
     "click #open-link": function (event) {
       $(event).preventDefault();
       var url = $(event.currentTarget).data('src');
@@ -194,6 +209,10 @@ MovieCache = new Mongo.Collection("movieCache");
     "click .movie-image": function (event){
       Session.set('currentMovie', event.currentTarget.dataset.id);
       Meteor.call('addRecent', event.currentTarget.dataset.id);
+      // set timer to rotate ratings
+      if(ratingTimer)
+        Meteor.clearInterval(ratingTimer);
+      ratingTimer = Meteor.setInterval(rotateRating, 4000);
     },
     // hide right panel
     "blur .movie-image": function (event){
@@ -257,27 +276,11 @@ MovieCache = new Mongo.Collection("movieCache");
     Meteor.call('updatePath', path);
   }
 
-  // setup event handlers
-  // window.load(function () {
-  //   var movieLinks = document.getElementByClassName('movie-link');
-  //   for (var i = 0; i < movieLinks.length; i++) {
-  //     var url = movieLinks[i].dataset.src;
-  //     movieLinks[i].addEventListner('click', function () { Meteor.call('openFile', url); });
-  //   };
-  // });
-  /*
-  $(document).ready(function(){
-    $(document).on("click", 'img.movie', function (e) {
-        var url = $(this).attr('data-src');
-        Meteor.call('openFile', url);
-    });
-    $(document).on("click", 'a.movie', function (e) {
-      e.preventDefault();
-        var url = $(this).attr('href');
-        Meteor.call('openFile', url);
-    });
-  });
-  */
+  var rotateRating = function () {
+    var totalRatings = 3; // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
+    var x =  Session.get('activeRating');
+    Session.set('activeRating',(x + 1 == totalRatings ? 0: x + 1));
+  }
 } // end Meteor.isClient
 
 
@@ -386,10 +389,24 @@ if (Meteor.isServer) {
           if (ex && _.contains(settings.valid_types, ex)) {
             // found a movie!
             // this is where the magic happens
-            var fileName = file.substr(0, file.length-ex.length);
-            var parsedName = parseTorrentName(file.substr(0, file.length-ex.length));
-            var name = (parsedName.title) ? parsedName.title : null;
-            var year = (parsedName.year) ? parsedName.year : null;
+
+            if(settings.parse_method == "regex") {
+              var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
+              var match = regex.exec(path.basename(file, ex));
+              var name = year = null;
+              if(!!match){
+                name = unescape(match[1]);
+                if(match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])){
+                  year = match[3];
+                }
+              }
+            } else {
+              var fileName = file.substr(0, file.length-ex.length);
+              var parsedName = parseTorrentName(file.substr(0, file.length-ex.length));
+              var name = (parsedName.title) ? parsedName.title : null;
+              var year = (parsedName.year) ? parsedName.year : null;
+            }
+
             if(name){
               // cache handling
               var movc = MovieCache.findOne({file: file});
