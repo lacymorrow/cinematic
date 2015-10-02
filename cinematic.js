@@ -1,9 +1,9 @@
 /*
  * TODO
+ * - Watch/IMDB links nicer
  * - Documentation
- * - Preview text
  * - Node-webkit
- * - keyboard on small screen
+ * - keyboard on small screens
  * - popularity, country, language, awards
  * - auto rename files
  * - popular movies
@@ -12,6 +12,7 @@
  * - newly added
  * - cache movies
  * - cache photos
+ * - settings for OMDB vs TMDB
  */
 
 
@@ -31,6 +32,8 @@ var settings = {
 
 // define db collections
 State = new Mongo.Collection("state");
+Recent = new Mongo.Collection("recent");
+Watched = new Mongo.Collection("watched");
 Genres = new Mongo.Collection("genres");
 Movies = new Mongo.Collection("movies");
 MovieCache = new Mongo.Collection("movieCache");
@@ -45,9 +48,12 @@ MovieCache = new Mongo.Collection("movieCache");
   // start page
   Session.set('currentPage', 'All');
   Session.set('movieQuery', {});
+  Session.set('movieSort', { sort: { name: 1 }});
 
   // observe db collections
   Meteor.subscribe("state");
+  Meteor.subscribe("recent");
+  Meteor.subscribe("watched");
   Meteor.subscribe("genres");
   Meteor.subscribe("movies");
   Meteor.subscribe("movieCache");
@@ -76,26 +82,40 @@ MovieCache = new Mongo.Collection("movieCache");
     },
   });
 
+  // handle page changes with filter/sort
   Template.navigation.events = {
     "click #links-panel li.link": function (event) {
       var pid = $(event.currentTarget).data('id');
       var currentPage = $(event.currentTarget).text();
       Session.set('currentPage', currentPage);
+      Session.set('movieSort', { sort: { name: 1 }});
       var genre = Genres.findOne(pid);
       if(!!genre) {
+        // genre page - All: alphabetical
         Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
+        Session.set('movieSort', { sort: { name: 1 }});
       } else if(currentPage == 'Popular') {
+        // browse popular: Popularity
         Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { 'info.popularity': -1 }});
       }  else if(currentPage == 'Random') {
+        // browse random: Random
         Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { '_id': 1 }});
       }  else if(currentPage == 'New') {
+        // browse release date
         Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { 'year': -1, 'info.release_date': -1 }});
       }  else if(currentPage == 'Recent') {
+        // browse recently viewed: alphabetical
         Session.set('movieQuery', {});
       } else if(currentPage == 'Watched') {
-        Session.set('movieQuery', {});
+        // browse watched: order of watched
+        Session.set('movieQuery', {_id: { $in: Watched.find().fetch()}});
       }  else {
+        // main page - All: alphabetical
         Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { name: 1 }});
       }
     }
   }
@@ -106,14 +126,47 @@ MovieCache = new Mongo.Collection("movieCache");
       return settings;
     },
     movie: function () {
-      return Movies.findOne({_id: Session.get('currentMovie')});
+      var mov = Movies.findOne({_id: Session.get('currentMovie')});
+      if(!!mov) {
+        var tmdbCount = [];
+        var metaCount = [];
+        var imdbCount = [];
+        if(mov.info.vote_average){
+          for(var i = 0; i < Math.round(mov.info.vote_average); i++) {
+            tmdbCount.push({});
+          }
+          mov.tmdb_rank = tmdbCount;
+          mov.itmdb_rank = 10 - tmdbCount.length;
+        }
+        if(mov.intel.Metascore){
+          for(var i = 0; i < Math.round(mov.intel.Metascore/10); i++) {
+            metaCount.push({});
+          }
+          mov.meta_rank = metaCount;
+          mov.imeta_rank = 10 - metaCount.length;
+        }
+        if(mov.intel.imdbRating){
+          for(var i = 0; i < Math.round(mov.intel.imdbRating); i++) {
+            imdbCount.push({});
+          }
+          mov.imdb_rank = imdbCount;
+          mov.iimdb_rank = 10 - imdbCount.length;
+        }
+      }
+      return mov;
     },
+
   });
 
   Template.details.events = {
-    "click #open": function (event) {
+    "click #open-link": function (event) {
       $(event).preventDefault();
       var url = $(event.currentTarget).data('src');
+      Meteor.call('openFile', url);
+    },
+    "click #imdb-link": function (event) {
+      $(event).preventDefault();
+      var url = $(event.currentTarget).data('id');
       Meteor.call('openFile', url);
     }
   }
@@ -124,7 +177,7 @@ MovieCache = new Mongo.Collection("movieCache");
       return settings;
     },
     movies: function () {
-      var movies = Movies.find(Session.get('movieQuery'), { sort: { name: 1 }}).fetch();
+      var movies = Movies.find(Session.get('movieQuery'), Session.get('movieSort')).fetch();
       var index = 0;
       movies.map(function(o, i) {
         movies[i].index = index++;
@@ -237,18 +290,12 @@ if (Meteor.isServer) {
   var omdbApi = Meteor.npmRequire('omdb-client');
   var movieInfo = Meteor.npmRequire('movie-info');
   var movieTrailer = Meteor.npmRequire('movie-trailer');
-  try {
-      Meteor.npmRequire('node-apple-remote')
-          .on('left', function(e) {
-            console.log('yayayaya');
-          })
-  } catch (e) {
-      // an exception is thrown if the apple remote 
-      //  device was not found on the system 
-  }
+  var parseName = Meteor.npmRequire('parse-torrent-name');
 
   // define observable collections
   Meteor.publish("state", function () { return State.find(); });
+  Meteor.publish("recent", function () { return Recent.find(); });
+  Meteor.publish("watched", function () { return Watched.find(); });
   Meteor.publish("genres", function () { return Genres.find(); });
   Meteor.publish("movies", function () { return Movies.find(); });
   Meteor.publish("movieCache", function () { return MovieCache.find(); });
@@ -281,14 +328,7 @@ if (Meteor.isServer) {
   // server-side methods
   Meteor.methods({
     addRecent: function (mid) {
-      // var state = State.findOne("0");
-      // if(!!state) {
-      //   var recents = state.recents || [];
-      //   recents.push(mid);
-      //   State.update('0', { $set: {recents: recents}});
-      // } else {
-      //   State.insert({_id: '0', recents: [mid]});
-      // }
+      Recent.insert(mid);
     },
     addWatched: function (mid) {
 

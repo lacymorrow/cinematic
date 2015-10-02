@@ -93,27 +93,59 @@
 			{{/if}}
 		</div>
 		<div id="details-wrapper" class="{{#unless movie.trailer.[0].key}}no-trailer{{/unless}}">
-			<div id="backdrop-space"></div>
+			<div id="backdrop-space">&nbsp;</div>
 			<div id="details">
-				<h1>{{movie.info.title}} {{#if movie.year}}({{movie.year}}){{/if}}</h1>
-				<p id="open" class="btn btn-primary" data-src="{{movie.path}}{{movie.file}}" role="button">Watch</p>
+				<h1>{{movie.info.title}} 
+					{{#if movie.year}}
+						({{movie.year}})
+					{{else}}{{#if movie.intel.Year}}
+						({{movie.intel.Year}})
+					{{/if}}{{/if}}
+				</h1>
+				<p id="open-link" class="btn btn-primary" data-src="{{movie.path}}{{movie.file}}" role="button">Watch</p>
+				{{#if movie.intel.imdbID}}
+					<p><a id="imdb-link" class="" target="_blank" href="http://www.imdb.com/title/{{movie.intel.imdbID}}">IMDB</a></p>
+				{{/if}}
 				{{#if movie.intel.Genre}}<h5>{{movie.intel.Genre}}</h5>{{/if}}
 				{{#if movie.intel.Runtime}}<h5>{{movie.intel.Runtime}}</h5>{{/if}}
-				<div id="rating">
+					<div id="rating">
+						<h5>IMDB RATING</h5>
+						{{>bullets}}
+						{{#if movie.intel.imdbRating}}
+							<div id="imdb-rating" class="rating active">
+								<div class="bullet-wrap">
+									{{#each movie.imdb_rank}}
+										<span class="bullet"></span>
+									{{/each}}
+								</div>
+								<h4 class="rating-text">{{movie.intel.imdbRating}} / 10</h4>
+							</div>
+						{{/if}}
 
-					{{#if movie.info.popularity}}
-						<p><span>Popularity: </span>{{movie.info.popularity}}</p>
-					{{/if}}
-					{{#if movie.info.vote_average}}
-						<p><span>TMDB Score: </span>{{movie.info.vote_average}}</p>
-					{{/if}}
-					{{#if movie.intel.imdbRating}}
-						<p><span>IMDB Score: </span>{{movie.intel.imdbRating}}</p>
-					{{/if}}
-					{{#if movie.intel.Metascore}}
-						<p><span>Metascore: </span>{{movie.intel.Metascore}}</p>
-					{{/if}}
-				</div>
+						{{#if movie.info.vote_average}}
+							<div id="tmdb-rating" class="rating">
+								<div class="bullet-wrap">
+									<h5>tmdb Score</h5>
+									{{#each movie.tmdb_rank}}
+										<span class="bullet"></span>
+									{{/each}}
+									<h4 class="rating-text">{{movie.info.vote_average}} / 10</h4>
+								</div>
+							</div>
+						{{/if}}
+
+						{{#if movie.intel.Metascore}}
+							<div id="meta-rating" class="rating" data-id="2">
+								<div class="bullet-wrap">
+									<h5>meta Score</h5>
+									{{#each movie.meta_rank}}
+										<span class="bullet"></span>
+									{{/each}}
+									<h4 class="rating-text">{{movie.intel.Metascore}} / 100</h4>
+								</div>
+							</div>
+						{{/if}}
+					</div>
 				{{#if movie.intel.Plot}}<p>{{movie.intel.Plot}}</p>{{/if}}
 				{{#if movie.intel.Director}}<p><span>Director:</span> {{movie.intel.Director}}</p>{{/if}}
 				{{#if movie.intel.Writer}}<p><span>Writers:</span> {{movie.intel.Writer}}</p>{{/if}}
@@ -126,11 +158,11 @@
 				{{#if movie.intel.Released}}<p><span>Released:</span> {{movie.intel.Released}}</p>{{/if}}
 				{{#if movie.info.release_date}}<p><span>TMDB Release Date:</span> {{movie.info.release_date}}</p>{{/if}}
 				{{#if movie.intel.imdbID}}<p><span>imdbID:</span> {{movie.intel.imdbID}}</p>{{/if}}
+				{{#if movie.trailer.[0].key}}<p class="fancy"><span>PREVIEW</span></p>{{/if}}
 			</div>
 		</div>
 		{{#if movie.trailer.[0].key}}
 			<div id="trailer">
-				<p class="fancy"><span>PREVIEW</span></p>
 				<iframe width="500" height="281" src="https://www.youtube-nocookie.com/embed/{{movie.trailer.[0].key}}?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
 			</div>
 		{{/if}}
@@ -192,4 +224,19 @@
 			</li>
 		{{/each}}
 	</ul>
+</template>
+
+<template name="bullets">
+	<div class="bullet-empty-wrap">
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+		<span class="bullet empty"></span>
+	</div>
 </template>

@@ -19,6 +19,9 @@
     },
     "open": {
       "version": "0.0.5"
+    },
+    "parse-torrent-name": {
+      "version": "0.5.2"
     }
   }
 }
