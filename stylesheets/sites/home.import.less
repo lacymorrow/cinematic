@@ -1,3 +1,5 @@
+// This file is flattened on purpose to prevent less from gen'ing huge selector trains - LM
+
 // normalize
 body {
     font-family: @font-family-regular;
@@ -103,12 +105,44 @@ h1 {
 		}
 	}
 	#backdrop-space {
+		position: relative;
+		background: 
+		  linear-gradient(
+		    to bottom,
+		    rgba(0, 0, 0, 0),
+		    rgba(0, 0, 0, 0),
+		    rgba(0, 0, 0, 0.2)
+		  );
 		width: 500px;
 		height: 280px;
 		display: block;
     	@media ( max-height: 800px ){
         	display: none;
         }
+	}
+	#rated {
+		color: #fff;
+		text-shadow: 1px 1px 1px #000;
+	    border: 2px solid #fff;
+	    display: inline-block;
+	    border-radius: 2px;
+	    padding: 5px 10px;
+	    opacity: .85;
+	    margin: 1em;
+	    position: absolute;
+	    bottom: 0;
+	    right: 0;
+	}
+	#release-date {
+		color: #fff;
+		text-shadow: 1px 1px 1px #000;
+		font-family: @font-family-light;
+	    display: inline-block;
+	    opacity: .85;
+	    margin: 1em;
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
 	}
 	#details {
 		padding: 10px 15px 15px 15px;
@@ -137,33 +171,6 @@ h1 {
 			font-size: 16px;
 			span {
 				font-family: @font-family-regular;
-			}
-		}
-	}
-	.fancy {
-		line-height: 0.5;
-		text-align: center;
-		margin-top: 2em;
-		span {
-			display: inline-block;
-			position: relative;  
-			&:before {
-				right: 100%;
-				margin-right: 15px;
-			}
-			&:after {
-				left: 100%;
-				margin-left: 15px;
-			}
-			&:before,
-			&:after {
-				content: "";
-				position: absolute;
-				height: 5px;
-				border-bottom: 1px solid @color-h5;
-				border-top: 1px solid @color-h5;
-				top: 0;
-				width: 150px;
 			}
 		}
 	}
@@ -235,6 +242,34 @@ h1 {
 		height:280px;
 		margin: 0 -15px;
 	}
+	#trailer-text {
+		line-height: 0.5;
+		text-align: center;
+		margin-top: 2em;
+		span {
+			display: inline-block;
+			position: relative;  
+			&:before {
+				right: 100%;
+				margin-right: 15px;
+			}
+			&:after {
+				left: 100%;
+				margin-left: 15px;
+			}
+			&:before,
+			&:after {
+				content: "";
+				position: absolute;
+				height: 5px;
+				border-bottom: 1px solid @color-h5;
+				border-top: 1px solid @color-h5;
+				top: 0;
+				width: 150px;
+			}
+		}
+	}
+	// #details-panel.active
 	&.active {
         transform: translate(0, 0);
 	}

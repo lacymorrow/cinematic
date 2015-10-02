@@ -13,10 +13,15 @@ Uses TMDB and OMDB to look up release date, poster, description, rating, and tra
 
 Download or clone the repo `lacymorrow/cinematic`. 
 
-You will need to have meteor installed. On a *NIX system this can be accomplished with the following command:
+You will need to have [nodejs](http://nodejs.org), NPM, and meteor installed. To install Meteor on a *NIX system you can run the following command:
 
 `curl https://install.meteor.com | /bin/sh`
 
-Next you will need to install [nodejs](http://nodejs.org) and npm if not included.
 
-`cd` into the `cinematic` directory and run `meteor` to quickstart the application on http://localhost:3000.
+# Running Cinematic
+
+From the `cinematic` directory run `meteor` to quickstart the application on [http://localhost:3000](http://localhost:3000).
+
+
+#Design
+User interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/)

@@ -93,7 +93,18 @@
 			{{/if}}
 		</div>
 		<div id="details-wrapper" class="{{#unless movie.trailer.[0].key}}no-trailer{{/unless}}">
-			<div id="backdrop-space">&nbsp;</div>
+			<div id="backdrop-space">
+				&nbsp; 
+				{{#if movie.info.release_date}}
+					<div id="release-date">{{movie.info.release_date}}</div>
+				{{else}}
+					{{#if movie.intel.Released}}
+						<div id="release-date">{{movie.intel.Released}}</div>
+					{{/if}}
+
+				{{/if}}
+				{{#if movie.intel.Rated}}<div id="rated">{{movie.intel.Rated}}</div>{{/if}}
+			</div>
 			<div id="details">
 				<h1>{{movie.info.title}} 
 					{{#if movie.year}}
@@ -153,14 +164,10 @@
 				{{#if movie.intel.Writer}}<p><span>Writers:</span> {{movie.intel.Writer}}</p>{{/if}}
 				{{#if movie.intel.Actors}}<p><span>Stars:</span> {{movie.intel.Actors}}</p>{{/if}}
 				{{#if movie.intel.Awards}}<p><span>Awards:</span> {{movie.intel.Awards}}</p>{{/if}}
-				{{#if movie.intel.Country}}<p><span>Country:</span> {{movie.intel.Country}}</p>{{/if}}
+<!-- 				{{#if movie.intel.Country}}<p><span>Country:</span> {{movie.intel.Country}}</p>{{/if}}
 				{{#if movie.intel.Language}}<p><span>Language:</span> {{movie.intel.Language}}</p>{{/if}}
-				{{#if movie.info.original_language}}<p><span>TMDB Original Language:</span> {{movie.info.original_language}}</p>{{/if}}
-				{{#if movie.intel.Rated}}<p><span>Rated:</span> {{movie.intel.Rated}}</p>{{/if}}
-				{{#if movie.intel.Released}}<p><span>Released:</span> {{movie.intel.Released}}</p>{{/if}}
-				{{#if movie.info.release_date}}<p><span>TMDB Release Date:</span> {{movie.info.release_date}}</p>{{/if}}
-				{{#if movie.intel.imdbID}}<p><span>imdbID:</span> {{movie.intel.imdbID}}</p>{{/if}}
-				{{#if movie.trailer.[0].key}}<p class="fancy"><span>PREVIEW</span></p>{{/if}}
+				{{#if movie.info.original_language}}<p><span>Original Language:</span> {{movie.info.original_language}}</p>{{/if}} -->
+				{{#if movie.trailer.[0].key}}<p id="trailer-text"><span>PREVIEW</span></p>{{/if}}
 			</div>
 		</div>
 		{{#if movie.trailer.[0].key}}
