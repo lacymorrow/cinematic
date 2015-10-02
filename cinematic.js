@@ -20,14 +20,15 @@ var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
   cache: 0, // seconds; 604800 = 7 days
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
-  overview_length: 'short', // short, full
+  overview_length: 'short', // short, full - from omdd
   // http://docs.themoviedb.apiary.io/ config
   key: '9d2bff12ed955c7f1f74b83187f188ae',
   base_url: "http://image.tmdb.org/t/p/",
   secure_base_url: "https://image.tmdb.org/t/p/",
   genre_url: "http://api.themoviedb.org/3/genre/movie/list",
   backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
-  poster_size: 'w185' //"w92", "w154", "w185", "w342", "w500", "w780", "original"
+  poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
+  recurse_level: 2 // how many directory levels to recursively search. higher is further down the rabbit hole.
 }
 
 // define db collections
@@ -290,7 +291,7 @@ if (Meteor.isServer) {
   var omdbApi = Meteor.npmRequire('omdb-client');
   var movieInfo = Meteor.npmRequire('movie-info');
   var movieTrailer = Meteor.npmRequire('movie-trailer');
-  var parseName = Meteor.npmRequire('parse-torrent-name');
+  var parseTorrentName = Meteor.npmRequire('parse-torrent-name');
 
   // define observable collections
   Meteor.publish("state", function () { return State.find(); });
@@ -377,22 +378,19 @@ if (Meteor.isServer) {
       broadcast('Cinematic: Opening ' + file);
       open('file://' + file);
     },
-    populateMovies: function (dirPath) {
+    populateMovies: function (dirPath, recurse_level) {
       try {
         var files = fs.readdirSync(dirPath);
         files.forEach(function(file){
           var ex = path.extname(file);
-          if (_.contains(settings.valid_types, ex)) { //!file.startsWith('.') &&
+          if (ex && _.contains(settings.valid_types, ex)) {
+            // found a movie!
             // this is where the magic happens
-            var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
-            var match = regex.exec(path.basename(file, ex));
-            var name = year = null;
-            if(!!match){
-              name = unescape(match[1]);
-              if(match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])){
-                year = match[3];
-              }
-
+            var fileName = file.substr(0, file.length-ex.length);
+            var parsedName = parseTorrentName(file.substr(0, file.length-ex.length));
+            var name = (parsedName.title) ? parsedName.title : null;
+            var year = (parsedName.year) ? parsedName.year : null;
+            if(name){
               // cache handling
               var movc = MovieCache.findOne({file: file});
               if(settings.cache && epoch() > movc.cache_date+settings.cache && !!movc){
@@ -451,6 +449,15 @@ if (Meteor.isServer) {
                 });
               }
             }
+          } else if (recurse_level < settings.recurse_level) {
+            // ok let's try recursing, were avoiding as many fs calls as possible
+            // which is why i didn't call it in the condition above
+            // fs.lstat(dirPath+file, function(err, stats) {
+            //   if(stats.isDirectory()) {
+            //     broadcast('recurse' + recurse_level);
+            //     Meteor.call('populateMovies', dirPath + file, recurse_level+1);
+            //   }
+            // });
           }
         });
       } catch (e) {
@@ -465,7 +472,7 @@ if (Meteor.isServer) {
         } else {
           throw new Error("Error: Path is not a directory.");
         }
-        Meteor.call('populateMovies', path);
+        Meteor.call('populateMovies', path, 0);
       } catch (e) {
         broadcast(e.name + ' ' + e.message);
       }
