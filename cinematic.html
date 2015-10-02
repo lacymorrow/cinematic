@@ -95,13 +95,6 @@
 		<div id="details-wrapper" class="{{#unless movie.trailer.[0].key}}no-trailer{{/unless}}">
 			<div id="backdrop-space">
 				&nbsp; 
-				{{#if movie.info.release_date}}
-					<div id="release-date">{{movie.info.release_date}}</div>
-				{{else}}
-					{{#if movie.intel.Released}}
-						<div id="release-date">{{movie.intel.Released}}</div>
-					{{/if}}
-				{{/if}}
 				{{#if movie.intel.Rated}}<div id="rated">{{movie.intel.Rated}}</div>{{/if}}
 			</div>
 			<div id="details">
