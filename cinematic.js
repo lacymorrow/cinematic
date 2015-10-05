@@ -176,12 +176,10 @@ MovieCache = new Mongo.Collection("movieCache");
       rotateRating();
     }, 
     "click #open-link": function (event) {
-      $(event).preventDefault();
       var url = $(event.currentTarget).data('src');
       Meteor.call('openFile', url);
     },
     "click #imdb-link": function (event) {
-      $(event).preventDefault();
       var url = $(event.currentTarget).data('id');
       Meteor.call('openFile', url);
     }

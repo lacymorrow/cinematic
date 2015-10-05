@@ -51,11 +51,12 @@
 	<header>
 		<h2 class="hidden-xl">Cinematic</h2>
 		{{> path}}
+		<span id="info-icon" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 	</header>
 </template>
 
 <template name="path">
-	<div id="path-wrapper" class="hidden-xs">
+	<div id="path-wrapper" class="hidden-xs hidden-sm">
 		<div id="search">
 			<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
 			<input type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
@@ -72,8 +73,8 @@
 			<li><h5 class="label">Movies  <span class="badge">{{movieCount}}</span></h5></li>
 			<li class="link{{#if equals page 'All'}} active{{/if}}" data-id="All"><h5>All</h5></li>
 			<li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New</h5></li>
-			<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent</h5></li>
-			<li class="link{{#if equals page 'Watched'}} active{{/if}}" data-id="Watched"><h5>Watched</h5></li>
+<!-- 			<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent</h5></li>
+			<li class="link{{#if equals page 'Watched'}} active{{/if}}" data-id="Watched"><h5>Watched</h5></li> -->
 			{{#if genres}}
 				<li><h5 class="label">Genres</h5></li>
 				{{#each genres}}
