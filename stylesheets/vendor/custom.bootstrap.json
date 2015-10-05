@@ -12,8 +12,8 @@
     "forms"                : true,
     "buttons"              : true,
 
-    "component-animations" : false,
-    "dropdowns"            : false,
+    "component-animations" : true,
+    "dropdowns"            : true,
     "button-groups"        : false,
     "input-groups"         : false,
     "navs"                 : false,

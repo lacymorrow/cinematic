@@ -47,6 +47,7 @@ h1 {
 			padding: 6px 0 6px 30px;
 			.badge {
 				margin: -3px 0 0 5px;
+				// background: @color-blue;
 			}
 		}
 		.label {
@@ -72,7 +73,7 @@ h1 {
 	height: 100%;
 	width: @side-panel-width;
 	right: 0;
-	background: #FFF;
+	background: #FCFCFC;
 	position: absolute;
     transform: translate(@side-panel-width, 0);
     transition: transform .2s ease-in;
@@ -149,7 +150,7 @@ h1 {
 			margin-top: 0;
 		}
 		padding: 10px 15px 15px 15px;
-		background: linear-gradient(to bottom, rgba(255, 255, 255, .8), rgba(255, 255, 255, .99), rgba(255, 255, 255, .99));
+		background: linear-gradient(to bottom, rgba(252, 252, 252, .8), rgba(252, 252, 252, .99), rgba(252, 252, 252, .99));
 		min-height: 300px;
 		overflow-x: hidden;
 		#open-link {
@@ -326,6 +327,14 @@ header {
 		    }
 		}
 	}
+	#info-icon {
+		float: right;
+		margin: 1em;
+		
+		button {
+			background: #F3F3F3;
+		}
+	}
 }
 
 // sub-headers
@@ -349,6 +358,7 @@ header {
 }
 .movie {
 	height: 384px;
+	margin-bottom: 2em;
 }
 .movie-image {
 	width: 220px;
@@ -356,6 +366,9 @@ header {
 	padding: 1em 0 .5em 0;
     font-family: @font-family-light;
 	outline: none;
+	img {
+		max-width: 185px;
+	}
 	&:active, &:focus {
 		background-color: @color-blue;
 		h5 {

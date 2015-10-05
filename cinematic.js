@@ -11,6 +11,10 @@
  * - cache movies
  * - cache photos
  * - cooler rating animation
+ * - combine info & allow preferences between sources
+ * - show all availale trailers
+ * - scrolling chrome bug
+ * - sorting
  */
 
 
@@ -68,6 +72,12 @@ MovieCache = new Mongo.Collection("movieCache");
   Template.registerHelper('equals',
       function(v1, v2) {
           return (v1 === v2);
+      }
+  );
+  Template.registerHelper('gt',
+      function(v1, v2) {
+          broadcast(v1 +'   '+ v2);
+          return (v1 > v2);
       }
   );
 
