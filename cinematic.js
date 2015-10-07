@@ -15,6 +15,7 @@
  * - show all availale trailers
  * - scrolling chrome bug
  * - sorting
+ * - file browser
  */
 
 
