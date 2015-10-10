@@ -328,7 +328,8 @@ if (Meteor.isServer) {
     var sid = State.upsert('0', {path: settings.DEFAULT_PATH, cache_genre: currtime - 1});
 
     // grab genre list
-    if(currtime > State.findOne({_id:"0"}).cache_genre+settings.cache) {
+    var state = State.findOne({_id:"0"});
+    if(!!state && currtime > state.cache_genre+settings.cache) {
       broadcast('Cinematic: Updating genre cache.');
       Meteor.call('updateGenres');
     } else {
