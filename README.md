@@ -1,6 +1,8 @@
 Cinematic
 ===========
 
+![Cinematic](http://lacymorrow.github.io/cinematic/public/demo.gif)
+
 Have lots of digital movies on a local hard drive? This is made for you.
 
 A meteor app to easily list, sort, and organize your movies. View poster art and watch trailers without effort.

@@ -34,8 +34,10 @@ var settings = {
   poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
 
   // app-specific -- affects how app is run and may affect performance
-  rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
+  max_connections: 30, // max number of simultaneous
   parse_method: "parse", // "regex", "parse"
+  rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
+  retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
   recurse_level: 2 // how many directory levels to recursively search. higher is further down the rabbit hole.
 }
 
@@ -313,6 +315,9 @@ if (Meteor.isServer) {
   Meteor.publish("movies", function () { return Movies.find(); });
   Meteor.publish("movieCache", function () { return MovieCache.find(); });
 
+  // server globals
+  var api_queue = 0; // number of concurrent api connections; currently doesn't distinguish between different api source limits
+
   // startup functions
   Meteor.startup(function () {
     Future = Npm.require('fibers/future');
@@ -357,14 +362,18 @@ if (Meteor.isServer) {
     getIntel: function(mid, name, year) {
 
       // updates to gather
+      Meteor.call('updateIntel', {mid, name, year}, function(err, res) {
+
+      }
       var jobs = [
         'updateIntel',
         'updateInfo',
         'updateTrailer'
       ];
       _.map(jobs, function(job){
-        Meteor.call(job, mid, name, year, function(err, res) {
-
+        Meteor.call('queueIt', job, {mid, name, year}, function(err, res) {
+          if(err)
+            broadcast(err);
         });
       });
 
@@ -549,14 +558,32 @@ if (Meteor.isServer) {
         Movies.update(mid, { $set: {info: res}});
       }));
     },
-    updateTrailer: function (mid, name, year) {
-      movieTrailer(name, year, true, Meteor.bindEnvironment(function (err, res){
+    updateTrailer: function (params.mid, params.name, year) {
+      movieTrailer(params.name, year, true, Meteor.bindEnvironment(function (err, res){
         if(err){
           broadcast(err);
           return false;
         }
-        Movies.update(mid, { $set: {trailer: res}});
+        Movies.update(params.mid, { $set: {trailer: res}});
       }));
+    },
+    queueIt: function (job, params) {
+      if(api_queue >= settings.max_connections){ 
+        // too many concurrent connections 
+        Meteor.setTimeout(function() {
+          Meteor.call(queueIt, job, params, function (err, res) {
+            if(err){
+              broadcast(err);
+            }
+          });
+        }, settings.retry_delay);
+      } else { 
+        Meteor.call(job, params, function (err, res) {
+          if(err){
+            broadcast(err);
+          } 
+        });
+      }
     }
   });
 
