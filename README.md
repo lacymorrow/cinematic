@@ -1,7 +1,7 @@
 Cinematic
 ===========
 
-![Cinematic](http://lacymorrow.github.io/cinematic/public/demo.gif)
+![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
 Have lots of digital movies on a local hard drive? This is made for you.
 
