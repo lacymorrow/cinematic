@@ -227,7 +227,7 @@ MovieCache = new Mongo.Collection("movieCache");
     },
     // hide right panel
     "blur .movie-image": function (event){
-
+      Session.set('currentMovie', 0);
     },
     "keyup .movie-image": function (event){
       var magnitude = 3; // $(".keyboard-magnitude").data('id');
@@ -362,7 +362,7 @@ if (Meteor.isServer) {
     getIntel: function(mid, name, year) {
 
       // updates to gather
-      Meteor.call('updateIntel', {mid, name, year}, function(err, res) {
+      Meteor.call('updateIntel', mid, name, year, function(err, res) {
 
       }
       var jobs = [
@@ -371,7 +371,7 @@ if (Meteor.isServer) {
         'updateTrailer'
       ];
       _.map(jobs, function(job){
-        Meteor.call('queueIt', job, {mid, name, year}, function(err, res) {
+        Meteor.call('queueIt', job, {'mid': mid, 'name': name, 'year': year}, function(err, res) {
           if(err)
             broadcast(err);
         });
