@@ -2,7 +2,6 @@
  * TODO
  * - Watch/IMDB links nicer
  * - Documentation
- * - Node-webkit
  * - keyboard on small screens
  * - popularity, country, language, awards
  * - auto rename files
@@ -10,10 +9,8 @@
  * - newly added
  * - cache movies
  * - cache photos
- * - cooler rating animation
  * - combine info & allow preferences between sources
  * - show all availale trailers
- * - scrolling chrome bug
  * - sorting
  * - file browser
  */
@@ -34,7 +31,7 @@ var settings = {
   poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
 
   // app-specific -- affects how app is run and may affect performance
-  max_connections: 30, // max number of simultaneous
+  max_connections: 10, // max number of simultaneous
   parse_method: "parse", // "regex", "parse"
   rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
   retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
@@ -102,44 +99,6 @@ MovieCache = new Mongo.Collection("movieCache");
     },
   });
 
-  // handle page changes with filter/sort
-  Template.navigation.events = {
-    "click #links-panel li.link": function (event) {
-      var pid = $(event.currentTarget).data('id');
-      var currentPage = $(event.currentTarget).text();
-      Session.set('currentPage', currentPage);
-      Session.set('movieSort', { sort: { name: 1 }});
-      var genre = Genres.findOne(pid);
-      if(!!genre) {
-        // genre page - All: alphabetical
-        Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
-        Session.set('movieSort', { sort: { name: 1 }});
-      } else if(currentPage == 'Popular') {
-        // browse popular: Popularity
-        Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { 'info.popularity': -1 }});
-      }  else if(currentPage == 'Random') {
-        // browse random: Random
-        Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { '_id': 1 }});
-      }  else if(currentPage == 'New') {
-        // browse release date
-        Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { 'year': -1, 'info.release_date': -1 }});
-      }  else if(currentPage == 'Recent') {
-        // browse recently viewed: alphabetical
-        Session.set('movieQuery', {});
-      } else if(currentPage == 'Watched') {
-        // browse watched: order of watched
-        Session.set('movieQuery', {_id: { $in: Watched.find().fetch()}});
-      }  else {
-        // main page - All: alphabetical
-        Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { name: 1 }});
-      }
-    }
-  }
-
   // define details helpers
   Template.details.helpers({
     rating: function () {
@@ -181,6 +140,75 @@ MovieCache = new Mongo.Collection("movieCache");
 
   });
 
+  // define movies helpers
+  Template.movies.helpers({
+    settings: function () {
+      return settings;
+    },
+    movies: function () {
+      var movies = Movies.find(Session.get('movieQuery'), Session.get('movieSort')).fetch();
+      var index = 0;
+      movies.map(function(o, i) {
+        movies[i].index = index++;
+      })
+
+      return movies;
+    }
+  });
+
+  // define path helpers
+  Template.path.helpers({
+    path: function () {
+      state = State.findOne({_id: "0"});
+      return state && state.path;
+    }
+  });
+
+  // handle page changes with filter/sort
+  Template.navigation.events = {
+    "click #links-panel li.link": function (event) {
+      var pid = $(event.currentTarget).data('id');
+      var currentPage = $(event.currentTarget).text();
+      Session.set('currentPage', currentPage);
+      Session.set('movieSort', { sort: { name: 1 }});
+      // hide right panel
+      Session.set('currentMovie', 0);
+      var genre = Genres.findOne(pid);
+      if(!!genre) {
+        // genre page - All: alphabetical
+        Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
+        Session.set('movieSort', { sort: { name: 1 }});
+      } else if(currentPage == 'Popular') {
+        // browse popular: Popularity
+        Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { 'info.popularity': -1 }});
+      }  else if(currentPage == 'Random') {
+        // browse random: Random
+        Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { '_id': 1 }});
+      }  else if(currentPage == 'New') {
+        // browse release date
+        Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { 'year': -1, 'info.release_date': -1 }});
+      }  else if(currentPage == 'Recent') {
+        // browse recently viewed: alphabetical  **** HAVENT FIGURED OUT SORTING
+        var recent = [];
+        _.map(Recent.find().fetch(), function(e){
+          recent.push(e._id);
+        });
+        Session.set('movieQuery', {_id: { $in: recent }});
+      } else if(currentPage == 'Watched') {
+        // browse watched: order of watched
+        Session.set('movieQuery', {_id: { $in: Watched.find().fetch()}});
+      }  else {
+        // main page - All: alphabetical
+        Session.set('movieQuery', {});
+        Session.set('movieSort', { sort: { name: 1 }});
+      }
+    }
+  }
+
+
   Template.details.events = {
     "click #rating" : function (event) {
       if(ratingTimer)
@@ -198,22 +226,6 @@ MovieCache = new Mongo.Collection("movieCache");
     }
   }
 
-  // define movies helpers
-  Template.movies.helpers({
-    settings: function () {
-      return settings;
-    },
-    movies: function () {
-      var movies = Movies.find(Session.get('movieQuery'), Session.get('movieSort')).fetch();
-      var index = 0;
-      movies.map(function(o, i) {
-        movies[i].index = index++;
-      })
-
-      return movies;
-    }
-  });
-
   // define movie events
   Template.movies.events = {
     // show right panel
@@ -224,10 +236,6 @@ MovieCache = new Mongo.Collection("movieCache");
       if(ratingTimer)
         Meteor.clearInterval(ratingTimer);
       ratingTimer = Meteor.setInterval(rotateRating, 4000);
-    },
-    // hide right panel
-    "blur .movie-image": function (event){
-      Session.set('currentMovie', 0);
     },
     "keyup .movie-image": function (event){
       var magnitude = 3; // $(".keyboard-magnitude").data('id');
@@ -254,14 +262,6 @@ MovieCache = new Mongo.Collection("movieCache");
       }
     }
   }
-
-  // define path helpers
-  Template.path.helpers({
-    path: function () {
-      state = State.findOne({_id: "0"});
-      return state && state.path;
-    }
-  });
 
   // define path events
   Template.path.events = {
@@ -347,13 +347,18 @@ if (Meteor.isServer) {
   // server-side methods
   Meteor.methods({
     addRecent: function (mid) {
-      Recent.insert(mid);
+      var recent = Recent.find({'_id': mid});
+      if(recent){
+        Recent.remove({'_id': mid});
+      }
+      Recent.insert({ '_id':mid, 'time': epoch() });
+      // Recent.upsert({ '_id': mid });
     },
     addWatched: function (mid) {
-
+      Watched.update({},{ $push: { 'mid': mid }});
     },
     cacheMovie: function (file) {
-      var mov = Movies.findOne({file: file});
+      var mov = Movies.findOne({'file': file});
       mov.cache_date = epoch();
       if(!!mov){
         MovieCache.insert(mov);
@@ -362,39 +367,17 @@ if (Meteor.isServer) {
     getIntel: function(mid, name, year) {
 
       // updates to gather
-      Meteor.call('updateIntel', mid, name, year, function(err, res) {
-
-      }
       var jobs = [
         'updateIntel',
         'updateInfo',
         'updateTrailer'
       ];
       _.map(jobs, function(job){
-        Meteor.call('queueIt', job, {'mid': mid, 'name': name, 'year': year}, function(err, res) {
+        Meteor.call('queueIt', job, mid, name, year, function(err, res) {
           if(err)
             broadcast(err);
         });
       });
-
-
-      // // Keep track of each job in an array
-      // var futures = _.map(jobs, function(job) {
-
-      //   // Set up a future for the current job
-      //   var future = new Future();
-
-      //   // a callback so the job can signal completion
-      //   var onComplete = future.resolver();
-      //   Meteor.call(job, mid, name, year, function(err, res) {
-      //     // Inform the future that we're done with it
-      //     onComplete(err, res);
-      //   });
-        // Return the future
-      //   return future;
-      // });
-
-      // return Future.wait(futures);
     },
     openFile: function (file) {
       broadcast('Cinematic: Opening ' + file);
@@ -516,33 +499,33 @@ if (Meteor.isServer) {
     updateGenres: function () {
       Genres.remove({});
       HTTP.call("GET", settings.genre_url+'?api_key='+settings.key,
-                      function (err, res) {
-                        if (err) {
-                          broadcast(err);
-                        } else if (!!res.data.genres){
-                          res.data.genres.forEach(function(genre){
-                            Genres.upsert({"_id": genre.id}, {id: genre.id, name: genre.name});
-                          });
-                          State.update("0", {$set: {cache_genre: epoch()}});
-                        } else {
-                          broadcast('Cinematic: Error getting genre list.')
-                        }
-                      });
+                function (err, res) {
+                  if (err) {
+                    broadcast(err);
+                  } else if (!!res.data.genres){
+                    res.data.genres.forEach(function(genre){
+                      Genres.upsert({"_id": genre.id}, {id: genre.id, name: genre.name});
+                    });
+                    State.update("0", {$set: {cache_genre: epoch()}});
+                  } else {
+                    broadcast('Cinematic: Error getting genre list.')
+                  }
+                });
     },
     updateIntel: function (mid, name, year) {
       omdbApi.get({title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full'}, Meteor.bindEnvironment(function (err, res){
         if(err){
-          broadcast(err);
+          broadcast(name + ': ' + err);
           return false;
         }
         Movies.update(mid, { $set: {intel: res}});
+        Meteor.call('queueDone', 'updateIntel');
       }));
     },
     updateInfo: function (mid, name, year) {
-
       movieInfo(name, year, Meteor.bindEnvironment(function (err, res){
         if(err){
-          broadcast(err);
+          broadcast(name + ': ' + err);
           return false;
         }
         _.each(res.genre_ids, function (e, i) {
@@ -556,34 +539,40 @@ if (Meteor.isServer) {
           }
         });
         Movies.update(mid, { $set: {info: res}});
+        Meteor.call('queueDone', 'updateInfo');
       }));
     },
-    updateTrailer: function (params.mid, params.name, year) {
-      movieTrailer(params.name, year, true, Meteor.bindEnvironment(function (err, res){
+    updateTrailer: function (mid, name, year) {
+      movieTrailer(name, year, true, Meteor.bindEnvironment(function (err, res){
         if(err){
-          broadcast(err);
+          broadcast(name + ': ' + err);
           return false;
         }
-        Movies.update(params.mid, { $set: {trailer: res}});
+        Movies.update(mid, { $set: {trailer: res}});
+        Meteor.call('queueDone', 'updateTrailer');
       }));
     },
-    queueIt: function (job, params) {
+    queueIt: function (job, mid, name, year) {
       if(api_queue >= settings.max_connections){ 
         // too many concurrent connections 
         Meteor.setTimeout(function() {
-          Meteor.call(queueIt, job, params, function (err, res) {
+          Meteor.call('queueIt', job, mid, name, year, function (err, res) {
             if(err){
               broadcast(err);
             }
           });
         }, settings.retry_delay);
       } else { 
-        Meteor.call(job, params, function (err, res) {
+        api_queue += 1;
+        Meteor.call(job, mid, name, year, function (err, res) {
           if(err){
             broadcast(err);
           } 
         });
       }
+    },
+    queueDone: function (job) {
+      api_queue -= 1;
     }
   });
 
