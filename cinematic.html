@@ -29,7 +29,7 @@
 				<div class="row">
 					<div class="header-details col-xs-12">
 						<h3>{{page}}</h3>
-						<h4>Alphabetical</h4>
+						{{> sort}}
 					</div>
 				</div>
 
@@ -47,10 +47,47 @@
 	</div>
 </body>
 
+<template name="sort">
+	<select class="form-control" id="sort">
+	  {{#each sort}}
+		<option value="{{this}}">{{this}}</option>
+	  {{/each}}
+	</select>
+</template>
+
+<template name="categories">
+  <option disabled="disabled" selected="selected">Please Select</option> 
+    {{#each categories}}
+      <option value="{{this}}">{{this}}</option>
+    {{/each}}
+</template>
+
 <template name="header">
 	<header>
 		<h2 class="hidden-xl">Cinematic</h2>
 		{{> path}}
+		<div class="loader">
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		  <span></span>
+		</div>
+		<div class="spinner">
+		  <div class="double-bounce1"></div>
+		  <div class="double-bounce2"></div>
+		</div>
+		<div class="loader-inner ball-scale-ripple-multiple"><div></div><div></div><div></div></div>
 	</header>
 </template>
 
@@ -66,14 +103,14 @@
 <template name="navigation">
 	<div class="full-height hidden-xs hidden-sm col-md-2">
 		<ul id="links-panel">
-			<li><h5 class="label">Browse</h5></li>
+<!-- 			<li><h5 class="label">Browse</h5></li>
 			<li class="link{{#if equals page 'Popular'}} active{{/if}}" data-id="Popular"><h5>Popular</h5></li>
-			<li class="link{{#if equals page 'Random'}} active{{/if}}" data-id="Random"><h5>Random</h5></li>
+			<li class="link{{#if equals page 'Random'}} active{{/if}}" data-id="Random"><h5>Random</h5></li> -->
 			<li><h5 class="label">Movies  <span class="badge">{{movieCount}}</span></h5></li>
 			<li class="link{{#if equals page 'All'}} active{{/if}}" data-id="All"><h5>All</h5></li>
-			<li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New</h5></li>
-<!-- 			<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent</h5></li>
-			<li class="link{{#if equals page 'Watched'}} active{{/if}}" data-id="Watched"><h5>Watched</h5></li> -->
+			<li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New*</h5></li>
+			<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent*</h5></li>
+			<li class="link{{#if equals page 'Watched'}} active{{/if}}" data-id="Watched"><h5>Watched*</h5></li>
 			{{#if genres}}
 				<li><h5 class="label">Genres</h5></li>
 				{{#each genres}}
@@ -170,6 +207,11 @@
 				{{#if intel.Writer}}<p><span>Writers:</span> {{intel.Writer}}</p>{{/if}}
 				{{#if intel.Actors}}<p><span>Stars:</span> {{intel.Actors}}</p>{{/if}}
 				{{#if intel.Awards}}<p><span>Awards:</span> {{intel.Awards}}</p>{{/if}}
+				
+				{{#each trailer}}
+					<span class="bullet">sdgsg</span>
+				{{/each}}
+				
 				{{#if trailer.[0].key}}<p id="trailer-text"><span>PREVIEW</span></p>{{/if}}
 			</div>
 		</div>
@@ -182,11 +224,6 @@
 	{{/with}}
 </template>
 
-<template name="footer">
-	<div class="footer text-center col-xs-12">
-		<p>Cinematic by Lacy Morrow</p>
-	</div>
-</template>
 
 <template name="movies">
 	<ul class="row">
@@ -234,5 +271,11 @@
 		<span class="bullet empty"></span>
 		<span class="bullet empty"></span>
 		<span class="bullet empty"></span>
+	</div>
+</template>
+
+<template name="footer">
+	<div class="footer text-center col-xs-12">
+		<p>Cinematic by Lacy Morrow</p>
 	</div>
 </template>

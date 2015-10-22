@@ -2,8 +2,9 @@
  * TODO
  * - Watch/IMDB links nicer
  * - Documentation
- * - keyboard on small screens
- * - popularity, country, language, awards
+ * - dynamic keyboard control
+ * - account for missing sort params
+ * - Unused data: popularity, country, language, awards
  * - auto rename files
  * - watched
  * - newly added
@@ -11,13 +12,17 @@
  * - cache photos
  * - combine info & allow preferences between sources
  * - show all availale trailers
- * - sorting
+ * - limit, possibly paginate
+ * - sorting by runtime, ratings
+ * - average rating
  * - file browser
+ * - Random refresh button -> add a random field and refresh it; use it as sort
  */
 
 
 var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
+  default_sort: 'Alphabetical',
   cache: 0, // seconds; 604800 = 7 days
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
   overview_length: 'short', // "short", "full" - from omdb
@@ -51,7 +56,7 @@ MovieCache = new Mongo.Collection("movieCache");
 /*
  * CLIENT
  */
- 
+
  if (Meteor.isClient) {
   // start page
   Session.set('activeRating', 0);
@@ -81,10 +86,14 @@ MovieCache = new Mongo.Collection("movieCache");
       }
   );
 
+
   // define nav helpers
   Template.body.helpers({
     page: function () {
       return Session.get('currentPage');
+    }, 
+    loading: function () {
+      return api_queue !== 0;
     }
   });
   Template.navigation.helpers({
@@ -164,32 +173,62 @@ MovieCache = new Mongo.Collection("movieCache");
     }
   });
 
-  // handle page changes with filter/sort
+  // sort helpers
+  Template.sort.helpers({
+      sort: function(){
+          return ["Alphabetical", "Popularity", "Recently Released", "Random"/* , "Runtime", "Ratings" */ ];
+      }
+  });
+
+  // sort event
+  Template.sort.events({
+      "change #sort": function (event, template) {
+          var sort = $(event.currentTarget).val();
+          broadcast("Sorting: " + sort); // #info
+          Session.set('currentSort', sort);
+
+          if(sort == 'Alphabetical') {
+            Session.set('movieSort', { sort: { name: 1 }});
+
+          } else if (sort == 'Popularity') {
+            Session.set('movieSort', { sort: { 'info.popularity': -1 }});
+
+          } else if (sort == 'Recently Released') {
+            Session.set('movieSort', { sort: { 'info.release_date': -1 }});
+
+          } else if (sort == 'Runtime') { // inactive
+            Session.set('movieSort', { sort: { 'Intel.Runtime': -1 }});
+
+          } else if (sort == 'Random') {
+            Session.set('movieSort', { sort: { 'seed': 1 }});
+
+          } else if (sort == 'Ratings') { // inactive, should use avg ratings
+
+          }
+      }
+  });
+
+  // handle page changes with filter
   Template.navigation.events = {
     "click #links-panel li.link": function (event) {
       var pid = $(event.currentTarget).data('id');
       var currentPage = $(event.currentTarget).text();
       Session.set('currentPage', currentPage);
-      Session.set('movieSort', { sort: { name: 1 }});
       // hide right panel
       Session.set('currentMovie', 0);
       var genre = Genres.findOne(pid);
       if(!!genre) {
         // genre page - All: alphabetical
         Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
-        Session.set('movieSort', { sort: { name: 1 }});
       } else if(currentPage == 'Popular') {
         // browse popular: Popularity
         Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { 'info.popularity': -1 }});
       }  else if(currentPage == 'Random') {
         // browse random: Random
         Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { '_id': 1 }});
       }  else if(currentPage == 'New') {
-        // browse release date
+        // browse Recently Released
         Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { 'year': -1, 'info.release_date': -1 }});
       }  else if(currentPage == 'Recent') {
         // browse recently viewed: alphabetical  **** HAVENT FIGURED OUT SORTING
         var recent = [];
@@ -203,7 +242,6 @@ MovieCache = new Mongo.Collection("movieCache");
       }  else {
         // main page - All: alphabetical
         Session.set('movieQuery', {});
-        Session.set('movieSort', { sort: { name: 1 }});
       }
     }
   }
@@ -287,6 +325,11 @@ MovieCache = new Mongo.Collection("movieCache");
     Meteor.call('updatePath', path);
   }
 
+  var resetSort = function () {
+    Session.set('currentSort', settings.default_sort);
+    Session.set('movieSort', { sort: { name: 1 }});
+  }
+
   var rotateRating = function () {
     var totalRatings = 3; // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
     var x =  Session.get('activeRating');
@@ -317,6 +360,7 @@ if (Meteor.isServer) {
 
   // server globals
   var api_queue = 0; // number of concurrent api connections; currently doesn't distinguish between different api source limits
+  var api_total = 0;
 
   // startup functions
   Meteor.startup(function () {
@@ -372,14 +416,6 @@ if (Meteor.isServer) {
         'updateInfo',
         'updateTrailer'
       ];
-      _.map(jobs, function(job){
-        Meteor.call('queueIt', job, mid, name, year, function(err, res) {
-          if(err)
-            broadcast(err);
-        });
-      });
-    },
-    openFile: function (file) {
       broadcast('Cinematic: Opening ' + file);
       open('file://' + file);
     },
@@ -426,6 +462,7 @@ if (Meteor.isServer) {
                   path: dirPath,
                   year: year,
                   trailer: null,
+                  seed: Math.random(),
                   info: {
                     adult: false,
                     backdrop_path: null,
@@ -553,6 +590,7 @@ if (Meteor.isServer) {
       }));
     },
     queueIt: function (job, mid, name, year) {
+      qpi_total += 1;
       if(api_queue >= settings.max_connections){ 
         // too many concurrent connections 
         Meteor.setTimeout(function() {
@@ -573,6 +611,7 @@ if (Meteor.isServer) {
     },
     queueDone: function (job) {
       api_queue -= 1;
+      // api_total -= 1;
     }
   });
 
