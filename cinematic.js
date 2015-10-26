@@ -18,13 +18,14 @@
  * - file browser
  * - Random refresh button -> add a random field and refresh it; use it as sort
  */
+  var api_queue = 0; // number of concurrent api connections; currently doesn't distinguish between different api source limits
 
 
 var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
-  default_sort: 'Alphabetical',
-  cache: 0, // seconds; 604800 = 7 days
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
+  sort_types: ["Alphabetical", "Popularity", "Recently Released", "Random"/* , "Runtime", "Ratings" */ ],
+  cache: 0, // seconds; 604800 = 7 days
   overview_length: 'short', // "short", "full" - from omdb
 
   // http://docs.themoviedb.apiary.io/ config
@@ -36,7 +37,7 @@ var settings = {
   poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
 
   // app-specific -- affects how app is run and may affect performance
-  max_connections: 10, // max number of simultaneous
+  max_connections: 5, // max number of simultaneous
   parse_method: "parse", // "regex", "parse"
   rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
   retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
@@ -91,9 +92,6 @@ MovieCache = new Mongo.Collection("movieCache");
   Template.body.helpers({
     page: function () {
       return Session.get('currentPage');
-    }, 
-    loading: function () {
-      return api_queue !== 0;
     }
   });
   Template.navigation.helpers({
@@ -106,6 +104,14 @@ MovieCache = new Mongo.Collection("movieCache");
     movieCount: function () {
       return Movies.find().count();
     },
+  });
+
+  // define loading indicatior
+  Template.header.helpers({
+    loading: function () {
+      var state = State.findOne({_id: "0"});
+      return state && state.loading;
+    }
   });
 
   // define details helpers
@@ -168,7 +174,7 @@ MovieCache = new Mongo.Collection("movieCache");
   // define path helpers
   Template.path.helpers({
     path: function () {
-      state = State.findOne({_id: "0"});
+      var state = State.findOne({_id: "0"});
       return state && state.path;
     }
   });
@@ -176,7 +182,7 @@ MovieCache = new Mongo.Collection("movieCache");
   // sort helpers
   Template.sort.helpers({
       sort: function(){
-          return ["Alphabetical", "Popularity", "Recently Released", "Random"/* , "Runtime", "Ratings" */ ];
+          return settings.sort_types;
       }
   });
 
@@ -326,7 +332,8 @@ MovieCache = new Mongo.Collection("movieCache");
   }
 
   var resetSort = function () {
-    Session.set('currentSort', settings.default_sort);
+    // default sort values
+    Session.set('currentSort', settings.sort_types[0]);
     Session.set('movieSort', { sort: { name: 1 }});
   }
 
@@ -359,7 +366,6 @@ if (Meteor.isServer) {
   Meteor.publish("movieCache", function () { return MovieCache.find(); });
 
   // server globals
-  var api_queue = 0; // number of concurrent api connections; currently doesn't distinguish between different api source limits
   var api_total = 0;
 
   // startup functions
@@ -416,6 +422,15 @@ if (Meteor.isServer) {
         'updateInfo',
         'updateTrailer'
       ];
+      _.map(jobs, function(job){
+        api_total += 1;
+        Meteor.call('queueIt', job, mid, name, year, function(err, res) {
+          if(err)
+            broadcast(err);
+        });
+      });
+    },
+    openFile: function (file) {
       broadcast('Cinematic: Opening ' + file);
       open('file://' + file);
     },
@@ -551,16 +566,17 @@ if (Meteor.isServer) {
     },
     updateIntel: function (mid, name, year) {
       omdbApi.get({title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full'}, Meteor.bindEnvironment(function (err, res){
+        Meteor.call('queueDone', 'updateIntel');
         if(err){
           broadcast(name + ': ' + err);
           return false;
         }
         Movies.update(mid, { $set: {intel: res}});
-        Meteor.call('queueDone', 'updateIntel');
       }));
     },
     updateInfo: function (mid, name, year) {
       movieInfo(name, year, Meteor.bindEnvironment(function (err, res){
+        Meteor.call('queueDone', 'updateInfo');
         if(err){
           broadcast(name + ': ' + err);
           return false;
@@ -576,21 +592,20 @@ if (Meteor.isServer) {
           }
         });
         Movies.update(mid, { $set: {info: res}});
-        Meteor.call('queueDone', 'updateInfo');
       }));
     },
     updateTrailer: function (mid, name, year) {
       movieTrailer(name, year, true, Meteor.bindEnvironment(function (err, res){
+        Meteor.call('queueDone', 'updateTrailer');
         if(err){
           broadcast(name + ': ' + err);
           return false;
         }
         Movies.update(mid, { $set: {trailer: res}});
-        Meteor.call('queueDone', 'updateTrailer');
       }));
     },
     queueIt: function (job, mid, name, year) {
-      qpi_total += 1;
+      State.update("0", {$set: {loading: true}});
       if(api_queue >= settings.max_connections){ 
         // too many concurrent connections 
         Meteor.setTimeout(function() {
@@ -611,7 +626,10 @@ if (Meteor.isServer) {
     },
     queueDone: function (job) {
       api_queue -= 1;
-      // api_total -= 1;
+      api_total -= 1;
+      if(api_total === 0) {
+        State.update("0", {$set: {loading: false}});
+      }
     }
   });
 

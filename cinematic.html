@@ -66,28 +66,12 @@
 	<header>
 		<h2 class="hidden-xl">Cinematic</h2>
 		{{> path}}
-		<div class="loader">
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		  <span></span>
-		</div>
-		<div class="spinner">
-		  <div class="double-bounce1"></div>
-		  <div class="double-bounce2"></div>
-		</div>
-		<div class="loader-inner ball-scale-ripple-multiple"><div></div><div></div><div></div></div>
+		{{#if loading }}
+			<div class="spinner">
+			  <div class="double-bounce1"></div>
+			  <div class="double-bounce2"></div>
+			</div>
+		{{/if}}
 	</header>
 </template>
 
@@ -209,7 +193,7 @@
 				{{#if intel.Awards}}<p><span>Awards:</span> {{intel.Awards}}</p>{{/if}}
 				
 				{{#each trailer}}
-					<span class="bullet">sdgsg</span>
+					<span class="bullet"></span>
 				{{/each}}
 				
 				{{#if trailer.[0].key}}<p id="trailer-text"><span>PREVIEW</span></p>{{/if}}
