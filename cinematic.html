@@ -67,9 +67,7 @@
 		<h2 class="hidden-xl">Cinematic</h2>
 		{{> path}}
 		{{#if loading }}
-			<div class="spinner">
-			  <div class="double-bounce1"></div>
-			  <div class="double-bounce2"></div>
+			<div class="loading">
 			</div>
 		{{/if}}
 	</header>
@@ -92,9 +90,9 @@
 			<li class="link{{#if equals page 'Random'}} active{{/if}}" data-id="Random"><h5>Random</h5></li> -->
 			<li><h5 class="label">Movies  <span class="badge">{{movieCount}}</span></h5></li>
 			<li class="link{{#if equals page 'All'}} active{{/if}}" data-id="All"><h5>All</h5></li>
-			<li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New*</h5></li>
+<!-- 			<li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New*</h5></li>
 			<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent*</h5></li>
-			<li class="link{{#if equals page 'Watched'}} active{{/if}}" data-id="Watched"><h5>Watched*</h5></li>
+			<li class="link{{#if equals page 'Watched'}} active{{/if}}" data-id="Watched"><h5>Watched*</h5></li> -->
 			{{#if genres}}
 				<li><h5 class="label">Genres</h5></li>
 				{{#each genres}}
@@ -192,16 +190,19 @@
 				{{#if intel.Actors}}<p><span>Stars:</span> {{intel.Actors}}</p>{{/if}}
 				{{#if intel.Awards}}<p><span>Awards:</span> {{intel.Awards}}</p>{{/if}}
 				
-				{{#each trailer}}
-					<span class="bullet"></span>
-				{{/each}}
-				
 				{{#if trailer.[0].key}}<p id="trailer-text"><span>PREVIEW</span></p>{{/if}}
 			</div>
 		</div>
 		{{#if trailer.[0].key}}
 			<div id="trailer">
-				<iframe width="500" height="281" src="https://www.youtube-nocookie.com/embed/{{trailer.[0].key}}?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+				{{#if gt trailer.length 1}}
+					<div id="trailer-bullets">
+						{{#each trailer}}
+							<span class="trailer bullet {{#unless equals currentTrailer key}}empty{{/unless}}" data-id="{{key}}"></span>
+						{{/each}}
+					</div>
+				{{/if}}
+				<iframe width="500" height="281" src="https://www.youtube-nocookie.com/embed/{{currentTrailer}}?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
 			</div>
 		{{/if}}
 	</div>

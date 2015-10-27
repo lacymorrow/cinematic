@@ -1,24 +1,21 @@
 /*
  * TODO
+ * - Additional Movie filters
  * - Watch/IMDB links nicer
- * - Documentation
  * - dynamic keyboard control
+ * - combine info & allow preferences between sources (look out for null/'N/A' values)
+ * - Documentation
+ ########## Bulletproof
+ * - cache movies (or urls?)
+ * - Random refresh button -> add a random field and refresh it; use it as sort
+ * - average rating
  * - account for missing sort params
  * - Unused data: popularity, country, language, awards
  * - auto rename files
- * - watched
- * - newly added
- * - cache movies
- * - cache photos
- * - combine info & allow preferences between sources
- * - show all availale trailers
  * - limit, possibly paginate
  * - sorting by runtime, ratings
- * - average rating
  * - file browser
- * - Random refresh button -> add a random field and refresh it; use it as sort
  */
-  var api_queue = 0; // number of concurrent api connections; currently doesn't distinguish between different api source limits
 
 
 var settings = {
@@ -74,6 +71,7 @@ MovieCache = new Mongo.Collection("movieCache");
   Meteor.subscribe("movieCache");
 
   var ratingTimer;
+  NProgress.configure({ trickleRate: 0.01, trickleSpeed: 800 });
 
   Template.registerHelper('equals',
       function(v1, v2) {
@@ -82,7 +80,6 @@ MovieCache = new Mongo.Collection("movieCache");
   );
   Template.registerHelper('gt',
       function(v1, v2) {
-          broadcast(v1 +'   '+ v2);
           return (v1 > v2);
       }
   );
@@ -110,7 +107,10 @@ MovieCache = new Mongo.Collection("movieCache");
   Template.header.helpers({
     loading: function () {
       var state = State.findOne({_id: "0"});
-      return state && state.loading;
+      // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
+      var loaded = state && (100-state.loading);
+      setLoaded(loaded/100);
+      return loaded;
     }
   });
 
@@ -152,7 +152,9 @@ MovieCache = new Mongo.Collection("movieCache");
       }
       return mov;
     },
-
+    currentTrailer: function () {
+      return Session.get('currentTrailer');
+    }
   });
 
   // define movies helpers
@@ -166,7 +168,6 @@ MovieCache = new Mongo.Collection("movieCache");
       movies.map(function(o, i) {
         movies[i].index = index++;
       })
-
       return movies;
     }
   });
@@ -255,6 +256,7 @@ MovieCache = new Mongo.Collection("movieCache");
 
   Template.details.events = {
     "click #rating" : function (event) {
+      // switch ratings
       if(ratingTimer)
         Meteor.clearInterval(ratingTimer);
       ratingTimer = Meteor.setInterval(rotateRating, 4000);
@@ -267,6 +269,10 @@ MovieCache = new Mongo.Collection("movieCache");
     "click #imdb-link": function (event) {
       var url = $(event.currentTarget).data('id');
       Meteor.call('openFile', url);
+    },
+    "click #trailer .trailer" : function (event) {
+      // switch trailers
+      Session.set('currentTrailer', event.currentTarget.dataset.id);
     }
   }
 
@@ -274,8 +280,15 @@ MovieCache = new Mongo.Collection("movieCache");
   Template.movies.events = {
     // show right panel
     "click .movie-image": function (event){
-      Session.set('currentMovie', event.currentTarget.dataset.id);
-      Meteor.call('addRecent', event.currentTarget.dataset.id);
+      // switch current movie in details panel
+      var id = event.currentTarget.dataset.id;
+      var trailers = Movies.findOne({'_id': id}, {fields: {trailer: 1}});
+      // set initial trailer
+      var trailer = trailers && trailers[0] && trailers[0].key;
+      Session.set('currentTrailer', trailer);
+      // set current movie and add to recent
+      Session.set('currentMovie', id);
+      Meteor.call('addRecent', id);
       // set timer to rotate ratings
       if(ratingTimer)
         Meteor.clearInterval(ratingTimer);
@@ -283,6 +296,7 @@ MovieCache = new Mongo.Collection("movieCache");
     },
     "keyup .movie-image": function (event){
       var magnitude = 3; // $(".keyboard-magnitude").data('id');
+      event.preventDefault();
       if(event.which == 37){
         // left
         var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - 1;
@@ -318,6 +332,12 @@ MovieCache = new Mongo.Collection("movieCache");
   }
 
   // client-side methods
+
+  var setLoaded = function (percentage) {
+    // broadcast(percentage);
+    NProgress.start();
+    NProgress.set(percentage);
+  }
   var setPath = function () {
     var _path = document.getElementById('path');
     if(_path.value != ''){
@@ -366,7 +386,6 @@ if (Meteor.isServer) {
   Meteor.publish("movieCache", function () { return MovieCache.find(); });
 
   // server globals
-  var api_total = 0;
 
   // startup functions
   Meteor.startup(function () {
@@ -393,6 +412,10 @@ if (Meteor.isServer) {
     // initial update
     Meteor.call('updatePath', settings.DEFAULT_PATH);
   }); // end startup
+
+  // number of concurrent api connections; currently doesn't distinguish between different api source limits
+  // total, number left to process, currently processing
+  var api_total = 0, api_queue = 0, api_current = 0;
 
   // server-side methods
   Meteor.methods({
@@ -423,6 +446,7 @@ if (Meteor.isServer) {
         'updateTrailer'
       ];
       _.map(jobs, function(job){
+        api_queue += 1;
         api_total += 1;
         Meteor.call('queueIt', job, mid, name, year, function(err, res) {
           if(err)
@@ -436,13 +460,16 @@ if (Meteor.isServer) {
     },
     populateMovies: function (dirPath, recurse_level) {
       try {
+        // start loading bar
+        State.update("0", {$set: {loading: 100}});
+
+        // read from filesystem
         var files = fs.readdirSync(dirPath);
         files.forEach(function(file){
           var ex = path.extname(file);
           if (ex && _.contains(settings.valid_types, ex)) {
             // found a movie!
             // this is where the magic happens
-
             if(settings.parse_method == "regex") {
               var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
               var match = regex.exec(path.basename(file, ex));
@@ -532,7 +559,7 @@ if (Meteor.isServer) {
           }
         });
       } catch (e) {
-        broadcast(e.name + ' ' + e.message);
+        broadcast('Error populating movies. ' + e.name + ' ' + e.message);
       }
     },
     updatePath: function (path) {
@@ -545,7 +572,7 @@ if (Meteor.isServer) {
         }
         Meteor.call('populateMovies', path, 0);
       } catch (e) {
-        broadcast(e.name + ' ' + e.message);
+        broadcast('Error getting path. ' + e.name + ' ' + e.message);
       }
     },
     updateGenres: function () {
@@ -605,8 +632,7 @@ if (Meteor.isServer) {
       }));
     },
     queueIt: function (job, mid, name, year) {
-      State.update("0", {$set: {loading: true}});
-      if(api_queue >= settings.max_connections){ 
+      if(api_current >= settings.max_connections){
         // too many concurrent connections 
         Meteor.setTimeout(function() {
           Meteor.call('queueIt', job, mid, name, year, function (err, res) {
@@ -616,7 +642,7 @@ if (Meteor.isServer) {
           });
         }, settings.retry_delay);
       } else { 
-        api_queue += 1;
+        api_current += 1;
         Meteor.call(job, mid, name, year, function (err, res) {
           if(err){
             broadcast(err);
@@ -625,10 +651,13 @@ if (Meteor.isServer) {
       }
     },
     queueDone: function (job) {
+      api_current -= 1;
       api_queue -= 1;
-      api_total -= 1;
-      if(api_total === 0) {
-        State.update("0", {$set: {loading: false}});
+      // update loading percent every set
+      if(api_queue === 0) {
+        State.update("0", {$set: {loading: 0}});
+      } else if(api_queue % settings.max_connections === 0) {
+        State.update("0", {$set: {loading: Math.round((api_queue/api_total)*100)}});
       }
     }
   });
