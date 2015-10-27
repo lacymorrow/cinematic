@@ -32,7 +32,8 @@ var settings = {
   parse_method: "parse", // "regex", "parse"
   rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
   retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
-  recurse_level: 2 // how many directory levels to recursively search. higher is further down the rabbit hole.
+  recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole.
+  ignore_list: ['sample', 'etrg'] // a lowercase list of movie titles to ignore
 }
 
 // define db collections
@@ -521,12 +522,11 @@ if (Meteor.isServer) {
               var year = (parsedName.year) ? parsedName.year : null;
             }
 
-            if(name){
+            if(name && !_.contains(settings.ignore_list, name.toLowerCase())){
               // cache handling
               var hash = dirPath+file;
               var movc = MovieCache.findOne({'_id': hash});
               if(!!movc && settings.cache && movc.movie && time < movc.cache_date+settings.cache){
-                broadcast('cached: ' + movc._id);
                 // cached
                 var mid = movc.movie._id;
                 Movies.insert(movc.movie);
@@ -588,12 +588,16 @@ if (Meteor.isServer) {
           } else if (recurse_level < settings.recurse_level) {
             // ok let's try recursing, were avoiding as many fs calls as possible
             // which is why i didn't call it in the condition above
-            // fs.lstat(dirPath+file, function(err, stats) {
-            //   if(stats.isDirectory()) {
-            //     broadcast('recurse' + recurse_level);
-            //     Meteor.call('populateMovies', dirPath + file, recurse_level+1);
-            //   }
-            // });
+            // first, is this a directory?
+            fs.lstat(dirPath+file, Meteor.bindEnvironment(function(err, stats) {
+              if(err){
+                broadcast(name + ': ' + err);
+                return false;
+              }
+              if(stats.isDirectory()) {
+                Meteor.call('populateMovies', dirPath + file + '/', recurse_level+1);
+              }
+            }));
           }
           var state = State.findOne({_id: "0"});
           // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
