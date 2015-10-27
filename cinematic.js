@@ -215,10 +215,10 @@ MovieCache = new Mongo.Collection("movieCache");
       Session.set('currentPage', currentPage);
       // hide right panel
       Session.set('currentMovie', 0);
-      var genre = Genres.findOne(String(pid));
+      var genre = Genres.findOne(pid);
       if(!!genre) {
         // genre page - All: alphabetical
-        Session.set('movieQuery', {_id: { $in: Genres.findOne(String(pid)).items}});
+        Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
       } else if(currentPage == 'Popular') {
         // browse popular: Popularity
         Session.set('movieQuery', {});
@@ -436,9 +436,17 @@ if (Meteor.isServer) {
       var movies = Movies.find();
       var time = epoch();
       movies.forEach(function(movie){
+        if(!movie.cache_date)
         MovieCache.upsert({'_id': movie.path+movie.file}, {cache_date: time, movie: movie});
       });
       State.update("0", {$set: {cache_movies: time}});
+    },
+    cacheMovie: function (file) {
+      var mov = Movies.findOne({'file': file});
+      mov.cache_date = epoch();
+      if(!!mov){
+        MovieCache.insert(mov);
+      }
     },
     getIntel: function(mid, name, year) {
 
@@ -496,20 +504,10 @@ if (Meteor.isServer) {
               var hash = dirPath+file;
               var movc = MovieCache.findOne({'_id': hash});
               if(!!movc && settings.cache && movc.movie && time < movc.cache_date+settings.cache){
+                broadcast('cached: ' + movc._id);
                 // cached
                 var mid = movc._id;
                 Movies.insert(movc.movie);
-                _.each(movc.movie.info.genre_ids, function (e, i) {
-                  broadcast(e);
-                  var genre = Genres.findOne({"_id": String(e)});
-                  if(!!genre) {
-                    var items = genre.items || [];
-                    items.push(mid);
-                    Genres.update(String(e), { $set: {items: items}});
-                  } else {
-                    Genres.insert({_id: String(e), id: null, name: null, items: [mid]});
-                  }
-                });
               } else {
                 //not cached
                 // add item to collection
@@ -520,7 +518,6 @@ if (Meteor.isServer) {
                   path: dirPath,
                   year: year,
                   trailer: null,
-                  cache_date: time,
                   seed: Math.random(),
                   info: {
                     adult: false,
@@ -574,8 +571,7 @@ if (Meteor.isServer) {
           var state = State.findOne({_id: "0"});
           // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
           var loaded = state && (100-state.loading);
-        }); // end file scan forEach]
-        // kill loading indicator
+        }); // end file scan forEach
         if(api_queue === 0){
           State.update("0", {$set: {loading: 0}});
         }
@@ -604,7 +600,7 @@ if (Meteor.isServer) {
                     broadcast(err);
                   } else if (!!res.data.genres){
                     res.data.genres.forEach(function(genre){
-                      Genres.upsert({"_id": String(genre.id)}, {id: genre.id, name: genre.name});
+                      Genres.upsert({"_id": genre.id}, {id: genre.id, name: genre.name});
                     });
                     State.update("0", {$set: {cache_genre: epoch()}});
                   } else {
@@ -630,13 +626,13 @@ if (Meteor.isServer) {
           return false;
         }
         _.each(res.genre_ids, function (e, i) {
-          var genre = Genres.findOne({"_id": String(e)});
+          var genre = Genres.findOne({"_id": e});
           if(!!genre) {
             var items = genre.items || [];
             items.push(mid);
             Genres.update(e, { $set: {items: items}});
           } else {
-            Genres.insert({_id: String(e), id: null, name: null, items: [mid]});
+            Genres.insert({_id: e, id: null, name: null, items: [mid]});
           }
         });
         Movies.update(mid, { $set: {info: res}});
