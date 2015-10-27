@@ -507,7 +507,7 @@ if (Meteor.isServer) {
                     items.push(mid);
                     Genres.update(e, { $set: {items: items}});
                   } else {
-                    Genres.insert({_id: e, id: null, name: null, items: [mid]});
+                    Genres.insert({_id: String(e), id: null, name: null, items: [mid]});
                   }
                 });
               } else {
