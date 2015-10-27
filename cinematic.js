@@ -499,6 +499,17 @@ if (Meteor.isServer) {
                 // cached
                 var mid = movc._id;
                 Movies.insert(movc.movie);
+                _.each(movc.movie.info.genre_ids, function (e, i) {
+                  broadcast(e);
+                  var genre = Genres.findOne({"_id": e});
+                  if(!!genre) {
+                    var items = genre.items || [];
+                    items.push(mid);
+                    Genres.update(e, { $set: {items: items}});
+                  } else {
+                    Genres.insert({_id: e, id: null, name: null, items: [mid]});
+                  }
+                });
               } else {
                 //not cached
                 // add item to collection
