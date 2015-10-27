@@ -210,7 +210,7 @@ MovieCache = new Mongo.Collection("movieCache");
   // handle page changes with filter
   Template.navigation.events = {
     "click #links-panel li.link": function (event) {
-      var pid = $(event.currentTarget).data('id');
+      var pid = String($(event.currentTarget).data('id'));
       var currentPage = $(event.currentTarget).text();
       Session.set('currentPage', currentPage);
       // hide right panel
@@ -320,6 +320,9 @@ MovieCache = new Mongo.Collection("movieCache");
         // on <enter> set path
         setPath();
       }
+    },
+    "click #search-refresh": function (event) {
+      setPath();
     }
   }
 
@@ -421,6 +424,21 @@ if (Meteor.isServer) {
 
   // server-side methods
   Meteor.methods({
+    addGenre: function (gid, mid, name) {
+      var id = String(gid);
+      var genre = Genres.findOne({"_id": id});
+      if(!!genre && name) {
+        Genres.update(id, { $set: {name: name}});
+      } else if(!!genre && mid) {
+        var items = genre.items || [];
+        items.push(mid);
+        Genres.update(id, { $set: {items: items}});
+      } else if(name){
+        Genres.insert({_id: id, id: gid, name: name});
+      } else if (mid){
+        Genres.insert({_id: id, id: gid, name: name, items: [mid]});
+      }
+    },
     addRecent: function (mid) {
       var recent = Recent.find({'_id': mid});
       if(recent){
@@ -436,7 +454,7 @@ if (Meteor.isServer) {
       var movies = Movies.find();
       var time = epoch();
       movies.forEach(function(movie){
-        if(!movie.cache_date)
+        movie.cache_date = epoch();
         MovieCache.upsert({'_id': movie.path+movie.file}, {cache_date: time, movie: movie});
       });
       State.update("0", {$set: {cache_movies: time}});
@@ -506,8 +524,11 @@ if (Meteor.isServer) {
               if(!!movc && settings.cache && movc.movie && time < movc.cache_date+settings.cache){
                 broadcast('cached: ' + movc._id);
                 // cached
-                var mid = movc._id;
+                var mid = movc.movie._id;
                 Movies.insert(movc.movie);
+                _.each(movc.movie.info.genre_ids, function (e, i) {
+                  Meteor.call('addGenre', e, mid, null);
+                });
               } else {
                 //not cached
                 // add item to collection
@@ -600,7 +621,7 @@ if (Meteor.isServer) {
                     broadcast(err);
                   } else if (!!res.data.genres){
                     res.data.genres.forEach(function(genre){
-                      Genres.upsert({"_id": genre.id}, {id: genre.id, name: genre.name});
+                      Meteor.call('addGenre', genre.id, null, genre.name);
                     });
                     State.update("0", {$set: {cache_genre: epoch()}});
                   } else {
@@ -626,14 +647,7 @@ if (Meteor.isServer) {
           return false;
         }
         _.each(res.genre_ids, function (e, i) {
-          var genre = Genres.findOne({"_id": e});
-          if(!!genre) {
-            var items = genre.items || [];
-            items.push(mid);
-            Genres.update(e, { $set: {items: items}});
-          } else {
-            Genres.insert({_id: e, id: null, name: null, items: [mid]});
-          }
+          Meteor.call('addGenre', e, mid, null);
         });
         Movies.update(mid, { $set: {info: res}});
       }));
