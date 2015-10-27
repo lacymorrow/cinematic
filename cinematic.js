@@ -276,9 +276,8 @@ MovieCache = new Mongo.Collection("movieCache");
       var id = event.currentTarget.dataset.id;
       var trailers = Movies.findOne({'_id': id}, {fields: {trailer: 1}});
       // set initial trailer
-      var trailer = trailers && trailers[0] && trailers[0].key;
+      var trailer = trailers && trailers.trailer && trailers.trailer[0] && trailers.trailer[0].key;
       Session.set('currentTrailer', trailer);
-      broadcast(event.currentTarget.dataset.id)
       // set current movie and add to recent
       Session.set('currentMovie', id);
       Meteor.call('addRecent', id);
@@ -401,12 +400,12 @@ if (Meteor.isServer) {
     broadcast('\n----- Cinematic -----');
 
     // set default path
-    var currtime = epoch();
-    var sid = State.upsert('0', {path: settings.DEFAULT_PATH, cache_genre: currtime - 1});
+    var time = epoch();
+    var sid = State.upsert('0', {path: settings.DEFAULT_PATH, cache_genre: time - 1});
 
     // grab genre list
     var state = State.findOne({_id:"0"});
-    if(!!state && currtime > state.cache_genre+settings.cache) {
+    if(!!state && time > state.cache_genre+settings.cache) {
       broadcast('Cinematic: Updating genre cache.');
       Meteor.call('updateGenres');
     } else {
@@ -620,10 +619,7 @@ if (Meteor.isServer) {
           return false;
         }
         _.each(res.genre_ids, function (e, i) {
-          broadcast(e);
-          broadcast(i);
           var genre = Genres.findOne({"_id": e});
-          broadcast(genre);
           if(!!genre) {
             var items = genre.items || [];
             items.push(mid);

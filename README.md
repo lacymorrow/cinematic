@@ -29,7 +29,7 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 * Filter movies by genre
 * Lookup and watch multiple trailers
 * Order movies randomly, roll the dice
-
+* Built-in caching of genres and movies
 
 
 #Design
