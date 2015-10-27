@@ -28,6 +28,8 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 * Built-in network throttling for requests to avoid timeouts.
 * Filter movies by genre
 * Lookup and watch multiple trailers
+* Order movies randomly, roll the dice
+
 
 
 #Design
