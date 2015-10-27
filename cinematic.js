@@ -405,7 +405,7 @@ if (Meteor.isServer) {
 
     // grab genre list
     var state = State.findOne({_id:"0"});
-    if(!!state && time > state.cache_genre+settings.cache) {
+    if(!!state && time < state.cache_genre+settings.cache) {
       broadcast('Cinematic: Updating genre cache.');
       Meteor.call('updateGenres');
     } else {
@@ -436,16 +436,9 @@ if (Meteor.isServer) {
       var movies = Movies.find();
       var time = epoch();
       movies.forEach(function(movie){
-        movie.cache_date = epoch();
-        MovieCache.upsert({'_id': movie.path+movie.file}, {cache_date: time});
+        MovieCache.upsert({'_id': movie.path+movie.file}, {cache_date: time, movie: movie});
       });
-    },
-    cacheMovie: function (file) {
-      var mov = Movies.findOne({'file': file});
-      mov.cache_date = epoch();
-      if(!!mov){
-        MovieCache.insert(mov);
-      }
+      State.update("0", {$set: {cache_movies: time}});
     },
     getIntel: function(mid, name, year) {
 
@@ -476,7 +469,7 @@ if (Meteor.isServer) {
         // read from filesystem
         var files = fs.readdirSync(dirPath);
         var time = epoch();
-        files.forEach(function(file){
+        files.forEach(function(file, i){
           var ex = path.extname(file);
           if (ex && _.contains(settings.valid_types, ex)) {
             // found a movie!
@@ -502,11 +495,10 @@ if (Meteor.isServer) {
               // cache handling
               var hash = dirPath+file;
               var movc = MovieCache.findOne({'_id': hash});
-              if(!!movc && settings.cache && time > movc.cache_date+settings.cache){
-                broadcast('cached');
+              if(!!movc && settings.cache && movc.movie && time < movc.cache_date+settings.cache){
                 // cached
                 var mid = movc._id;
-                Movies.insert(movc);
+                Movies.insert(movc.movie);
               } else {
                 //not cached
                 // add item to collection
@@ -517,6 +509,7 @@ if (Meteor.isServer) {
                   path: dirPath,
                   year: year,
                   trailer: null,
+                  cache_date: time,
                   seed: Math.random(),
                   info: {
                     adult: false,
@@ -567,7 +560,14 @@ if (Meteor.isServer) {
             //   }
             // });
           }
-        });
+          var state = State.findOne({_id: "0"});
+          // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
+          var loaded = state && (100-state.loading);
+        }); // end file scan forEach]
+        // kill loading indicator
+        if(api_queue === 0){
+          State.update("0", {$set: {loading: 0}});
+        }
       } catch (e) {
         broadcast('Error populating movies. ' + e.name + ' ' + e.message);
       }
