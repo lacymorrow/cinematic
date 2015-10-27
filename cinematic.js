@@ -215,10 +215,10 @@ MovieCache = new Mongo.Collection("movieCache");
       Session.set('currentPage', currentPage);
       // hide right panel
       Session.set('currentMovie', 0);
-      var genre = Genres.findOne(pid);
+      var genre = Genres.findOne(String(pid));
       if(!!genre) {
         // genre page - All: alphabetical
-        Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
+        Session.set('movieQuery', {_id: { $in: Genres.findOne(String(pid)).items}});
       } else if(currentPage == 'Popular') {
         // browse popular: Popularity
         Session.set('movieQuery', {});
@@ -501,11 +501,11 @@ if (Meteor.isServer) {
                 Movies.insert(movc.movie);
                 _.each(movc.movie.info.genre_ids, function (e, i) {
                   broadcast(e);
-                  var genre = Genres.findOne({"_id": e});
+                  var genre = Genres.findOne({"_id": String(e)});
                   if(!!genre) {
                     var items = genre.items || [];
                     items.push(mid);
-                    Genres.update(e, { $set: {items: items}});
+                    Genres.update(String(e), { $set: {items: items}});
                   } else {
                     Genres.insert({_id: String(e), id: null, name: null, items: [mid]});
                   }
@@ -604,7 +604,7 @@ if (Meteor.isServer) {
                     broadcast(err);
                   } else if (!!res.data.genres){
                     res.data.genres.forEach(function(genre){
-                      Genres.upsert({"_id": genre.id}, {id: genre.id, name: genre.name});
+                      Genres.upsert({"_id": String(genre.id)}, {id: genre.id, name: genre.name});
                     });
                     State.update("0", {$set: {cache_genre: epoch()}});
                   } else {
@@ -630,13 +630,13 @@ if (Meteor.isServer) {
           return false;
         }
         _.each(res.genre_ids, function (e, i) {
-          var genre = Genres.findOne({"_id": e});
+          var genre = Genres.findOne({"_id": String(e)});
           if(!!genre) {
             var items = genre.items || [];
             items.push(mid);
             Genres.update(e, { $set: {items: items}});
           } else {
-            Genres.insert({_id: e, id: null, name: null, items: [mid]});
+            Genres.insert({_id: String(e), id: null, name: null, items: [mid]});
           }
         });
         Movies.update(mid, { $set: {info: res}});
