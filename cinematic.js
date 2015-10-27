@@ -15,7 +15,7 @@
 var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
-  sort_types: ["Alphabetical", "Popularity", "Release Date", "Random"/* , "Runtime", "Ratings" */ ],
+  sort_types: ["Alphabetical", "Popularity", "Release Date", "Random" /* , "Runtime", "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
   overview_length: 'short', // "short", "full" - from omdb
 
@@ -170,12 +170,16 @@ MovieCache = new Mongo.Collection("movieCache");
 
   // sort helpers
   Template.sort.helpers({
-      sort: function(){
-          return settings.sort_types;
-      },
-      currentSort: function () {
-        return Session.get('currentSort');
-      }
+    showSort: function () {
+      var currentSort = Session.get('currentSort');
+      return currentSort != 'Recent';
+    },
+    sort: function(){
+        return settings.sort_types;
+    },
+    currentSort: function () {
+      return Session.get('currentSort');
+    }
   });
 
   // sort event
@@ -205,7 +209,11 @@ MovieCache = new Mongo.Collection("movieCache");
   // handle page changes with filter
   Template.navigation.events = {
     "click #links-panel li.link": function (event) {
-      var pid = String($(event.currentTarget).data('id'));
+      var page = Session.get('currentPage');
+      if(Session.get('currentSort') == 'Recent'){
+        resetSort();
+      }
+      var pid = String(event.currentTarget.dataset.id);
       var currentPage = $(event.currentTarget).text();
       Session.set('currentPage', currentPage);
       // hide right panel
@@ -214,13 +222,7 @@ MovieCache = new Mongo.Collection("movieCache");
       if(!!genre) {
         // genre page - All: alphabetical
         Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
-      } else if(currentPage == 'Popular') {
-        // browse popular: Popularity
-        Session.set('movieQuery', {});
-      }  else if(currentPage == 'Random') {
-        // browse random: Random
-        Session.set('movieQuery', {});
-      }  else if(currentPage == 'New') {
+      } else if(currentPage == 'New') {
         // browse Recently Released
         Session.set('movieQuery', {});
       }  else if(currentPage == 'Recent') {
@@ -229,14 +231,18 @@ MovieCache = new Mongo.Collection("movieCache");
         _.map(Recent.find().fetch(), function(e){
           recent.push(e._id);
         });
+        Session.set('currentSort', 'Recent');
         Session.set('movieQuery', {_id: { $in: recent }});
+        Session.set('movieSort', { sort: { 'recent_time': -1 }});
       } else if(currentPage == 'Watched') {
         // browse watched: order of watched
         var watched = [];
         _.map(Watched.find().fetch(), function(e){
           watched.push(e._id);
         });
+        Session.set('currentSort', 'Recent');
         Session.set('movieQuery', {_id: { $in: watched}});
+        Session.set('movieSort', { sort: { 'watched_time': -1 }});
       }  else {
         // main page - All: alphabetical
         Session.set('movieQuery', {});
@@ -254,8 +260,8 @@ MovieCache = new Mongo.Collection("movieCache");
       rotateRating();
     }, 
     "click #open-link": function (event) {
-      var url = $(event.currentTarget).data('src');
-      var mid = $(event.currentTarget).data('id');
+      var url = event.currentTarget.dataset.src;
+      var mid = event.currentTarget.dataset.id;
       Meteor.call('addWatched', mid);
       Meteor.call('openFile', url);
     },
@@ -439,10 +445,14 @@ if (Meteor.isServer) {
       }
     },
     addRecent: function (mid) {
-      Recent.upsert({ '_id': mid }, {'time': epoch()});
+      var time = epoch();
+      Recent.upsert({ '_id': mid }, {'time': time});
+      Movies.update({'_id': mid}, {$set: {'recent_time': time}})
     },
     addWatched: function (mid) {
-      Watched.upsert({ '_id': mid }, {'time': epoch()});
+      var time = epoch();
+      Watched.upsert({ '_id': mid }, {'time': time});
+      Movies.update({'_id': mid}, {$set: {'watched_time': time}})
     },
     cacheMovies: function () {
       var movies = Movies.find();
@@ -534,6 +544,8 @@ if (Meteor.isServer) {
                   year: year,
                   trailer: null,
                   seed: Math.random(),
+                  recent_time: null,
+                  watched_time: null,
                   info: {
                     adult: false,
                     backdrop_path: null,
