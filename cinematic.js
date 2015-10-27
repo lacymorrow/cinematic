@@ -402,7 +402,7 @@ if (Meteor.isServer) {
     var time = epoch();
     var state = State.findOne({_id:"0"});
     if (!state) {
-      var sid = State.insert('0', {path: settings.DEFAULT_PATH});
+      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH});
     }
 
     // grab genre list
@@ -704,7 +704,7 @@ if (Meteor.isServer) {
 
       // set default path
       var time = epoch();
-      // var sid = State.insert('0', {path: settings.DEFAULT_PATH});
+      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH});
 
       // grab genre list
       Meteor.call('updateGenres');
