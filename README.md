@@ -23,5 +23,12 @@ You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www
 From the `cinematic` directory run `meteor` to quickstart the application on [http://localhost:3000](http://localhost:3000).
 
 
+# Features
+
+* Built-in network throttling for requests to avoid timeouts.
+* Filter movies by genre
+* Lookup and watch multiple trailers
+
+
 #Design
 User interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/)

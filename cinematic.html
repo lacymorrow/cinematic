@@ -53,6 +53,9 @@
 		<option value="{{this}}">{{this}}</option>
 	  {{/each}}
 	</select>
+	{{#if equals currentSort 'Random'}}
+		<span id="random" class="glyphicon glyphicon-refresh"></span>
+	{{/if}}
 </template>
 
 <template name="categories">
@@ -134,7 +137,7 @@
 						({{intel.Year}})
 					{{/if}}{{/if}}
 				</h1>
-				<p id="open-link" class="btn btn-primary" data-src="{{path}}{{file}}" role="button">Watch</p>
+				<a id="open-link" class="btn btn-primary" data-src="{{path}}{{file}}" role="button">Watch</a>
 				{{#if intel.imdbID}}
 					<p><a id="imdb-link" class="" target="_blank" href="http://www.imdb.com/title/{{intel.imdbID}}">IMDB</a></p>
 				{{/if}}

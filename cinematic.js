@@ -2,7 +2,6 @@
  * TODO
  * - Additional Movie filters
  * - Watch/IMDB links nicer
- * - dynamic keyboard control
  * - combine info & allow preferences between sources (look out for null/'N/A' values)
  * - Documentation
  ########## Bulletproof
@@ -56,12 +55,6 @@ MovieCache = new Mongo.Collection("movieCache");
  */
 
  if (Meteor.isClient) {
-  // start page
-  Session.set('activeRating', 0);
-  Session.set('currentPage', 'All');
-  Session.set('movieQuery', {});
-  Session.set('movieSort', { sort: { name: 1 }});
-
   // observe db collections
   Meteor.subscribe("state");
   Meteor.subscribe("recent");
@@ -184,34 +177,33 @@ MovieCache = new Mongo.Collection("movieCache");
   Template.sort.helpers({
       sort: function(){
           return settings.sort_types;
+      },
+      currentSort: function () {
+        return Session.get('currentSort');
       }
   });
 
   // sort event
   Template.sort.events({
       "change #sort": function (event, template) {
-          var sort = $(event.currentTarget).val();
-          broadcast("Sorting: " + sort); // #info
-          Session.set('currentSort', sort);
+        var sort = $(event.currentTarget).val();
+        Session.set('currentSort', sort);
+        if(sort == 'Alphabetical') {
+          Session.set('movieSort', { sort: { name: 1 }});
+        } else if (sort == 'Popularity') {
+          Session.set('movieSort', { sort: { 'info.popularity': -1 }});
+        } else if (sort == 'Recently Released') {
+          Session.set('movieSort', { sort: { 'info.release_date': -1 }});
+        } else if (sort == 'Runtime') { // inactive
+          Session.set('movieSort', { sort: { 'Intel.Runtime': -1 }});
+        } else if (sort == 'Random') {
+          Session.set('movieSort', { sort: { 'seed': 1 }});
+        } else if (sort == 'Ratings') { // inactive, should use avg ratings
 
-          if(sort == 'Alphabetical') {
-            Session.set('movieSort', { sort: { name: 1 }});
-
-          } else if (sort == 'Popularity') {
-            Session.set('movieSort', { sort: { 'info.popularity': -1 }});
-
-          } else if (sort == 'Recently Released') {
-            Session.set('movieSort', { sort: { 'info.release_date': -1 }});
-
-          } else if (sort == 'Runtime') { // inactive
-            Session.set('movieSort', { sort: { 'Intel.Runtime': -1 }});
-
-          } else if (sort == 'Random') {
-            Session.set('movieSort', { sort: { 'seed': 1 }});
-
-          } else if (sort == 'Ratings') { // inactive, should use avg ratings
-
-          }
+        }
+      },
+      "click #random": function (event) {
+        Meteor.call('updateRandom');
       }
   });
 
@@ -295,7 +287,7 @@ MovieCache = new Mongo.Collection("movieCache");
       ratingTimer = Meteor.setInterval(rotateRating, 4000);
     },
     "keyup .movie-image": function (event){
-      var magnitude = 3; // $(".keyboard-magnitude").data('id');
+      var magnitude = 3; // $(".keyboard-magnitude").data('id'); // this should equal the number of movies per row
       event.preventDefault();
       if(event.which == 37){
         // left
@@ -307,16 +299,16 @@ MovieCache = new Mongo.Collection("movieCache");
         var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + 1;
         $('.movie-image[tabIndex="'+currTab+'"]').click();
         $('.movie-image[tabIndex="'+currTab+'"]').focus();
-      } else if(event.which == 38){
-        // up
-        var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - magnitude;
-        $('.movie-image[tabIndex="'+currTab+'"]').click();
-        $('.movie-image[tabIndex="'+currTab+'"]').focus();
-      } else if(event.which == 40){
-        // down
-        var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + magnitude;
-        $('.movie-image[tabIndex="'+currTab+'"]').click();
-        $('.movie-image[tabIndex="'+currTab+'"]').focus();
+      // } else if(event.which == 38){
+      //   // up
+      //   var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - magnitude;
+      //   $('.movie-image[tabIndex="'+currTab+'"]').click();
+      //   $('.movie-image[tabIndex="'+currTab+'"]').focus();
+      // } else if(event.which == 40){
+      //   // down
+      //   var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + magnitude;
+      //   $('.movie-image[tabIndex="'+currTab+'"]').click();
+      //   $('.movie-image[tabIndex="'+currTab+'"]').focus();
       }
     }
   }
@@ -339,6 +331,7 @@ MovieCache = new Mongo.Collection("movieCache");
     NProgress.set(percentage);
   }
   var setPath = function () {
+    resetClient();
     var _path = document.getElementById('path');
     if(_path.value != ''){
       var path = _path.value;
@@ -362,6 +355,16 @@ MovieCache = new Mongo.Collection("movieCache");
     var x =  Session.get('activeRating');
     Session.set('activeRating',(x + 1 == totalRatings ? 0: x + 1));
   }
+
+  // defaults
+  var resetClient = function () {
+    resetSort();
+    Session.set('activeRating', 0);
+    Session.set('currentMovie', 0);
+    Session.set('currentPage', 'All');
+    Session.set('movieQuery', {});
+  }
+  resetClient();
 } // end Meteor.isClient
 
 
@@ -630,6 +633,12 @@ if (Meteor.isServer) {
         }
         Movies.update(mid, { $set: {trailer: res}});
       }));
+    },
+    updateRandom: function () {
+      var seeds = Movies.find({}, {fields: {'seed':1}});
+      seeds.forEach(function(seed){
+        Movies.update(seed._id, {$set: {'seed': Math.random()}});
+      });
     },
     queueIt: function (job, mid, name, year) {
       if(api_current >= settings.max_connections){
