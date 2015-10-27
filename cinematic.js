@@ -1,12 +1,7 @@
 /*
  * TODO
- * - Additional Movie filters
- * - Watch/IMDB links nicer
  * - combine info & allow preferences between sources (look out for null/'N/A' values)
- * - Documentation
  ########## Bulletproof
- * - cache movies (or urls?)
- * - Random refresh button -> add a random field and refresh it; use it as sort
  * - average rating
  * - account for missing sort params
  * - Unused data: popularity, country, language, awards
@@ -103,6 +98,7 @@ MovieCache = new Mongo.Collection("movieCache");
       // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
       var loaded = state && (100-state.loading);
       setLoaded(loaded/100);
+      broadcast(loaded);
       return loaded;
     }
   });
@@ -397,7 +393,6 @@ if (Meteor.isServer) {
     Future = Npm.require('fibers/future');
     // setup db - optionally clear movies and path
     Movies.remove({});
-    // State.remove({});
 
     // welcome message
     broadcast('\n----- Cinematic -----');
@@ -710,7 +705,7 @@ if (Meteor.isServer) {
  */
 
 // safe console.log which outputs in the called context - client/server
-broadcast = function (msg) {
+var broadcast = function (msg) {
   if (typeof console !== 'undefined')
     console.log(msg);
 }

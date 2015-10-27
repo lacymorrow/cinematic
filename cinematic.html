@@ -92,7 +92,7 @@
 <!-- 			<li><h5 class="label">Browse</h5></li>
 			<li class="link{{#if equals page 'Popular'}} active{{/if}}" data-id="Popular"><h5>Popular</h5></li>
 			<li class="link{{#if equals page 'Random'}} active{{/if}}" data-id="Random"><h5>Random</h5></li> -->
-			<li><h5 class="label">Movies  <span class="badge">{{movieCount}}</span></h5></li>
+			<li><h5 class="label">Browse  <span class="badge">{{movieCount}}</span></h5></li>
 			<li class="link{{#if equals page 'All'}} active{{/if}}" data-id="All"><h5>All</h5></li>
 <!-- 			<li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New*</h5></li>
 			<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent*</h5></li>
@@ -139,11 +139,8 @@
 					{{/if}}{{/if}}
 				</h1>
 				<a id="open-link" class="btn btn-primary" data-src="{{path}}{{file}}" role="button">Watch</a>
-				{{#if intel.imdbID}}
-					<p><a id="imdb-link" class="" target="_blank" href="http://www.imdb.com/title/{{intel.imdbID}}">IMDB</a></p>
-				{{/if}}
 				{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
-				{{#if intel.Runtime}}<h5>{{intel.Runtime}}</h5>{{/if}}
+				{{#if intel.Runtime}}<h5>{{intel.Runtime}}{{#if intel.imdbID}} &nbsp;|&nbsp; <a id="imdb-link" target="_blank" href="http://www.imdb.com/title/{{intel.imdbID}}">IMDB <span class="glyphicon glyphicon-link"></span></a>{{/if}}</h5>{{/if}}
 					<div id="rating">
 						{{#if intel.imdbRating}}
 							<div id="imdb-rating" class="rating {{#if equals rating 0}}active{{/if}} {{#if equals rating 1}}old{{/if}}">

@@ -242,24 +242,26 @@ header {
 		overflow-x: hidden;
 		#open-link {
 			cursor: pointer;
+			z-index: 1;
+			position: relative;
 			float: right;
 			margin-right: 25px;
 			font-family: @font-family-light;
 		}
 		#imdb-link {
+			z-index: 1;
+			position: relative;
 			cursor: pointer;
-			color: @color-blue;
-			clear: both;
-			float: right;
-			margin: 10px 40px 10px 10px;
-			font-family: @font-family-light;
+			color: @color-dark;
 			&:hover {
-				color: @color-blue-dark;
+				color: @color-blue;
 			}
 		}
 		p {
 			font-family: @font-family-light;
 			font-size: 16px;
+			position: relative;
+			z-index: 1;
 			span {
 				font-family: @font-family-regular;
 			}
@@ -267,6 +269,7 @@ header {
 	}
 	#rating {
 		position: relative;
+		z-index: 0;
 		margin: 0 0 25px 0;
 		display: block;
 		height: 50px;
@@ -335,11 +338,16 @@ header {
 	}
 	#trailer-bullets {
 		position: absolute;
+		cursor: pointer;
 		z-index: 3;
 		top: 0;
 		left: 0;
-		margin: 1em;
-		opacity: 0.8;
+		padding: 1em;
+		opacity: 0.4;
+		transition: opacity .2s ease-in;
+		&:hover {
+			opacity: 0.9;
+		}
 	}
 	#trailer-text {
 		line-height: 0.5;
