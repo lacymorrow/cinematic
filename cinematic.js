@@ -21,7 +21,7 @@ var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
   sort_types: ["Alphabetical", "Popularity", "Recently Released", "Random"/* , "Runtime", "Ratings" */ ],
-  cache: 0, // seconds; 604800 = 7 days
+  cache: 3600, // seconds; 604800 = 7 days
   overview_length: 'short', // "short", "full" - from omdb
 
   // http://docs.themoviedb.apiary.io/ config
@@ -326,9 +326,12 @@ MovieCache = new Mongo.Collection("movieCache");
   // client-side methods
 
   var setLoaded = function (percentage) {
-    // broadcast(percentage);
-    NProgress.start();
-    NProgress.set(percentage);
+    if(percentage === 1) {
+      NProgress.done();
+    } else {
+      NProgress.start();
+      NProgress.set(percentage);
+    }
   }
   var setPath = function () {
     resetClient();
@@ -433,6 +436,14 @@ if (Meteor.isServer) {
     addWatched: function (mid) {
       Watched.update({},{ $push: { 'mid': mid }});
     },
+    cacheMovies: function () {
+      var movies = Movies.find();
+      var time = epoch();
+      movies.forEach(function(movie){
+        movie.cache_date = epoch();
+        MovieCache.upsert({'_id': movie.path+movie.file}, {cache_date: time});
+      });
+    },
     cacheMovie: function (file) {
       var mov = Movies.findOne({'file': file});
       mov.cache_date = epoch();
@@ -468,6 +479,7 @@ if (Meteor.isServer) {
 
         // read from filesystem
         var files = fs.readdirSync(dirPath);
+        var time = epoch();
         files.forEach(function(file){
           var ex = path.extname(file);
           if (ex && _.contains(settings.valid_types, ex)) {
@@ -492,8 +504,10 @@ if (Meteor.isServer) {
 
             if(name){
               // cache handling
-              var movc = MovieCache.findOne({file: file});
-              if(settings.cache && epoch() > movc.cache_date+settings.cache && !!movc){
+              var hash = dirPath+file;
+              var movc = MovieCache.findOne({'_id': hash});
+              if(!!movc && settings.cache && time > movc.cache_date+settings.cache){
+                broadcast('cached');
                 // cached
                 var mid = movc._id;
                 Movies.insert(movc);
@@ -544,10 +558,7 @@ if (Meteor.isServer) {
                   }
                 });
                 // make api calls to gather info
-                Meteor.call('getIntel', mid, name, year, function(err, res){
-                  // store movie to cache
-                  Meteor.call('cacheMovie', file);
-                });
+                Meteor.call('getIntel', mid, name, year);
               }
             }
           } else if (recurse_level < settings.recurse_level) {
@@ -665,6 +676,9 @@ if (Meteor.isServer) {
       // update loading percent every set
       if(api_queue === 0) {
         State.update("0", {$set: {loading: 0}});
+        if(settings.cache){
+          Meteor.call('cacheMovies');
+        }
       } else if(api_queue % settings.max_connections === 0) {
         State.update("0", {$set: {loading: Math.round((api_queue/api_total)*100)}});
       }
