@@ -15,7 +15,7 @@
 var settings = {
   DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
-  sort_types: ["Alphabetical", "Popularity", "Recently Released", "Random"/* , "Runtime", "Ratings" */ ],
+  sort_types: ["Alphabetical", "Popularity", "Release Date", "Random"/* , "Runtime", "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
   overview_length: 'short', // "short", "full" - from omdb
 
@@ -98,7 +98,6 @@ MovieCache = new Mongo.Collection("movieCache");
       // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
       var loaded = state && (100-state.loading);
       setLoaded(loaded/100);
-      broadcast(loaded);
       return loaded;
     }
   });
@@ -184,16 +183,16 @@ MovieCache = new Mongo.Collection("movieCache");
       "change #sort": function (event, template) {
         var sort = $(event.currentTarget).val();
         Session.set('currentSort', sort);
-        if(sort == 'Alphabetical') {
+        if(sort == settings.sort_types[0]) { // Alphabetical
           Session.set('movieSort', { sort: { name: 1 }});
-        } else if (sort == 'Popularity') {
+        } else if (sort == settings.sort_types[1]) { // Popularity
           Session.set('movieSort', { sort: { 'info.popularity': -1 }});
-        } else if (sort == 'Recently Released') {
+        } else if (sort == settings.sort_types[2]) { // Release Date
           Session.set('movieSort', { sort: { 'info.release_date': -1 }});
+        } else if (sort == settings.sort_types[3]) { // Random
+          Session.set('movieSort', { sort: { 'seed': 1 }});
         } else if (sort == 'Runtime') { // inactive
           Session.set('movieSort', { sort: { 'Intel.Runtime': -1 }});
-        } else if (sort == 'Random') {
-          Session.set('movieSort', { sort: { 'seed': 1 }});
         } else if (sort == 'Ratings') { // inactive, should use avg ratings
 
         }
@@ -233,7 +232,11 @@ MovieCache = new Mongo.Collection("movieCache");
         Session.set('movieQuery', {_id: { $in: recent }});
       } else if(currentPage == 'Watched') {
         // browse watched: order of watched
-        Session.set('movieQuery', {_id: { $in: Watched.find().fetch()}});
+        var watched = [];
+        _.map(Watched.find().fetch(), function(e){
+          watched.push(e._id);
+        });
+        Session.set('movieQuery', {_id: { $in: watched}});
       }  else {
         // main page - All: alphabetical
         Session.set('movieQuery', {});
@@ -252,10 +255,8 @@ MovieCache = new Mongo.Collection("movieCache");
     }, 
     "click #open-link": function (event) {
       var url = $(event.currentTarget).data('src');
-      Meteor.call('openFile', url);
-    },
-    "click #imdb-link": function (event) {
-      var url = $(event.currentTarget).data('id');
+      var mid = $(event.currentTarget).data('id');
+      Meteor.call('addWatched', mid);
       Meteor.call('openFile', url);
     },
     "click #trailer .trailer" : function (event) {
@@ -399,16 +400,19 @@ if (Meteor.isServer) {
 
     // set default path
     var time = epoch();
-    var sid = State.upsert('0', {path: settings.DEFAULT_PATH, cache_genre: time - 1});
+    var state = State.findOne({_id:"0"});
+    if (!state) {
+      var sid = State.insert('0', {path: settings.DEFAULT_PATH});
+    }
 
     // grab genre list
-    var state = State.findOne({_id:"0"});
-    if(!!state && time < state.cache_genre+settings.cache) {
+    if(settings.cache && state && state.cache_date && time < state.cache_genre+settings.cache) {
+      broadcast('Cinematic: Loading cached genre list.');
+    } else if (settings.cache && state && state.cache_date && time < state.cache_genre+settings.cache) {
       broadcast('Cinematic: Updating genre cache.');
       Meteor.call('updateGenres');
-    } else {
-      broadcast('Cinematic: Loading cached genre list.')
     }
+
     // initial update
     Meteor.call('updatePath', settings.DEFAULT_PATH);
   }); // end startup
@@ -435,15 +439,10 @@ if (Meteor.isServer) {
       }
     },
     addRecent: function (mid) {
-      var recent = Recent.find({'_id': mid});
-      if(recent){
-        Recent.remove({'_id': mid});
-      }
-      Recent.insert({ '_id':mid, 'time': epoch() });
-      // Recent.upsert({ '_id': mid });
+      Recent.upsert({ '_id': mid }, {'time': epoch()});
     },
     addWatched: function (mid) {
-      Watched.update({},{ $push: { 'mid': mid }});
+      Watched.upsert({ '_id': mid }, {'time': epoch()});
     },
     cacheMovies: function () {
       var movies = Movies.find();
@@ -694,6 +693,24 @@ if (Meteor.isServer) {
       } else if(api_queue % settings.max_connections === 0) {
         State.update("0", {$set: {loading: Math.round((api_queue/api_total)*100)}});
       }
+    },
+    reset: function () {
+      State.remove({});
+      Recent.remove({});
+      Watched.remove({});
+      Genres.remove({});
+      Movies.remove({});
+      MovieCache.remove({});
+
+      // set default path
+      var time = epoch();
+      // var sid = State.insert('0', {path: settings.DEFAULT_PATH});
+
+      // grab genre list
+      Meteor.call('updateGenres');
+
+      // initial update
+      Meteor.call('updatePath', settings.DEFAULT_PATH);
     }
   });
 
