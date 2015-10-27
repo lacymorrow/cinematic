@@ -278,6 +278,7 @@ MovieCache = new Mongo.Collection("movieCache");
       // set initial trailer
       var trailer = trailers && trailers[0] && trailers[0].key;
       Session.set('currentTrailer', trailer);
+      broadcast(event.currentTarget.dataset.id)
       // set current movie and add to recent
       Session.set('currentMovie', id);
       Meteor.call('addRecent', id);
@@ -326,12 +327,8 @@ MovieCache = new Mongo.Collection("movieCache");
   // client-side methods
 
   var setLoaded = function (percentage) {
-    if(percentage === 1) {
-      NProgress.done();
-    } else {
-      NProgress.start();
-      NProgress.set(percentage);
-    }
+    NProgress.start();
+    NProgress.set(percentage);
   }
   var setPath = function () {
     resetClient();
@@ -623,7 +620,10 @@ if (Meteor.isServer) {
           return false;
         }
         _.each(res.genre_ids, function (e, i) {
+          broadcast(e);
+          broadcast(i);
           var genre = Genres.findOne({"_id": e});
+          broadcast(genre);
           if(!!genre) {
             var items = genre.items || [];
             items.push(mid);
