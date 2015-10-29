@@ -47,7 +47,7 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 * Filter movies by genre
 * Watch multiple trailers
 * Cycle through ratings from IMDB, TMDB, and Metacritic
-* Order movies randomly, roll the dice 
+* Order movies randomly, roll the dice
 * Built-in caching of genres and movies
 
 
