@@ -1,7 +1,6 @@
 /*
  * TODO
  * - combine info & allow preferences between sources (look out for null/'N/A' values)
- ########## Bulletproof
  * - average rating
  * - account for missing sort params
  * - Unused data: popularity, country, language, awards
@@ -89,6 +88,12 @@ MovieCache = new Mongo.Collection("movieCache");
     },
     movieCount: function () {
       return Movies.find().count();
+    },
+    recentCount: function () {
+      return Recent.find().count();
+    },
+    watchedCount: function () {
+      return Watched.find().count();
     },
   });
 
@@ -180,6 +185,12 @@ MovieCache = new Mongo.Collection("movieCache");
     },
     currentSort: function () {
       return Session.get('currentSort');
+    }
+  });
+
+  Template.body.events({
+    "click #refresh": function (event) {
+      Meteor.call('reset');
     }
   });
 
