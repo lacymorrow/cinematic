@@ -36,6 +36,7 @@ var settings = {
 }
 
 // define db collections
+Log = new Mongo.Collection("log");
 State = new Mongo.Collection("state");
 Recent = new Mongo.Collection("recent");
 Watched = new Mongo.Collection("watched");
@@ -53,6 +54,7 @@ MovieCache = new Mongo.Collection("movieCache");
   var ratingTimer;
   
   // observe db collections
+  Meteor.subscribe("log");
   Meteor.subscribe("state");
   Meteor.subscribe("recent");
   Meteor.subscribe("watched");
@@ -403,6 +405,7 @@ if (Meteor.isServer) {
   var parseTorrentName = Meteor.npmRequire('parse-torrent-name');
   
   // define observable collections
+  Meteor.publish("log", function () { return Log.find(); });
   Meteor.publish("state", function () { return State.find(); });
   Meteor.publish("recent", function () { return Recent.find(); });
   Meteor.publish("watched", function () { return Watched.find(); });
@@ -415,7 +418,8 @@ if (Meteor.isServer) {
   // startup functions
   Meteor.startup(function () {
     Future = Npm.require('fibers/future');
-    // setup db - optionally clear movies and path
+    // setup db - optionally clear movies, log, and path
+    Log.remove({});
     Movies.remove({});
 
     // welcome message
@@ -755,6 +759,7 @@ if (Meteor.isServer) {
 
 // safe console.log which outputs in the called context - client/server
 var broadcast = function (msg) {
+  Log.insert({time: epoch(), msg: msg});
   if (typeof console !== 'undefined')
     console.log(msg);
 }
