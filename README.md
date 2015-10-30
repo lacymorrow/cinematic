@@ -23,7 +23,7 @@ Point it to the movie folder on your hard drive and it will automatically find m
 * Awards
 * Runtime
 
-This app was created as an exploratory dive into the world of [Meteor](http://meteor.com). Currently Meteor version 1.1.0.3.
+This app was created as an exploratory dive into the world of [Meteor](http://meteor.com). Currently Meteor version 1.2.1.
 
 Uses TMDB and OMDB to look up release date, poster, description, rating, and trailer and display them in an organized fashion.
 
@@ -46,6 +46,7 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 * Built-in network throttling for requests to avoid timeouts.
 * Filter movies by genre
 * Watch multiple trailers
+* Jump straight to the IMDB page
 * Cycle through ratings from IMDB, TMDB, and Metacritic
 * Order movies randomly, roll the dice
 * Built-in caching of genres and movies
