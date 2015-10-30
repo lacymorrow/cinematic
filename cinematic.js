@@ -57,6 +57,9 @@ MovieCache = new Mongo.Collection("movieCache");
   Meteor.subscribe("genres");
   Meteor.subscribe("movies");
   Meteor.subscribe("movieCache");
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 
   var ratingTimer;
   NProgress.configure({ trickleRate: 0.01, trickleSpeed: 800 });
