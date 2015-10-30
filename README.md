@@ -23,7 +23,7 @@ Point it to the movie folder on your hard drive and it will automatically find m
 * Awards
 * Runtime
 
-This app was created as an exploratory dive into the world of [meteor](http://meteor.com). Currently Meteor version 1.1.0.3.
+This app was created as an exploratory dive into the world of [Meteor](http://meteor.com). Currently Meteor version 1.1.0.3.
 
 Uses TMDB and OMDB to look up release date, poster, description, rating, and trailer and display them in an organized fashion.
 

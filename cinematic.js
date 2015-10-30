@@ -50,6 +50,8 @@ MovieCache = new Mongo.Collection("movieCache");
  */
 
  if (Meteor.isClient) {
+  var ratingTimer;
+  
   // observe db collections
   Meteor.subscribe("state");
   Meteor.subscribe("recent");
@@ -57,12 +59,12 @@ MovieCache = new Mongo.Collection("movieCache");
   Meteor.subscribe("genres");
   Meteor.subscribe("movies");
   Meteor.subscribe("movieCache");
+
+  // third-party
+  NProgress.configure({ trickleRate: 0.05, trickleSpeed: 800 });
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
   });
-
-  var ratingTimer;
-  NProgress.configure({ trickleRate: 0.01, trickleSpeed: 800 });
 
   Template.registerHelper('equals',
       function(v1, v2) {
@@ -427,9 +429,9 @@ if (Meteor.isServer) {
     }
 
     // grab genre list
-    if(settings.cache && state && state.cache_date && time < state.cache_genre+settings.cache) {
+    if(settings.cache && state && state.cache_genre && time < state.cache_genre+settings.cache) {
       broadcast('Cinematic: Loading cached genre list.');
-    } else if (settings.cache && state && state.cache_date && time < state.cache_genre+settings.cache) {
+    } else {
       broadcast('Cinematic: Updating genre cache.');
       Meteor.call('updateGenres');
     }
