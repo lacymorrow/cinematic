@@ -12,7 +12,7 @@
 
 
 var settings = {
-  DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
+  DEFAULT_PATH: '/public/movies/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Random" /* , "Runtime", "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
@@ -61,7 +61,7 @@ MovieCache = new Mongo.Collection("movieCache");
   Meteor.subscribe("movieCache");
 
   // third-party
-  NProgress.configure({ trickleRate: 0.05, trickleSpeed: 800 });
+  NProgress.configure({ trickleRate: 0.01, trickleSpeed: 1400 });
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
   });
@@ -401,7 +401,7 @@ if (Meteor.isServer) {
   var movieInfo = Meteor.npmRequire('movie-info');
   var movieTrailer = Meteor.npmRequire('movie-trailer');
   var parseTorrentName = Meteor.npmRequire('parse-torrent-name');
-
+  
   // define observable collections
   Meteor.publish("state", function () { return State.find(); });
   Meteor.publish("recent", function () { return Recent.find(); });
@@ -425,7 +425,7 @@ if (Meteor.isServer) {
     var time = epoch();
     var state = State.findOne({_id:"0"});
     if (!state) {
-      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH});
+      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH, cwd: process.env.PWD});
     }
 
     // grab genre list
@@ -736,7 +736,7 @@ if (Meteor.isServer) {
 
       // set default path
       var time = epoch();
-      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH});
+      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH, cwd: process.env.PWD});
 
       // grab genre list
       Meteor.call('updateGenres');
