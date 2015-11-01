@@ -8,13 +8,20 @@
  * - limit, possibly paginate
  * - sorting by runtime, ratings
  * - file browser
+
+
+ do something with vote average
+ hide ratings
+ parse intel genres
+ scroll anywhere
+
  */
 
 
 var settings = {
-  DEFAULT_PATH: '/public/movies/',
+  DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
-  sort_types: ["Alphabetical", "Popularity", "Release Date", "Random" /* , "Runtime", "Ratings" */ ],
+  sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
   overview_length: 'short', // "short", "full" - from omdb
 
@@ -125,7 +132,7 @@ MovieCache = new Mongo.Collection("movieCache");
     },
     movie: function () {
       var mov = Movies.findOne({_id: Session.get('currentMovie')});
-      if(!!mov) {
+      if(mov) {
         var tmdbCount = [];
         var metaCount = [];
         var imdbCount = [];
@@ -160,9 +167,6 @@ MovieCache = new Mongo.Collection("movieCache");
 
   // define movies helpers
   Template.movies.helpers({
-    settings: function () {
-      return settings;
-    },
     movies: function () {
       var movies = Movies.find(Session.get('movieQuery'), Session.get('movieSort')).fetch();
       var index = 0;
@@ -206,16 +210,17 @@ MovieCache = new Mongo.Collection("movieCache");
       "change #sort": function (event, template) {
         var sort = $(event.currentTarget).val();
         Session.set('currentSort', sort);
+        // warning, magic numbers below, indexs reference sort types above
         if(sort == settings.sort_types[0]) { // Alphabetical
           Session.set('movieSort', { sort: { name: 1 }});
         } else if (sort == settings.sort_types[1]) { // Popularity
           Session.set('movieSort', { sort: { 'info.popularity': -1 }});
         } else if (sort == settings.sort_types[2]) { // Release Date
           Session.set('movieSort', { sort: { 'info.release_date': -1 }});
-        } else if (sort == settings.sort_types[3]) { // Random
+        } else if (sort == settings.sort_types[3]) { // Runtime
+          Session.set('movieSort', { sort: { 'intel.Runtime': 1 }});
+        } else if (sort == settings.sort_types[4]) { // Random
           Session.set('movieSort', { sort: { 'seed': 1 }});
-        } else if (sort == 'Runtime') { // inactive
-          Session.set('movieSort', { sort: { 'Intel.Runtime': -1 }});
         } else if (sort == 'Ratings') { // inactive, should use avg ratings
 
         }
@@ -238,7 +243,7 @@ MovieCache = new Mongo.Collection("movieCache");
       // hide right panel
       Session.set('currentMovie', 0);
       var genre = Genres.findOne(pid);
-      if(!!genre) {
+      if(genre) {
         // genre page - All: alphabetical
         Session.set('movieQuery', {_id: { $in: Genres.findOne(pid).items}});
       } else if(currentPage == 'New') {
@@ -359,7 +364,7 @@ MovieCache = new Mongo.Collection("movieCache");
     var _path = document.getElementById('path');
     if(_path.value != ''){
       var path = _path.value;
-      if (path.lastIndexOf('/') !== path.length - 1){
+      if (path.slice(-1) != '/'){
         path = path + '/';
       }
     } else {
@@ -426,6 +431,11 @@ if (Meteor.isServer) {
     broadcast('\n----- Cinematic -----');
 
     // set default path
+    if(settings.DEFAULT_PATH.slice(-1) != '/'){
+      settings.DEFAULT_PATH = settings.DEFAULT_PATH + '/';
+    }
+
+    // set up state
     var time = epoch();
     var state = State.findOne({_id:"0"});
     if (!state) {
@@ -453,9 +463,9 @@ if (Meteor.isServer) {
     addGenre: function (gid, mid, name) {
       var id = String(gid);
       var genre = Genres.findOne({"_id": id});
-      if(!!genre && name) {
+      if(genre && name) {
         Genres.update(id, { $set: {name: name}});
-      } else if(!!genre && mid) {
+      } else if(genre && mid) {
         var items = genre.items || [];
         items.push(mid);
         Genres.update(id, { $set: {items: items}});
@@ -487,7 +497,8 @@ if (Meteor.isServer) {
     cacheMovie: function (file) {
       var mov = Movies.findOne({'file': file});
       mov.cache_date = epoch();
-      if(!!mov){
+      // only cache if it loaded properly
+      if(mov && mov.intel.Title && mov.info.title){
         MovieCache.insert(mov);
       }
     },
@@ -529,7 +540,7 @@ if (Meteor.isServer) {
               var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
               var match = regex.exec(path.basename(file, ex));
               var name = year = null;
-              if(!!match){
+              if(match){
                 name = unescape(match[1]);
                 if(match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])){
                   year = match[3];
@@ -546,8 +557,9 @@ if (Meteor.isServer) {
               // cache handling
               var hash = dirPath+file;
               var movc = MovieCache.findOne({'_id': hash});
-              if(!!movc && settings.cache && movc.movie && time < movc.cache_date+settings.cache){
+              if(movc && settings.cache && movc.movie && time < movc.cache_date+settings.cache){
                 // cached
+                broadcast('Cinematic: Loading cached movie ' + name);
                 var mid = movc.movie._id;
                 Movies.insert(movc.movie);
                 _.each(movc.movie.info.genre_ids, function (e, i) {
@@ -562,12 +574,14 @@ if (Meteor.isServer) {
                   name: name,
                   path: dirPath,
                   year: year,
+                  ratings: [],
                   trailer: null,
                   seed: Math.random(),
                   recent_time: null,
                   watched_time: null,
                   info: {
                     adult: false,
+                    backdrop: null,
                     backdrop_path: null,
                     genre_ids: [],
                     imdb_id: null,
@@ -599,7 +613,13 @@ if (Meteor.isServer) {
                     Year: null,
                     imdbID: null,
                     imdbRating: null
-                  }
+                  },
+                  // combined info
+                  imdb_id: null,
+                  plot: null,
+                  poster: null,
+                  release_date: year,
+                  title: name,
                 });
                 // make api calls to gather info
                 Meteor.call('getIntel', mid, name, year);
@@ -649,7 +669,7 @@ if (Meteor.isServer) {
                 function (err, res) {
                   if (err) {
                     broadcast(err);
-                  } else if (!!res.data.genres){
+                  } else if (res.data.genres){
                     res.data.genres.forEach(function(genre){
                       Meteor.call('addGenre', genre.id, null, genre.name);
                     });
@@ -666,7 +686,24 @@ if (Meteor.isServer) {
           broadcast(name + ': ' + err);
           return false;
         }
-        Movies.update(mid, { $set: {intel: res}});
+        // lets parse this shit proper
+        var mov = Movies.findOne({_id: mid});
+        res.Runtime = res.Runtime.replace(/\D/g,'');
+        mov.ratings.push({name: 'TMDB Rating', score: res.Metascore});
+        mov.ratings.push({name: 'TMDB Rating', score: res.imdbRating});
+        mov.imdb_id = res.imdbID;
+        mov.plot = res.Plot
+        mov.poster = res.Poster;
+        mov.release_date = Date.parse(res.Released);
+        mov.title = res.Title;
+        if(!mov.poster){
+          mov.poster = res.Poster;
+        }
+        if(!mov.year){
+          mov.year = res.Year;
+        }
+        mov.intel = res;
+        Movies.update(mid, mov);
       }));
     },
     updateInfo: function (mid, name, year) {
@@ -679,7 +716,24 @@ if (Meteor.isServer) {
         _.each(res.genre_ids, function (e, i) {
           Meteor.call('addGenre', e, mid, null);
         });
-        Movies.update(mid, { $set: {info: res}});
+        // lets parse this shit proper
+        var mov = Movies.findOne({_id: mid});
+        res.backdrop = settings.secure_base_url + settings.backdrop_size + res.backdrop_path;
+        mov.ratings.push({name: 'TMDB Rating', score: res.vote_average});
+        mov.imdb_id = res.imdb_id;
+        mov.poster = settings.secure_base_url + settings.poster_size + res.poster_path;
+        mov.title = res.title;
+        if(!mov.plot) {
+          mov.plot = res.overview;
+        }
+        if(!mov.release_date){
+          mov.release_date = Date.parse(res.release_date);
+        }
+        if(!mov.year){
+          mov.year = res.Year;
+        }
+        mov.info = res;
+        Movies.update(mid, mov);
       }));
     },
     updateTrailer: function (mid, name, year) {
