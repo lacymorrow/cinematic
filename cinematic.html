@@ -134,44 +134,18 @@
 				{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
 				<h5>{{#if intel.Runtime}}{{intel.Runtime}}{{/if}}{{#if imdb_id}} &nbsp;|&nbsp; <a id="imdb-link" target="_blank" href="http://www.imdb.com/title/{{imdb_id}}">IMDB <span class="glyphicon glyphicon-link"></span></a>{{/if}}</h5>
 					<div id="rating">
-						{{#if intel.imdbRating}}
-							<div id="imdb-rating" class="rating {{#if equals rating 0}}active{{/if}} {{#if equals rating 1}}old{{/if}}">
-								<h5>IMDB RATING</h5>
+						{{#each ratings}}
+							<div class="rating {{#if equals index rating}}active{{/if}} {{#if equals indexPlus rating}}old{{/if}}">
+								<h5>{{name}}</h5>
 								{{>bullets}}
 								<div class="bullet-wrap">
-									{{#each imdb_rank}}
+									{{#each count}}
 										<span class="bullet"></span>
 									{{/each}}
 								</div>
-								<h4 class="rating-text">{{intel.imdbRating}} / 10</h4>
+								<h4 class="rating-text">{{score}} / 10</h4>
 							</div>
-						{{/if}}
-
-						{{#if info.vote_average}}
-							<div id="tmdb-rating" class="rating {{#if equals rating 1}}active{{/if}} {{#if equals rating 2}}old{{/if}}">
-								<h5>TMDB RATING</h5>
-								{{>bullets}}
-								<div class="bullet-wrap">
-									{{#each tmdb_rank}}
-										<span class="bullet"></span>
-									{{/each}}
-								</div>
-								<h4 class="rating-text">{{info.vote_average}} / 10</h4>
-							</div>
-						{{/if}}
-
-						{{#if intel.Metascore}}
-							<div id="meta-rating" class="rating {{#if equals rating 2}}active{{/if}} {{#if equals rating 0}}old{{/if}}">
-								<h5>METASCORE RATING</h5>
-								{{>bullets}}
-								<div class="bullet-wrap">
-									{{#each meta_rank}}
-										<span class="bullet"></span>
-									{{/each}}
-								</div>
-								<h4 class="rating-text">{{intel.Metascore}} / 100</h4>
-							</div>
-						{{/if}}
+						{{/each}}
 					</div>
 				{{#if plot}}
 					<p>{{plot}}</p>

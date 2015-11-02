@@ -1,17 +1,12 @@
 /*
  * TODO
- * - combine info & allow preferences between sources (look out for null/'N/A' values)
- * - average rating
  * - account for missing sort params
  * - Unused data: popularity, country, language, awards
  * - auto rename files
  * - limit, possibly paginate
- * - sorting by runtime, ratings
  * - file browser
 
 
- do something with vote average
- hide ratings
  parse intel genres
  scroll anywhere
 
@@ -59,6 +54,7 @@ MovieCache = new Mongo.Collection("movieCache");
 
  if (Meteor.isClient) {
   var ratingTimer;
+  var totalRatings;
   
   // observe db collections
   Meteor.subscribe("log");
@@ -131,34 +127,18 @@ MovieCache = new Mongo.Collection("movieCache");
       return settings;
     },
     movie: function () {
-      var mov = Movies.findOne({_id: Session.get('currentMovie')});
-      if(mov) {
-        var tmdbCount = [];
-        var metaCount = [];
-        var imdbCount = [];
-        if(mov.info.vote_average){
-          for(var i = 0; i < Math.round(mov.info.vote_average); i++) {
-            tmdbCount.push({});
+      var movie = Movies.findOne({_id: Session.get('currentMovie')});
+      if(movie){
+        movie.ratings.map(function(o, i) {
+          movie.ratings[i].index = i;
+          if(i == movie.ratings.length - 1) {
+            movie.ratings[i].indexPlus = 0;
+          } else {
+            movie.ratings[i].indexPlus = i + 1;
           }
-          mov.tmdb_rank = tmdbCount;
-          mov.itmdb_rank = 10 - tmdbCount.length;
-        }
-        if(mov.intel.Metascore){
-          for(var i = 0; i < Math.round(mov.intel.Metascore/10); i++) {
-            metaCount.push({});
-          }
-          mov.meta_rank = metaCount;
-          mov.imeta_rank = 10 - metaCount.length;
-        }
-        if(mov.intel.imdbRating){
-          for(var i = 0; i < Math.round(mov.intel.imdbRating); i++) {
-            imdbCount.push({});
-          }
-          mov.imdb_rank = imdbCount;
-          mov.iimdb_rank = 10 - imdbCount.length;
-        }
+        });
       }
-      return mov;
+      return movie;
     },
     currentTrailer: function () {
       return Session.get('currentTrailer');
@@ -201,6 +181,8 @@ MovieCache = new Mongo.Collection("movieCache");
 
   Template.body.events({
     "click #refresh": function (event) {
+      broadcast('Cinematic: Resetting client...');
+      resetClient();
       Meteor.call('reset');
     }
   });
@@ -302,6 +284,8 @@ MovieCache = new Mongo.Collection("movieCache");
       // switch current movie in details panel
       var id = event.currentTarget.dataset.id;
       var trailers = Movies.findOne({'_id': id}, {fields: {trailer: 1}});
+      var ratings = Movies.findOne({'_id': id}, {fields: {ratings: 1}}).ratings;
+      totalRatings = ratings.length;
       // set initial trailer
       var trailer = trailers && trailers.trailer && trailers.trailer[0] && trailers.trailer[0].key;
       Session.set('currentTrailer', trailer);
@@ -380,7 +364,7 @@ MovieCache = new Mongo.Collection("movieCache");
   }
 
   var rotateRating = function () {
-    var totalRatings = 3; // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
+    // broadcast(totalRatings); // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
     var x =  Session.get('activeRating');
     Session.set('activeRating',(x + 1 == totalRatings ? 0: x + 1));
   }
@@ -515,7 +499,7 @@ if (Meteor.isServer) {
         api_total += 1;
         Meteor.call('queueIt', job, mid, name, year, function(err, res) {
           if(err)
-            broadcast(err);
+            broadcast('Cinematic/getIntel: ' + err);
         });
       });
     },
@@ -668,7 +652,7 @@ if (Meteor.isServer) {
       HTTP.call("GET", settings.genre_url+'?api_key='+settings.key,
                 function (err, res) {
                   if (err) {
-                    broadcast(err);
+                    broadcast('Cinematic/updateGenres: ' + err);
                   } else if (res.data.genres){
                     res.data.genres.forEach(function(genre){
                       Meteor.call('addGenre', genre.id, null, genre.name);
@@ -686,11 +670,24 @@ if (Meteor.isServer) {
           broadcast(name + ': ' + err);
           return false;
         }
+        // strip runtime characters
+        res.Runtime = res.Runtime.replace(/\D/g,'');
+        // toss any "N/A" response
+        for (var key in res) {
+          if(res[key] == "N/A"){
+            res[key] = null;
+          }
+        }
         // lets parse this shit proper
         var mov = Movies.findOne({_id: mid});
-        res.Runtime = res.Runtime.replace(/\D/g,'');
-        mov.ratings.push({name: 'TMDB Rating', score: res.Metascore});
-        mov.ratings.push({name: 'TMDB Rating', score: res.imdbRating});
+        if(res.imdbRating){
+          mov.ratings.push({name: 'IMDB RATING', score: parseFloat(res.imdbRating), 
+            count: Array.apply(null, Array(Math.round(res.imdbRating))).map(function(){return {};})});
+        }
+        if(res.Metascore){
+          mov.ratings.push({name: 'METASCORE RATING', score: res.Metascore/10,
+            count: Array.apply(null, Array(Math.round(res.Metascore/10))).map(function(){return {};})});
+        }
         mov.imdb_id = res.imdbID;
         mov.plot = res.Plot
         mov.poster = res.Poster;
@@ -719,7 +716,10 @@ if (Meteor.isServer) {
         // lets parse this shit proper
         var mov = Movies.findOne({_id: mid});
         res.backdrop = settings.secure_base_url + settings.backdrop_size + res.backdrop_path;
-        mov.ratings.push({name: 'TMDB Rating', score: res.vote_average});
+        if(res.vote_average) {
+          mov.ratings.push({name: 'TMDB RATING', score: parseFloat(res.vote_average),
+            count: Array.apply(null, Array(Math.round(res.vote_average))).map(function(){return {};})});
+        }
         mov.imdb_id = res.imdb_id;
         mov.poster = settings.secure_base_url + settings.poster_size + res.poster_path;
         mov.title = res.title;
@@ -758,7 +758,7 @@ if (Meteor.isServer) {
         Meteor.setTimeout(function() {
           Meteor.call('queueIt', job, mid, name, year, function (err, res) {
             if(err){
-              broadcast(err);
+              broadcast('Cinematic/queueIt: ' + err);
             }
           });
         }, settings.retry_delay);
@@ -766,7 +766,7 @@ if (Meteor.isServer) {
         api_current += 1;
         Meteor.call(job, mid, name, year, function (err, res) {
           if(err){
-            broadcast(err);
+            broadcast('Cinematic/queueIt: ' + err);
           } 
         });
       }
@@ -785,6 +785,7 @@ if (Meteor.isServer) {
       }
     },
     reset: function () {
+      broadcast('Cinematic: Resetting server...');
       State.remove({});
       Recent.remove({});
       Watched.remove({});
