@@ -154,7 +154,7 @@
 				</h1>
 				<a id="open-link" class="btn btn-primary" data-src="{{path}}{{file}}" data-id="{{_id}}" role="button">Watch</a>
 				{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
-				<h5>{{#if intel.Runtime}}{{intel.Runtime}}{{/if}}{{#if imdb_id}} &nbsp;|&nbsp; <a id="imdb-link" target="_blank" href="http://www.imdb.com/title/{{imdb_id}}">IMDB <span class="glyphicon glyphicon-link"></span></a>{{/if}}</h5>
+				<h5>{{#if intel.Runtime}}{{intel.Runtime}} min{{/if}}{{#if imdb_id}} &nbsp;|&nbsp; <a id="imdb-link" target="_blank" href="http://www.imdb.com/title/{{imdb_id}}">IMDB <span class="glyphicon glyphicon-link"></span></a>{{/if}}</h5>
 					<div id="rating">
 						{{#each ratings}}
 							<div class="rating {{#if equals index rating}}active{{/if}} {{#if equals indexPlus rating}}old{{/if}}">
