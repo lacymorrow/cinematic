@@ -1,13 +1,13 @@
 Cinematic
 ===========
 
-Do you store your movies on a hard drive? This is your tool.
+Do you store your movies on a hard drive? Cinematic was built for you.
 
 ![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
-Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze. 
+Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.
 
-Point it to the movie folder on your hard drive and it will automatically find movie posters, ratings, trailers and more. Organize your movies by genre and sort by popularity, release date, or randomize things. It prefers tiles like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
+Point it to the movie folder on your hard drive and it will automatically find movie posters, ratings, trailers and more. Organize your movies by genre and sort by popularity, release date, or randomize things. It prefers filenames like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
 
 ### What it finds
 
@@ -17,7 +17,7 @@ Point it to the movie folder on your hard drive and it will automatically find m
 * Multiple Trailers
 * Poster + Backdrop
 * Genres
-* Ratings from IMDB, TMDB, and Metacritic, as well as current popularity
+* Ratings from IMDB, TMDB, and Metacritic, and current popularity
 * MPAA Rating
 * Actors, Director, Writer
 * Awards
@@ -25,15 +25,15 @@ Point it to the movie folder on your hard drive and it will automatically find m
 
 ### Features
 
-* Read plotlines and summarys before watching
-* Keeps track of recently viewed and recently watched
-* Built-in network throttling for requests to avoid timeouts.
 * Filter movies by genre
+* Sort movies by name, popularity, release date, runtime, or randomly
+* Read plotlines and summarys before watching
 * Watch multiple trailers
 * Jump straight to the IMDB page
+* Keep track of recently viewed and recently watched
 * Cycle through ratings from IMDB, TMDB, and Metacritic
-* Order movies randomly, roll the dice
 * Built-in caching of genres and movies
+* Built-in network throttling of requests to avoid timeouts
 
 This app was created as an exploratory dive into the world of [Meteor](http://meteor.com). Currently Meteor version 1.2.1.
 
