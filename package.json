@@ -1,0 +1,23 @@
+{
+  "name": "Cinematic",
+  "version": "1.0.1",
+  "author": "Lacy Morrow <me@lacymorrow.com>",
+  "contributors": [{
+    "name": "Lacy Morrow",
+    "email": "me@lacymorrow.com"
+  }],
+  "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
+  "homepage": "https://github.com/lacymorrow/cinematic",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lacymorrow/cinematic"
+  },
+  "bugs": {
+    "url": "https://github.com/lacymorrow/cinematic/issues"
+  },
+  "licenses": [
+    {
+      "type": "GPL"
+    }
+  ]
+}
