@@ -43,7 +43,10 @@ Uses TMDB and OMDB to look up movie information and display in an organized fash
 
 Currently Cinematic is only packaged for OSX 64-bit machines but Windows and Linux versions are almost complete.
 
-#### Mac OSX users can install by cloning the repo or downloading the zip, then copying `Cinematic.app` to your applications folder.
+#### Mac OSX users can install by cloning the repo or downloading the zip, then copying the file `.electrify/.dist/Cinematic-darwin-x64/Cinematic.app` to your applications folder.
+
+
+Native Windows and Linux Support coming soon!
 
 
 # Running Cinematic
