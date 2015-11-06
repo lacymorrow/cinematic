@@ -498,7 +498,7 @@ if (Meteor.isServer) {
             }
             return settings.DEFAULT_PATH;
           }
-          if((file.toLowerCase().indexOf('movies') > -1 || file.toLowerCase().indexOf('videos') > -1) && stats.isDirectory()) {
+          if((file.toLowerCase().indexOf('movies') != -1 || file.toLowerCase().indexOf('videos') != -1) && stats.isDirectory()) {
             dir = home+file+'/';
           }
         }));
