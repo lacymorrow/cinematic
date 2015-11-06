@@ -1,7 +1,7 @@
 Cinematic
 ===========
 
-Do you store your movies on a hard drive? Cinematic was built for you.
+Do you store your movies on a hard drive? Cinematic is a desktop application built for you.
 
 ![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
@@ -41,12 +41,16 @@ Uses TMDB and OMDB to look up movie information and display in an organized fash
 
 # Installation
 
-Download or clone the repo `lacymorrow/cinematic`. 
+Currently Cinematic is only packaged for OSX 64-bit machines but Windows and Linux versions are almost complete.
 
-You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www.meteor.com/install) installed.
+#### Mac OSX users can install by cloning the repo or downloading the zip, then copying `Cinematic.app` to your applications folder.
 
 
 # Running Cinematic
+
+Anyone else can run Cinematic by downloading or cloning the repo `lacymorrow/cinematic`. 
+
+You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www.meteor.com/install) installed.
 
 From the `cinematic` directory run `meteor` to quickstart the application on [http://localhost:3000](http://localhost:3000).
 
