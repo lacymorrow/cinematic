@@ -490,18 +490,10 @@ if (Meteor.isServer) {
       var dir = home;
       var files = fs.readdirSync(home);
       files.forEach(function(file, i){
-        fs.lstat(home+file, Meteor.bindEnvironment(function(err, stats) {
-          if(err){
-            broadcast('Cinematic/findMovieDir: ' + err);
-            if(settings.DEFAULT_PATH.slice(-1) != '/'){
-              settings.DEFAULT_PATH = settings.DEFAULT_PATH + '/';
-            }
-            return settings.DEFAULT_PATH;
-          }
-          if((file.toLowerCase().indexOf('movies') != -1 || file.toLowerCase().indexOf('videos') != -1) && stats.isDirectory()) {
-            dir = home+file+'/';
-          }
-        }));
+        var stats = fs.lstatSync(home+file);
+        if(stats.isDirectory() && (file.toLowerCase().indexOf('movies') != -1 || file.toLowerCase().indexOf('videos') != -1) ) {
+          dir = home+file+'/';
+        }
       });
       broadcast('Cinematic: Using ' + dir + ' as movie directory');
       return dir;
