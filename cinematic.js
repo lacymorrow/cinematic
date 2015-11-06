@@ -14,7 +14,7 @@
 
 
 var settings = {
-  DEFAULT_PATH: '/Users/lacymorrow/Downloads/',
+  DEFAULT_PATH: '/Users/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
@@ -814,7 +814,7 @@ if (Meteor.isServer) {
       MovieCache.remove({});
 
       // set default path
-      var dir = Meteor.call('findMovieDir'  );
+      var dir = Meteor.call('findMovieDir');
 
       var time = epoch();
       var sid = State.insert({_id: '0', path: dir, cwd: process.env.PWD});
