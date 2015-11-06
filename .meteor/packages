@@ -12,7 +12,6 @@ peerlibrary:fs
 jss:path
 less
 nemo64:bootstrap
-bdunnette:snapjs
 http
 standard-minifiers
 meteor-base
