@@ -3,6 +3,8 @@ Cinematic
 
 Do you store your movies on a hard drive? Cinematic is a desktop application built for you.
 
+##### [Download for OSX](https://github.com/lacymorrow/cinematic/releases)
+
 ![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
 Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.
@@ -43,20 +45,29 @@ Uses TMDB and OMDB to look up movie information and display in an organized fash
 
 Currently Cinematic is only packaged for OSX 64-bit machines but Windows and Linux versions are almost complete.
 
-#### Mac OSX users can install by cloning the repo or downloading the zip, then copying the file `.electrify/.dist/Cinematic-darwin-x64/Cinematic.app` to your applications folder.
-
+##### [Visit the Releases page to download Cinematic for OSX](https://github.com/lacymorrow/cinematic/releases)
 
 Native Windows and Linux Support coming soon!
 
 
-# Running Cinematic
+### Running & Developing Cinematic
 
-Anyone else can run Cinematic by downloading or cloning the repo `lacymorrow/cinematic`. 
+Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacymorrow/cinematic`. 
 
 You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www.meteor.com/install) installed.
 
 From the `cinematic` directory run `meteor` to quickstart the application on [http://localhost:3000](http://localhost:3000).
 
+### Packaging
+
+To package Cinematic for your machine architecture:
+
+```
+npm install -g electrify
+electrify package
+```
+
+See [arboleya/electrify](https://github.com/arboleya/electrify) for more information.
 
 
 # Design
