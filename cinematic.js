@@ -403,10 +403,8 @@ if (Meteor.isServer) {
   Meteor.publish("movieCache", function () { return MovieCache.find(); });
 
   // server globals
-
   // startup functions
   Meteor.startup(function () {
-    Future = Npm.require('fibers/future');
     // setup db - optionally clear movies, log, and path
     Log.remove({});
     Movies.remove({});
@@ -415,15 +413,13 @@ if (Meteor.isServer) {
     broadcast('\n----- Cinematic -----');
 
     // set default path
-    if(settings.DEFAULT_PATH.slice(-1) != '/'){
-      settings.DEFAULT_PATH = settings.DEFAULT_PATH + '/';
-    }
+    var dir = Meteor.call('findMovieDir');
 
     // set up state
     var time = epoch();
     var state = State.findOne({_id:"0"});
     if (!state) {
-      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH, cwd: process.env.PWD});
+      var sid = State.insert({_id: '0', path: dir, cwd: process.env.PWD});
     }
 
     // grab genre list
@@ -435,7 +431,7 @@ if (Meteor.isServer) {
     }
 
     // initial update
-    Meteor.call('updatePath', settings.DEFAULT_PATH);
+    Meteor.call('updatePath', dir);
   }); // end startup
 
   // number of concurrent api connections; currently doesn't distinguish between different api source limits
@@ -485,6 +481,30 @@ if (Meteor.isServer) {
       if(mov && mov.intel.Title && mov.info.title){
         MovieCache.insert(mov);
       }
+    },
+    findMovieDir: function(){
+      var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+      if(home.slice(-1) != '/'){
+        home = home + '/';
+      }
+      var dir = home;
+      var files = fs.readdirSync(home);
+      files.forEach(function(file, i){
+        fs.lstat(home+file, Meteor.bindEnvironment(function(err, stats) {
+          if(err){
+            broadcast('Cinematic/findMovieDir: ' + err);
+            if(settings.DEFAULT_PATH.slice(-1) != '/'){
+              settings.DEFAULT_PATH = settings.DEFAULT_PATH + '/';
+            }
+            return settings.DEFAULT_PATH;
+          }
+          if((file.toLowerCase().indexOf('movies') > -1 || file.toLowerCase().indexOf('videos') > -1) && stats.isDirectory()) {
+            dir = home+file+'/';
+          }
+        }));
+      });
+      broadcast('Cinematic: Using ' + dir + ' as movie directory');
+      return dir;
     },
     getIntel: function(mid, name, year) {
 
@@ -794,14 +814,16 @@ if (Meteor.isServer) {
       MovieCache.remove({});
 
       // set default path
+      var dir = Meteor.call('findMovieDir'  );
+
       var time = epoch();
-      var sid = State.insert({_id: '0', path: settings.DEFAULT_PATH, cwd: process.env.PWD});
+      var sid = State.insert({_id: '0', path: dir, cwd: process.env.PWD});
 
       // grab genre list
       Meteor.call('updateGenres');
 
       // initial update
-      Meteor.call('updatePath', settings.DEFAULT_PATH);
+      Meteor.call('updatePath', dir);
     }
   });
 

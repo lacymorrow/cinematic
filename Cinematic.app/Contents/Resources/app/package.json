@@ -1,7 +1,0 @@
-{
-  "name": "Cinematic",
-  "main": "index.js",
-  "dependencies": {
-    "electrify": "2.0.0"
-  }
-}
