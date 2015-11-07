@@ -72,3 +72,9 @@ See [arboleya/electrify](https://github.com/arboleya/electrify) for more informa
 
 # Design
 User interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/).
+
+Thanks to:
+
+* [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
+* [bbraithwaite/omdb-client](https://github.com/bbraithwaite/omdb-client)
+* [pwnall/node-open](https://github.com/pwnall/node-open)
