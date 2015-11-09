@@ -374,7 +374,7 @@ MovieCache = new Mongo.Collection("movieCache");
     resetSort();
     Session.set('activeRating', 0);
     Session.set('currentMovie', 0);
-    Session.set('currentPage', 'All');
+    Session.set('currentPage', 'Movies');
     Session.set('movieQuery', {});
   }
   resetClient();

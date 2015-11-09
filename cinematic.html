@@ -19,12 +19,12 @@
 	<link rel="manifest" href="/favicons/manifest.json">
 	<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#01a6f6">
 	<link rel="shortcut icon" href="/favicons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#2b5797">
 	<meta name="apple-mobile-web-app-title" content="Cinematic">
 	<meta name="application-name" content="Cinematic">
-	<meta name="msapplication-TileColor" content="#da532c">
 	<meta name="msapplication-TileImage" content="/favicons/mstile-144x144.png">
 	<meta name="msapplication-config" content="/favicons/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
+	<meta name="theme-color" content="#01a6f6">
 	<!--[if gte IE 9]
 	<style type="text/css">
 	.gradient {
@@ -102,7 +102,7 @@
 	<div id="links-wrapper" class="hidden-xs hidden-sm col-md-2">
 		<ul id="links-panel">
 			<li><h5 class="label">Browse  <span class="badge">{{movieCount}}</span></h5></li>
-			<li class="link{{#if equals page 'All'}} active{{/if}}" data-id="All"><h5>All</h5></li>
+			<li class="link{{#if equals page 'Movies'}} active{{/if}}" data-id="Movies"><h5>Movies</h5></li>
 			<!-- <li class="link{{#if equals page 'New'}} active{{/if}}" data-id="New"><h5>New*</h5></li> -->
 			{{#if gt recentCount 0}}
 				<li class="link{{#if equals page 'Recent'}} active{{/if}}" data-id="Recent"><h5>Recent</h5></li>
