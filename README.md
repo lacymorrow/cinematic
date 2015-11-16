@@ -1,13 +1,14 @@
 Cinematic
 ===========
 
+Have a digital movie collection?
 
+Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection. 
 
 ##### [Download for OSX](https://github.com/lacymorrow/cinematic/releases)
 
 ![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
-Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection. 
 
 Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found. Organize your movies by genre and sort by popularity, release date, runtime, or randomize things. It prefers filenames like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
 
