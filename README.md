@@ -79,6 +79,7 @@ Thanks to:
 * [bbraithwaite/omdb-client](https://github.com/bbraithwaite/omdb-client)
 * [pwnall/node-open](https://github.com/pwnall/node-open)
 
+
 ### Need help?
 
 Please post any questions or issues you come across to our [issues page](https://github.com/lacymorrow/cinematic/issues).
