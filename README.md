@@ -1,15 +1,15 @@
 Cinematic
 ===========
 
-Do you store your movies on a hard drive? Cinematic is a desktop application built for you.
+
 
 ##### [Download for OSX](https://github.com/lacymorrow/cinematic/releases)
 
 ![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
-Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.
+Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection. 
 
-Point it to the movie folder on your hard drive and it will automatically find movie posters, ratings, trailers and more. Organize your movies by genre and sort by popularity, release date, or randomize things. It prefers filenames like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
+Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found. Organize your movies by genre and sort by popularity, release date, runtime, or randomize things. It prefers filenames like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
 
 ### What it finds
 
@@ -51,6 +51,8 @@ Native Windows and Linux Support coming soon!
 
 
 ### Running & Developing Cinematic
+
+_(from source)_
 
 Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacymorrow/cinematic`. 
 
