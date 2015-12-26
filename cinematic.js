@@ -6,6 +6,8 @@
  * - limit, possibly paginate
  * - file browser
  * - TV Shows
+ * - Filter by Director
+ * - Ambiguous search
 
 
  parse intel genres
