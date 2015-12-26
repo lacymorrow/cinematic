@@ -5,6 +5,7 @@
  * - auto rename files
  * - limit, possibly paginate
  * - file browser
+ * - TV Shows
 
 
  parse intel genres
