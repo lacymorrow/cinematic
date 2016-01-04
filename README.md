@@ -70,6 +70,8 @@ npm install -g electrify
 electrify package
 ```
 
+_And to include app icon:_ `electrify package -- --icon=public/favicons/icon.png`
+
 See [arboleya/electrify](https://github.com/arboleya/electrify) for more information.
 
 

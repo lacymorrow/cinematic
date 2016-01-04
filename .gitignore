@@ -19,8 +19,7 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 dist
-# Lets keep historical binaries. These can get big though.
-# .electrify/.dist
+.electrify/.dist
 
 # Dependency directory
 # Deployed apps should consider commenting this line out:
