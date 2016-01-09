@@ -18,7 +18,7 @@
 
 var settings = {
   DEFAULT_PATH: '/Users/',
-  valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv'],
+  valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
   overview_length: 'short', // "short", "full" - from omdb
