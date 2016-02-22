@@ -1,0 +1,1 @@
+{"version":3,"sources":["meteor://💻app/packages/ecmascript-runtime/runtime.js"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA;AACA;AACA;AACA;AACA;AACA,yE","file":"/packages/ecmascript-runtime.js","sourcesContent":["var runtime = Npm.require(\"meteor-ecmascript-runtime\");\n\nSymbol = runtime.Symbol;\nMap = runtime.Map;\nSet = runtime.Set;\n"]}
