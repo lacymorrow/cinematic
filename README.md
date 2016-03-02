@@ -44,7 +44,7 @@ Uses TMDB and OMDB to look up movie information and display in an organized fash
 
 # Installation
 
-Currently Cinematic is only packaged for OSX 64-bit and Linux machines but a Windows version is almost complete.
+Currently Cinematic is only packaged for OSX and Linux machines but a Windows version is almost complete.
 
 ##### [Visit the Releases page to download Cinematic for OSX & Linux](https://github.com/lacymorrow/cinematic/releases)
 
