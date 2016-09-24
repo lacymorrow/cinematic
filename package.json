@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/lacymorrow/cinematic"
   },
+  "scripts": {
+    "start": "meteor"
+  },
   "bugs": {
     "url": "https://github.com/lacymorrow/cinematic/issues"
   },
