@@ -17,6 +17,7 @@
 
 
 var settings = {
+  DEMO: false,
   DEFAULT_PATH: '/Users/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
@@ -490,6 +491,7 @@ if (Meteor.isServer) {
       if(home.slice(-1) != '/'){
         home = home + '/';
       }
+      console.log(home);
       var dir = home;
       var files = fs.readdirSync(home);
       files.forEach(function(file, i){
