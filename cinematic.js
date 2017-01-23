@@ -514,7 +514,7 @@ if (Meteor.isServer) {
       files.forEach(function(file, i){
         //sync with internal db
         console.log(home+file); 
-        var stats = fs.lstatSync();
+        var stats = fs.lstatSync(home+file);
         if(stats.isDirectory() && (file.toLowerCase().indexOf('movies') != -1 || file.toLowerCase().indexOf('videos') != -1) ) {
           dir = (settings.DEMO) ? settings.DEMO : home+'/'+file+'/'; //DEMO
         }
