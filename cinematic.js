@@ -17,6 +17,7 @@
 
 
 var settings = {
+  DEMO: 'public/movies',
   DEFAULT_PATH: '/Users/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
@@ -329,6 +330,10 @@ MovieCache = new Mongo.Collection("movieCache");
 
   // define path events
   Template.path.events = {
+
+    "click #path": function (event){
+      chooseFile('#fileDialog');
+    },
     "keyup #path": function (event){
       if(event.which == 13){
         // on <enter> set path
@@ -341,8 +346,15 @@ MovieCache = new Mongo.Collection("movieCache");
   }
 
   // client-side methods
+  var chooseFile = function(name) {
+    var chooser = document.querySelector(name);
+    chooser.addEventListener("change", function(evt) {
+      console.log(this.value);
+    }, false);
 
-  var setLoaded = function (percentage) {
+    chooser.click();
+  }
+  var setLoaded = function(percentage) {
     NProgress.start();
     NProgress.set(percentage);
   }
@@ -485,17 +497,26 @@ if (Meteor.isServer) {
         MovieCache.insert(mov);
       }
     },
+
+    // Uses best practice to support old browsers vvv
     findMovieDir: function(){
       var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
       if(home.slice(-1) != '/'){
         home = home + '/';
       }
-      var dir = home;
-      var files = fs.readdirSync(home);
+
+      // dir is the directoy containimg movie files; use DEMO if you'd  trefer to test with dummy data
+      var dir = (settings.DEMO) ?  settings.DEMO + home : home;
+      
+
+      // read home directory
+      var files = fs.readdirSync(dir);
       files.forEach(function(file, i){
-        var stats = fs.lstatSync(home+file);
+        //sync with internal db
+        console.log(home+file); 
+        var stats = fs.lstatSync();
         if(stats.isDirectory() && (file.toLowerCase().indexOf('movies') != -1 || file.toLowerCase().indexOf('videos') != -1) ) {
-          dir = home+file+'/';
+          dir = (settings.DEMO) ? settings.DEMO : home+'/'+file+'/'; //DEMO
         }
       });
       broadcast('Cinematic: Using ' + dir + ' as movie directory');

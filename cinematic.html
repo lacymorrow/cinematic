@@ -92,9 +92,10 @@
 	<div id="path-wrapper" class="hidden-xs hidden-sm">
 		<div id="search">
 			<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
-			<input type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
+			<input contenteditable="false" type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
 		</div>
 		<span id="search-refresh" class="glyphicon glyphicon-refresh"></span>
+		<input id="fileDialog" type="file" />
 	</div>
 </template>
 
