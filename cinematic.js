@@ -17,7 +17,7 @@
 
 
 var settings = {
-  DEMO: 'public/movies',
+  DEMO: false,
   DEFAULT_PATH: '/Users/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
@@ -506,7 +506,7 @@ if (Meteor.isServer) {
       }
 
       // dir is the directoy containimg movie files; use DEMO if you'd  trefer to test with dummy data
-      var dir = (settings.DEMO) ?  settings.DEMO + home : home;
+      var dir = (settings.DEMO) ?  settings.DEMO : home;
       
 
       // read home directory
