@@ -357,11 +357,12 @@ MovieCache = new Mongo.Collection("movieCache");
   var choosePath = function(name) {
     var chooser = document.querySelector(name);
     chooser.addEventListener("change", function(evt) {
-      console.log(this.value, evt);
       var files = $('#fileDialog')[0].files;
       files.length <= 0 ? 'No Movies Found' : Objects.values(file[0])
-      // for (var i = 0; i < files.length; ++i)
-      //   broadcast(files[i].path); 
+      console.log(this.value, evt);
+      require('path').dirname(Objects.values(file[0]));
+      console.debug('aadf');
+      alert('asd');
     }, false);
 
     chooser.click();
