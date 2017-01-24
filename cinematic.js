@@ -18,7 +18,7 @@
 
 var settings = {
   DEMO: false,
-  DEFAULT_PATH: '/Users/',
+  DEFAULT_PATH: '/Users/Movies',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
@@ -331,8 +331,9 @@ MovieCache = new Mongo.Collection("movieCache");
   // define path events
   Template.path.events = {
 
-    "click #path": function (event){
-      chooseFile('#fileDialog');
+    "change #path click #path": function (event){
+      // Choosse files to load
+      choosePath('#fileDialog');
     },
     "keyup #path": function (event){
       if(event.which == 13){
@@ -346,10 +347,13 @@ MovieCache = new Mongo.Collection("movieCache");
   }
 
   // client-side methods
-  var chooseFile = function(name) {
+  var choosePath = function(name) {
     var chooser = document.querySelector(name);
     chooser.addEventListener("change", function(evt) {
-      console.log(this.value);
+      // console.log(this.value);
+      var files = $('#fileDialog')[0].files;
+      for (var i = 0; i < files.length; ++i)
+        broadcast(files[i].path); 
     }, false);
 
     chooser.click();
@@ -513,7 +517,7 @@ if (Meteor.isServer) {
       var files = fs.readdirSync(dir);
       files.forEach(function(file, i){
         //sync with internal db
-        console.log(home+file); 
+        // console.log(home+file); 
         var stats = fs.lstatSync(home+file);
         if(stats.isDirectory() && (file.toLowerCase().indexOf('movies') != -1 || file.toLowerCase().indexOf('videos') != -1) ) {
           dir = (settings.DEMO) ? settings.DEMO : home+'/'+file+'/'; //DEMO

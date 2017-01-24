@@ -93,10 +93,13 @@
 		<div id="search">
 			<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
 			<input type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
-			<input contenteditable="false" type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
+			<input contenteditable="false" type="contenteditable" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
+			<input id="fileDialog" type="file" multiple webkitdirectory />
 		</div>
-		<span id="search-refresh" class="glyphicon glyphicon-refresh"></span>
-		<input id="fileDialog" type="file" />
+		<span id="search-refresh" class="glyphicon glyphicon-refresh">
+			<a  id="refresh" href="#" data-toggle="tooltip" data-placement="left" title="Reset Cinematic"><span class="glyphicon glyphicon-refresh"></span></a>
+		</span>
+
 	</div>
 </template>
 
