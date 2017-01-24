@@ -94,11 +94,11 @@ MovieCache = new Mongo.Collection("movieCache");
     }
   });
 
-  Template.noPage404.helpers({
-    page: function () {
-      return Session.get('noPage404');
-    }
-  });
+  // Template.noPage404.helpers({
+  //   page: function () {
+  //     return Session.get('noPage404');
+  //   }
+  // });
 
   Template.navigation.helpers({
     page: function () {
@@ -403,8 +403,8 @@ MovieCache = new Mongo.Collection("movieCache");
     Session.set('movieQuery', {});
     Session.set('activeRating', 0);
     Session.set('currentMovie', 0);
-    Session.set('noPage404', false);
     Session.set('currentPage', 'Movies');
+    // Session.set('noPage404', false);
   }
   resetClient();
 } // end Meteor.isClient
