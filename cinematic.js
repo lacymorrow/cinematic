@@ -18,7 +18,7 @@
 
 var settings = {
   DEMO: false,
-  DEFAULT_PATH: '/Users/lacymorrow/',
+  DEFAULT_PATH: './demo/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
@@ -93,6 +93,13 @@ MovieCache = new Mongo.Collection("movieCache");
       return Session.get('currentPage');
     }
   });
+
+  Template.noPage404.helpers({
+    page: function () {
+      return Session.get('noPage404');
+    }
+  });
+
   Template.navigation.helpers({
     page: function () {
       return Session.get('currentPage');
@@ -350,10 +357,11 @@ MovieCache = new Mongo.Collection("movieCache");
   var choosePath = function(name) {
     var chooser = document.querySelector(name);
     chooser.addEventListener("change", function(evt) {
-      // console.log(this.value);
+      console.log(this.value, evt);
       var files = $('#fileDialog')[0].files;
-      for (var i = 0; i < files.length; ++i)
-        broa(files[i].path); 
+      files.length <= 0 ? 'No Movies Found' : Objects.values(file[0])
+      // for (var i = 0; i < files.length; ++i)
+      //   broadcast(files[i].path); 
     }, false);
 
     chooser.click();
@@ -391,10 +399,11 @@ MovieCache = new Mongo.Collection("movieCache");
   // defaults
   var resetClient = function () {
     resetSort();
+    Session.set('movieQuery', {});
     Session.set('activeRating', 0);
     Session.set('currentMovie', 0);
+    Session.set('noPage404', false);
     Session.set('currentPage', 'Movies');
-    Session.set('movieQuery', {});
   }
   resetClient();
 } // end Meteor.isClient
@@ -725,7 +734,7 @@ if (Meteor.isServer) {
             count: Array.apply(null, Array(Math.round(res.imdbRating))).map(function(){return {};})});
         }
         if(res.Metascore){
-          mov.ratings.push({name: 'METASCORE RATING', score: res.Metascore/10,
+          mov.ratings.node({name: 'METASCORE RATING', score: res.Metascore/10,
             count: Array.apply(null, Array(Math.round(res.Metascore/10))).map(function(){return {};})});
         }
         mov.imdb_id = res.imdbID;

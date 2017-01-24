@@ -17,6 +17,17 @@ h1 {
 	color: #222;
 }
 
+input {
+	padding: 3px 0 3px 30px;
+	width: 400px;
+	border: 1px solid #e1e1e1;
+	border-radius: 25px;
+	outline: none;
+	&:focus {
+		box-shadow: 0px 0px 3px 1px #01a6f6;
+	}
+}
+
 .full-height {
 	height: 100%;
 }
@@ -61,16 +72,17 @@ header {
 		font-size: 14px;	
 		color: @gray-light;
 		float: left;
-		margin: 22px 0 0 30px;
+		margin: 14px 0 0 42px;
+		padding: 2px 0px 4px 36px;
 		#search {
 			position: relative;
 			display: inline-block;
 		}
 		#search-icon {
-			position: absolute;
-			left: 10px;
-			top: 7px;
-			padding: 2px 6px;
+		    position: absolute;
+		    left: 8px;
+		    top: 24px;
+		    padding: 2px 6px;
 		}
 		#search-refresh {
 			margin-left: -2em;

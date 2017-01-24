@@ -60,7 +60,6 @@
 				</div>
 			</div>
 		</div>
-		<a  id="refresh" href="#" data-toggle="tooltip" data-placement="left" title="Reset Cinematic"><span class="glyphicon glyphicon-refresh"></span></a>
 	</div>
 </body>
 
@@ -91,15 +90,44 @@
 <template name="path">
 	<div id="path-wrapper" class="hidden-xs hidden-sm">
 		<div id="search">
-			<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
-			<input type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
-			<input contenteditable="false" type="contenteditable" id="path" placeholder="Movie directory" value="{{path}}" size="60" />
-			<input id="fileDialog" type="file" multiple webkitdirectory />
+			{{> pathForm}}
+			<aside>
+				<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				<input id="fileDialog" type="file" multiple webkitdirectory />
+				<span id="search-refresh" class="glyphicon glyphicon-refresh">
+					<a  id="refresh" href="#" data-toggle="tooltip" data-placement="left" title="Reset Cinematic"><span class="glyphicon glyphicon-refresh"></span></a>
+				</span>
+			</aside>
 		</div>
-		<span id="search-refresh" class="glyphicon glyphicon-refresh">
-			<a  id="refresh" href="#" data-toggle="tooltip" data-placement="left" title="Reset Cinematic"><span class="glyphicon glyphicon-refresh"></span></a>
-		</span>
+	</div>
+</template>
 
+<template name="pathForm">
+	<div id="pathForm" class="hidden-xs hidden-sm col-md-2">
+		<aside>
+			<span>Movie Directory: </span>{{path}} 
+		</aside>
+		<ul id="links-panel">
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+		</ul>
+	</div>
+</template>
+
+<template name="noPage404">
+	<div id="links-wrapper" class="hidden-xs hidden-sm col-md-2">
+		<ul id="links-panel">
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+			<li>hey </li>
+		</ul>
 	</div>
 </template>
 
@@ -235,5 +263,13 @@
 		<span class="bullet empty"></span>
 		<span class="bullet empty"></span>
 		<span class="bullet empty"></span>
+	</div>
+</template>
+
+
+<template name="noPage404">
+	<div class="bullet-empty-wrap">
+		<h2>Whoops, wrong page on our end.<br />
+		<small>Reset the app in the bottoom left corner or contact support.</small></h2>
 	</div>
 </template>
