@@ -18,7 +18,7 @@
 
 var settings = {
   DEMO: false,
-  DEFAULT_PATH: '/Users/Movies',
+  DEFAULT_PATH: '/Users/lacymorrow/',
   valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
   sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
   cache: 3600, // seconds; 604800 = 7 days
@@ -353,7 +353,7 @@ MovieCache = new Mongo.Collection("movieCache");
       // console.log(this.value);
       var files = $('#fileDialog')[0].files;
       for (var i = 0; i < files.length; ++i)
-        broadcast(files[i].path); 
+        broa(files[i].path); 
     }, false);
 
     chooser.click();
