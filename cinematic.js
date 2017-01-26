@@ -92,11 +92,12 @@ if (Meteor.isClient) {
     );
 
 
-  // Template.noPage404.helpers({
-  //   page: function () {
-  //     return Session.get('noPage404');
-  //   }
-  // });
+    // define nav helpers
+    Template.body.helpers({
+        page: function() {
+            return Session.get('currentPage');
+        }
+    });
 
     Template.noPage404.helpers({
         page: function() {
@@ -405,22 +406,16 @@ if (Meteor.isClient) {
         Session.set('activeRating', (x + 1 == totalRatings ? 0 : x + 1));
     }
 
-  var rotateRating = function () {
-    // broadcast(totalRatings); // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
-    var x =  Session.get('activeRating');
-    Session.set('activeRating',(x + 1 == totalRatings ? 0: x + 1));
-  }
-
-  // defaults
-  var resetClient = function () {
-    resetSort();
-    Session.set('movieQuery', {});
-    Session.set('activeRating', 0);
-    Session.set('currentMovie', 0);
-    Session.set('currentPage', 'Movies');
-    // Session.set('noPage404', false);
-  }
-  resetClient();
+    // defaults
+    var resetClient = function() {
+        resetSort();
+        Session.set('movieQuery', {});
+        Session.set('activeRating', 0);
+        Session.set('currentMovie', 0);
+        Session.set('noPage404', false);
+        Session.set('currentPage', 'Movies');
+    }
+    resetClient();
 } // end Meteor.isClient
 
 
