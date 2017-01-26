@@ -19,9 +19,8 @@ h1 {
 
 input {
 	padding: 3px 0 3px 30px;
-	width: 400px;
+	width: inherit;
 	border: 1px solid #e1e1e1;
-	border-radius: 25px;
 	outline: none;
 	&:focus {
 		box-shadow: 0px 0px 3px 1px #01a6f6;
@@ -77,31 +76,50 @@ header {
 		#search {
 			position: relative;
 			display: inline-block;
-		}
-		#search-icon {
-		    position: absolute;
-		    left: 8px;
-		    top: 24px;
-		    padding: 2px 6px;
-		}
-		#search-refresh {
-			margin-left: -2em;
-			cursor: pointer;
-		}
-		&:focus {
-		  outline: 0;
-		  border-color: #66b1ee;
-		  box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
-		}
-		input {
-			padding: 3px 0 3px 30px;
-			width: 400px;
 			border: 1px solid #e1e1e1;
 		    border-radius: 25px;
 		    outline: none;
 		    &:active, &:focus {
 		    	box-shadow: 0px 0px 3px 1px @color-blue;
 		    }
+			span, input {
+				float: left;
+				background-color: @color-background-dark;
+				border: none;
+			}
+		    #fileDialog {
+		    	border: none;
+		    	line-height: 1ex;
+    			padding: 5px 0px 5px 12px;
+    			width: 250px;
+    			border-right: 1px solid #e1e1e1;
+    			border-radius: none;
+    			padding-right: 50px;
+		    }
+		    #path {
+		    	padding: 5px 5px 5px 12px;
+		    	background: @color-background;
+		    	outline: none;
+		    	border: none;
+		    	&:focus, &:active {
+			    	outline: none;
+			    	outline-width: 0;
+			    	box-shadow: none;
+		    	}
+		    }
+		}
+		#search-icon {
+		    margin: 6px 0 0 15px;	
+		}
+		#search-refresh {
+			cursor: pointer;
+			padding: 6px 0px 8px 10px;
+			margin-right: 12px;
+		}
+		&:focus {
+		  outline: 0;
+		  border-color: #66b1ee;
+		  box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
 		}
 	}
 	#info-icon {
