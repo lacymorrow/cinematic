@@ -210,7 +210,7 @@ if (Meteor.isClient) {
             Session.set('currentSort', sort);
             // warning, magic numbers below, indexs reference sort types above
             if (sort == settings.sort_types[0]) { // Alphabetical
-                Session.set('movieSort', { sort: { name: 1 } });
+                Session.set('movieSort', { sort: { 'name.toLowerCase()': 1 } });
             } else if (sort == settings.sort_types[1]) { // Popularity
                 Session.set('movieSort', { sort: { 'info.popularity': -1 } });
             } else if (sort == settings.sort_types[2]) { // Release Date
@@ -771,7 +771,7 @@ if (Meteor.isServer) {
                             return {}; })
                     });
                 }
-                if (res.Metascore) {
+                if (res.Metascore && mov.ratings.node) {
                     mov.ratings.node({
                         name: 'METASCORE RATING',
                         score: res.Metascore / 10,
