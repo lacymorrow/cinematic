@@ -85,6 +85,12 @@ Thanks to:
 * [pwnall/node-open](https://github.com/pwnall/node-open)
 
 
+# Improvements
+* batch send data to save http requests (force https?)
+* Boost that cache
+* Cross-OS node file chooser
+
+
 ### Need help?
 
 Please post any questions or issues you come across to our [issues page](https://github.com/lacymorrow/cinematic/issues).
