@@ -48,7 +48,7 @@ Currently Cinematic is only packaged for OSX and Linux machines but a Windows ve
 
 ##### [Visit the Releases page to download Cinematic for OSX & Linux](https://github.com/lacymorrow/cinematic/releases)
 
-Native Windows and Linux Support coming soon!
+Native Windows Support coming soon!
 
 
 ### Running & Developing Cinematic
