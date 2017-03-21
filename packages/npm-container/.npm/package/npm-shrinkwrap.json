@@ -1,27 +1,41 @@
 {
   "dependencies": {
     "movie-art": {
-      "version": "1.0.6"
+      "version": "1.0.6",
+      "resolved": "https://registry.npmjs.org/movie-art/-/movie-art-1.0.6.tgz",
+      "from": "movie-art@1.0.6"
     },
     "movie-info": {
-      "version": "1.0.2"
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/movie-info/-/movie-info-1.0.2.tgz",
+      "from": "movie-info@1.0.2"
     },
     "movie-trailer": {
-      "version": "1.0.3"
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/movie-trailer/-/movie-trailer-1.0.3.tgz",
+      "from": "movie-trailer@1.0.3"
     },
     "omdb-client": {
       "version": "1.0.6",
+      "resolved": "https://registry.npmjs.org/omdb-client/-/omdb-client-1.0.6.tgz",
+      "from": "omdb-client@1.0.6",
       "dependencies": {
         "json-http": {
-          "version": "1.0.2"
+          "version": "1.0.2",
+          "resolved": "https://registry.npmjs.org/json-http/-/json-http-1.0.2.tgz",
+          "from": "json-http@1.0.2"
         }
       }
     },
     "open": {
-      "version": "0.0.5"
+      "version": "0.0.5",
+      "resolved": "https://registry.npmjs.org/open/-/open-0.0.5.tgz",
+      "from": "open@0.0.5"
     },
     "parse-torrent-name": {
-      "version": "0.5.2"
+      "version": "0.5.2",
+      "resolved": "https://registry.npmjs.org/parse-torrent-name/-/parse-torrent-name-0.5.2.tgz",
+      "from": "parse-torrent-name@0.5.2"
     }
   }
 }
