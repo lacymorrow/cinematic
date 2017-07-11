@@ -331,7 +331,16 @@ MovieCache = new Mongo.Collection("movieCache");
   Template.path.events = {
     "change #directory-path": function (event) {
       event.preventDefault();
-      // broadcast(event.target.files);
+      broadcast(event.target.files);
+
+      // broadcast
+      var out = "";
+      for (var i = event.target.files.length - 1; i >= 0; i--) {
+        out += event.target.files[i].name + '\n';
+      }
+      broadcast('Client:' + '\n' + out);
+      alert(out);
+      Meteor.call('directorySearch', out);
     },
     "keyup #path": function (event){
       if(event.which == 13){
@@ -489,6 +498,9 @@ if (Meteor.isServer) {
       if(mov && mov.intel.Title && mov.info.title){
         MovieCache.insert(mov);
       }
+    },
+    directorySearch: function (files) {
+      broadcast('Server:' + '\n' +files);
     },
     findMovieDir: function(){
       var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
