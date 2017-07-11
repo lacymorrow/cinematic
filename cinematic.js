@@ -329,6 +329,10 @@ MovieCache = new Mongo.Collection("movieCache");
 
   // define path events
   Template.path.events = {
+    "change #directory-path": function (event) {
+      event.preventDefault();
+      // broadcast(event.target.files);
+    },
     "keyup #path": function (event){
       if(event.which == 13){
         // on <enter> set path
@@ -346,6 +350,7 @@ MovieCache = new Mongo.Collection("movieCache");
     NProgress.start();
     NProgress.set(percentage);
   }
+
   var setPath = function () {
     resetClient();
     var _path = document.getElementById('path');

@@ -90,6 +90,9 @@
 
 <template name="path">
 	<div id="path-wrapper" class="hidden-xs hidden-sm">
+		<div id="directory">
+			<input id="directory-path" type="file" name="files" webkitdirectory mozdirectory directory multiple />
+		</div>
 		<div id="search">
 			<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
 			<input type="text" id="path" placeholder="Movie directory" value="{{path}}" size="60" />

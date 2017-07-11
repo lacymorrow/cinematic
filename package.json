@@ -27,5 +27,9 @@
   ],
   "devDependencies": {
     "electron-packager": "^8.6.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.23.0",
+    "electron": "^1.6.11"
   }
 }
