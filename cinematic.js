@@ -331,16 +331,22 @@ if (Meteor.isClient) {
     Template.path.events = {
         "change #directory-path": function(event) {
             event.preventDefault();
-            broadcast(event.target.files);
+            // if (typeof Electrify != 'undefined') {
+            //   broadcast('Electrify loaded!');
+            //   Electrify.startup(function(){
+            //     Electrify.call('openDialog', 'shit');
+            //   });
+            // }
+            // broadcast(event.target.files);
 
-            // broadcast
-            var out = "";
-            for (var i = event.target.files.length - 1; i >= 0; i--) {
-                out += event.target.files[i].name + '\n';
-            }
-            broadcast('Client:' + '\n' + out);
-            alert(out);
-            Meteor.call('directorySearch', out);
+            // // broadcast
+            // var out = "";
+            // for (var i = event.target.files.length - 1; i >= 0; i--) {
+            //     out += event.target.files[i].name + '\n';
+            // }
+            // broadcast('Client:' + '\n' + out);
+            // alert(out);
+            Meteor.call('directorySearch');
         },
         "keyup #path": function(event) {
             if (event.which == 13) {
@@ -404,6 +410,9 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
     // import npm packages
+    var electrify = Meteor.npmRequire('electrify');
+
+
     var open = Meteor.npmRequire('open');
     var omdbApi = Meteor.npmRequire('omdb-client');
     var movieInfo = Meteor.npmRequire('movie-info');
@@ -412,19 +421,26 @@ if (Meteor.isServer) {
 
     // define observable collections
     Meteor.publish("log", function() {
-        return Log.find(); });
+        return Log.find();
+    });
     Meteor.publish("state", function() {
-        return State.find(); });
+        return State.find();
+    });
     Meteor.publish("recent", function() {
-        return Recent.find(); });
+        return Recent.find();
+    });
     Meteor.publish("watched", function() {
-        return Watched.find(); });
+        return Watched.find();
+    });
     Meteor.publish("genres", function() {
-        return Genres.find(); });
+        return Genres.find();
+    });
     Meteor.publish("movies", function() {
-        return Movies.find(); });
+        return Movies.find();
+    });
     Meteor.publish("movieCache", function() {
-        return MovieCache.find(); });
+        return MovieCache.find();
+    });
 
     // server globals
     // startup functions
@@ -508,8 +524,14 @@ if (Meteor.isServer) {
                 MovieCache.insert(mov);
             }
         },
-        directorySearch: function(files) {
-            broadcast('Server:' + '\n' + files);
+        directorySearch: function() {
+            if (typeof electrify != 'undefined') {
+              broadcast('electrify loaded!');
+              electrify.call('method.name', '');
+            } else {
+              broadcast('electrify :(');
+            }
+            // broadcast('Server:' + '\n' + files);
         },
         findMovieDir: function() {
             var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
@@ -675,6 +697,120 @@ if (Meteor.isServer) {
                 broadcast('Error populating movies. ' + e.name + ' ' + e.message);
             }
         },
+        scanDirectory: function(files) {
+          files.forEach(function(file, i) {
+              var ex = path.extname(file);
+              if (ex && _.contains(settings.valid_types, ex)) {
+                  // found a movie!
+                  // this is where the magic happens
+                  if (settings.parse_method == "regex") {
+                      var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
+                      var match = regex.exec(path.basename(file, ex));
+                      var name = year = null;
+                      if (match) {
+                          name = unescape(match[1]);
+                          if (match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])) {
+                              year = match[3];
+                          }
+                      }
+                  } else {
+                      var fileName = file.substr(0, file.length - ex.length);
+                      var parsedName = parseTorrentName(file.substr(0, file.length - ex.length));
+                      var name = (parsedName.title) ? parsedName.title : null;
+                      var year = (parsedName.year) ? parsedName.year : null;
+                  }
+
+                  if (name && !_.contains(settings.ignore_list, name.toLowerCase())) {
+                      // cache handling
+                      var hash = dirPath + file;
+                      var movc = MovieCache.findOne({ '_id': hash });
+                      if (movc && settings.cache && movc.movie && time < movc.cache_date + settings.cache) {
+                          // cached
+                          broadcast('Cinematic: Loading cached movie ' + name);
+                          var mid = movc.movie._id;
+                          Movies.insert(movc.movie);
+                          _.each(movc.movie.info.genre_ids, function(e, i) {
+                              Meteor.call('addGenre', e, mid, null);
+                          });
+                      } else {
+                          //not cached
+                          // add item to collection
+                          var mid = Movies.insert({
+                              ext: ex,
+                              file: file,
+                              name: name,
+                              path: dirPath,
+                              year: year,
+                              ratings: [],
+                              trailer: null,
+                              seed: Math.random(),
+                              recent_time: null,
+                              watched_time: null,
+                              info: {
+                                  adult: false,
+                                  backdrop: null,
+                                  backdrop_path: null,
+                                  genre_ids: [],
+                                  imdb_id: null,
+                                  original_title: null,
+                                  overview: null,
+                                  popularity: null,
+                                  poster_path: null,
+                                  release_date: year,
+                                  tagline: null,
+                                  title: null,
+                                  vote_average: null
+                              },
+                              intel: {
+                                  Actors: null,
+                                  Awards: null,
+                                  Country: null,
+                                  Director: null,
+                                  Genre: null,
+                                  Language: null,
+                                  Metascore: null,
+                                  Plot: null,
+                                  Poster: null,
+                                  Rated: null,
+                                  Released: null,
+                                  Runtime: null,
+                                  Title: null,
+                                  Type: null,
+                                  Writer: null,
+                                  Year: null,
+                                  imdbID: null,
+                                  imdbRating: null
+                              },
+                              // combined info
+                              imdb_id: null,
+                              plot: null,
+                              poster: null,
+                              release_date: year,
+                              title: name,
+                          });
+                          // make api calls to gather info
+                          Meteor.call('getIntel', mid, name, year);
+                      }
+                  }
+              } else if (recurse_level < settings.recurse_level) {
+                  // ok let's try recursing, were avoiding as many fs calls as possible
+                  // which is why i didn't call it in the condition above
+                  // first, is this a directory?
+                  fs.lstat(dirPath + file, Meteor.bindEnvironment(function(err, stats) {
+                      if (err) {
+                          broadcast(name + ': ' + err);
+                          return false;
+                      }
+                      if (stats.isDirectory()) {
+                          Meteor.call('populateMovies', dirPath + file + '/', recurse_level + 1);
+                      }
+                  }));
+              }
+              var state = State.findOne({ _id: "0" });
+              // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
+              var loaded = state && (100 - state.loading);
+          }); // end file scan forEach
+        },
         updatePath: function(path) {
             try {
                 if (fs.statSync(path).isDirectory()) {
@@ -726,7 +862,8 @@ if (Meteor.isServer) {
                         name: 'IMDB RATING',
                         score: parseFloat(res.imdbRating),
                         count: Array.apply(null, Array(Math.round(res.imdbRating))).map(function() {
-                            return {}; })
+                            return {};
+                        })
                     });
                 }
                 if (res.Metascore) {
@@ -734,7 +871,8 @@ if (Meteor.isServer) {
                         name: 'METASCORE RATING',
                         score: res.Metascore / 10,
                         count: Array.apply(null, Array(Math.round(res.Metascore / 10))).map(function() {
-                            return {}; })
+                            return {};
+                        })
                     });
                 }
                 mov.imdb_id = res.imdbID;
@@ -770,7 +908,8 @@ if (Meteor.isServer) {
                         name: 'TMDB RATING',
                         score: parseFloat(res.vote_average),
                         count: Array.apply(null, Array(Math.round(res.vote_average))).map(function() {
-                            return {}; })
+                            return {};
+                        })
                     });
                 }
                 mov.imdb_id = res.imdb_id;
@@ -869,7 +1008,8 @@ if (Meteor.isServer) {
 
 // safe console.log which outputs in the called context - client/server
 var broadcast = function(msg) {
-    Log.insert({ time: epoch(), msg: msg });
+    if (Meteor.isServer)
+        Log.insert({ time: epoch(), msg: msg });
     if (typeof console !== 'undefined')
         console.log(msg);
 }
