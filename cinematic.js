@@ -578,6 +578,9 @@ if (Meteor.isServer) {
                             var year = (parsedName.year) ? parsedName.year : null;
                         }
 
+                        // Manipulate name for search engines
+                        name = parseName(name);
+
                         if (name && !_.contains(settings.ignore_list, name.toLowerCase())) {
                             // cache handling
                             var hash = dirPath + file;
@@ -877,4 +880,15 @@ var broadcast = function(msg) {
 var epoch = function() {
     var d = new Date();
     return d.getTime() / 1000;
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+}
+
+var parseName = function (name) {
+    // replace underscores with spaces
+    name = replaceAll(name, '_', ' ');
+    console.log(name);
+    return name;
 }
