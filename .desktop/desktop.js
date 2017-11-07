@@ -42,6 +42,9 @@ export default class Desktop {
         // reference. This is the reference to the current Electron renderer process (Chrome)
         // displaying your Meteor app.
         eventsBus.on('windowCreated', (window) => {
+            // set perfect size
+            window.setSize(1024,768);
+
             window.webContents.on('crashed', Desktop.windowCrashedHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
         });

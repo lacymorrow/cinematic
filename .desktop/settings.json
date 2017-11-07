@@ -1,7 +1,7 @@
 {
-    "name": "My Meteor App",
-    "version": "0.0.1",
-    "projectName": "MyMeteorApp",
+    "name": "Cinematic",
+    "version": "1.1.0",
+    "projectName": "Cinematic",
     "devTools": true,
     "devtron": true,
     "desktopHCP": true,
@@ -33,14 +33,14 @@
     },
     "dependencies": {},
     "packageJsonFields": {
-        "description": "My Meteor App",
-        "author": "Me, Myself And I",
-        "private": true
+        "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
+        "author": "Lacy Morrow",
+        "private": false
     },
     "builderOptions": {
         "win": {
-            "title": "My Meteor App",
-            "authors": "Me, Myself And I",
+            "title": "Cinematic",
+            "authors": "Lacy Morrow",
             "target": "squirrel"
         },
         "squirrelWindows": {
@@ -48,8 +48,8 @@
             "loadingGif": ".desktop/assets/loading.gif"
         },
         "icon": ".desktop/assets/meteor.ico",
-        "appId": "meteor.app",
-        "productName": "My Meteor App",
+        "appId": "Cinematic.app",
+        "productName": "Cinematic",
         "compression": "maximum",
         "mac": {
             "icon": ".desktop/assets/meteor.icns"
@@ -73,14 +73,14 @@
             "icon": ".desktop/assets/meteor.icns"
         },
         "version-string": {
-            "CompanyName": "My Company",
-            "LegalCopyright": "Copyright 2016 My Company - All rights reserved.",
-            "FileDescription": "MyMeteorApp",
-            "OriginalFilename": "MyMeteorApp.exe",
+            "CompanyName": "lacymorrow",
+            "LegalCopyright": "Copyright 2018 lacymorrow - All rights reserved.",
+            "FileDescription": "Cinematic",
+            "OriginalFilename": "Cinematic.exe",
             "FileVersion": "@version",
             "ProductVersion": "@version",
-            "ProductName": "MyMeteorApp",
-            "InternalName": "MyMeteorApp.exe"
+            "ProductName": "Cinematic",
+            "InternalName": "Cinematic.exe"
         }
     }
 }
