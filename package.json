@@ -15,7 +15,8 @@
     "url": "https://github.com/lacymorrow/cinematic"
   },
   "scripts": {
-    "start": "meteor"
+    "start": "meteor",
+    "desktop": "meteor-desktop"
   },
   "bugs": {
     "url": "https://github.com/lacymorrow/cinematic/issues"
@@ -26,10 +27,11 @@
     }
   ],
   "devDependencies": {
-    "electron-packager": "^8.6.0"
+    "electron-packager": "^8.6.0",
+    "meteor-desktop": "^0.11.1"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0",
+    "babel-runtime": "^6.26.0",
     "electron": "^1.6.11"
   }
 }

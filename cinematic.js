@@ -8,7 +8,7 @@
  * - TV Shows
  * - Filter by Director
  * - Ambiguous search
-
+ * - Keyboard Navigation
 
  parse intel genres
  scroll anywhere
@@ -21,10 +21,12 @@ var settings = {
     valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
     sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
     cache: 3600, // seconds; 604800 = 7 days
-    overview_length: 'short', // "short", "full" - from omdb
+    overview_length: 'full', // "short", "full" - from omdb
 
     // http://docs.themoviedb.apiary.io/ config
-    key: '9d2bff12ed955c7f1f74b83187f188ae',
+    api_key: '9d2bff12ed955c7f1f74b83187f188ae',
+    // omdb key
+    omdb_key: 'e0341ca3',
     base_url: "http://image.tmdb.org/t/p/",
     secure_base_url: "https://image.tmdb.org/t/p/",
     genre_url: "http://api.themoviedb.org/3/genre/movie/list",
@@ -32,12 +34,12 @@ var settings = {
     poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
 
     // app-specific -- affects how app is run and may affect performance
-    max_connections: 5, // max number of simultaneous
+    max_connections: 4, // max number of simultaneous
     parse_method: "parse", // "regex", "parse"
     rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
     retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
-    recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole.
-    ignore_list: ['sample', 'etrg'] // a lowercase list of movie titles to ignore
+    recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole === more processing time
+    ignore_list: ['sample', 'etrg'] // a lowercase list of movie titles to ignore; ex: sample.avi
 }
 
 // define db collections
@@ -300,6 +302,7 @@ if (Meteor.isClient) {
                 Meteor.clearInterval(ratingTimer);
             ratingTimer = Meteor.setInterval(rotateRating, 4000);
         },
+        // TODO: All the keyboard navigation
         "keyup .movie-image": function(event) {
             var magnitude = 3; // $(".keyboard-magnitude").data('id'); // this should equal the number of movies per row
             event.preventDefault();
@@ -575,11 +578,9 @@ if (Meteor.isServer) {
                             var fileName = file.substr(0, file.length - ex.length);
                             var parsedName = parseTorrentName(file.substr(0, file.length - ex.length));
                             var name = (parsedName.title) ? parsedName.title : null;
+                            name = parseName(name);
                             var year = (parsedName.year) ? parsedName.year : null;
                         }
-
-                        // Manipulate name for search engines
-                        name = parseName(name);
 
                         if (name && !_.contains(settings.ignore_list, name.toLowerCase())) {
                             // cache handling
@@ -659,7 +660,7 @@ if (Meteor.isServer) {
                         // first, is this a directory?
                         fs.lstat(dirPath + file, Meteor.bindEnvironment(function(err, stats) {
                             if (err) {
-                                broadcast(name + ': ' + err);
+                                broadcast("fs error: " + name + ': ' + err);
                                 return false;
                             }
                             if (stats.isDirectory()) {
@@ -693,7 +694,7 @@ if (Meteor.isServer) {
         },
         updateGenres: function() {
             Genres.remove({});
-            HTTP.call("GET", settings.genre_url + '?api_key=' + settings.key,
+            HTTP.call("GET", settings.genre_url + '?api_key=' + settings.api_key,
                 function(err, res) {
                     if (err) {
                         broadcast('Cinematic/updateGenres: ' + err);
@@ -708,10 +709,10 @@ if (Meteor.isServer) {
                 });
         },
         updateIntel: function(mid, name, year) {
-            omdbApi.get({ title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full' }, Meteor.bindEnvironment(function(err, res) {
+            omdbApi.get({ omdb_key: settings.omdb_key, title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full' }, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateIntel');
                 if (err) {
-                    broadcast(name + ': ' + err);
+                    broadcast("ombd-client error: " + name + ': ' + err);
                     return false;
                 }
                 // strip runtime characters
@@ -759,7 +760,7 @@ if (Meteor.isServer) {
             movieInfo(name, year, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateInfo');
                 if (err) {
-                    broadcast(name + ': ' + err);
+                    broadcast("movie-info error: " + name + ': ' + err);
                     return false;
                 }
                 _.each(res.genre_ids, function(e, i) {
@@ -796,7 +797,7 @@ if (Meteor.isServer) {
             movieTrailer(name, year, true, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateTrailer');
                 if (err) {
-                    broadcast(name + ': ' + err);
+                    broadcast("movie-trailer error: " + name + ': ' + err);
                     return false;
                 }
                 Movies.update(mid, { $set: { trailer: res } });
@@ -887,8 +888,7 @@ function replaceAll(str, find, replace) {
 }
 
 var parseName = function (name) {
-    // replace underscores with spaces
-    name = replaceAll(name, '_', ' ');
-    console.log(name);
+    name = replaceAll(name, '_', ' '); // replace underscores with spaces
+    name = replaceAll(name, '-', ' ');
     return name;
 }

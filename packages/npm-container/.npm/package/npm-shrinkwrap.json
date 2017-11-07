@@ -1,41 +1,42 @@
 {
+  "lockfileVersion": 1,
   "dependencies": {
     "movie-art": {
       "version": "1.0.6",
       "resolved": "https://registry.npmjs.org/movie-art/-/movie-art-1.0.6.tgz",
-      "from": "movie-art@1.0.6"
+      "integrity": "sha1-DY1XpltwccVBQ1vxVFZizE/a/P4="
     },
     "movie-info": {
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/movie-info/-/movie-info-1.0.2.tgz",
-      "from": "movie-info@1.0.2"
+      "integrity": "sha1-V36Evnh8a60eZevybXNkOCWqHiE="
     },
     "movie-trailer": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/movie-trailer/-/movie-trailer-1.0.3.tgz",
-      "from": "movie-trailer@1.0.3"
+      "integrity": "sha1-TPQ+gf1mhIZvvCb62fMlz4yvAMk="
     },
     "omdb-client": {
       "version": "1.0.6",
       "resolved": "https://registry.npmjs.org/omdb-client/-/omdb-client-1.0.6.tgz",
-      "from": "omdb-client@1.0.6",
+      "integrity": "sha1-ecZ5lYWMzvJvjGAoXvP2c1mrjWE=",
       "dependencies": {
         "json-http": {
           "version": "1.0.2",
           "resolved": "https://registry.npmjs.org/json-http/-/json-http-1.0.2.tgz",
-          "from": "json-http@1.0.2"
+          "integrity": "sha1-Hf/e3yoVbZAvVPNa8mLZuVBJpz8="
         }
       }
     },
     "open": {
       "version": "0.0.5",
       "resolved": "https://registry.npmjs.org/open/-/open-0.0.5.tgz",
-      "from": "open@0.0.5"
+      "integrity": "sha1-QsPhjslUZra/DcQvOilFw/DK2Pw="
     },
     "parse-torrent-name": {
       "version": "0.5.2",
       "resolved": "https://registry.npmjs.org/parse-torrent-name/-/parse-torrent-name-0.5.2.tgz",
-      "from": "parse-torrent-name@0.5.2"
+      "integrity": "sha1-4eh+XISokOZBsAZvPlODnhKhfeA="
     }
   }
 }
