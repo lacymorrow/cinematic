@@ -1,22 +1,19 @@
 /*
  * TODO
+ * - Keyboard Navigation
  * - account for missing sort params
  * - Unused data: popularity, country, language, awards
- * - auto rename files
- * - limit, possibly paginate
- * - file browser
+ * - limit, possibly paginate movies
+ * - Ambiguous/Fuzzy search
  * - TV Shows
- * - Filter by Director
- * - Ambiguous search
- * - Keyboard Navigation
+ * - Filter by Director ( cool )
+ * - parse intel genres ( old )
+ * - auto rename files ( out of scope )
 
  * - Select directory
  * - Select multiple files
  * - Change file browser per browser/desktop
-
- parse intel genres
- scroll anywhere
-
+ * - Pass errors to front end
  */
 
 

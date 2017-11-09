@@ -61,6 +61,12 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 
 To package Cinematic for your machine architecture:
 
+###### YOU MUST HAVE A METEOR INSTANCE RUNNING WITH MOBILE ARCHITECTURE ENABLED IN A SEPARATE TERMINAL
+
+`meteor --mobile-server=127.0.0.1:3000`
+
+In your main terminal:
+
 ```bash
 # The magic script. Builds for osx and ia32 and x64 for windows and linux. 
 
