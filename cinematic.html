@@ -96,9 +96,17 @@
 		</div>
 		<span id="search-refresh" class="glyphicon glyphicon-refresh"></span>
 	</div>
-	<!-- <div id="directory">
-		<input id="directory-path" type="file" name="files" webkitdirectory mozdirectory directory multiple />
-	</div> -->
+	<a id="browse-link" class="browse-link btn btn-primary hide" role="button">
+		Browse
+		<span class="icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+	</a>
+	<div id="browse-input" class="hide">
+		<a id="browse-input-link" class="browse-link btn btn-primary" role="button">
+			Browse
+			<span class="icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+		</a>
+		<input id="browse-input-directory" type="file" name="files" webkitdirectory mozdirectory directory multiple />
+	</div>
 </template>
 
 <template name="navigation">
@@ -148,7 +156,11 @@
 						({{year}})
 					{{/if}}
 				</h1>
-				<a id="open-link" class="btn btn-primary" data-src="{{path}}{{file}}" data-id="{{_id}}" role="button">Watch</a>
+
+				{{#if path}}
+					<a id="open-link" class="btn btn-primary" data-src="{{path}}{{file}}" data-id="{{_id}}" role="button">Watch</a>
+				{{/if}}
+
 				{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
 				<h5>{{#if intel.Runtime}}{{intel.Runtime}} min{{/if}}{{#if imdb_id}} &nbsp;|&nbsp; <a id="imdb-link" target="_blank" href="http://www.imdb.com/title/{{imdb_id}}">IMDB <span class="glyphicon glyphicon-link"></span></a>{{/if}}</h5>
 					<div id="rating">

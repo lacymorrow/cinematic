@@ -91,6 +91,53 @@ header {
 		    }
 		}
 	}
+
+	.browse-link {
+
+		display: inline-block;
+		position: relative;
+		padding: .8em 1.4em;
+		margin: 1em;
+		padding-right: 4.7em;
+		border: none;
+		border-radius: 0;
+		color: black;
+		background: @gray-button-light;
+		-webkit-font-smoothing: antialiased;
+
+		.icon {
+			border: none;
+			background: @gray-button-dark;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			padding-top: inherit;
+			padding-bottom: inherit;
+			width: 2.8em;
+			text-align: center;
+		}
+
+		&:hover {
+			background: darken(@gray-button-light, 10%);
+
+			.icon {
+				background: darken(@gray-button-dark, 10%);
+			}
+
+		}
+
+	}
+
+	#browse-input-directory {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 1px;
+		height: 1px;
+		opacity: .1;
+	}
+
 	#info-icon {
 		float: right;
 		margin: 1em;
@@ -179,6 +226,7 @@ header {
 		position: absolute;
 		z-index: -1;
 	}
+	// Mirrored backdrop
 	#mirror {
 		-moz-transform: scaleY(-1);
         -o-transform: scaleY(-1);
@@ -192,13 +240,14 @@ header {
         transform: scaleY(-1);
         filter: FlipV;
         -ms-filter: "FlipV";
-		@media ( max-height: 800px ){
+		@media ( max-height: 600px ){
 			display: none;
 		}
 	}
 	#details-wrapper {
 		overflow-y: auto;
 		margin: 0 -15px;
+		padding-top: 280px;
 		padding-bottom: 280px;
 		height: 100%;
 		.no-trailer {
@@ -282,7 +331,7 @@ header {
 	#rating {
 		position: relative;
 		z-index: 0;
-		margin: 0 0 25px 0;
+		margin: 20px 0 25px 0;
 		display: block;
 		height: 50px;
 	}

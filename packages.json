@@ -1,8 +1,4 @@
 {
-    "electron": "1.6.11",
-    "electron-ipc-stream": "0.2.0",
-    "ipc": "0.0.1",
-    "node-ipc": "9.1.1",
 	"movie-art": "1.0.6",
 	"movie-info": "1.0.2",
 	"movie-trailer": "1.0.3",

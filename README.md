@@ -5,7 +5,7 @@ Have a digital movie collection?
 
 Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection. 
 
-##### [Download for OSX & Linux](https://github.com/lacymorrow/cinematic/releases)
+##### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
 ![Cinematic](http://lacymorrow.com/images/cinematic.gif)
 
@@ -44,16 +44,12 @@ Uses TMDB and OMDB to look up movie information and display in an organized fash
 
 # Installation
 
-Currently Cinematic is only packaged for OSX and Linux machines but a Windows version is almost complete.
+_Recently packaged for Windows!_
 
-##### [Visit the Releases page to download Cinematic for OSX & Linux](https://github.com/lacymorrow/cinematic/releases)
-
-Native Windows Support coming soon!
+#### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
 
-### Running & Developing Cinematic
-
-_(from source)_
+### Running & Developing Cinematic _(from source)_
 
 Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacymorrow/cinematic`. 
 
@@ -65,16 +61,31 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 
 To package Cinematic for your machine architecture:
 
+###### YOU MUST HAVE A METEOR INSTANCE RUNNING WITH MOBILE ARCHITECTURE ENABLED IN A SEPARATE TERMINAL
+
+`meteor --mobile-server=127.0.0.1:3000`
+
+In your main terminal:
+
 ```bash
-# The magic script.
+# Build and test Desktop version. 
+
+npm run desktop
+
+# The magic script. Builds for osx and ia32 and x64 for windows and linux. 
 
 npm run desktop -- build-installer --all-archs --win --mac --linux --production
 
 ```
 
+To only build for current architecture: `npm run desktop -- build-installer --production`
+
+
+
+##### Other Notes
 
 ```
-# deploy server
+# deploy server for hosted media server use
 DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy myapp.meteorapp.com --settings settings.json
 
 # build the calculator for the local machine, with a connection to the production server
@@ -82,9 +93,9 @@ meteor --settings settings.json --mobile-server https://myapp.meteorapp.com
 ```
 
 
-See [arboleya/electrify](https://github.com/arboleya/electrify) for more information.
+See [wojtkowiak/meteor-desktop](https://github.com/wojtkowiak/meteor-desktop) for more information.
 
-~We no longer use [wojtkowiak/meteor-desktop](https://github.com/wojtkowiak/meteor-desktop) for packaging~
+_We no longer use [arboleya/electrify](https://github.com/arboleya/electrify) for packaging_
 
 
 # Design
