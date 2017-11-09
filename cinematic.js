@@ -1,5 +1,6 @@
 /*
  * TODO
+ * - Ability to add individual files via dialog
  * - Tell me which way filters are sorted by
  * - Keyboard Navigation
  * - account for missing sort params
@@ -15,6 +16,13 @@
  * - Select multiple files
  * - Change file browser per browser/desktop
  * - Pass errors to front end
+
+ *****
+   NOTES
+ *****
+ * - We cache movies if a single api script returns intel (movieInfo/omdbClient); easier than waiting on 3 api reqs
+ * - We disregard files with the same name as their extension, ex: avi.avi; check addMovie to change
+
  */
 
 
@@ -33,7 +41,7 @@ var settings = {
     secure_base_url: "https://image.tmdb.org/t/p/",
     genre_url: "http://api.themoviedb.org/3/genre/movie/list",
     backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
-    poster_size: 'w185', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
+    poster_size: 'w780', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
 
     // app-specific -- affects how app is run and may affect performance
     max_connections: 4, // max number of simultaneous
@@ -92,8 +100,10 @@ if (Meteor.isClient) {
     /* onReady */
     Template.body.rendered = function() {
         if (Meteor.isDesktop) {
-            // Desktop Loaded; runs $("#browse-link").removeClass("hide");
+            // Desktop Loaded
             isDesktop();
+            // init browse button IPC
+            $("#browse-link").removeClass("hide");
         } else {
             $('#browse-input').removeClass('hide');
         }
@@ -369,13 +379,9 @@ if (Meteor.isClient) {
             broadcast(event.target.files);
 
             // broadcast
-            var out = "";
             for (var i = event.target.files.length - 1; i >= 0; i--) {
                 Meteor.call('addMovie', event.target.files[i].name);
-                out += event.target.files[i].name + '\n';
             }
-            broadcast('Client adding files:' + '\n' + out);
-            Meteor.call('directorySearch', out);
         },
         "click #browse-input-link": function(event) {
             $('#browse-input-directory').click();
@@ -400,8 +406,6 @@ if (Meteor.isClient) {
 
     var isDesktop = function() {
         $('html').addClass('desktop-app');
-        // init browse button IPC
-        $("#browse-link").removeClass("hide");
     };
 
     var setLoaded = function(percentage) {
@@ -573,7 +577,7 @@ if (Meteor.isServer) {
                 var year = (parsedName.year) ? parsedName.year : null;
             }
 
-            if (name && !_.contains(settings.ignore_list, name.toLowerCase())) {
+            if (name && name != ex && !_.contains(settings.ignore_list, name.toLowerCase())) {
                 // cache handling
                 var hash = dirPath + file;
                 var movc = MovieCache.findOne({ '_id': hash });

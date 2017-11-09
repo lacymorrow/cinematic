@@ -226,6 +226,7 @@ header {
 		position: absolute;
 		z-index: -1;
 	}
+	// Mirrored backdrop
 	#mirror {
 		-moz-transform: scaleY(-1);
         -o-transform: scaleY(-1);
@@ -239,13 +240,14 @@ header {
         transform: scaleY(-1);
         filter: FlipV;
         -ms-filter: "FlipV";
-		@media ( max-height: 800px ){
+		@media ( max-height: 600px ){
 			display: none;
 		}
 	}
 	#details-wrapper {
 		overflow-y: auto;
 		margin: 0 -15px;
+		padding-top: 280px;
 		padding-bottom: 280px;
 		height: 100%;
 		.no-trailer {

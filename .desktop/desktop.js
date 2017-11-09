@@ -114,7 +114,7 @@ export default class Desktop {
                     ],
                     title: 'Open Movies',
                     message: 'Choose movie folder to organize:',
-                    properties: ['openDirectory']
+                    properties: ['openDirectory', 'openFile', 'multiSelections']
                 }, function(files) {
                     if (files) {
                         desktop.send('selected-file', files)

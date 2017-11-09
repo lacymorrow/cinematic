@@ -68,6 +68,10 @@ To package Cinematic for your machine architecture:
 In your main terminal:
 
 ```bash
+# Build and test Desktop version. 
+
+npm run desktop
+
 # The magic script. Builds for osx and ia32 and x64 for windows and linux. 
 
 npm run desktop -- build-installer --all-archs --win --mac --linux --production
