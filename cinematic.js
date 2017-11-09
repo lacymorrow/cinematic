@@ -1,5 +1,6 @@
 /*
  * TODO
+ * - Tell me which way filters are sorted by
  * - Keyboard Navigation
  * - account for missing sort params
  * - Unused data: popularity, country, language, awards
@@ -36,7 +37,7 @@ var settings = {
 
     // app-specific -- affects how app is run and may affect performance
     max_connections: 4, // max number of simultaneous
-    parse_method: "parse", // Filename parsing options: "regex", "parse"
+    parse_method: "parse", // Filename parsing options: "regex", "parse"; regex is kinda faulty but perfect for well-organized files lile This[2004].avi
     rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
     retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
     recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole === more processing time
@@ -361,7 +362,7 @@ if (Meteor.isClient) {
 
     // define path events
     Template.path.events({
-        "change #directory-path": function(event) {
+        "change #browse-directory-input": function(event) {
             event.preventDefault();
             broadcast(event.target.files);
 
@@ -537,6 +538,104 @@ if (Meteor.isServer) {
             Watched.upsert({ '_id': mid }, { 'time': time });
             Movies.update({ '_id': mid }, { $set: { 'watched_time': time } })
         },
+        addMovie: function(file, options) {
+            // set options 
+            var ex = (options.ext) ? options.ext : '';
+            var dirPath = (options.dirPath) ? options.dirPath : false;
+            
+            var time = epoch();
+            if (settings.parse_method == "regex") {
+                var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
+                var match = regex.exec(path.basename(file, ex));
+                var name = year = null;
+                if (match) {
+                    name = unescape(match[1]);
+                    if (match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])) {
+                        year = match[3];
+                    }
+                }
+            } else {
+                var fileName = file.substr(0, file.length - ex.length);
+                var parsedName = parseTorrentName(file.substr(0, file.length - ex.length));
+                var name = (parsedName.title) ? parsedName.title : null;
+                name = parseName(name);
+                var year = (parsedName.year) ? parsedName.year : null;
+            }
+
+            if (name && !_.contains(settings.ignore_list, name.toLowerCase())) {
+                // cache handling
+                var hash = dirPath + file;
+                var movc = MovieCache.findOne({ '_id': hash });
+                if (movc && movc.cached && settings.cache && movc.movie && time < movc.cache_date + settings.cache) {
+                    // cached
+                    broadcast('Cinematic: Loading cached movie ' + name);
+                    var mid = movc.movie._id;
+                    Movies.insert(movc.movie);
+                    _.each(movc.movie.info.genre_ids, function(e, i) {
+                        Meteor.call('addGenre', e, mid, null);
+                    });
+                } else {
+                    // not cached
+                    // add item to collection
+                    var mid = Movies.insert({
+                        ext: ex,
+                        file: file,
+                        name: name,
+                        path: dirPath,
+                        year: year,
+                        ratings: [],
+                        trailer: null,
+                        seed: Math.random(),
+                        recent_time: null,
+                        watched_time: null,
+                        info: {
+                            adult: false,
+                            backdrop: null,
+                            backdrop_path: null,
+                            genre_ids: [],
+                            imdb_id: null,
+                            original_title: null,
+                            overview: null,
+                            popularity: null,
+                            poster_path: null,
+                            release_date: year,
+                            tagline: null,
+                            title: null,
+                            vote_average: null
+                        },
+                        intel: {
+                            Actors: null,
+                            Awards: null,
+                            Country: null,
+                            Director: null,
+                            Genre: null,
+                            Language: null,
+                            Metascore: null,
+                            Plot: null,
+                            Poster: null,
+                            Rated: null,
+                            Released: null,
+                            Runtime: null,
+                            Title: null,
+                            Type: null,
+                            Writer: null,
+                            Year: null,
+                            imdbID: null,
+                            imdbRating: null
+                        },
+                        // combined info
+                        imdb_id: null,
+                        plot: null,
+                        poster: null,
+                        release_date: year,
+                        title: name,
+                        cached: false
+                    });
+                    // make api calls to gather info
+                    Meteor.call('getIntel', mid, name, year);
+                }
+            }
+        },
         cacheMovies: function() {
             var movies = Movies.find();
             var time = epoch();
@@ -577,9 +676,9 @@ if (Meteor.isServer) {
 
             // updates to gather
             var jobs = [
+                'updateTrailer',
                 'updateIntel',
-                'updateInfo',
-                'updateTrailer'
+                'updateInfo'
             ];
             _.map(jobs, function(job) {
                 api_queue += 1;
@@ -601,102 +700,16 @@ if (Meteor.isServer) {
 
                 // read from filesystem
                 var files = fs.readdirSync(dirPath);
-                var time = epoch();
                 files.forEach(function(file, i) {
                     var ex = path.extname(file);
                     if (ex && _.contains(settings.valid_types, ex)) {
                         // found a movie!
                         // this is where the magic happens
-                        if (settings.parse_method == "regex") {
-                            var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
-                            var match = regex.exec(path.basename(file, ex));
-                            var name = year = null;
-                            if (match) {
-                                name = unescape(match[1]);
-                                if (match.length > 1 && !isNaN(parseFloat(match[3])) && isFinite(match[3])) {
-                                    year = match[3];
-                                }
-                            }
-                        } else {
-                            var fileName = file.substr(0, file.length - ex.length);
-                            var parsedName = parseTorrentName(file.substr(0, file.length - ex.length));
-                            var name = (parsedName.title) ? parsedName.title : null;
-                            name = parseName(name);
-                            var year = (parsedName.year) ? parsedName.year : null;
-                        }
-
-                        if (name && !_.contains(settings.ignore_list, name.toLowerCase())) {
-                            // cache handling
-                            var hash = dirPath + file;
-                            var movc = MovieCache.findOne({ '_id': hash });
-                            if (movc && settings.cache && movc.movie && time < movc.cache_date + settings.cache) {
-                                // cached
-                                broadcast('Cinematic: Loading cached movie ' + name);
-                                var mid = movc.movie._id;
-                                Movies.insert(movc.movie);
-                                _.each(movc.movie.info.genre_ids, function(e, i) {
-                                    Meteor.call('addGenre', e, mid, null);
-                                });
-                            } else {
-                                //not cached
-                                // add item to collection
-                                var mid = Movies.insert({
-                                    ext: ex,
-                                    file: file,
-                                    name: name,
-                                    path: dirPath,
-                                    year: year,
-                                    ratings: [],
-                                    trailer: null,
-                                    seed: Math.random(),
-                                    recent_time: null,
-                                    watched_time: null,
-                                    info: {
-                                        adult: false,
-                                        backdrop: null,
-                                        backdrop_path: null,
-                                        genre_ids: [],
-                                        imdb_id: null,
-                                        original_title: null,
-                                        overview: null,
-                                        popularity: null,
-                                        poster_path: null,
-                                        release_date: year,
-                                        tagline: null,
-                                        title: null,
-                                        vote_average: null
-                                    },
-                                    intel: {
-                                        Actors: null,
-                                        Awards: null,
-                                        Country: null,
-                                        Director: null,
-                                        Genre: null,
-                                        Language: null,
-                                        Metascore: null,
-                                        Plot: null,
-                                        Poster: null,
-                                        Rated: null,
-                                        Released: null,
-                                        Runtime: null,
-                                        Title: null,
-                                        Type: null,
-                                        Writer: null,
-                                        Year: null,
-                                        imdbID: null,
-                                        imdbRating: null
-                                    },
-                                    // combined info
-                                    imdb_id: null,
-                                    plot: null,
-                                    poster: null,
-                                    release_date: year,
-                                    title: name,
-                                });
-                                // make api calls to gather info
-                                Meteor.call('getIntel', mid, name, year);
-                            }
-                        }
+                        Meteor.call('addMovie', file, {
+                            dirPath: dirPath,
+                            ext: ex
+                        });
+                        
                     } else if (recurse_level < settings.recurse_level) {
                         // ok let's try recursing, were avoiding as many fs calls as possible
                         // which is why i didn't call it in the condition above
@@ -715,6 +728,8 @@ if (Meteor.isServer) {
                     // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
                     var loaded = state && (100 - state.loading);
                 }); // end file scan forEach
+                
+
                 if (api_queue === 0) {
                     State.update("0", { $set: { loading: 0 } });
                 }
@@ -796,6 +811,7 @@ if (Meteor.isServer) {
                     mov.year = res.Year;
                 }
                 mov.intel = res;
+                mov.cached = true;// WE CACHE HALF-LOADED FILES. BAD? PROBABLY
                 Movies.update(mid, mov);
             }));
         },
@@ -833,6 +849,7 @@ if (Meteor.isServer) {
                     mov.year = res.Year;
                 }
                 mov.info = res;
+                mov.cached = true;// WE CACHE HALF-LOADED FILES. BAD? PROBABLY
                 Movies.update(mid, mov);
             }));
         },
