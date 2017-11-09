@@ -1,6 +1,6 @@
 {
   "name": "Cinematic",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Lacy Morrow <me@lacymorrow.com>",
   "contributors": [
     {
@@ -21,17 +21,16 @@
   "bugs": {
     "url": "https://github.com/lacymorrow/cinematic/issues"
   },
-  "licenses": [
-    {
-      "type": "GPL"
-    }
-  ],
+  "license": "GPL-3.0",
   "devDependencies": {
+    "electron": "^1.7.9",
     "electron-packager": "^8.6.0",
     "meteor-desktop": "^0.11.1"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
-    "electron": "^1.6.11"
+    "electron-ipc-stream": "^0.2.0",
+    "ipc": "0.0.1",
+    "node-ipc": "^9.1.1"
   }
 }

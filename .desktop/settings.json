@@ -35,6 +35,11 @@
     "packageJsonFields": {
         "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
         "author": "Lacy Morrow",
+        "repository": {
+          "type": "git",
+          "url": "https://github.com/lacymorrow/cinematic"
+        },
+        "license": "GPL-3.0",
         "private": false
     },
     "builderOptions": {

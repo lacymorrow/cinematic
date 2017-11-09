@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import process from 'process';
-import { app, dialog } from 'electron';
+import { app, dialog, ipcMain, event, Menu } from 'electron';
 
 /**
  * Entry point to your native desktop code.
@@ -42,15 +42,102 @@ export default class Desktop {
         // reference. This is the reference to the current Electron renderer process (Chrome)
         // displaying your Meteor app.
         eventsBus.on('windowCreated', (window) => {
-            // set perfect size
-            window.setSize(1024,768);
+            window.webContents.on('dom-ready', () => {
+                // set perfect size
+                // window.setSize(1300,768);
+                // window.setFullScreen(true);
+                // window.minimize();
+                window.maximize();
+            });
 
             window.webContents.on('crashed', Desktop.windowCrashedHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
+
+            // https://stackoverflow.com/questions/44773029/how-to-select-file-or-folder-in-file-dialog
+            // listen to an open-file-dialog command and sending back selected information
+            desktop.on('open-file-dialog', () => {
+                movieSelectDialog();
+            });
+
+            // Build Menu
+            var menu_template = [
+                {},
+                {
+                    label: 'File',
+                    submenu: [{
+                            label: 'Select Movie Folder',
+                            accelerator: 'CommandOrControl+O',
+                            click: function() {
+                                movieSelectDialog();
+                            }
+                        },
+                        // {
+                        //   label:'Control',
+                        //   submenu:[
+                        //     {
+                        //       label:'Pause',
+                        //       accelerator:'CommandOrControl+E',
+                        //       click:function(){
+                        //         // sendPauseSongMessage();
+                        //       }
+                        //     },
+                        //     {
+                        //       label:'Next',
+                        //       accelerator:'CommandOrControl+N',
+                        //       click:function(){
+                        //         // sendNextSongMessage();
+                        //       }
+                        //     },
+                        //     {
+                        //       label:'Previous',
+                        //       accelerator:'CommandOrControl+P',
+                        //       click:function(){
+                        //         // sendNextSongMessage();
+                        //       }
+                        //     }
+                        //   ]
+                        // }
+                    ]
+                }
+            ];
+
+            const menu = Menu.buildFromTemplate(menu_template);
+            Menu.setApplicationMenu(menu);
+
+            const movieSelectDialog = () => {
+                dialog.showOpenDialog({
+                    filters: [
+                        { name: 'All Files', extensions: ['*'] },
+                        { name: 'Movies', extensions: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'] }
+                    ],
+                    title: 'Open Movies',
+                    message: 'Choose movie files to organize:',
+                    properties: ['openDirectory']
+                }, function(files) {
+                    if (files) {
+                        desktop.send('selected-file', files)
+                    } else {
+                        desktop.send('selected-file', false)
+                    }
+                });
+
+            }
+
         });
+
 
         // Consider setting a crash reporter ->
         // https://github.com/electron/electron/blob/master/docs/api/crash-reporter.md
+    }
+
+    /**
+     * Window crash handler.
+     */
+    static dialogLaunch() {
+        Desktop.displayRestartDialog(
+            'Application has crashed',
+            'Do you want to restart it?'
+        );
     }
 
     /**
@@ -83,7 +170,7 @@ export default class Desktop {
         Desktop.displayRestartDialog(
             'Application encountered an error',
             'Do you want to restart it?',
-             error.message
+            error.message
         );
     }
 
@@ -94,8 +181,7 @@ export default class Desktop {
      * @param {string} details - additional details to be displayed
      */
     static displayRestartDialog(title, message, details = '') {
-        dialog.showMessageBox(
-            { type: 'error', buttons: ['Restart', 'Shutdown'], title, message, detail: details },
+        dialog.showMessageBox({ type: 'error', buttons: ['Restart', 'Shutdown'], title, message, detail: details },
             (response) => {
                 if (response === 0) {
                     app.relaunch();

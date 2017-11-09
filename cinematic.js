@@ -52,12 +52,22 @@ Movies = new Mongo.Collection("movies");
 MovieCache = new Mongo.Collection("movieCache");
 
 
+// Meteor.isDesktop TODO
 
 /*
  * CLIENT
  */
 
+
 if (Meteor.isClient) {
+
+    if (Meteor.isDesktop) {
+        Desktop.on('desktop', 'selected-file', function (event, data) {
+            console.log('File Dialog Data:', event, data);
+        });
+        // Desktop.send('desktop', 'open-file-dialog');
+    } // end Meteor.isDesktop
+
     var ratingTimer;
     var totalRatings;
 
@@ -70,11 +80,16 @@ if (Meteor.isClient) {
     Meteor.subscribe("movies");
     Meteor.subscribe("movieCache");
 
-    // third-party
+    /* Third-Party */
+    // Progress bar
     NProgress.configure({ trickleRate: 0.01, trickleSpeed: 1400 });
+
+    // jQuery onReady()
     $(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    /* /End Third-Party */
 
     Template.registerHelper('equals',
         function(v1, v2) {
@@ -406,7 +421,7 @@ if (Meteor.isClient) {
  */
 
 if (Meteor.isServer) {
-    // import npm packages
+
     var open = Meteor.npmRequire('open');
     var omdbApi = Meteor.npmRequire('omdb-client');
     var movieInfo = Meteor.npmRequire('movie-info');
