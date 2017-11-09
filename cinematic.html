@@ -100,9 +100,13 @@
 		Browse
 		<span class="icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
 	</a>
-<!-- 	<div id="browse-input">
-		<input id="browse-directory-input" type="file" name="files" webkitdirectory mozdirectory directory multiple />
-	</div> -->
+	<div id="browse-input" class="hide">
+		<a id="browse-input-link" class="btn btn-primary browse-link" role="button">
+			Browse
+			<span class="icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+		</a>
+		<input id="browse-input-directory" type="file" name="files" webkitdirectory mozdirectory directory multiple />
+	</div>
 </template>
 
 <template name="navigation">

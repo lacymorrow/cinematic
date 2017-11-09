@@ -64,9 +64,9 @@ MovieCache = new Mongo.Collection("movieCache");
 if (Meteor.isClient) {
 
     if (Meteor.isDesktop) {
-        Desktop.on('desktop', 'selected-file', function (event, data) {
+        Desktop.on('desktop', 'selected-file', function(event, data) {
             console.log('Selected File Dialog Data:', event, data);
-            if(data.length === 1) {
+            if (data.length === 1) {
                 // Single folder to open
                 $('#path').val(data[0]);
                 setPath();
@@ -90,19 +90,21 @@ if (Meteor.isClient) {
     NProgress.configure({ trickleRate: 0.01, trickleSpeed: 1400 });
 
     /* onReady */
-    Template.body.rendered = function(){
-        $('[data-toggle="tooltip"]').tooltip();
+    Template.body.rendered = function() {
         if (Meteor.isDesktop) {
-            // Desktop Loaded
+            // Desktop Loaded; runs $("#browse-link").removeClass("hide");
             isDesktop();
+        } else {
+            $('#browse-input').removeClass('hide');
         }
+        $('[data-toggle="tooltip"]').tooltip();
     }
 
     /*
      * HELPERS
      * Define nav helpers
      */
-     
+
     Template.registerHelper('equals',
         function(v1, v2) {
             return (v1 === v2);
@@ -362,18 +364,21 @@ if (Meteor.isClient) {
 
     // define path events
     Template.path.events({
-        "change #browse-directory-input": function(event) {
+        "change #browse-input-directory": function(event) {
             event.preventDefault();
             broadcast(event.target.files);
 
             // broadcast
             var out = "";
             for (var i = event.target.files.length - 1; i >= 0; i--) {
+                Meteor.call('addMovie', event.target.files[i].name);
                 out += event.target.files[i].name + '\n';
             }
-            broadcast('Client:' + '\n' + out);
-            alert(out);
+            broadcast('Client adding files:' + '\n' + out);
             Meteor.call('directorySearch', out);
+        },
+        "click #browse-input-link": function(event) {
+            $('#browse-input-directory').click();
         },
         "keyup #path": function(event) {
             if (event.which == 13) {
@@ -385,7 +390,7 @@ if (Meteor.isClient) {
             setPath();
         },
         "click #browse-link": function(event) {
-            if(Meteor.isDesktop) {
+            if (Meteor.isDesktop) {
                 Desktop.send('desktop', 'open-file-dialog');
             }
         }
@@ -393,13 +398,10 @@ if (Meteor.isClient) {
 
     // client-side methods
 
-    var isDesktop = function(){
-      $('html').addClass('desktop-app');
-      // init browse button IPC
-      var e = $("#browse-link");
-      if(e.hasClass("hide")){
-          e.removeClass("hide"); 
-      }
+    var isDesktop = function() {
+        $('html').addClass('desktop-app');
+        // init browse button IPC
+        $("#browse-link").removeClass("hide");
     };
 
     var setLoaded = function(percentage) {
@@ -459,19 +461,26 @@ if (Meteor.isServer) {
 
     // define observable collections
     Meteor.publish("log", function() {
-        return Log.find(); });
+        return Log.find();
+    });
     Meteor.publish("state", function() {
-        return State.find(); });
+        return State.find();
+    });
     Meteor.publish("recent", function() {
-        return Recent.find(); });
+        return Recent.find();
+    });
     Meteor.publish("watched", function() {
-        return Watched.find(); });
+        return Watched.find();
+    });
     Meteor.publish("genres", function() {
-        return Genres.find(); });
+        return Genres.find();
+    });
     Meteor.publish("movies", function() {
-        return Movies.find(); });
+        return Movies.find();
+    });
     Meteor.publish("movieCache", function() {
-        return MovieCache.find(); });
+        return MovieCache.find();
+    });
 
     // server globals
     // startup functions
@@ -539,10 +548,12 @@ if (Meteor.isServer) {
             Movies.update({ '_id': mid }, { $set: { 'watched_time': time } })
         },
         addMovie: function(file, options) {
+
             // set options 
-            var ex = (options.ext) ? options.ext : '';
+            var options = (options) ? options : {};
+            var ex = (options.ext) ? options.ext : file.split('.').pop();
             var dirPath = (options.dirPath) ? options.dirPath : false;
-            
+
             var time = epoch();
             if (settings.parse_method == "regex") {
                 var regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
@@ -653,8 +664,8 @@ if (Meteor.isServer) {
                 MovieCache.insert(mov);
             }
         },
-        directorySearch: function(files) {
-            broadcast('Server:' + '\n' + files);
+        directorySearch: function(output) {
+            broadcast('Server adding files:' + '\n' + output);
         },
         findMovieDir: function() {
             var home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
@@ -676,7 +687,7 @@ if (Meteor.isServer) {
 
             // updates to gather
             var jobs = [
-                'updateTrailer',
+                'updateTrailer', // we call trailer first, because we cache as soon as we get any info; if program stops before all info loaded, still cached
                 'updateIntel',
                 'updateInfo'
             ];
@@ -709,7 +720,7 @@ if (Meteor.isServer) {
                             dirPath: dirPath,
                             ext: ex
                         });
-                        
+
                     } else if (recurse_level < settings.recurse_level) {
                         // ok let's try recursing, were avoiding as many fs calls as possible
                         // which is why i didn't call it in the condition above
@@ -728,7 +739,7 @@ if (Meteor.isServer) {
                     // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
                     var loaded = state && (100 - state.loading);
                 }); // end file scan forEach
-                
+
 
                 if (api_queue === 0) {
                     State.update("0", { $set: { loading: 0 } });
@@ -788,7 +799,8 @@ if (Meteor.isServer) {
                         name: 'IMDB RATING',
                         score: parseFloat(res.imdbRating),
                         count: Array.apply(null, Array(Math.round(res.imdbRating))).map(function() {
-                            return {}; })
+                            return {};
+                        })
                     });
                 }
                 if (res.Metascore) {
@@ -796,7 +808,8 @@ if (Meteor.isServer) {
                         name: 'METASCORE RATING',
                         score: res.Metascore / 10,
                         count: Array.apply(null, Array(Math.round(res.Metascore / 10))).map(function() {
-                            return {}; })
+                            return {};
+                        })
                     });
                 }
                 mov.imdb_id = res.imdbID;
@@ -811,7 +824,7 @@ if (Meteor.isServer) {
                     mov.year = res.Year;
                 }
                 mov.intel = res;
-                mov.cached = true;// WE CACHE HALF-LOADED FILES. BAD? PROBABLY
+                mov.cached = true; // WE CACHE HALF-LOADED FILES. BAD? PROBABLY
                 Movies.update(mid, mov);
             }));
         },
@@ -833,7 +846,8 @@ if (Meteor.isServer) {
                         name: 'TMDB RATING',
                         score: parseFloat(res.vote_average),
                         count: Array.apply(null, Array(Math.round(res.vote_average))).map(function() {
-                            return {}; })
+                            return {};
+                        })
                     });
                 }
                 mov.imdb_id = res.imdb_id;
@@ -849,7 +863,7 @@ if (Meteor.isServer) {
                     mov.year = res.Year;
                 }
                 mov.info = res;
-                mov.cached = true;// WE CACHE HALF-LOADED FILES. BAD? PROBABLY
+                mov.cached = true; // WE CACHE HALF-LOADED FILES. BAD? PROBABLY
                 Movies.update(mid, mov);
             }));
         },
@@ -947,7 +961,7 @@ function replaceAll(str, find, replace) {
     return str.replace(new RegExp(find, 'g'), replace);
 }
 
-var parseName = function (name) {
+var parseName = function(name) {
     name = replaceAll(name, '_', ' '); // replace underscores with spaces
     name = replaceAll(name, '-', ' ');
     return name;
