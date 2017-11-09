@@ -109,11 +109,11 @@ export default class Desktop {
             const movieSelectDialog = () => {
                 dialog.showOpenDialog({
                     filters: [
-                        { name: 'All Files', extensions: ['*'] },
-                        { name: 'Movies', extensions: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'] }
+                        { name: 'Movies', extensions: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'] },
+                        { name: 'All Files', extensions: ['*'] }
                     ],
                     title: 'Open Movies',
-                    message: 'Choose movie files to organize:',
+                    message: 'Choose movie folder to organize:',
                     properties: ['openDirectory']
                 }, function(files) {
                     if (files) {

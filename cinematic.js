@@ -10,6 +10,10 @@
  * - Ambiguous search
  * - Keyboard Navigation
 
+ * - Select directory
+ * - Select multiple files
+ * - Change file browser per browser/desktop
+
  parse intel genres
  scroll anywhere
 
@@ -35,7 +39,7 @@ var settings = {
 
     // app-specific -- affects how app is run and may affect performance
     max_connections: 4, // max number of simultaneous
-    parse_method: "parse", // "regex", "parse"
+    parse_method: "parse", // Filename parsing options: "regex", "parse"
     rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
     retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
     recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole === more processing time
@@ -63,9 +67,13 @@ if (Meteor.isClient) {
 
     if (Meteor.isDesktop) {
         Desktop.on('desktop', 'selected-file', function (event, data) {
-            console.log('File Dialog Data:', event, data);
+            console.log('Selected File Dialog Data:', event, data);
+            if(data.length === 1) {
+                // Single folder to open
+                $('#path').val(data[0]);
+                setPath();
+            }
         });
-        // Desktop.send('desktop', 'open-file-dialog');
     } // end Meteor.isDesktop
 
     var ratingTimer;
@@ -80,20 +88,23 @@ if (Meteor.isClient) {
     Meteor.subscribe("movies");
     Meteor.subscribe("movieCache");
 
-    /* Third-Party */
-    // Progress bar
+    /* Third-Party Progress bar: NProgress */
     NProgress.configure({ trickleRate: 0.01, trickleSpeed: 1400 });
 
-    // jQuery onReady()
-    $(function() {
+    /* onReady */
+    Template.body.rendered = function(){
         $('[data-toggle="tooltip"]').tooltip();
         if (Meteor.isDesktop) {
-
+            // Desktop Loaded
+            isDesktop();
         }
-    });
+    }
 
-    /* /End Third-Party */
-
+    /*
+     * HELPERS
+     * Define nav helpers
+     */
+     
     Template.registerHelper('equals',
         function(v1, v2) {
             return (v1 === v2);
@@ -105,11 +116,6 @@ if (Meteor.isClient) {
         }
     );
 
-    /*
-     * HELPERS
-     * Define nav helpers
-     */
-     
     Template.body.helpers({
         page: function() {
             return Session.get('currentPage');
@@ -379,14 +385,24 @@ if (Meteor.isClient) {
         },
         "click #search-refresh": function(event) {
             setPath();
+        },
+        "click #browse-link": function(event) {
+            if(Meteor.isDesktop) {
+                Desktop.send('desktop', 'open-file-dialog');
+            }
         }
     });
 
     // client-side methods
 
-    var browseClick = function () {
-
-    }
+    var isDesktop = function(){
+      $('html').addClass('desktop-app');
+      // init browse button IPC
+      var e = $("#browse-link");
+      if(e.hasClass("hide")){
+          e.removeClass("hide"); 
+      }
+    };
 
     var setLoaded = function(percentage) {
         NProgress.start();
