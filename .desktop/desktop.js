@@ -53,11 +53,6 @@ export default class Desktop {
             window.webContents.on('crashed', Desktop.windowCrashedHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
 
-            // https://stackoverflow.com/questions/44773029/how-to-select-file-or-folder-in-file-dialog
-            // listen to an open-file-dialog command and sending back selected information
-            desktop.on('open-file-dialog', () => {
-                movieSelectDialog();
-            });
 
             // Build Menu
             var menu_template = [
@@ -104,6 +99,13 @@ export default class Desktop {
             const menu = Menu.buildFromTemplate(menu_template);
             Menu.setApplicationMenu(menu);
 
+            /* IPC to open desktop dialog */
+            // https://stackoverflow.com/questions/44773029/how-to-select-file-or-folder-in-file-dialog
+            // listen to an open-file-dialog command and sending back selected information
+            desktop.on('open-file-dialog', () => {
+                movieSelectDialog();
+            });
+
             const movieSelectDialog = () => {
                 dialog.showOpenDialog({
                     filters: [
@@ -135,7 +137,7 @@ export default class Desktop {
      */
     static dialogLaunch() {
         Desktop.displayRestartDialog(
-            'Application has crashed',
+            'Cinematic has crashed unexpectedly',
             'Do you want to restart it?'
         );
     }
@@ -145,7 +147,7 @@ export default class Desktop {
      */
     static windowCrashedHandler() {
         Desktop.displayRestartDialog(
-            'Application has crashed',
+            'Cinematic has crashed',
             'Do you want to restart it?'
         );
     }
@@ -155,7 +157,7 @@ export default class Desktop {
      */
     static windowUnresponsiveHandler() {
         Desktop.displayRestartDialog(
-            'Application is not responding',
+            'Cinematic is not responding',
             'Do you want to restart it?'
         );
     }
@@ -168,7 +170,7 @@ export default class Desktop {
         // Consider sending a log somewhere, it is good be aware your users are having problems,
         // right?
         Desktop.displayRestartDialog(
-            'Application encountered an error',
+            'Cinematic encountered an error',
             'Do you want to restart it?',
             error.message
         );

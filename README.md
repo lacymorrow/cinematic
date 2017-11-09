@@ -66,15 +66,20 @@ From the `cinematic` directory run `meteor` to quickstart the application on [ht
 To package Cinematic for your machine architecture:
 
 ```bash
-# The magic script.
+# The magic script. Builds for osx and ia32 and x64 for windows and linux. 
 
 npm run desktop -- build-installer --all-archs --win --mac --linux --production
 
 ```
 
+To only build for current architecture: `npm run desktop -- build-installer --production`
+
+
+
+##### Other Notes
 
 ```
-# deploy server
+# deploy server for hosted media server use
 DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy myapp.meteorapp.com --settings settings.json
 
 # build the calculator for the local machine, with a connection to the production server
@@ -82,9 +87,9 @@ meteor --settings settings.json --mobile-server https://myapp.meteorapp.com
 ```
 
 
-See [arboleya/electrify](https://github.com/arboleya/electrify) for more information.
+See [wojtkowiak/meteor-desktop](https://github.com/wojtkowiak/meteor-desktop) for more information.
 
-~We no longer use [wojtkowiak/meteor-desktop](https://github.com/wojtkowiak/meteor-desktop) for packaging~
+_We no longer use [arboleya/electrify](https://github.com/arboleya/electrify) for packaging_
 
 
 # Design

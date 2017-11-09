@@ -91,6 +91,38 @@ header {
 		    }
 		}
 	}
+
+	#browse-link {
+
+		display: inline-block;
+		position: relative;
+		padding: .8em 1.4em;
+		margin: 1em;
+		padding-right: 4.7em;
+		border: none;
+		border-radius: 0;
+		color: black;
+		background: @gray-button-light;
+		-webkit-font-smoothing: antialiased;
+
+		.icon {
+			border: none;
+			background: @gray-button-dark;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			padding-top: inherit;
+			padding-bottom: inherit;
+			width: 2.8em;
+			text-align: center;
+		}
+
+		&:hover {
+		}
+
+	}
+
 	#info-icon {
 		float: right;
 		margin: 1em;

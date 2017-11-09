@@ -87,6 +87,9 @@ if (Meteor.isClient) {
     // jQuery onReady()
     $(function() {
         $('[data-toggle="tooltip"]').tooltip();
+        if (Meteor.isDesktop) {
+
+        }
     });
 
     /* /End Third-Party */
@@ -102,8 +105,11 @@ if (Meteor.isClient) {
         }
     );
 
-
-    // define nav helpers
+    /*
+     * HELPERS
+     * Define nav helpers
+     */
+     
     Template.body.helpers({
         page: function() {
             return Session.get('currentPage');
@@ -135,6 +141,14 @@ if (Meteor.isClient) {
             var loaded = state && (100 - state.loading);
             setLoaded(loaded / 100);
             return loaded;
+        }
+    });
+
+    // define path helpers
+    Template.path.helpers({
+        path: function() {
+            var state = State.findOne({ _id: "0" });
+            return state && state.path;
         }
     });
 
@@ -177,14 +191,6 @@ if (Meteor.isClient) {
         }
     });
 
-    // define path helpers
-    Template.path.helpers({
-        path: function() {
-            var state = State.findOne({ _id: "0" });
-            return state && state.path;
-        }
-    });
-
     // sort helpers
     Template.sort.helpers({
         showSort: function() {
@@ -198,6 +204,11 @@ if (Meteor.isClient) {
             return Session.get('currentSort');
         }
     });
+
+
+    /*
+     * Events
+     */
 
     Template.body.events({
         "click #refresh": function(event) {
@@ -233,7 +244,7 @@ if (Meteor.isClient) {
     });
 
     // handle page changes with filter
-    Template.navigation.events = {
+    Template.navigation.events({
         "click #links-panel li.link": function(event) {
             var page = Session.get('currentPage');
             if (Session.get('currentSort') == 'Recent') {
@@ -274,10 +285,10 @@ if (Meteor.isClient) {
                 Session.set('movieQuery', {});
             }
         }
-    }
+    });
 
 
-    Template.details.events = {
+    Template.details.events({
         "click #rating": function(event) {
             // switch ratings
             if (ratingTimer)
@@ -295,10 +306,10 @@ if (Meteor.isClient) {
             // switch trailers
             Session.set('currentTrailer', event.currentTarget.dataset.id);
         }
-    }
+    });
 
     // define movie events
-    Template.movies.events = {
+    Template.movies.events({
         // show right panel
         "click .movie-image": function(event) {
             // switch current movie in details panel
@@ -343,10 +354,10 @@ if (Meteor.isClient) {
                 //   $('.movie-image[tabIndex="'+currTab+'"]').focus();
             }
         }
-    }
+    });
 
     // define path events
-    Template.path.events = {
+    Template.path.events({
         "change #directory-path": function(event) {
             event.preventDefault();
             broadcast(event.target.files);
@@ -369,9 +380,13 @@ if (Meteor.isClient) {
         "click #search-refresh": function(event) {
             setPath();
         }
-    }
+    });
 
     // client-side methods
+
+    var browseClick = function () {
+
+    }
 
     var setLoaded = function(percentage) {
         NProgress.start();
