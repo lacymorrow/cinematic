@@ -29,11 +29,8 @@
 
 var settings = {
     /* Secrets */
-    // api_key: (secrets.api_key) ? secrets.api_key : false, // http://docs.themoviedb.apiary.io/ config
-    // omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key    
-    
-    api_key: '9d2bff12ed955c7f1f74b83187f188ae', // http://docs.themoviedb.apiary.io/ config
-    omdb_key: 'e0341ca3', // omdb key
+    api_key: (process.env.TMDB_KEY) ? process.env.TMDB_KEY : false, // http://docs.themoviedb.apiary.io/ config
+    omdb_key: (process.env.OMDB_KEY) ? process.env.OMDB_KEY : false, // omdb api key    
 
     /* Defaults */
     DEFAULT_PATH: '/Users/',

@@ -1,4 +1,5 @@
 # Confidential
+env.json
 secrets
 .secrets
 secrets.*
