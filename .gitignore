@@ -34,3 +34,4 @@ node_modules
 
 version.desktop
 .desktop-installer
+.desktop_node_modules
