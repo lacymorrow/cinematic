@@ -1,0 +1,43 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
+    },
+    "plugins": [
+        "import"
+    ],
+    "globals": {
+        "Meteor": true,
+        "Desktop": true,
+        "Package": true
+    },
+    "settings": {
+        "import/core-modules": [
+            "electron",
+            "lodash/assignIn",
+            "fs-plus"
+        ]
+    },
+    "rules": {
+        "indent": [
+            2,
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "comma-dangle": [
+            0
+        ],
+        "no-bitwise": [
+            0
+        ],
+        "import/no-extraneous-dependencies": ["error",
+            {
+                "devDependencies": ["**/tests/**/*.js"]
+            }
+        ]
+    }
+}
