@@ -1,5 +1,6 @@
 # Confidential
 secrets
+.secrets
 secrets.*
 
 # Logs

@@ -25,15 +25,12 @@
 
  */
 
-var secrets = require('./secrets');
+// var secrets = require('./secrets');
 
 var settings = {
     /* Secrets */
-    api_key: (secrets.api_key) ? secrets.api_key : false, // http://docs.themoviedb.apiary.io/ config
-    omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key
     // api_key: (secrets.api_key) ? secrets.api_key : false, // http://docs.themoviedb.apiary.io/ config
-    // omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key
-    
+    // omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key    
     
     api_key: '9d2bff12ed955c7f1f74b83187f188ae', // http://docs.themoviedb.apiary.io/ config
     omdb_key: 'e0341ca3', // omdb key
