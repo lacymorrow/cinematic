@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import process from 'process';
-import { app, dialog, ipcMain, event, Menu } from 'electron';
+import { app, dialog, event, ipcMain, Menu } from 'electron';
 
 /**
  * Entry point to your native desktop code.
@@ -99,7 +99,13 @@ export default class Desktop {
             const menu = Menu.buildFromTemplate(menu_template);
             Menu.setApplicationMenu(menu);
 
-            /* IPC to open desktop dialog */
+
+            /* IPC */
+
+            desktop.on('load-settings', (args) => {
+                desktop.cinematic_settings = args;
+            });
+
             // https://stackoverflow.com/questions/44773029/how-to-select-file-or-folder-in-file-dialog
             // listen to an open-file-dialog command and sending back selected information
             desktop.on('open-file-dialog', () => {

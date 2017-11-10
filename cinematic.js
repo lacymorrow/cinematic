@@ -12,9 +12,6 @@
  * - parse intel genres ( old )
  * - auto rename files ( out of scope )
 
- * - Select directory
- * - Select multiple files
- * - Change file browser per browser/desktop
  * - Pass errors to front end
 
  *****
@@ -25,25 +22,29 @@
 
  */
 
+var secrets = require('./secrets');
 
 var settings = {
+    /* Secrets */
+    api_key: (secrets.api_key) ? secrets.api_key : false, // http://docs.themoviedb.apiary.io/ config
+    omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key
+
+    /* Defaults */
     DEFAULT_PATH: '/Users/',
     valid_types: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'],
     sort_types: ["Alphabetical", "Popularity", "Release Date", "Runtime", "Random" /*, "Ratings" */ ],
     cache: 3600, // seconds; 604800 = 7 days
     overview_length: 'full', // "short", "full" - from omdb
 
-    // http://docs.themoviedb.apiary.io/ config
-    api_key: '9d2bff12ed955c7f1f74b83187f188ae',
-    // omdb key
-    omdb_key: 'e0341ca3',
+    /* URLs */
     base_url: "http://image.tmdb.org/t/p/",
     secure_base_url: "https://image.tmdb.org/t/p/",
     genre_url: "http://api.themoviedb.org/3/genre/movie/list",
     backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
     poster_size: 'w780', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
 
-    // app-specific -- affects how app is run and may affect performance
+    /* app-specific */
+    // -- affects how app is run and may affect performance
     max_connections: 4, // max number of simultaneous
     parse_method: "parse", // Filename parsing options: "regex", "parse"; regex is kinda faulty but perfect for well-organized files lile This[2004].avi
     rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
@@ -72,6 +73,9 @@ MovieCache = new Mongo.Collection("movieCache");
 if (Meteor.isClient) {
 
     if (Meteor.isDesktop) {
+        // Send settings
+        Desktop.send('desktop', 'load-settings', settings)
+        // Receive files from browser
         Desktop.on('desktop', 'selected-file', function(event, data) {
             console.log('Selected File Dialog Data:', event, data);
             if (data.length === 1) {
