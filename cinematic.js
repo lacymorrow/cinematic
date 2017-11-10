@@ -1,4 +1,7 @@
 /*
+ * Cinematic, (c) 2017 Lacy Morrow - http://github/lacmorrow/cinematic
+ * @license GPL
+
  * TODO
  * - Ability to add individual files via dialog
  * - Tell me which way filters are sorted by
@@ -28,6 +31,12 @@ var settings = {
     /* Secrets */
     api_key: (secrets.api_key) ? secrets.api_key : false, // http://docs.themoviedb.apiary.io/ config
     omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key
+    // api_key: (secrets.api_key) ? secrets.api_key : false, // http://docs.themoviedb.apiary.io/ config
+    // omdb_key: (secrets.omdb_key) ? secrets.omdb_key : false, // omdb api key
+    
+    
+    api_key: '9d2bff12ed955c7f1f74b83187f188ae', // http://docs.themoviedb.apiary.io/ config
+    omdb_key: 'e0341ca3', // omdb key
 
     /* Defaults */
     DEFAULT_PATH: '/Users/',
