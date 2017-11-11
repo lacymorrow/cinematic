@@ -29,8 +29,10 @@
 
 var settings = {
     /* Secrets */
-    api_key: (process.env.TMDB_KEY) ? process.env.TMDB_KEY : false, // http://docs.themoviedb.apiary.io/ config
-    omdb_key: (process.env.OMDB_KEY) ? process.env.OMDB_KEY : false, // omdb api key    
+    DEFAULT_TMDB_KEY: '9d2bff12ed955c7f1f74b83187f188ae',
+    DEFAULT_OMDB_KEY: 'e0341ca3',
+    api_key: (process.env.TMDB_KEY) ? process.env.TMDB_KEY : DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
+    omdb_key: (process.env.OMDB_KEY) ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // omdb api key    
 
     /* Defaults */
     DEFAULT_PATH: '/Users/',
@@ -789,7 +791,7 @@ if (Meteor.isServer) {
                 });
         },
         updateIntel: function(mid, name, year) {
-            omdbApi.get({ omdb_key: settings.omdb_key, title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full' }, Meteor.bindEnvironment(function(err, res) {
+            omdbApi.get({ omdb_key: settings.omdb_key, apiKey: settings.omdb_key, title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full' }, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateIntel');
                 if (err) {
                     broadcast("ombd-client error: " + name + ': ' + err);
