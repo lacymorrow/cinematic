@@ -27,13 +27,15 @@
  */
 
 // var secrets = require('./secrets');
+/* Secrets */
+var DEFAULT_APIARY_KEY = '1f1f98ca6e0744b46ebf4f582dc25c24b';
+var DEFAULT_TMDB_KEY = '9d2bff12ed955c7f1f74b83187f188ae';
+var DEFAULT_OMDB_KEY = 'e0341ca3';
 
 var settings = {
-    /* Secrets */
-    DEFAULT_TMDB_KEY: '9d2bff12ed955c7f1f74b83187f188ae',
-    DEFAULT_OMDB_KEY: 'e0341ca3',
-    api_key: (process.env.TMDB_KEY) ? process.env.TMDB_KEY : this.DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
-    omdb_key: (process.env.OMDB_KEY) ? process.env.OMDB_KEY : this.DEFAULT_OMDB_KEY, // omdb api key    
+    apiary_key: (process.env.APIARY_KEY) ? process.env.APIARY_KEY : DEFAULT_APIARY_KEY, // omdb api key
+    tmdb_key: (process.env.TMDB_KEY) ? process.env.TMDB_KEY : DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
+    omdb_key: (process.env.OMDB_KEY) ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // omdb api key
 
     /* Defaults */
     DEFAULT_PATH: '/Users/',
@@ -777,7 +779,7 @@ if (Meteor.isServer) {
         },
         updateGenres: function() {
             Genres.remove({});
-            HTTP.call("GET", settings.genre_url + '?api_key=' + settings.api_key,
+            HTTP.call("GET", settings.genre_url + '?api_key=' + settings.tmdb_key,
                 function(err, res) {
                     if (err) {
                         broadcast('Cinematic/updateGenres: ' + err);
