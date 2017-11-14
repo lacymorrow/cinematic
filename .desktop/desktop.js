@@ -66,6 +66,14 @@ export default class Desktop {
                                 movieSelectDialog();
                             }
                         },
+                        // Don't forget a quit hotkey!
+                        {
+                            label: 'Quit',
+                            accelerator: 'CommandOrControl+Q',
+                            click: function() {
+                                app.exit(0);
+                            }
+                        },
                         // {
                         //   label:'Control',
                         //   submenu:[
