@@ -63,15 +63,19 @@ To package Cinematic for your machine architecture:
 
 ###### YOU MUST HAVE A METEOR INSTANCE RUNNING WITH MOBILE ARCHITECTURE ENABLED IN A SEPARATE TERMINAL
 
-`meteor --mobile-server=127.0.0.1:3000`
+`npm run mobile` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
 
 In your main terminal:
 
+
+#### Build and test Desktop version. 
+
+`npm run desktop`
+
+
+#### Full Cross-platform build
+
 ```bash
-# Build and test Desktop version. 
-
-npm run desktop
-
 # The magic script. Builds for osx and ia32 and x64 for windows and linux. 
 
 npm run desktop -- build-installer --all-archs --win --mac --linux --production
@@ -95,7 +99,7 @@ meteor --settings settings.json --mobile-server https://myapp.meteorapp.com
 
 See [wojtkowiak/meteor-desktop](https://github.com/wojtkowiak/meteor-desktop) for more information.
 
-_We no longer use [arboleya/electrify](https://github.com/arboleya/electrify) for packaging_
+_As of v1.1.0, we no longer use [arboleya/electrify](https://github.com/arboleya/electrify) for packaging_
 
 
 # Design
@@ -111,7 +115,6 @@ Thanks to:
 # Improvements
 * batch send data to save http requests (force https?)
 * Boost that cache
-* Cross-OS node file chooser
 
 
 ### Need help?
