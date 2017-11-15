@@ -26,14 +26,12 @@
 
  */
 
-// var secrets = require('./secrets');
-/* Secrets */
-var DEFAULT_APIARY_KEY = '1f1f98ca6e0744b46ebf4f582dc25c24b';
+/* Secrets - public til they're blocked. 4 years going strong, thank TMDB and OMDB! */
 var DEFAULT_TMDB_KEY = '9d2bff12ed955c7f1f74b83187f188ae';
 var DEFAULT_OMDB_KEY = 'e0341ca3';
 
 var settings = {
-    apiary_key: (process.env.APIARY_KEY) ? process.env.APIARY_KEY : DEFAULT_APIARY_KEY, // omdb api key
+    /* Allow for personal api key secrets for analytics */
     tmdb_key: (process.env.TMDB_KEY) ? process.env.TMDB_KEY : DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
     omdb_key: (process.env.OMDB_KEY) ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // omdb api key
 
@@ -470,7 +468,8 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
 
     var open = Meteor.npmRequire('open');
-    var omdbApi = Meteor.npmRequire('omdb-client');
+    // var omdbApi = Meteor.npmRequire('omdb-client');
+    var omdbApi = Meteor.npmRequire('lacymorrow-omdb-client');
     var movieInfo = Meteor.npmRequire('movie-info');
     var movieTrailer = Meteor.npmRequire('movie-trailer');
     var parseTorrentName = Meteor.npmRequire('parse-torrent-name');
@@ -743,7 +742,7 @@ if (Meteor.isServer) {
                         // first, is this a directory?
                         fs.lstat(dirPath + file, Meteor.bindEnvironment(function(err, stats) {
                             if (err) {
-                                broadcast("fs error: " + name + ': ' + err);
+                                broadcast("fs error: " + name + ': ' + err, true);
                                 return false;
                             }
                             if (stats.isDirectory()) {
@@ -761,7 +760,7 @@ if (Meteor.isServer) {
                     State.update("0", { $set: { loading: 0 } });
                 }
             } catch (e) {
-                broadcast('Error populating movies. ' + e.name + ' ' + e.message);
+                broadcast('Error populating movies. ' + e.name + ' ' + e.message, true);
             }
         },
         updatePath: function(path) {
@@ -774,7 +773,7 @@ if (Meteor.isServer) {
                 }
                 Meteor.call('populateMovies', path, 0);
             } catch (e) {
-                broadcast('Error getting path. ' + e.name + ' ' + e.message);
+                broadcast('Error getting path. ' + e.name + ' ' + e.message, true);
             }
         },
         updateGenres: function() {
@@ -789,7 +788,7 @@ if (Meteor.isServer) {
                         });
                         State.update("0", { $set: { cache_genre: epoch() } });
                     } else {
-                        broadcast('Cinematic: Error getting genre list.')
+                        broadcast('Cinematic: Error getting genre list.', true)
                     }
                 });
         },
@@ -797,7 +796,7 @@ if (Meteor.isServer) {
             omdbApi.get({ omdb_key: settings.omdb_key, apiKey: settings.omdb_key, title: name, plot: (settings.overview_length === 'short') ? 'short' : 'full' }, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateIntel');
                 if (err) {
-                    broadcast("ombd-client error: " + name + ': ' + err);
+                    broadcast("ombd-client error: " + name + ': ' + err, true);
                     return false;
                 }
                 // strip runtime characters
@@ -848,7 +847,7 @@ if (Meteor.isServer) {
             movieInfo(name, year, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateInfo');
                 if (err) {
-                    broadcast("movie-info error: " + name + ': ' + err);
+                    broadcast("movie-info error: " + name + ': ' + err, true);
                     return false;
                 }
                 _.each(res.genre_ids, function(e, i) {
@@ -887,7 +886,7 @@ if (Meteor.isServer) {
             movieTrailer(name, year, true, Meteor.bindEnvironment(function(err, res) {
                 Meteor.call('queueDone', 'updateTrailer');
                 if (err) {
-                    broadcast("movie-trailer error: " + name + ': ' + err);
+                    broadcast("movie-trailer error: " + name + ': ' + err, true);
                     return false;
                 }
                 Movies.update(mid, { $set: { trailer: res } });
@@ -962,7 +961,10 @@ if (Meteor.isServer) {
  */
 
 // safe console.log which outputs in the called context - client/server
-var broadcast = function(msg) {
+var broadcast = function(msg, err) {
+    if(err === true) {
+        // Log error
+    }
     Log.insert({ time: epoch(), msg: msg });
     if (typeof console !== 'undefined')
         console.log(msg);

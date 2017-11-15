@@ -63,7 +63,7 @@ To package Cinematic for your machine architecture:
 
 ###### YOU MUST HAVE A METEOR INSTANCE RUNNING WITH MOBILE ARCHITECTURE ENABLED IN A SEPARATE TERMINAL
 
-`npm run mobile` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
+`npm run serve` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
 
 In your main terminal:
 

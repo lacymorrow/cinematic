@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "meteor",
-    "mobile": "meteor --mobile-server=127.0.0.1:3000",
+    "serve": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop"
   },
   "bugs": {
