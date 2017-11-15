@@ -24,7 +24,7 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "^1.7.9",
+    "electron": "^1.8.1",
     "meteor-desktop": "^0.11.1"
   },
   "dependencies": {
