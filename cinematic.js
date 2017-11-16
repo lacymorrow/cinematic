@@ -4,6 +4,7 @@
 
  * TODO
  * - PUBLIC API BRO... SMH
+ * - Limit Request count (throttle requests)
  * - Ability to add individual files via dialog
  * - Tell me which way filters are sorted by
  * - Keyboard Navigation
@@ -51,10 +52,10 @@ var settings = {
 
     /* app-specific */
     // -- affects how app is run and may affect performance
-    max_connections: 4, // max number of simultaneous
+    max_connections: 3, // max number of simultaneous, more is faster but more api hits at once; 5 is okay...
     parse_method: "parse", // Filename parsing options: "regex", "parse"; regex is kinda faulty but perfect for well-organized files lile This[2004].avi
     rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
-    retry_delay: 3000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
+    retry_delay: 4000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
     recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole === more processing time
     ignore_list: ['sample', 'etrg'] // a lowercase list of movie titles to ignore; ex: sample.avi
 }
