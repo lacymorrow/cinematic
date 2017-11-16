@@ -5,7 +5,7 @@ Have a digital movie collection?
 
 Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection. 
 
-##### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
+#### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
 ![Cinematic](http://lacymorrow.com/images/github/cinematic.gif)
 
