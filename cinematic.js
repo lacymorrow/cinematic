@@ -38,7 +38,6 @@ var settings = {
     omdb_key: process.env.OMDB_KEY ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // omdb api key
 
     /* Defaults */
-    DEFAULT_PATH: '/Users/',
     valid_types: [
         '.avi',
         '.flv',
@@ -464,8 +463,6 @@ if (Meteor.isClient) {
             if (path.slice(-1) != '/') {
                 path = path + '/';
             }
-        } else {
-            path = settings.DEFAULT_PATH;
         }
         Meteor.call('updatePath', path);
     };
@@ -504,6 +501,7 @@ if (Meteor.isServer) {
     var movieInfo = Meteor.npmRequire('movie-info');
     var movieTrailer = Meteor.npmRequire('movie-trailer');
     var parseTorrentName = Meteor.npmRequire('parse-torrent-name');
+
 
     // define observable collections
     Meteor.publish('log', function() {
@@ -749,10 +747,9 @@ if (Meteor.isServer) {
             broadcast('Server adding files:' + '\n' + output);
         },
         findMovieDir: function() {
-            var home =
-                process.env[
-                    process.platform == 'win32' ? 'USERPROFILE' : 'HOME'
-                ];
+            // Get default media directory. Fetches ~/movies, ~/videos, ~
+
+            var home = Meteor.npmRequire('os').homedir()
             if (home.slice(-1) != '/') {
                 home = home + '/';
             }
@@ -853,7 +850,7 @@ if (Meteor.isServer) {
         },
         updatePath: function(path) {
             try {
-                if (fs.statSync(path).isDirectory()) {
+                if (fs.existsSync(path) && fs.statSync(path).isDirectory()) {
                     Movies.remove({});
                     State.update('0', { $set: { path: path } });
                 } else {

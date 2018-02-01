@@ -58,10 +58,11 @@ You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www
 Install dependencies:
 ```bash
 cd cinematic
-npm install # or `yarn install`!
+npm install    # or `yarn install`!
+meteor         # http://localhost:3000
 ```
 
-From the `cinematic` directory run `meteor` to quickstart the application on [http://localhost:3000](http://localhost:3000).
+Running `meteor` from the `cinematic` directory quickstarts the application on [http://localhost:3000](http://localhost:3000).
 
 ### Packaging
 
@@ -99,7 +100,7 @@ To only build for current architecture: `npm run desktop -- build-installer --pr
 # deploy server for hosted media server use
 DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy myapp.meteorapp.com --settings settings.json
 
-# build the calculator for the local machine, with a connection to the production server
+# build the project for the local machine, with a connection to the production server
 meteor --settings settings.json --mobile-server https://myapp.meteorapp.com  
 ```
 

@@ -17,14 +17,14 @@
       "integrity": "sha512-0lxpMC7Am26F04Zi2i8+iQ5oR8hyxc/vlcE7LvpkK5Ln0PyoHkPTNhZaS0fBk16wAM336a4b9PHIFds+XqqA9g=="
     },
     "movie-info": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/movie-info/-/movie-info-1.0.2.tgz",
-      "integrity": "sha1-V36Evnh8a60eZevybXNkOCWqHiE="
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/movie-info/-/movie-info-1.0.3.tgz",
+      "integrity": "sha512-Bh0/rEtLkGofgXshM77TTqTnuqccBRScFuu3yIbbSHREmmEgLF6aBlli2RJ/bBD2s4MrL9nZfvgC3am02AqxKQ=="
     },
     "movie-trailer": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/movie-trailer/-/movie-trailer-1.0.3.tgz",
-      "integrity": "sha1-TPQ+gf1mhIZvvCb62fMlz4yvAMk="
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/movie-trailer/-/movie-trailer-1.0.4.tgz",
+      "integrity": "sha512-Z2ipVu7MiF1bRd+qvyqnsTBB9Y1DQSsMlTlxlvZ4+UcSqX6pQbnTt9f7IGYWltam9qY57bF+GlEwpGY3l+BoQA=="
     },
     "open": {
       "version": "0.0.5",
