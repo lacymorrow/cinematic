@@ -55,6 +55,12 @@ Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacy
 
 You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www.meteor.com/install) installed.
 
+Install dependencies:
+```bash
+cd cinematic
+npm install # or `yarn install`!
+```
+
 From the `cinematic` directory run `meteor` to quickstart the application on [http://localhost:3000](http://localhost:3000).
 
 ### Packaging
@@ -76,7 +82,8 @@ In your main terminal:
 #### Full Cross-platform build
 
 ```bash
-# The magic script. Builds for osx and ia32 and x64 for windows and linux. 
+# The magic script. Builds for osx and ia32 and x64 for windows and linux.
+# Get some coffee, this takes awhile.
 
 npm run desktop -- build-installer --all-archs --win --mac --linux --production
 

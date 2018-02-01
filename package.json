@@ -24,11 +24,17 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "^1.8.1",
-    "meteor-desktop": "^0.11.1"
+    "electron": "^1.7.12",
+    "eslint": "^4.13.1",
+    "meteor-desktop": "^0.11.2"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
-    "omdb-client": "github:lacymorrow/omdb-client"
+    "omdb-client": "lacymorrow/omdb-client",
+    "movie-art": "1.0.7",
+    "movie-info": "1.0.3",
+    "movie-trailer": "1.0.4",
+    "parse-torrent-name": "0.5.2",
+    "open": "0.0.5"
   }
 }
