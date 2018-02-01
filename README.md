@@ -1,4 +1,4 @@
-Cinematic
+Cinematic [![dependencies Status](https://david-dm.org/lacymorrow/cinematic/status.svg)](https://david-dm.org/lacymorrow/cinematic)
 ===========
 
 Have a digital movie collection?
