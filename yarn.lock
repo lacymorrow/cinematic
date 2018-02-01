@@ -26,10 +26,6 @@
   version "7.0.52"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.52.tgz#8990d3350375542b0c21a83cd0331e6a8fc86716"
 
-"@types/node@^8.0.24":
-  version "8.5.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.9.tgz#7155cfb4ae405bca4dd8df1a214c339e939109bf"
-
 JSONStream@~1.3.0:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.2.tgz#c102371b6ec3a7cf3b847ca00c20bb0fce4c6dea"
@@ -56,8 +52,8 @@ acorn@^3.0.4:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-3.3.0.tgz#45e37fb39e8da3f25baee3ff5369e2bb5f22017a"
 
 acorn@^5.2.1:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.3.0.tgz#7446d39459c54fb49a80e6ee6478149b940ec822"
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.4.0.tgz#51c581c9d4b1943dda59a3e73bcf02661ac727ea"
 
 ajv-keywords@^2.1.0:
   version "2.1.1"
@@ -1584,11 +1580,11 @@ electron@1.7.9:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
-electron@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.8.1.tgz#19b6f39f2013e204a91a60bc3086dc7a4a07ed88"
+electron@^1.7.12:
+  version "1.7.12"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.12.tgz#dcc61a2c1b0c3df25f68b3425379a01abd01190e"
   dependencies:
-    "@types/node" "^8.0.24"
+    "@types/node" "^7.0.18"
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
@@ -2776,6 +2772,18 @@ mksnapshot@^0.3.0:
     fs-extra "0.26.7"
     request "^2.79.0"
 
+movie-art@1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/movie-art/-/movie-art-1.0.7.tgz#1bd3605d58ee980dc91f418fe29faf2fc84abca5"
+
+movie-info@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/movie-info/-/movie-info-1.0.3.tgz#b7033efe9104aa3d5ae3c6205e29388e7b6c44c8"
+
+movie-trailer@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/movie-trailer/-/movie-trailer-1.0.4.tgz#f74bb9fc92a8e5e1502772b54af23b2519132dbf"
+
 ms@0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
@@ -3057,7 +3065,7 @@ object-path@0.x.x:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.4.tgz#370ae752fbf37de3ea70a861c23bba8915691949"
 
-"omdb-client@github:lacymorrow/omdb-client":
+omdb-client@lacymorrow/omdb-client:
   version "1.0.6"
   resolved "https://codeload.github.com/lacymorrow/omdb-client/tar.gz/53b34ea799515fc48e76de2464a667b1acb0d5a9"
   dependencies:
@@ -3074,6 +3082,10 @@ onetime@^2.0.0:
   resolved "https://registry.yarnpkg.com/onetime/-/onetime-2.0.1.tgz#067428230fd67443b2794b22bba528b6867962d4"
   dependencies:
     mimic-fn "^1.0.0"
+
+open@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/open/-/open-0.0.5.tgz#42c3e18ec95466b6bf0dc42f3a2945c3f0cad8fc"
 
 opener@~1.4.2:
   version "1.4.3"
@@ -3170,6 +3182,10 @@ parse-json@^2.2.0:
   resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-2.2.0.tgz#f480f40434ef80741f8469099f8dea18f55a4dc9"
   dependencies:
     error-ex "^1.2.0"
+
+parse-torrent-name@0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/parse-torrent-name/-/parse-torrent-name-0.5.2.tgz#e1e87e5c84a890e641b0066f3e53839e12a17de0"
 
 path-exists@^2.0.0, path-exists@^2.1.0:
   version "2.1.0"
