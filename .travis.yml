@@ -15,7 +15,9 @@ matrix:
         - brew install graphicsmagick mono wine
       script:
         - npm test
+        - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
         - npm run build-mac
+        - kill %1
       
     - os: linux
       services: 
