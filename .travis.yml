@@ -9,8 +9,8 @@ matrix:
       - curl https://install.meteor.com/ | sh
       - brew install graphicsmagick mono wine
       script:
-      - npm test
-      - travis_wait npm run desktop -- build-installer --build-meteor --mac --production
+      - yarn test
+      - yarn desktop -- build-installer --build-meteor --mac --production
       
     - os: linux
       sudo: required
@@ -22,13 +22,14 @@ matrix:
             - icnsutils
             - graphicsmagick
       before_install:
-      - curl https://install.meteor.com/ | sh
-      - export DISPLAY=:99.0
-      - sh -e /etc/init.d/xvfb start
-      - sleep 3
+        - curl https://install.meteor.com/ | sh
+        - export DISPLAY=:99.0
+        - sh -e /etc/init.d/xvfb start
+        - sleep 3
       script:
-      - npm test
-      - npm run desktop -- build-installer --build-meteor --linux --production
+        - npm install
+        - npm test
+        - npm run desktop -- build-installer --build-meteor --linux --production
 
 language: node_js
 
