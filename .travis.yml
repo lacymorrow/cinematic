@@ -16,7 +16,7 @@ matrix:
       script:
         - npm test
         - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
-        - npm run build-mac
+        - npm run build-win
         - kill %1
       
     - os: linux
@@ -51,6 +51,7 @@ branches:
 
 cache:
   directories:
+    - .desktop-installer
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
