@@ -3,7 +3,7 @@ matrix:
     - os: osx
       language: node_js
       node_js:
-        - node
+        - "node"
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
@@ -19,7 +19,9 @@ matrix:
       services: 
         - docker
         - mongodb
-      language: generic
+      language: node_js
+      node_js:
+        - "node"
       addons:
         apt:
           packages:
@@ -36,16 +38,12 @@ matrix:
         - npm run build
         - ls -a
 
-node_js:
-  - node
-
 branches:
   only:
     - master
 
 cache:
   directories:
-    - node_modules
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
