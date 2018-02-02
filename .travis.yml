@@ -6,7 +6,7 @@ matrix:
       - brew install graphicsmagick mono wine
       script:
       - npm test
-      - npm run desktop -- build-installer --build-meteor --mac --production
+      - travis_wait 30 npm run desktop -- build-installer --build-meteor --mac --production
       
     - os: linux
       before_install:
