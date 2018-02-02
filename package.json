@@ -18,6 +18,7 @@
     "start": "meteor",
     "serve": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop",
+    "build": "npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production",
     "test": "ava"
   },
   "bugs": {

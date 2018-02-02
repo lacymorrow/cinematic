@@ -16,18 +16,22 @@ cache:
   directories:
     - node_modules
 
+addons:
+  apt:
+    packages:
+      - wine
+
 services:
   - mongodb
 
-before_script:
+before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install xquartz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install wine; fi
   - curl https://install.meteor.com/ | sh
 
+
 script:
-  - node --version
-  - npm --version
-  - npm install
-  - npm run serve &
-  - npm run desktop -- build-installer --all-archs --win --mac --linux --production
+  - npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production

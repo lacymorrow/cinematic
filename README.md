@@ -72,21 +72,27 @@ To package Cinematic for your machine architecture:
 
 `npm run serve` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
 
-In your main terminal:
-
-
 #### Build and test Desktop version. 
+
+In your main terminal:
 
 `npm run desktop`
 
 
 #### Full Cross-platform build
 
+To build for a Windows target from a MacOS host, you must have wine install
 ```bash
-# The magic script. Builds for osx and ia32 and x64 for windows and linux.
+# Using Homebrew
+brew cask install xquartz && brew install wine
+```
+
+
+```bash
+# The magic script. Builds for macOS and ia32 and x64 for Windows and Linux.
 # Get some coffee, this takes awhile.
 
-npm run desktop -- build-installer --all-archs --win --mac --linux --production
+npm run desktop -- build-installer --buil-meteor --all-archs --win --mac --linux --production
 
 ```
 
