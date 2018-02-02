@@ -20,6 +20,7 @@ matrix:
         - kill %1
       
     - os: linux
+      sudo: required
       services: 
         - docker
         - mongodb
@@ -41,7 +42,7 @@ matrix:
         - npm test
         - npm run build-linux
         - ls -a1 .desktop-installer
-        - ls -a1 $HOME/.cache/electron-builder
+        - ls -a1 $HOME/.cache/electron-builder/AppImage
 
 
 branches:
