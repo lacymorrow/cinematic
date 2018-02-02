@@ -4,7 +4,7 @@ matrix:
     - os: osx
       before_install:
         - curl https://install.meteor.com/ | sh
-        - then brew install graphicsmagick mono wine
+        - brew install graphicsmagick mono wine
       script:
         - npm test
         - npm run desktop -- build-installer --build-meteor --mac --production
