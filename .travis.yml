@@ -29,6 +29,7 @@ matrix:
           packages:
             - icnsutils
             - graphicsmagick
+            - snapd
       before_install:
         - curl https://install.meteor.com/ | sh
         - export DISPLAY=:99.0
@@ -39,7 +40,7 @@ matrix:
         - npm run build-linux
         - ls -a1 .desktop-installer
         - ls -a1 $HOME/.cache/electron-builder
-        
+
 
 branches:
   only:
