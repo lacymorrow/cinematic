@@ -16,11 +16,6 @@ cache:
   directories:
     - node_modules
 
-addons:
-  apt:
-    packages:
-      - wine1.8
-
 services:
   - mongodb
 
