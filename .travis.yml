@@ -59,6 +59,7 @@ deploy:
   provider: releases
   api_key:
     secure: QAy6AN+BIMV7yntJz9azJLpN11yC4fDHtsjg1Mgaa2oJ3oCake3fB9dvd9akEXaXEmwFbAmlV+E549Tv7/ECKgjY9un+54ySSKFUwtuyGHk3ZKoYh8+XW1O7aNBoNmnd1ci8soXyu5GlkrWD6U36Heth2J7W0YxR/qmFDYZSD3s=
+  file_glob: true
   file:
     - .desktop-installer/*.AppImage
     - .desktop-installer/mac/*
