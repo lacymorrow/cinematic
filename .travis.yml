@@ -6,7 +6,6 @@ language: node_js
 
 node_js:
   - "node"
-  - "8"
 
 branches:
   only:
@@ -16,3 +15,15 @@ cache:
   yarn: true
   directories:
     - node_modules
+
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
+
+script:
+  - node --version
+  - npm --version
+  - npm install
+  - npm run serve &
+  - npm run desktop -- build-installer --all-archs --win --mac --linux --production

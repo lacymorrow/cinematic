@@ -18,7 +18,7 @@
     "start": "meteor",
     "serve": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop",
-    "test": "ava --verbose"
+    "test": "ava"
   },
   "bugs": {
     "url": "https://github.com/lacymorrow/cinematic/issues"
@@ -37,6 +37,6 @@
     "movie-trailer": "1.0.4",
     "omdb-client": "lacymorrow/omdb-client",
     "open": "0.0.5",
-    "parse-torrent-name": "0.5.2"
+    "parse-torrent-name": "0.5.4"
   }
 }

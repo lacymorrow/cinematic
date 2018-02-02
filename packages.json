@@ -3,6 +3,6 @@
 	"movie-info": "1.0.3",
 	"movie-trailer": "1.0.4",
 	"lacymorrow-omdb-client": "1.0.0",
-	"parse-torrent-name": "0.5.2",
+	"parse-torrent-name": "0.5.4",
 	"open": "0.0.5"
 }
