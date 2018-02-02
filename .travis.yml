@@ -24,14 +24,11 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install xquartz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install wine; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install graphicsmagick mono wine; fi
   - curl https://install.meteor.com/ | sh
 
 script:
   - npm test
-  - npm run desktop -- --build-meteor
-
-before_deploy:
   - npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production
 
 deploy:
