@@ -4,7 +4,6 @@ matrix:
     - os: osx
       before_install:
         - curl https://install.meteor.com/ | sh
-        - brew cask install xquartz
         - then brew install graphicsmagick mono wine
       script:
         - npm test
