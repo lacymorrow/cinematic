@@ -1,8 +1,9 @@
 matrix:
   include:
     - os: osx
-      osx_image: xcode9.2
       language: node_js
+      node_js:
+        - node
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
@@ -15,8 +16,10 @@ matrix:
       
     - os: linux
       sudo: required
-      services: docker
-      language: node_js
+      services: 
+        - docker
+        - mongodb
+      language: generic
       addons:
         apt:
           packages:
@@ -41,14 +44,10 @@ branches:
     - master
 
 cache:
-  yarn: true
   directories:
     - node_modules
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
-
-services:
-  - mongodb
 
 deploy:
   provider: releases
