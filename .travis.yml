@@ -19,7 +19,7 @@ cache:
 addons:
   apt:
     packages:
-      - wine
+      - wine1.8
 
 services:
   - mongodb
@@ -32,6 +32,18 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install wine; fi
   - curl https://install.meteor.com/ | sh
 
-
 script:
+  - npm test
+  - npm run desktop -- --build-meteor
+
+before_deploy:
   - npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production
+
+deploy:
+  provider: releases
+  api_key: <your api key for github>
+  file: 
+    - ".desktop-installer/mac/*"
+  skip_cleanup: true
+  on:
+    tags: true
