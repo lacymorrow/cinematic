@@ -42,8 +42,6 @@ matrix:
         - npm test
         - npm run build-linux
         - ls -aR .desktop-installer
-        - ls -al $HOME/.cache/electron-builder/AppImage
-
 
 branches:
   only:
@@ -62,7 +60,8 @@ deploy:
   file_glob: true
   file:
     - .desktop-installer/*.AppImage
-    - .desktop-installer/mac/*
+    - .desktop-installer/mac/*.dmg
+    - .desktop-installer/mac/*.zip
     - .desktop-installer/win/*.exe
     - .desktop-installer/win/*.nupkg
     - .desktop-installer/win-ia32/*.exe

@@ -62,15 +62,6 @@
         "appId": "com.lacymorrow.cinematic",
         "productName": "Cinematic",
         "compression": "maximum",
-        "linux": {
-            "maintainer": "Lacy Morrow <me@lacymorrow.com>",
-            "target": [
-                "AppImage",
-                "pacman",
-                "freebsd",
-                "apk"
-            ]
-        },
         "mac": {
             "icon": ".desktop/assets/icon.icns"
         },
