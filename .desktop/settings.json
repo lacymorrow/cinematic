@@ -63,6 +63,7 @@
         "productName": "Cinematic",
         "compression": "maximum",
         "linux": {
+            "maintainer": "Lacy Morrow <me@lacymorrow.com>",
             "target": [
                 "AppImage",
                 "deb",
