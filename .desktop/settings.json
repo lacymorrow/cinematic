@@ -13,9 +13,9 @@
     "webAppStartupTimeout": 60000,
     "exposeLocalFilesystem": false,
     "window": {
-        "icon": "@assets/meteor.png",
+        "icon": "@assets/icon.png",
         "_windows": {
-            "icon": "@assets/meteor.ico"
+            "icon": "@assets/icon.ico"
         }
     },
     "windowDev": {
@@ -49,18 +49,18 @@
             "target": "squirrel"
         },
         "squirrelWindows": {
-            "iconUrl": "https://github.com/wojtkowiak/meteor-desktop/blob/beta/scaffold/assets/meteor.ico?raw=true",
+            "iconUrl": "https://github.com/wojtkowiak/meteor-desktop/blob/scaffold/assets/meteor.ico?raw=true",
             "loadingGif": ".desktop/assets/loading.gif"
         },
-        "icon": ".desktop/assets/meteor.ico",
+        "icon": ".desktop/assets/icon.ico",
         "appId": "Cinematic.app",
         "productName": "Cinematic",
         "compression": "maximum",
         "mac": {
-            "icon": ".desktop/assets/meteor.icns"
+            "icon": ".desktop/assets/icon.icns"
         },
         "dmg": {
-            "icon": ".desktop/assets/meteor.icns",
+            "icon": ".desktop/assets/icon.icns",
             "background": ".desktop/assets/dmgBackground.png",
             "iconSize": 54,
             "contents": [
@@ -73,9 +73,9 @@
             }
         }    },
     "packagerOptions": {
-        "icon": ".desktop/assets/meteor.ico",
+        "icon": ".desktop/assets/icon.ico",
         "_osx": {
-            "icon": ".desktop/assets/meteor.icns"
+            "icon": ".desktop/assets/icon.icns"
         },
         "version-string": {
             "CompanyName": "lacymorrow",
