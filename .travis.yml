@@ -41,8 +41,8 @@ matrix:
       script:
         - npm test
         - npm run build-linux
-        - ls -a1 .desktop-installer
-        - ls -a1 $HOME/.cache/electron-builder/AppImage
+        - ls -aR .desktop-installer
+        - ls -al $HOME/.cache/electron-builder/AppImage
 
 
 branches:
