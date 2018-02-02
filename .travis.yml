@@ -3,17 +3,21 @@ matrix:
   include:
     - os: osx
       before_install:
-        - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install xquartz; fi
-        - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install graphicsmagick mono wine; fi
+        - curl https://install.meteor.com/ | sh
+        - brew cask install xquartz
+        - then brew install graphicsmagick mono wine
       script:
+        - npm test
         - npm run desktop -- build-installer --build-meteor --mac --production
-        
+
     - os: linux
       before_install:
+        - curl https://install.meteor.com/ | sh
         - export DISPLAY=:99.0
         - sh -e /etc/init.d/xvfb start
         - sleep 3
       script:
+        - npm test
         - npm run desktop -- build-installer --build-meteor --linux --production
 
 language: node_js
@@ -32,12 +36,6 @@ cache:
 
 services:
   - mongodb
-
-before_install:
-  - curl https://install.meteor.com/ | sh
-
-script:
-  - npm test
 
 deploy:
   provider: releases
