@@ -6,13 +6,10 @@ matrix:
       - brew install graphicsmagick mono wine
       script:
       - npm test
-      - travis_wait 30 npm run desktop -- build-installer --build-meteor --mac --production
+      - travis_wait npm run desktop -- build-installer --build-meteor --mac --production
       
     - os: linux
-      addons:
-        apt:
-          packages:
-            - icns2png
+      sudo: required
       before_install:
       - curl https://install.meteor.com/ | sh
       - export DISPLAY=:99.0
