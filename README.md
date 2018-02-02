@@ -1,5 +1,6 @@
 Cinematic
 ===========
+> 🎥  A gorgeous Desktop UI for your digital movie collection.
 
 Have a digital movie collection?
 
