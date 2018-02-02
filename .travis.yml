@@ -1,7 +1,10 @@
 matrix:
   include:
     - os: osx
-      osx_image: xcode9.0
+      osx_image: xcode9.2
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
       before_install:
       - curl https://install.meteor.com/ | sh
       - brew install graphicsmagick mono wine
@@ -11,10 +14,13 @@ matrix:
       
     - os: linux
       sudo: required
+      services: docker
+      language: generic
       addons:
         apt:
           packages:
             - icnsutils
+            - graphicsmagick
       before_install:
       - curl https://install.meteor.com/ | sh
       - export DISPLAY=:99.0
@@ -37,6 +43,8 @@ cache:
   yarn: true
   directories:
     - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
 
 services:
   - mongodb
