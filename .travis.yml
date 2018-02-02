@@ -1,6 +1,7 @@
 matrix:
   include:
     - os: osx
+      osx_image: xcode9.2
       language: node_js
       node_js:
         - "node"
@@ -35,7 +36,7 @@ matrix:
       script:
         - npm test
         - npm run build-linux
-        - ls -a
+        - ls -a1 .desktop-installer
 
 branches:
   only:
@@ -51,12 +52,12 @@ deploy:
   api_key:
     secure: QAy6AN+BIMV7yntJz9azJLpN11yC4fDHtsjg1Mgaa2oJ3oCake3fB9dvd9akEXaXEmwFbAmlV+E549Tv7/ECKgjY9un+54ySSKFUwtuyGHk3ZKoYh8+XW1O7aNBoNmnd1ci8soXyu5GlkrWD6U36Heth2J7W0YxR/qmFDYZSD3s=
   file:
-    - ".desktop-installer/*.AppImage"
-    - ".desktop-installer/mac/*"
-    - ".desktop-installer/win/*.exe"
-    - ".desktop-installer/win/*.nupkg"
-    - ".desktop-installer/win-ia32/*.exe"
-    - ".desktop-installer/win-ia32/*.nupkg"
+    - .desktop-installer/*.AppImage
+    - .desktop-installer/mac/*
+    - .desktop-installer/win/*.exe
+    - .desktop-installer/win/*.nupkg
+    - .desktop-installer/win-ia32/*.exe
+    - .desktop-installer/win-ia32/*.nupkg
   skip_cleanup: true
   on:
     repo: lacymorrow/cinematic

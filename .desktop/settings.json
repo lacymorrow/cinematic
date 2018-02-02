@@ -56,6 +56,12 @@
         "appId": "Cinematic.app",
         "productName": "Cinematic",
         "compression": "maximum",
+        "linux": {
+            "target": [
+                "AppImage",
+                "deb"
+            ]
+        },
         "mac": {
             "icon": ".desktop/assets/icon.icns"
         },
