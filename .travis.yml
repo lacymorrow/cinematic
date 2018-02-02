@@ -5,6 +5,8 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      services:
+        - mongodb
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
@@ -16,7 +18,6 @@ matrix:
         - npm run build-mac
       
     - os: linux
-      sudo: required
       services: 
         - docker
         - mongodb
@@ -37,6 +38,8 @@ matrix:
         - npm test
         - npm run build-linux
         - ls -a1 .desktop-installer
+        - ls -a1 $HOME/.cache/electron-builder
+        
 
 branches:
   only:

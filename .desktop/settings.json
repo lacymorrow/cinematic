@@ -46,20 +46,31 @@
         "win": {
             "title": "Cinematic",
             "authors": "Lacy Morrow",
-            "target": "squirrel"
+            "target": [
+                "nsis",
+                "portable",
+                "msi",
+                "squirrel",
+                "zip"
+            ]
         },
         "squirrelWindows": {
             "iconUrl": "https://github.com/wojtkowiak/meteor-desktop/blob/scaffold/assets/meteor.ico?raw=true",
             "loadingGif": ".desktop/assets/loading.gif"
         },
         "icon": ".desktop/assets/icon.ico",
-        "appId": "Cinematic.app",
+        "appId": "com.lacymorrow.cinematic",
         "productName": "Cinematic",
         "compression": "maximum",
         "linux": {
             "target": [
                 "AppImage",
-                "deb"
+                "deb",
+                "snap",
+                "rpm",
+                "pacman",
+                "freebsd",
+                "apk"
             ]
         },
         "mac": {

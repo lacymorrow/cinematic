@@ -1,11 +1,16 @@
 {
   "name": "Cinematic",
   "version": "1.1.1",
-  "author": "Lacy Morrow <me@lacymorrow.com>",
+  "author": {
+    "name": "Lacy Morrow",
+    "email": "me@lacymorrow.com",
+    "url": "http://lacymorrow.com"
+  },
   "contributors": [
     {
       "name": "Lacy Morrow",
-      "email": "me@lacymorrow.com"
+      "email": "me@lacymorrow.com",
+      "url": "http://lacymorrow.com"
     }
   ],
   "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
