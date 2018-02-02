@@ -1,32 +1,31 @@
-
 matrix:
   include:
     - os: osx
       before_install:
-        - curl https://install.meteor.com/ | sh
-        - brew install graphicsmagick mono wine
+      - curl https://install.meteor.com/ | sh
+      - brew install graphicsmagick mono wine
       script:
-        - npm test
-        - npm run desktop -- build-installer --build-meteor --mac --production
-
+      - npm test
+      - npm run desktop -- build-installer --build-meteor --mac --production
+      
     - os: linux
       before_install:
-        - curl https://install.meteor.com/ | sh
-        - export DISPLAY=:99.0
-        - sh -e /etc/init.d/xvfb start
-        - sleep 3
+      - curl https://install.meteor.com/ | sh
+      - export DISPLAY=:99.0
+      - sh -e /etc/init.d/xvfb start
+      - sleep 3
       script:
-        - npm test
-        - npm run desktop -- build-installer --build-meteor --linux --production
+      - npm test
+      - npm run desktop -- build-installer --build-meteor --linux --production
 
 language: node_js
 
 node_js:
-  - "node"
+  - node
 
 branches:
   only:
-    - master 
+    - master
 
 cache:
   yarn: true
@@ -38,9 +37,13 @@ services:
 
 deploy:
   provider: releases
-  api_key: <your api key for github>
-  file: 
+  api_key:
+    secure: QAy6AN+BIMV7yntJz9azJLpN11yC4fDHtsjg1Mgaa2oJ3oCake3fB9dvd9akEXaXEmwFbAmlV+E549Tv7/ECKgjY9un+54ySSKFUwtuyGHk3ZKoYh8+XW1O7aNBoNmnd1ci8soXyu5GlkrWD6U36Heth2J7W0YxR/qmFDYZSD3s=
+  file:
+    - ".desktop-installer/*.AppImage"
     - ".desktop-installer/mac/*"
+    - ".desktop-installer/win/*.nupkg"
+    - ".desktop-installer/win-ia32/*.nupkg"
   skip_cleanup: true
   on:
-    tags: true
+    repo: lacymorrow/cinematic

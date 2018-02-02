@@ -1,4 +1,4 @@
-Cinematic [![dependencies Status](https://david-dm.org/lacymorrow/cinematic/status.svg)](https://david-dm.org/lacymorrow/cinematic) [![devDependencies Status](https://david-dm.org/lacymorrow/cinematic/dev-status.svg)](https://david-dm.org/lacymorrow/cinematic?type=dev)
+Cinematic
 ===========
 
 Have a digital movie collection?
@@ -55,7 +55,6 @@ Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacy
 
 You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www.meteor.com/install) installed.
 
-Install dependencies:
 ```bash
 cd cinematic
 npm install    # or `yarn install`!
@@ -99,7 +98,6 @@ npm run desktop -- build-installer --buil-meteor --all-archs --win --mac --linux
 To only build for current architecture: `npm run desktop -- build-installer --production`
 
 
-
 ##### Other Notes
 
 ```
@@ -138,3 +136,5 @@ Please post any questions or issues you come across to our [issues page](https:/
 ### Want to help?
 
 Pull requests welcome!
+
+[![dependencies Status](https://david-dm.org/lacymorrow/cinematic/status.svg)](https://david-dm.org/lacymorrow/cinematic) [![devDependencies Status](https://david-dm.org/lacymorrow/cinematic/dev-status.svg)](https://david-dm.org/lacymorrow/cinematic?type=dev)
