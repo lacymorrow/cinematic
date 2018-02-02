@@ -10,13 +10,13 @@ matrix:
         - curl https://install.meteor.com/ | sh
         - brew install graphicsmagick mono wine
       script:
-        - yarn test
-        - yarn desktop -- build-installer --build-meteor --mac --production
+        - npm test
+        - npm run desktop -- build-installer --build-meteor
       
     - os: linux
       sudo: required
       services: docker
-      language: generic
+      language: node_js
       addons:
         apt:
           packages:
@@ -30,7 +30,8 @@ matrix:
       script:
         - npm install
         - npm test
-        - npm run desktop -- build-installer --build-meteor --linux --production
+        - npm run build
+        - ls -a
 
 node_js:
   - node
@@ -56,7 +57,9 @@ deploy:
   file:
     - ".desktop-installer/*.AppImage"
     - ".desktop-installer/mac/*"
+    - ".desktop-installer/win/*.exe"
     - ".desktop-installer/win/*.nupkg"
+    - ".desktop-installer/win-ia32/*.exe"
     - ".desktop-installer/win-ia32/*.nupkg"
   skip_cleanup: true
   on:
