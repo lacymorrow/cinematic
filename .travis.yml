@@ -1,19 +1,5 @@
 matrix:
-  include:
-    - os: osx
-      osx_image: xcode9.2
-      language: node_js
-      node_js:
-        - "node"
-      before_install:
-        - curl https://install.meteor.com/ | sh
-        - brew install graphicsmagick mono wine
-      script:
-        - npm test
-        - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
-        - npm run build-win
-        - kill %1
-      
+  include:      
     - os: linux
       sudo: required
       services: 
@@ -36,7 +22,6 @@ matrix:
       script:
         - npm test
         - npm run build-linux
-        - ls -aR .desktop-installer
 
 branches:
   only:
