@@ -24,8 +24,8 @@
     "serve": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop",
     "build-mac": "npm run desktop -- build-installer --build-meteor --mac --production",
-    "build-win": "npm run desktop -- build-installer --build-meteor --all-archs --linux --win --production",
-    "build-linux": "npm run desktop -- build-installer --build-meteor --all-archs --linux --production",
+    "build-win": "npm run desktop -- build-installer --build-meteor --all-archs --win --production",
+    "build-linux": "npm run desktop -- build-installer --build-meteor --all-archs --linux --win --production",
     "build": "npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production",
     "test": "ava"
   },
