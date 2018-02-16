@@ -44,7 +44,7 @@
     "movie-art": "1.0.7",
     "movie-info": "1.0.3",
     "movie-trailer": "1.0.4",
-    "omdb-client": "lacymorrow/omdb-client",
+    "omdb-client": "^2.0.0",
     "open": "0.0.5",
     "parse-torrent-name": "0.5.4"
   }
