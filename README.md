@@ -2,52 +2,53 @@ Cinematic
 ===========
 > 🎥  A gorgeous Desktop UI for your digital movie collection.
 
-Have a digital movie collection?
+**Have a digital movie collection?**
 
-Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection. 
+Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching 
 
-#### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
+### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
 ![Cinematic](http://lacymorrow.com/images/github/cinematic/demo.gif)
 
 
-Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found. Organize your movies by genre and sort by popularity, release date, runtime, or randomize things. It prefers filenames like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
+Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found. 
+Organize your movies by genre and sort by popularity, release date, runtime, or randomize things.
+
+Cinematic prefers filenames like `Elysium [2013].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
+
+
+### Features
+
+* Filter movies by genre   🎭
+* Sort movies by name, popularity, release date, runtime, or randomly   🖇
+* Read plotlines and summarys before watching   🚥
+* Watch multiple trailers   🎬
+* Jump straight to the IMDB page   🥃
+* Keep track of recently viewed and recently watched   🍱
+* Cycle through ratings from IMDB, TMDB, and Metacritic   🍅
+* Network throttled requests to avoid timeouts   ☔️
+* Built-in caching of genres and movies   🐠
 
 ### What it finds
 
 * Title
-* Plot
-* Release Date
-* Multiple Trailers
-* Poster + Backdrop
+* Plot summary
+* Release date
+* Multiple trailers
+* Poster + backdrop images
 * Genres
 * Ratings from IMDB, TMDB, and Metacritic, and current popularity
-* MPAA Rating
+* MPAA rating
 * Actors, Director, Writer
 * Awards
 * Runtime
 
-### Features
-
-* Filter movies by genre
-* Sort movies by name, popularity, release date, runtime, or randomly
-* Read plotlines and summarys before watching
-* Watch multiple trailers
-* Jump straight to the IMDB page
-* Keep track of recently viewed and recently watched
-* Cycle through ratings from IMDB, TMDB, and Metacritic
-* Built-in caching of genres and movies
-* Built-in network throttling of requests to avoid timeouts
-
-This app was created as an exploratory dive into the world of [Meteor](http://meteor.com). Currently Meteor version 1.2.1.
-
-Uses TMDB and OMDB to look up movie information and display in an organized fashion.
 
 # Installation
 
 _Recently packaged for Windows!_
 
-#### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
+### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
 
 ### Running & Developing Cinematic _(from source)_
@@ -123,11 +124,17 @@ Thanks to:
 * [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
 * [bbraithwaite/omdb-client](https://github.com/bbraithwaite/omdb-client)
 * [pwnall/node-open](https://github.com/pwnall/node-open)
+* Made with [Meteor](http://meteor.com) v1.8.2
+* Packaged with [Electron](https://electronjs.org/)
+* APIs provided by TMDB and OMDB
 
 
 # Improvements
-* batch send data to save http requests (force https?)
-* Boost that cache
+[ ] Batch request data to save http connections
+[ ] Boost the cache to hold images
+[ ] Force HTTPS
+[X] File browser
+[X] Release for Windows
 
 
 ### Need help?

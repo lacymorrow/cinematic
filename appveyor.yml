@@ -10,6 +10,7 @@ install:
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
   - choco install meteor
+  - where meteor
 matrix:
   fast_finish: true
 build: off
@@ -18,6 +19,6 @@ test_script:
   - node --version
   - npm --version
   - npm test
-  - npm run build-win
+  # - npm run build-win
 cache:
   - '%APPDATA%\npm-cache'
