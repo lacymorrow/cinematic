@@ -1,7 +1,6 @@
 {
-    "extends": "",
     "parserOptions": {
-        "ecmaVersion": 8,
+        "ecmaVersion": 2017,
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
@@ -18,10 +17,11 @@
     "plugins": [],
 
     "globals": {
-        "$": true,
+        "window": true,
+        "define": true,
+        "process": true,
         "document": true,
-        "navigator": true,
-        "window": true
+        "navigator": true
     },
 
     "rules": {
@@ -217,21 +217,6 @@
         "valid-typeof": ["error", { "requireStringLiterals": true }],
         "wrap-iife": ["error", "any", { "functionPrototypeMethods": true }],
         "yield-star-spacing": ["error", "both"],
-        "yoda": ["error", "never"],
-
-        // "import/export": "error",
-        // "import/no-duplicates": "error",
-        "import/first": "error",
-        "import/no-webpack-loader-syntax": "error",
-
-        "node/no-deprecated-api": "error",
-        // "node/process-exit-as-throw": "error",
-
-        "promise/param-names": "error",
-
-        // "standard/array-bracket-even-spacing": ["error", "either"],
-        // "standard/computed-property-even-spacing": ["error", "even"],
-        // "standard/no-callback-literal": "error",
-        // "standard/object-curly-even-spacing": ["error", "either"]
+        "yoda": ["error", "never"]
     }
 }

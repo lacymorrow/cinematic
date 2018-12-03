@@ -19,15 +19,15 @@ Cinematic prefers filenames like `Elysium [2013].mp4` but will happily parse tor
 
 ### Features
 
-* Filter movies by genre   🎭
-* Sort movies by name, popularity, release date, runtime, or randomly   🖇
-* Read plotlines and summarys before watching   🚥
-* Watch multiple trailers   🎬
-* Jump straight to the IMDB page   🥃
-* Keep track of recently viewed and recently watched   🍱
-* Cycle through ratings from IMDB, TMDB, and Metacritic   🍅
-* Network throttled requests to avoid timeouts   ☔️
-* Built-in caching of genres and movies   🐠
+* 🎭   Filter movies by genre
+* 🖇   Sort movies by name, popularity, release date, runtime, or randomly
+* 🚥   Read plotlines and summarys before watching
+* 🎬   Watch multiple trailers
+* 🥃   Jump straight to the IMDB page
+* 🍱   Keep track of recently viewed and recently watched
+* 🍅   Cycle through ratings from IMDB, TMDB, and Metacritic
+* ☔️    Network throttled requests to avoid timeouts
+* 🐠   Built-in caching of genres and movies
 
 ### What it finds
 
@@ -51,7 +51,7 @@ _Recently packaged for Windows!_
 ### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
 
-### Running & Developing Cinematic _(from source)_
+# Running & Developing Cinematic _(from source)_
 
 Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacymorrow/cinematic`. 
 

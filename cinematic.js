@@ -2,7 +2,7 @@
  * Cinematic, (c) 2017 Lacy Morrow - http://github/lacmorrow/cinematic
  * @license GPL
 
- * TODO
+ * Roadmap
  * - Account for duplicate filenames
  * - PUBLIC API BRO... SMH
  * - Limit Request count (throttle requests)
@@ -86,7 +86,6 @@ Genres = new Mongo.Collection('genres');
 Movies = new Mongo.Collection('movies');
 MovieCache = new Mongo.Collection('movieCache');
 
-// Meteor.isDesktop TODO
 
 /*
  * CLIENT
@@ -384,7 +383,6 @@ if (Meteor.isClient) {
             if (ratingTimer) Meteor.clearInterval(ratingTimer);
             ratingTimer = Meteor.setInterval(rotateRating, 4000);
         },
-        // TODO: All the keyboard navigation
         'keyup .movie-image': function(event) {
             var magnitude = 3; // $(".keyboard-magnitude").data('id'); // this should equal the number of movies per row
             event.preventDefault();
@@ -1040,7 +1038,7 @@ if (Meteor.isServer) {
                         res
                     ) {
                         if (err) {
-                            broadcast('Cinematic/queueIt: ' + err);
+                            broadcast('Cinematic/queueIt/retryError: ' + err);
                         }
                     });
                 }, settings.retry_delay);
@@ -1048,7 +1046,7 @@ if (Meteor.isServer) {
                 api_current += 1;
                 Meteor.call(job, mid, name, year, function(err, res) {
                     if (err) {
-                        broadcast('Cinematic/queueIt: ' + err);
+                        broadcast('Cinematic/queueIt/jobError: ' + err);
                     }
                 });
             }
