@@ -37,7 +37,7 @@
     "ava": "^0.25.0",
     "electron": "^1.7.12",
     "eslint": "^4.13.1",
-    "meteor-desktop": "^0.12.0"
+    "meteor-desktop": "^2.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.39",
