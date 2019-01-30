@@ -130,6 +130,7 @@ Thanks to:
 
 
 # Improvements
+
 [ ] Batch request data to save http connections
 [ ] Boost the cache to hold images
 [ ] Force HTTPS
