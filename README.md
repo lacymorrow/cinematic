@@ -131,11 +131,11 @@ Thanks to:
 
 # Improvements
 
-[ ] Batch request data to save http connections
-[ ] Boost the cache to hold images
-[ ] Force HTTPS
-[X] File browser
-[X] Release for Windows
+ - [ ] Batch request data to save http connections
+ - [ ] Boost the cache to hold images
+ - [ ] Force HTTPS
+ - [X] File browser
+ - [X] Release for Windows
 
 
 ### Need help?
