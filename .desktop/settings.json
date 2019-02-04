@@ -1,97 +1,108 @@
 {
-    "name": "Cinematic",
-    "version": "1.1.1",
-    "projectName": "Cinematic",
-    "devTools": true,
-    "devtron": true,
-    "desktopHCP": true,
-    "desktopHCPIgnoreCompatibilityVersion": false,
-    "autoUpdateFeedUrl": "http://127.0.0.1/update/:platform/:version",
-    "autoUpdateFeedHeaders": {},
-    "autoUpdateCheckOnStart": true,
-    "rebuildNativeNodeModules": false,
-    "webAppStartupTimeout": 60000,
-    "exposeLocalFilesystem": false,
-    "window": {
-        "icon": "@assets/icon.png",
-        "_windows": {
-            "icon": "@assets/icon.ico"
-        }
-    },
-    "windowDev": {
-    },
-    "uglify": true,
-    "plugins": {
-        "meteor-desktop-splash-screen": {
-            "version": "0.3.0",
-            "windowSettings": {
-                "width": 800,
-                "height": 600
-            }
-        },
-        "meteor-desktop-localstorage": "0.0.11"
-    },
-    "dependencies": {},
-    "packageJsonFields": {
-        "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
-        "author": "Lacy Morrow",
-        "repository": {
-          "type": "git",
-          "url": "https://github.com/lacymorrow/cinematic"
-        },
-        "license": "GPL-3.0",
-        "private": false
-    },
-    "builderOptions": {
-        "win": {
-            "title": "Cinematic",
-            "authors": "Lacy Morrow",
-            "target": [
-                "nsis",
-                "portable",
-                "msi",
-                "squirrel",
-                "zip"
-            ]
-        },
-        "squirrelWindows": {
-            "iconUrl": "https://github.com/wojtkowiak/meteor-desktop/blob/scaffold/assets/meteor.ico?raw=true",
-            "loadingGif": ".desktop/assets/loading.gif"
-        },
-        "icon": ".desktop/assets/icon.ico",
-        "appId": "com.lacymorrow.cinematic",
-        "productName": "Cinematic",
-        "compression": "maximum",
-        "mac": {
-            "icon": ".desktop/assets/icon.icns"
-        },
-        "dmg": {
-            "icon": ".desktop/assets/icon.icns",
-            "background": ".desktop/assets/dmgBackground.png",
-            "iconSize": 54,
-            "contents": [
-                { "x": 377, "y": 190, "type": "link", "path": "/Applications" },
-                { "x": 63, "y": 190, "type": "file" }
-            ],
-            "window": {
-                "width": 480,
-                "height": 300
-            }
-        }    },
-    "packagerOptions": {
-        "icon": ".desktop/assets/icon.ico",
-        "_osx": {
-            "icon": ".desktop/assets/icon.icns"
-        },
-        "version-string": {
-            "CompanyName": "lacymorrow",
-            "LegalCopyright": "Copyright 2018 lacymorrow - All rights reserved.",
-            "FileDescription": "Cinematic",
-            "OriginalFilename": "Cinematic.exe",
-            "FileVersion": "@version",
-            "ProductVersion": "@version",
-            "ProductName": "Cinematic",
-            "InternalName": "Cinematic.exe"
-        }
-    }
+	"name": "Cinematic",
+	"version": "1.1.1",
+	"projectName": "Cinematic",
+	"devTools": true,
+	"devtron": true,
+	"desktopHCP": true,
+	"desktopHCPIgnoreCompatibilityVersion": false,
+	"squirrel": {
+		"autoUpdateFeedUrl": "http://127.0.0.1/update/:platform/:version",
+		"autoUpdateFeedHeaders": {},
+		"autoUpdateCheckOnStart": false
+	},
+	"webAppStartupTimeout": 30000,
+	"exposeLocalFilesystem": false,
+	"window": {
+		"icon": "@assets/meteor.png",
+		"_windows": {
+			"icon": "@assets/meteor.ico"
+		}
+	},
+	"windowDev": {
+	},
+	"uglify": true,
+	"plugins": {
+		"meteor-desktop-splash-screen": {
+			"version": "0.5.0",
+			"windowSettings": {
+				"width": 800,
+				"height": 600
+			},
+			"updateScreen": true,
+			"updateScreenSettings": {
+				"imagePath": "updating.gif",
+				"windowSettings": {
+					"width": 400,
+					"height": 300
+				},
+				"clickThrough": false,
+				"style": {
+					"background-size": "auto"
+				}
+			}
+		}
+	},
+	"dependencies": {},
+	"packageJsonFields": {
+		"description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
+		"author": "Lacy Morrow",
+		"repository": {
+		  "type": "git",
+		  "url": "https://github.com/lacymorrow/cinematic"
+		},
+		"license": "GPL-3.0",
+		"private": false
+	},
+	"builderOptions": {
+		"icon": ".desktop/assets/icon.ico",
+		"appId": "cinematic.app",
+		"productName": "Cinematic",
+		"compression": "maximum",
+		"win": {
+			"target": "nsis"
+		},
+		"squirrelWindows": {
+			"iconUrl": "https://raw.githubusercontent.com/lacymorrow/cinematic/master/.desktop/assets/icon.ico",
+			"loadingGif": ".desktop/assets/loading.gif"
+		},
+		"publish": [
+			{
+				"provider": "generic",
+				"url": "http://127.0.0.1:8080/"
+			}
+		],
+		"mac": {
+			"icon": ".desktop/assets/icon.icns"
+		},
+		"dmg": {
+			"icon": ".desktop/assets/icon.icns",
+			"background": ".desktop/assets/dmgBackground.png",
+			"iconSize": 54,
+			"contents": [
+				{ "x": 377, "y": 190, "type": "link", "path": "/Applications" },
+				{ "x": 63, "y": 190, "type": "file" }
+			],
+			"window": {
+				"width": 480,
+				"height": 300
+			}
+		}
+	},
+	"packagerOptions": {
+		"icon": ".desktop/assets/icon.ico",
+		"_osx": {
+			"icon": ".desktop/assets/icon.icns"
+		},
+		"appVersion": "@version",
+		"buildVersion": "@version",
+		"appCopyright": "Copyright 2018 Lacy Morrow - All rights reserved.",
+		"win32metadata": {
+			"CompanyName": "lacymorrow",
+			"FileDescription": "Cinematic",
+			"OriginalFilename": "Cinematic.exe",
+			"ProductName": "Cinematic",
+			"InternalName": "Cinematic.exe"
+		}
+	}
 }

@@ -23,27 +23,36 @@
     "start": "meteor",
     "serve": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop",
+    "build-current": "npm run desktop -- build-installer --production",
     "build-mac": "npm run desktop -- build-installer --build-meteor --mac --production",
     "build-win": "npm run desktop -- build-installer --build-meteor --all-archs --win --production",
     "build-linux": "npm run desktop -- build-installer --build-meteor --all-archs --linux --production",
     "build": "npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production",
-    "test": "ava"
+    "test": "ava --verbose",
+    "test-desktop": "cross-env NODE_ENV=test ava .desktop/**/*.test.js -s --verbose",
+    "test-desktop-watch": "cross-env NODE_ENV=test ava .desktop/**/*.test.js -s --verbose --watch --source .desktop"
   },
   "bugs": {
     "url": "https://github.com/lacymorrow/cinematic/issues"
   },
   "license": "GPL-3.0",
   "devDependencies": {
-    "ava": "^0.25.0",
-    "electron": "^1.7.12",
-    "eslint": "^4.13.1",
-    "meteor-desktop": "^2.0.0"
+    "ava": "^1.2.0",
+    "cross-env": "^5.2.0",
+    "electron": "^4.0.4",
+    "eslint": "^5.13.0",
+    "meteor-desktop": "^2.0.0",
+    "meteor-desktop-test-suite": "^0.2.2",
+    "spectron": "^5.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.39",
-    "movie-art": "1.0.7",
-    "movie-info": "1.0.3",
-    "movie-trailer": "1.0.4",
+    "app-builder-lib": "^20.38.5",
+    "electron-builder": "^20.38.5",
+    "electron-packager": "^13.0.1",
+    "movie-art": "^2.0.3",
+    "movie-info": "^2.0.4",
+    "movie-trailer": "^2.0.3",
     "omdb-client": "^2.0.0",
     "open": "0.0.5",
     "parse-torrent-name": "0.5.4"

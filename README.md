@@ -60,7 +60,7 @@ You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www
 ```bash
 cd cinematic
 npm install    # or `yarn install`!
-meteor         # http://localhost:3000
+npm start         # http://localhost:3000
 ```
 
 Running `meteor` from the `cinematic` directory quickstarts the application on [http://localhost:3000](http://localhost:3000).
@@ -82,7 +82,7 @@ In your main terminal:
 
 #### Full Cross-platform build
 
-To build for a Windows target from a MacOS host, you must have wine install
+To build for a Windows target from a MacOS host, you must have wine and [XQuartz](https://www.xquartz.org/) installed
 ```bash
 # Using Homebrew
 brew cask install xquartz && brew install wine
@@ -93,11 +93,22 @@ brew cask install xquartz && brew install wine
 # The magic script. Builds for macOS and ia32 and x64 for Windows and Linux.
 # Get some coffee, this takes awhile.
 
-npm run desktop -- build-installer --buil-meteor --all-archs --win --mac --linux --production
+npm run build 
+# alias: npm run desktop -- build-installer --buil-meteor --all-archs --win --mac --linux --production
 
+# Or, to build for a specific platform:
+
+npm run build-mac
+# alias: npm run desktop -- build-installer --build-meteor --mac --production"
+
+npm build-win
+# alias: npm run desktop -- build-installer --build-meteor --all-archs --win --production"
+
+npm run build-linux
+# alias: npm run desktop -- build-installer --build-meteor --all-archs --linux --production"
 ```
 
-To only build for current architecture: `npm run desktop -- build-installer --production`
+To only build for current architecture: `npm run build-current`
 
 
 ##### Other Notes
@@ -124,7 +135,7 @@ Thanks to:
 * [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
 * [bbraithwaite/omdb-client](https://github.com/bbraithwaite/omdb-client)
 * [pwnall/node-open](https://github.com/pwnall/node-open)
-* Made with [Meteor](http://meteor.com) v1.8.2
+* Made with [Meteor](http://meteor.com) v1.8.0.2
 * Packaged with [Electron](https://electronjs.org/)
 * APIs provided by TMDB and OMDB
 
