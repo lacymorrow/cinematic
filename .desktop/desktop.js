@@ -44,12 +44,115 @@ export default class Desktop {
         // reference. This is the reference to the current Electron renderer process (Chrome)
         // displaying your Meteor app.
         eventsBus.on('windowCreated', (window) => {
+        	window.webContents.on('dom-ready', () => {
+        	    // set perfect size
+        	    // window.setSize(1300,768);
+        	    // window.setFullScreen(true);
+        	    // window.minimize();
+        	    window.maximize();
+        	});
+
             window.webContents.on('crashed', Desktop.windowCrashedHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
-        });
+
+            // Build Menu
+            var menu_template = [
+                {},
+                {
+                    label: 'File',
+                    submenu: [{
+                            label: 'Select Movie Folder',
+                            accelerator: 'CommandOrControl+O',
+                            click: function() {
+                                movieSelectDialog();
+                            }
+                        },
+                        // Don't forget a quit hotkey!
+                        {
+                            label: 'Quit',
+                            accelerator: 'CommandOrControl+Q',
+                            click: function() {
+                                app.exit(0);
+                            }
+                        },
+                        // {
+                        //   label:'Control',
+                        //   submenu:[
+                        //     {
+                        //       label:'Pause',
+                        //       accelerator:'CommandOrControl+E',
+                        //       click:function(){
+                        //         // sendPauseSongMessage();
+                        //       }
+                        //     },
+                        //     {
+                        //       label:'Next',
+                        //       accelerator:'CommandOrControl+N',
+                        //       click:function(){
+                        //         // sendNextSongMessage();
+                        //       }
+                        //     },
+                        //     {
+                        //       label:'Previous',
+                        //       accelerator:'CommandOrControl+P',
+                        //       click:function(){
+                        //         // sendNextSongMessage();
+                        //       }
+                        //     }
+                        //   ]
+                        // }
+                    ]
+                }
+            ];
+
+            const menu = Menu.buildFromTemplate(menu_template);
+            Menu.setApplicationMenu(menu);
+
+            /* IPC */
+
+            desktop.on('load-settings', (args) => {
+                desktop.cinematic_settings = args;
+            });
+
+            // https://stackoverflow.com/questions/44773029/how-to-select-file-or-folder-in-file-dialog
+            // listen to an open-file-dialog command and sending back selected information
+            desktop.on('open-file-dialog', () => {
+                movieSelectDialog();
+            });
+
+            const movieSelectDialog = () => {
+                dialog.showOpenDialog({
+                    filters: [
+                        { name: 'Movies', extensions: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'] },
+                        { name: 'All Files', extensions: ['*'] }
+                    ],
+                    title: 'Open Movies',
+                    message: 'Choose movie folder to organize:',
+                    properties: ['openDirectory', 'openFile', 'multiSelections']
+                }, function(files) {
+                    if (files) {
+                        desktop.send('selected-file', files)
+                    } else {
+                        desktop.send('selected-file', false)
+                    }
+                });
+
+            }
+
+        }); //  /eventsBus.on('windowCreated'
 
         // Consider setting a crash reporter ->
         // https://github.com/electron/electron/blob/master/docs/api/crash-reporter.md
+    }
+
+    /**
+     * File browser handler.
+     */
+    static dialogLaunch() {
+        Desktop.displayRestartDialog(
+            'Cinematic has crashed unexpectedly',
+            'Do you want to restart it?'
+        );
     }
 
     /**
@@ -57,7 +160,7 @@ export default class Desktop {
      */
     static windowCrashedHandler() {
         Desktop.displayRestartDialog(
-            'Application has crashed',
+            'Cinematic has crashed',
             'Do you want to restart it?'
         );
     }
@@ -67,7 +170,7 @@ export default class Desktop {
      */
     static windowUnresponsiveHandler() {
         Desktop.displayRestartDialog(
-            'Application is not responding',
+            'Cinematic is not responding',
             'Do you want to restart it?'
         );
     }
@@ -80,7 +183,7 @@ export default class Desktop {
         // Consider sending a log somewhere, it is good be aware your users are having problems,
         // right?
         Desktop.displayRestartDialog(
-            'Application encountered an error',
+            'Cinematic encountered an error',
             'Do you want to restart it?',
             error.message
         );

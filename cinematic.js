@@ -494,8 +494,8 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
     var open = Meteor.npmRequire('open');
-    // var omdbApi = Meteor.npmRequire('omdb-client');
-    var omdbApi = Meteor.npmRequire('lacymorrow-omdb-client');
+    var omdbApi = Meteor.npmRequire('omdb-client');
+    // var omdbApi = Meteor.npmRequire('lacymorrow-omdb-client');
     var movieInfo = Meteor.npmRequire('movie-info');
     var movieTrailer = Meteor.npmRequire('movie-trailer');
     var parseTorrentName = Meteor.npmRequire('parse-torrent-name');
@@ -1008,8 +1008,10 @@ if (Meteor.isServer) {
         updateTrailer: function(mid, name, year) {
             movieTrailer(
                 name,
-                year,
-                true,
+                {
+                	year,
+                	multi: true
+                },
                 Meteor.bindEnvironment(function(err, res) {
                     Meteor.call('queueDone', 'updateTrailer');
                     if (err) {

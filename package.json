@@ -50,9 +50,6 @@
     "app-builder-lib": "^20.38.5",
     "electron-builder": "^20.38.5",
     "electron-packager": "^13.0.1",
-    "movie-art": "^2.0.3",
-    "movie-info": "^2.0.4",
-    "movie-trailer": "^2.0.3",
     "omdb-client": "^2.0.0",
     "open": "0.0.5",
     "parse-torrent-name": "0.5.4"
