@@ -32,6 +32,7 @@ dist
 node_modules
 .DS_Store
 
+# meteor-desktop
 version.desktop
 .desktop-installer
 .desktop_node_modules
