@@ -55,58 +55,58 @@ export default class Desktop {
             window.webContents.on('crashed', Desktop.windowCrashedHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
 
-            // Build Menu
-            var menu_template = [
-                {},
-                {
-                    label: 'File',
-                    submenu: [{
-                            label: 'Select Movie Folder',
-                            accelerator: 'CommandOrControl+O',
-                            click: function() {
-                                movieSelectDialog();
-                            }
-                        },
-                        // Don't forget a quit hotkey!
-                        {
-                            label: 'Quit',
-                            accelerator: 'CommandOrControl+Q',
-                            click: function() {
-                                app.exit(0);
-                            }
-                        },
-                        // {
-                        //   label:'Control',
-                        //   submenu:[
-                        //     {
-                        //       label:'Pause',
-                        //       accelerator:'CommandOrControl+E',
-                        //       click:function(){
-                        //         // sendPauseSongMessage();
-                        //       }
-                        //     },
-                        //     {
-                        //       label:'Next',
-                        //       accelerator:'CommandOrControl+N',
-                        //       click:function(){
-                        //         // sendNextSongMessage();
-                        //       }
-                        //     },
-                        //     {
-                        //       label:'Previous',
-                        //       accelerator:'CommandOrControl+P',
-                        //       click:function(){
-                        //         // sendNextSongMessage();
-                        //       }
-                        //     }
-                        //   ]
-                        // }
-                    ]
-                }
-            ];
+            // // Build Menu
+            // var menu_template = [
+            //     {},
+            //     {
+            //         label: 'File',
+            //         submenu: [{
+            //                 label: 'Select Movie Folder',
+            //                 accelerator: 'CommandOrControl+O',
+            //                 click: function() {
+            //                     movieSelectDialog();
+            //                 }
+            //             },
+            //             // Don't forget a quit hotkey!
+            //             {
+            //                 label: 'Quit',
+            //                 accelerator: 'CommandOrControl+Q',
+            //                 click: function() {
+            //                     app.exit(0);
+            //                 }
+            //             },
+            //             // {
+            //             //   label:'Control',
+            //             //   submenu:[
+            //             //     {
+            //             //       label:'Pause',
+            //             //       accelerator:'CommandOrControl+E',
+            //             //       click:function(){
+            //             //         // sendPauseSongMessage();
+            //             //       }
+            //             //     },
+            //             //     {
+            //             //       label:'Next',
+            //             //       accelerator:'CommandOrControl+N',
+            //             //       click:function(){
+            //             //         // sendNextSongMessage();
+            //             //       }
+            //             //     },
+            //             //     {
+            //             //       label:'Previous',
+            //             //       accelerator:'CommandOrControl+P',
+            //             //       click:function(){
+            //             //         // sendNextSongMessage();
+            //             //       }
+            //             //     }
+            //             //   ]
+            //             // }
+            //         ]
+            //     }
+            // ];
 
-            const menu = Menu.buildFromTemplate(menu_template);
-            Menu.setApplicationMenu(menu);
+            // const menu = Menu.buildFromTemplate(menu_template);
+            // Menu.setApplicationMenu(menu);
 
             /* IPC */
 

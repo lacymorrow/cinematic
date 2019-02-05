@@ -60,7 +60,10 @@
 		"productName": "Cinematic",
 		"compression": "maximum",
 		"win": {
-			"target": "nsis"
+			"target": [
+				"nsis",
+				"msi"
+			]
 		},
 		"squirrelWindows": {
 			"iconUrl": "https://raw.githubusercontent.com/lacymorrow/cinematic/master/.desktop/assets/icon.ico",
