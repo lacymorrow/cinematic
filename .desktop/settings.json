@@ -46,7 +46,11 @@
 	"dependencies": {},
 	"packageJsonFields": {
 		"description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
-		"author": "Lacy Morrow",
+		"author": {
+		  "name": "Lacy Morrow",
+		  "email": "me@lacymorrow.com",
+		  "url": "http://lacymorrow.com"
+		},
 		"repository": {
 		  "type": "git",
 		  "url": "https://github.com/lacymorrow/cinematic"
@@ -65,6 +69,14 @@
 				"msi"
 			]
 		},
+		"linux": {
+			"target": [
+			  "deb",
+			  "rpm",
+			  "AppImage"
+			],
+			"category": "Development"
+		},
 		"squirrelWindows": {
 			"iconUrl": "https://raw.githubusercontent.com/lacymorrow/cinematic/master/.desktop/assets/icon.ico",
 			"loadingGif": ".desktop/assets/loading.gif"
@@ -76,7 +88,8 @@
 			}
 		],
 		"mac": {
-			"icon": ".desktop/assets/icon.icns"
+			"icon": ".desktop/assets/icon.icns",
+			"appId": null
 		},
 		"dmg": {
 			"icon": ".desktop/assets/icon.icns",

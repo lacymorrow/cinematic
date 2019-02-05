@@ -23,7 +23,7 @@
     "start": "meteor",
     "serve": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop",
-    "build-current": "npm run desktop -- build-installer --production",
+    "build-current": "npm run desktop -- build-installer --build-meteor --production",
     "build-mac": "npm run desktop -- build-installer --build-meteor --mac --production",
     "build-win": "npm run desktop -- build-installer --build-meteor --all-archs --win --production",
     "build-linux": "npm run desktop -- build-installer --build-meteor --all-archs --linux --production",

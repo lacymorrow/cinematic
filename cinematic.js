@@ -1105,7 +1105,7 @@ var broadcast = function(msg, err) {
     if (err === true) {
         // Log error
     }
-    Log.insert({ time: epoch(), msg: msg });
+    Log.insert({ time: epoch(), msg: (msg || err), error: !!err });
     if (typeof console !== 'undefined') console.log(msg);
 };
 
