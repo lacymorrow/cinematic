@@ -1,3 +1,4 @@
+'use strict';
 /*
  * Cinematic, (c) 2017 Lacy Morrow - http://github/lacmorrow/cinematic
  * @license GPL
@@ -58,11 +59,10 @@ var settings = {
         'Random' /*, "Ratings" */
     ],
     cache: 3600, // seconds; 604800 = 7 days
-    overview_length: 'full', // "short", "full" - from omdb
+    overview_length: 'full', // Plot Summary length: "short", "full" - from omdb
 
     /* URLs */
-    base_url: 'http://image.tmdb.org/t/p/',
-    secure_base_url: 'https://image.tmdb.org/t/p/',
+    base_url: 'https://image.tmdb.org/t/p/',
     genre_url: 'http://api.themoviedb.org/3/genre/movie/list',
     backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
     poster_size: 'w780', //"w92", "w154", "w185", "w342", "w500", "w780", "original",
@@ -71,9 +71,9 @@ var settings = {
     // -- affects how app is run and may affect performance
     max_connections: 3, // max number of simultaneous, more is faster but more api hits at once; 5 is okay...
     parse_method: 'parse', // Filename parsing options: "regex", "parse"; regex is best for well-organized files lile This[2004].avi
-    rating_delay: 5000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
+    rating_delay: 6000, // milli-seconds of rating rotate interval; 5000 = 5 seconds
     retry_delay: 4000, // milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
-    recurse_level: 1, // how many directory levels to recursively search. higher is further down the rabbit hole === more processing time
+    recurse_level: 1, // how many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
     ignore_list: ['sample', 'etrg'] // a lowercase list of movie titles to ignore; ex: sample.avi
 };
 
@@ -110,11 +110,11 @@ if (Meteor.isClient) {
     var totalRatings;
 
     // observe db collections
-    Meteor.subscribe('log');
+    Meteor.subscribe('log'); // Application log
     Meteor.subscribe('state');
-    Meteor.subscribe('recent');
+    Meteor.subscribe('recent'); // Recently clicked
     Meteor.subscribe('watched');
-    Meteor.subscribe('genres');
+    Meteor.subscribe('genres'); // A map of genre-firendly-name to genre id
     Meteor.subscribe('movies');
     Meteor.subscribe('movieCache');
 
@@ -142,6 +142,7 @@ if (Meteor.isClient) {
     Template.registerHelper('equals', function(v1, v2) {
         return v1 === v2;
     });
+
     Template.registerHelper('gt', function(v1, v2) {
         return v1 > v2;
     });
@@ -151,15 +152,13 @@ if (Meteor.isClient) {
             return Session.get('currentPage');
         }
     });
+
     Template.navigation.helpers({
         page: function() {
             return Session.get('currentPage');
         },
         genres: function() {
-            return Genres.find(
-                { items: { $exists: true } },
-                { sort: { name: 1 } }
-            ).fetch();
+            return Genres.find({ items: { $exists: true } }, { sort: { name: 1 } }).fetch();
         },
         movieCount: function() {
             return Movies.find().count();
@@ -177,7 +176,7 @@ if (Meteor.isClient) {
         loading: function() {
             var state = State.findOne({ _id: '0' });
             // invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
-            var loaded = state && 100 - state.loading;
+            var loaded = (state) ? 100 - state.loading : 100;
             setLoaded(loaded / 100);
             return loaded;
         }
@@ -187,7 +186,7 @@ if (Meteor.isClient) {
     Template.path.helpers({
         path: function() {
             var state = State.findOne({ _id: '0' });
-            return state && state.path;
+            return (state) ? state.path : '---';
         }
     });
 
@@ -311,7 +310,7 @@ if (Meteor.isClient) {
                 // browse Recently Released
                 Session.set('movieQuery', {});
             } else if (currentPage == 'Recent') {
-                // browse recently viewed: alphabetical  **** HAVENT FIGURED OUT SORTING
+                // browse recently viewed: alphabetical  **** TODO: HAVENT FIGURED OUT SORTING
                 var recent = [];
                 _.map(Recent.find().fetch(), function(e) {
                     recent.push(e._id);
@@ -338,8 +337,7 @@ if (Meteor.isClient) {
     Template.details.events({
         'click #rating': function(event) {
             // switch ratings
-            if (ratingTimer) Meteor.clearInterval(ratingTimer);
-            ratingTimer = Meteor.setInterval(rotateRating, 4000);
+            resetRatingInterval();
             rotateRating();
         },
         'click #open-link': function(event) {
@@ -360,14 +358,8 @@ if (Meteor.isClient) {
         'click .movie-image': function(event) {
             // switch current movie in details panel
             var id = event.currentTarget.dataset.id;
-            var trailers = Movies.findOne(
-                { _id: id },
-                { fields: { trailer: 1 } }
-            );
-            var ratings = Movies.findOne(
-                { _id: id },
-                { fields: { ratings: 1 } }
-            ).ratings;
+            var trailers = Movies.findOne({ _id: id }, { fields: { trailer: 1 } });
+            var ratings = Movies.findOne({ _id: id }, { fields: { ratings: 1 } }).ratings;
             totalRatings = ratings.length;
             // set initial trailer
             var trailer =
@@ -380,8 +372,7 @@ if (Meteor.isClient) {
             Session.set('currentMovie', id);
             Meteor.call('addRecent', id);
             // set timer to rotate ratings
-            if (ratingTimer) Meteor.clearInterval(ratingTimer);
-            ratingTimer = Meteor.setInterval(rotateRating, 4000);
+            resetRatingInterval();
         },
         'keyup .movie-image': function(event) {
             var magnitude = 3; // $(".keyboard-magnitude").data('id'); // this should equal the number of movies per row
@@ -438,6 +429,8 @@ if (Meteor.isClient) {
         'click #browse-link': function(event) {
             if (Meteor.isDesktop) {
                 Desktop.send('desktop', 'open-file-dialog');
+            } else {
+                // Web browser
             }
         }
     });
@@ -465,16 +458,22 @@ if (Meteor.isClient) {
         Meteor.call('updatePath', path);
     };
 
+    var rotateRating = function() {
+        // broadcast(totalRatings); // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
+        var x = Session.get('activeRating');
+        x += 1
+        Session.set('activeRating', x == totalRatings ? 0 : x);
+    };
+
+    var resetRatingInterval = function() {
+        if (ratingTimer) Meteor.clearInterval(ratingTimer);
+        ratingTimer = Meteor.setInterval(rotateRating, settings.rating_delay);
+    }
+
     var resetSort = function() {
         // default sort values
         Session.set('currentSort', settings.sort_types[0]);
         Session.set('movieSort', { sort: { name: 1 } });
-    };
-
-    var rotateRating = function() {
-        // broadcast(totalRatings); // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
-        var x = Session.get('activeRating');
-        Session.set('activeRating', x + 1 == totalRatings ? 0 : x + 1);
     };
 
     // defaults
@@ -485,6 +484,7 @@ if (Meteor.isClient) {
         Session.set('currentPage', 'Movies');
         Session.set('movieQuery', {});
     };
+
     resetClient();
 } // end Meteor.isClient
 
@@ -601,12 +601,12 @@ if (Meteor.isServer) {
         addMovie: function(file, options) {
             // set options
             var options = options ? options : {};
-            var ex = options.ext
-                ? options.ext
-                : file
-                    .split('.')
-                    .pop()
-                    .toLowerCase();
+            var ex = options.ext ?
+                options.ext :
+                file
+                .split('.')
+                .pop()
+                .toLowerCase();
             var dirPath = options.dirPath ? options.dirPath : false;
 
             var time = epoch();
@@ -726,10 +726,7 @@ if (Meteor.isServer) {
             var time = epoch();
             movies.forEach(function(movie) {
                 movie.cache_date = epoch();
-                MovieCache.upsert(
-                    { _id: movie.path + movie.file },
-                    { cache_date: time, movie: movie }
-                );
+                MovieCache.upsert({ _id: movie.path + movie.file }, { cache_date: time, movie: movie });
             });
             State.update('0', { $set: { cache_movies: time } });
         },
@@ -882,13 +879,11 @@ if (Meteor.isServer) {
             );
         },
         updateIntel: function(mid, name, year) {
-            omdbApi.get(
-                {
+            omdbApi.get({
                     omdb_key: settings.omdb_key,
                     apiKey: settings.omdb_key,
                     title: name,
-                    plot:
-                        settings.overview_length === 'short' ? 'short' : 'full'
+                    plot: settings.overview_length === 'short' ? 'short' : 'full'
                 },
                 Meteor.bindEnvironment(function(err, res) {
                     Meteor.call('queueDone', 'updateIntel');
@@ -969,7 +964,7 @@ if (Meteor.isServer) {
                     // lets parse this shit proper
                     var mov = Movies.findOne({ _id: mid });
                     res.backdrop =
-                        settings.secure_base_url +
+                        settings.base_url +
                         settings.backdrop_size +
                         res.backdrop_path;
                     if (res.vote_average) {
@@ -986,7 +981,7 @@ if (Meteor.isServer) {
                     }
                     mov.imdb_id = res.imdb_id;
                     mov.poster =
-                        settings.secure_base_url +
+                        settings.base_url +
                         settings.poster_size +
                         res.poster_path;
                     mov.title = res.title;
@@ -1007,10 +1002,9 @@ if (Meteor.isServer) {
         },
         updateTrailer: function(mid, name, year) {
             movieTrailer(
-                name,
-                {
-                	year,
-                	multi: true
+                name, {
+                    year,
+                    multi: true
                 },
                 Meteor.bindEnvironment(function(err, res) {
                     Meteor.call('queueDone', 'updateTrailer');
