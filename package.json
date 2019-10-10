@@ -51,7 +51,7 @@
     "electron-builder": "^20.38.5",
     "electron-packager": "^13.0.1",
     "omdb-client": "^2.0.0",
-    "open": "0.0.5",
+    "open": "6.4.0",
     "parse-torrent-name": "0.5.4"
   }
 }
