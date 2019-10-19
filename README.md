@@ -8,9 +8,9 @@ Cinematic is a desktop app to beautifully organize and automatically retrieve in
 
 ### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
-<div style="text-align:center;">
- <img src="http://lacymorrow.com/images/github/cinematic/demo.gif">
-</div>
+<p align="center">
+  <img width="720" height="450" src="http://lacymorrow.com/images/github/cinematic/demo.gif">
+</p>
 
 Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found. 
 Organize your movies by genre and sort by popularity, release date, runtime, or randomize things.
