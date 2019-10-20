@@ -1,57 +1,71 @@
 {
-  "name": "Cinematic",
-  "version": "1.1.1",
-  "author": {
-    "name": "Lacy Morrow",
-    "email": "me@lacymorrow.com",
-    "url": "http://lacymorrow.com"
-  },
-  "contributors": [
-    {
-      "name": "Lacy Morrow",
-      "email": "me@lacymorrow.com",
-      "url": "http://lacymorrow.com"
-    }
-  ],
-  "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
-  "homepage": "https://github.com/lacymorrow/cinematic",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lacymorrow/cinematic"
-  },
-  "scripts": {
-    "start": "meteor",
-    "serve": "meteor --mobile-server=127.0.0.1:3000",
-    "desktop": "meteor-desktop",
-    "build-current": "npm run desktop -- build-installer --build-meteor --production",
-    "build-mac": "npm run desktop -- build-installer --build-meteor --mac --production",
-    "build-win": "npm run desktop -- build-installer --build-meteor --all-archs --win --production",
-    "build-linux": "npm run desktop -- build-installer --build-meteor --all-archs --linux --production",
-    "build": "npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production",
-    "test": "ava --verbose",
-    "test-desktop": "cross-env NODE_ENV=test ava .desktop/**/*.test.js -s --verbose",
-    "test-desktop-watch": "cross-env NODE_ENV=test ava .desktop/**/*.test.js -s --verbose --watch --source .desktop"
-  },
-  "bugs": {
-    "url": "https://github.com/lacymorrow/cinematic/issues"
-  },
-  "license": "GPL-3.0",
-  "devDependencies": {
-    "ava": "^1.2.0",
-    "cross-env": "^5.2.0",
-    "electron": "^4.0.4",
-    "eslint": "^5.13.0",
-    "meteor-desktop": "^2.0.0",
-    "meteor-desktop-test-suite": "^0.2.2",
-    "spectron": "^5.0.0"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.39",
-    "app-builder-lib": "^20.38.5",
-    "electron-builder": "^20.38.5",
-    "electron-packager": "^13.0.1",
-    "omdb-client": "^2.0.0",
-    "open": "6.4.0",
-    "parse-torrent-name": "0.5.4"
-  }
+	"name": "Cinematic",
+	"version": "1.1.1",
+	"author": {
+		"name": "Lacy Morrow",
+		"email": "me@lacymorrow.com",
+		"url": "http://lacymorrow.com"
+	},
+	"contributors": [
+		{
+			"name": "Lacy Morrow",
+			"email": "me@lacymorrow.com",
+			"url": "http://lacymorrow.com"
+		}
+	],
+	"description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
+	"homepage": "https://github.com/lacymorrow/cinematic",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lacymorrow/cinematic"
+	},
+	"scripts": {
+		"start": "meteor",
+		"serve": "meteor --mobile-server=127.0.0.1:3000",
+		"desktop": "meteor-desktop",
+		"build-current": "npm run desktop -- build-installer --build-meteor --production",
+		"build-mac": "npm run desktop -- build-installer --build-meteor --mac --production",
+		"build-win": "npm run desktop -- build-installer --build-meteor --all-archs --win --production",
+		"build-linux": "npm run desktop -- build-installer --build-meteor --all-archs --linux --production",
+		"build": "npm run desktop -- build-installer --build-meteor --all-archs --win --mac --linux --production",
+		"lint": "xo --fix",
+		"test": "npm run lint && ava --verbose",
+		"test-desktop": "cross-env NODE_ENV=test ava .desktop/**/*.test.js -s --verbose",
+		"test-desktop-watch": "cross-env NODE_ENV=test ava .desktop/**/*.test.js -s --verbose --watch --source .desktop"
+	},
+	"bugs": {
+		"url": "https://github.com/lacymorrow/cinematic/issues"
+	},
+	"license": "GPL-3.0",
+	"devDependencies": {
+		"ava": "^1.2.0",
+		"cross-env": "^5.2.0",
+		"electron": "^4.0.4",
+		"eslint-config-xo": "^0.27.2",
+		"meteor-desktop": "^2.0.0",
+		"meteor-desktop-test-suite": "^0.2.2",
+		"np": "^5.1.1",
+		"spectron": "^5.0.0",
+		"xo": "^0.25.3"
+	},
+	"dependencies": {
+		"@babel/runtime": "^7.0.0-beta.39",
+		"app-builder-lib": "^20.38.5",
+		"electron-builder": "^20.38.5",
+		"electron-packager": "^13.0.1",
+		"omdb-client": "^2.0.0",
+		"open": "6.4.0",
+		"parse-torrent-name": "0.5.4"
+	},
+	"np": {
+		"publish": false,
+		"releaseDraft": false
+	},
+	"xo": {
+		"envs": [
+			"node",
+			"browser"
+		],
+		"semicolon": false
+	}
 }
