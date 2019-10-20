@@ -99,8 +99,8 @@ export default class Desktop {
                         { name: 'Movies', extensions: ['.avi', '.flv', '.mp4', '.m4v', '.mov', '.ogg', '.ogv', '.vob', '.wmv', '.mkv'] },
                         { name: 'All Files', extensions: ['*'] }
                     ],
-                    title: 'Open Movies',
-                    message: 'Choose movie folder to organize:',
+                    title: 'Scan Movies',
+                    message: 'Choose movie folder to scan:',
                     properties: ['openDirectory', 'openFile', 'multiSelections']
                 }, function(files) {
                     if (files) {
