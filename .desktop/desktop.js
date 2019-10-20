@@ -1,7 +1,31 @@
-/* eslint-disable no-unused-vars */
+'use strict'
 import process from 'process';
-import { app, dialog } from 'electron';
+import { app, dialog, ipcMain, globalShortcut, BrowserWindow, Menu } from 'electron';
+import {autoUpdater} from 'electron-updater'
+import {is} from 'electron-util'
+import unhandled from 'electron-unhandled'
+import debug from 'electron-debug'
+import contextMenu from 'electron-context-menu'
+import {config, defaults} from './config'
+import menu from './menu'
 
+unhandled()
+debug()
+contextMenu();
+
+// Note: Must match `build.appId` in package.json
+app.setAppUserModelId('com.lacymorrow.Cinematic')
+
+// Uncomment this before publishing your first version.
+// It's commented out as it throws an error if there are no published versions.
+if (!is.development) {
+	const FOUR_HOURS = 1000 * 60 * 60 * 4
+	setInterval(() => {
+		autoUpdater.checkForUpdates()
+	}, FOUR_HOURS)
+
+	autoUpdater.checkForUpdates()
+}
 /**
  * Entry point to your native desktop code.
  *
@@ -55,58 +79,7 @@ export default class Desktop {
             window.webContents.on('crashed', Desktop.windowCrashedHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
 
-            // // Build Menu
-            // var menu_template = [
-            //     {},
-            //     {
-            //         label: 'File',
-            //         submenu: [{
-            //                 label: 'Select Movie Folder',
-            //                 accelerator: 'CommandOrControl+O',
-            //                 click: function() {
-            //                     movieSelectDialog();
-            //                 }
-            //             },
-            //             // Don't forget a quit hotkey!
-            //             {
-            //                 label: 'Quit',
-            //                 accelerator: 'CommandOrControl+Q',
-            //                 click: function() {
-            //                     app.exit(0);
-            //                 }
-            //             },
-            //             // {
-            //             //   label:'Control',
-            //             //   submenu:[
-            //             //     {
-            //             //       label:'Pause',
-            //             //       accelerator:'CommandOrControl+E',
-            //             //       click:function(){
-            //             //         // sendPauseSongMessage();
-            //             //       }
-            //             //     },
-            //             //     {
-            //             //       label:'Next',
-            //             //       accelerator:'CommandOrControl+N',
-            //             //       click:function(){
-            //             //         // sendNextSongMessage();
-            //             //       }
-            //             //     },
-            //             //     {
-            //             //       label:'Previous',
-            //             //       accelerator:'CommandOrControl+P',
-            //             //       click:function(){
-            //             //         // sendNextSongMessage();
-            //             //       }
-            //             //     }
-            //             //   ]
-            //             // }
-            //         ]
-            //     }
-            // ];
-
-            // const menu = Menu.buildFromTemplate(menu_template);
-            // Menu.setApplicationMenu(menu);
+            Menu.setApplicationMenu(menu);
 
             /* IPC */
 

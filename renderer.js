@@ -1,3 +1,4 @@
+/* global Meteor, Mongo */
 'use strict'
 /*
  * Cinematic, (c) 2017 Lacy Morrow - http://github/lacmorrow/cinematic

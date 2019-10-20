@@ -42,7 +42,12 @@
     "cross-env": "^5.2.0",
     "electron": "^4.0.4",
     "electron-builder": "^21.2.0",
-    "electron-packager": "^13.0.1",
+    "electron-debug": "^3.0.1",
+    "electron-packager": "^14.0.6",
+    "electron-store": "^5.0.0",
+    "electron-unhandled": "^3.0.0",
+    "electron-updater": "^4.1.2",
+    "electron-util": "^0.12.2",
     "eslint-config-xo": "^0.27.2",
     "meteor-desktop": "^2.0.0",
     "spectron": "^5.0.0",
@@ -50,6 +55,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.39",
+    "electron-context-menu": "^0.15.0",
     "omdb-client": "^2.0.0",
     "open": "6.4.0",
     "parse-torrent-name": "0.5.4"
