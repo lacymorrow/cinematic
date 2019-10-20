@@ -919,6 +919,7 @@ if (Meteor.isServer) {
 				// Lets parse this shit proper
 				const mov = Movies.findOne({_id: mid})
 				if (res.imdbRating) {
+					// TODO: SAFE GET .ratings
 					mov.ratings.push({
 						name: 'IMDB RATING',
 						score: parseFloat(res.imdbRating),

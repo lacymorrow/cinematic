@@ -11,12 +11,12 @@
 		"autoUpdateFeedHeaders": {},
 		"autoUpdateCheckOnStart": false
 	},
-	"webAppStartupTimeout": 30000,
+	"webAppStartupTimeout": 15000,
 	"exposeLocalFilesystem": false,
 	"window": {
-		"icon": "@assets/meteor.png",
+		"icon": "@assets/icon.png",
 		"_windows": {
-			"icon": "@assets/meteor.ico"
+			"icon": "@assets/icon.ico"
 		}
 	},
 	"windowDev": {
@@ -60,7 +60,7 @@
 	},
 	"builderOptions": {
 		"icon": ".desktop/assets/icon.ico",
-		"appId": "cinematic.app",
+		"appId": "com.lacymorrow.Cinematic",
 		"productName": "Cinematic",
 		"compression": "maximum",
 		"win": {

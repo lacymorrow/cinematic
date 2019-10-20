@@ -2,7 +2,7 @@
 
 # Running & Developing Cinematic _(from source)_
 
-Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacymorrow/cinematic`. 
+Anyone else can run Cinematic on any OS by downloading or cloning the repo `lacymorrow/cinematic`.
 
 You will need to have [nodejs](http://nodejs.org), NPM, and [Meteor](https://www.meteor.com/install) installed.
 
@@ -22,11 +22,11 @@ To package Cinematic for your machine architecture:
 
 `npm run serve` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
 
-#### Build and test Desktop version. 
+#### Build and test Desktop version.
 
 In your main terminal:
 
-`npm run desktop`
+`npm run electron`
 
 
 #### Full Cross-platform build
@@ -42,19 +42,19 @@ brew cask install xquartz && brew install wine
 # The magic script. Builds for macOS and ia32 and x64 for Windows and Linux.
 # Get some coffee, this takes awhile.
 
-npm run build 
-# alias: npm run desktop -- build-installer --buil-meteor --all-archs --win --mac --linux --production
+npm run build
+# alias: npm run electron -- build-installer --buil-meteor --all-archs --win --mac --linux --production
 
 # Or, to build for a specific platform:
 
 npm run build-mac
-# alias: npm run desktop -- build-installer --build-meteor --mac --production"
+# alias: npm run electron -- build-installer --build-meteor --mac --production"
 
 npm build-win
-# alias: npm run desktop -- build-installer --build-meteor --all-archs --win --production"
+# alias: npm run electron -- build-installer --build-meteor --all-archs --win --production"
 
 npm run build-linux
-# alias: npm run desktop -- build-installer --build-meteor --all-archs --linux --production"
+# alias: npm run electron -- build-installer --build-meteor --all-archs --linux --production"
 ```
 
 To only build for current architecture: `npm run build-current`
@@ -67,7 +67,7 @@ To only build for current architecture: `npm run build-current`
 DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy myapp.meteorapp.com --settings settings.json
 
 # build the project for the local machine, with a connection to the production server
-meteor --settings settings.json --mobile-server https://myapp.meteorapp.com  
+meteor --settings settings.json --mobile-server https://myapp.meteorapp.com
 ```
 
 
