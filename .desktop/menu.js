@@ -109,7 +109,15 @@ const macosTemplate = [
 		}
 	]),
 	{
-		role: 'fileMenu'
+		role: 'fileMenu',
+		submenu: [
+			{
+				type: 'separator'
+			},
+			{
+				role: 'close'
+			}
+		]
 	},
 	{
 		role: 'editMenu'

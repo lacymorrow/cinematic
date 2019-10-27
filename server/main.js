@@ -1,9 +1,14 @@
-const open = Meteor.npmRequire('open')
-const omdbApi = Meteor.npmRequire('omdb-client')
-// Var omdbApi = Meteor.npmRequire('lacymorrow-omdb-client');
-const movieInfo = Meteor.npmRequire('movie-info')
-const movieTrailer = Meteor.npmRequire('movie-trailer')
-const parseTorrentName = Meteor.npmRequire('parse-torrent-name')
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import open from 'open'
+import omdbApi from 'omdb-client'
+import movieInfo from 'movie-info'
+import movieTrailer from 'movie-trailer'
+import parseTorrentName from 'parse-torrent-name'
+
+import {config} from '../imports/config.js'
+
 const Log = new Mongo.Collection('log')
 const State = new Mongo.Collection('state')
 const Recent = new Mongo.Collection('recent')
@@ -12,52 +17,27 @@ const Genres = new Mongo.Collection('genres')
 const Movies = new Mongo.Collection('movies')
 const MovieCache = new Mongo.Collection('movieCache')
 
-/* Secrets - public til they're blocked. 4 years going strong, thank TMDB and OMDB! */
-const DEFAULT_TMDB_KEY = '9d2bff12ed955c7f1f74b83187f188ae'
-const DEFAULT_OMDB_KEY = 'e0341ca3'
+const getOSMediaPath = () => {
+	// Get default media directory. Fetches ~/movies, ~/videos, ~
 
-const settings = {
-	/* Allow for personal api key secrets for analytics */
-	tmdb_key: process.env.TMDB_KEY ? process.env.TMDB_KEY : DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
-	omdb_key: process.env.OMDB_KEY ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // Omdb api key
+	let home = os.homedir()
+	if (home.slice(-1) != '/') {
+		home += '/'
+	}
 
-	/* Defaults */
-	valid_types: [
-		'.avi',
-		'.flv',
-		'.mp4',
-		'.m4v',
-		'.mov',
-		'.ogg',
-		'.ogv',
-		'.vob',
-		'.wmv',
-		'.mkv'
-	],
-	sort_types: [
-		'Alphabetical',
-		'Popularity',
-		'Release Date',
-		'Runtime',
-		'Random' /* , "Ratings" */
-	],
-	cache: 3600, // Seconds; 604800 = 7 days
-	overview_length: 'full', // Plot Summary length: "short", "full" - from omdb
-
-	/* URLs */
-	base_url: 'https://image.tmdb.org/t/p/',
-	genre_url: 'http://api.themoviedb.org/3/genre/movie/list',
-	backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
-	poster_size: 'w780', // "w92", "w154", "w185", "w342", "w500", "w780", "original",
-
-	/* app-specific */
-	// -- affects how app is run and may affect performance
-	max_connections: 3, // Max number of simultaneous, more is faster but more api hits at once; 5 is okay...
-	parse_method: 'parse', // Filename parsing options: "regex", "parse"; regex is best for well-organized files lile This[2004].avi
-	rating_delay: 6000, // Milli-seconds of rating rotate interval; 5000 = 5 seconds
-	retry_delay: 4000, // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
-	recurse_level: 1, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-	ignore_list: ['sample', 'etrg'] // A lowercase list of movie titles to ignore; ex: sample.avi
+	let dir = home
+	const files = fs.readdirSync(home)
+	files.forEach((file, i) => {
+		const stats = fs.lstatSync(home + file)
+		if (
+			stats.isDirectory() &&
+            (file.toLowerCase().includes('movies') ||
+                file.toLowerCase().includes('videos'))
+		) {
+			dir = home + file + '/'
+		}
+	})
+	return dir
 }
 
 const epoch = function () {
@@ -65,7 +45,7 @@ const epoch = function () {
 	return d.getTime() / 1000
 }
 
-const replaceAll = function(str, find, replace) {
+const replaceAll = function (str, find, replace) {
 	return str.replace(new RegExp(find, 'g'), replace)
 }
 
@@ -74,7 +54,8 @@ const parseName = function (name) {
 	name = replaceAll(name, '-', ' ')
 	return name
 }
-// safe console.log which outputs in the called context - client/server
+
+// Safe console.log which outputs in the called context - client/server
 const broadcast = function (msg, err) {
 	if (err === true) {
 		// Log error
@@ -84,6 +65,27 @@ const broadcast = function (msg, err) {
 	if (typeof console !== 'undefined') {
 		console.log(msg)
 	}
+}
+
+const startupFromCache = () => {
+	const state = State.findOne({_id: '0'})
+	// If genre cache is expired, update genres
+	if (
+		config.CACHE_TIMEOUT &&
+        state.genreCacheTimestamp &&
+        epoch() < state.genreCacheTimestamp + config.CACHE_TIMEOUT
+	) {
+		broadcast('Cinematic: Loading cached genre list.')
+	} else {
+		broadcast('Cinematic: Updating genre cache.')
+		Meteor.call('syncGenreCache')
+	}
+
+	startup()
+}
+
+const startup = () => {
+
 }
 
 // Define observable collections
@@ -120,30 +122,22 @@ Meteor.startup(() => {
 	broadcast('\n----- Cinematic -----')
 
 	// Set default path
-	const dir = Meteor.call('findMovieDir')
+	const dir = getOSMediaPath()
+	broadcast('Cinematic: Using ' + dir + ' as movie directory')
 
-	// Set up state
-	const time = epoch()
-	const state = State.findOne({_id: '0'})
-	if (!state) {
-		const sid = State.insert({
-			_id: '0',
+	// TODO: save current dir to store and retrieve on startup
+
+	// Set up state - our redneck appcache
+
+	if (State.findOne({_id: '0'})) {
+		startupFromCache()
+	} else {
+		State.insert({
+			_id: '0', // There can be only one...
 			path: dir,
 			cwd: process.env.PWD
 		})
-	}
-
-	// Grab genre list
-	if (
-		settings.cache &&
-        state &&
-        state.cache_genre &&
-        time < state.cache_genre + settings.cache
-	) {
-		broadcast('Cinematic: Loading cached genre list.')
-	} else {
-		broadcast('Cinematic: Updating genre cache.')
-		Meteor.call('updateGenres')
+		startup()
 	}
 
 	// Initial update
@@ -195,7 +189,7 @@ Meteor.methods({
 		const dirPath = options.dirPath ? options.dirPath : false
 
 		const time = epoch()
-		if (settings.parse_method == 'regex') {
+		if (config.PARSE_METHOD === 'regex') {
 			const regex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g
 			const match = regex.exec(path.basename(file, ex))
 			var name = (year = null)
@@ -226,7 +220,7 @@ Meteor.methods({
 		if (
 			name &&
             name != ex &&
-            !_.contains(settings.ignore_list, name.toLowerCase())
+            !_.contains(config.IGNORE_LIST, name.toLowerCase())
 		) {
 			// Cache handling
 			const hash = dirPath + file
@@ -234,9 +228,9 @@ Meteor.methods({
 			if (
 				movc &&
                 movc.cached &&
-                settings.cache &&
+                config.CACHE_TIMEOUT &&
                 movc.movie &&
-                time < movc.cache_date + settings.cache
+                time < movc.cache_date + config.CACHE_TIMEOUT
 			) {
 				// Cached
 				broadcast('Cinematic: Loading cached movie ' + name)
@@ -327,29 +321,6 @@ Meteor.methods({
 	directorySearch(output) {
 		broadcast('Server adding files:' + '\n' + output)
 	},
-	findMovieDir() {
-		// Get default media directory. Fetches ~/movies, ~/videos, ~
-
-		let home = Meteor.npmRequire('os').homedir()
-		if (home.slice(-1) != '/') {
-			home += '/'
-		}
-
-		let dir = home
-		const files = fs.readdirSync(home)
-		files.forEach((file, i) => {
-			const stats = fs.lstatSync(home + file)
-			if (
-				stats.isDirectory() &&
-                (file.toLowerCase().includes('movies') ||
-                    file.toLowerCase().includes('videos'))
-			) {
-				dir = home + file + '/'
-			}
-		})
-		broadcast('Cinematic: Using ' + dir + ' as movie directory')
-		return dir
-	},
 	getIntel(mid, name, year) {
 		// Updates to gather
 		const jobs = [
@@ -385,7 +356,7 @@ Meteor.methods({
 				const ex = path.extname(file)
 				if (
 					ex &&
-                    _.contains(settings.valid_types, ex.toLowerCase())
+                    _.contains(config.VALID_TYPES, ex.toLowerCase())
 				) {
 					// Found a movie!
 					// this is where the magic happens
@@ -393,7 +364,7 @@ Meteor.methods({
 						dirPath,
 						ext: ex
 					})
-				} else if (recurse_level < settings.recurse_level) {
+				} else if (recurse_level < config.SCAN_DEPTH) {
 					// Ok let's try recursing, were avoiding as many fs calls as possible
 					// which is why i didn't call it in the condition above
 					// first, is this a directory?
@@ -451,19 +422,19 @@ Meteor.methods({
 			)
 		}
 	},
-	updateGenres() {
+	syncGenreCache() {
 		Genres.remove({})
 		HTTP.call(
 			'GET',
-			settings.genre_url + '?api_key=' + settings.tmdb_key,
+			config.GENRE_ENDPOINT + '?api_key=' + config.TMDB_KEY,
 			(err, res) => {
 				if (err) {
-					broadcast('Cinematic/updateGenres: ' + err)
+					broadcast('Cinematic/syncGenreCache: ' + err)
 				} else if (res.data.genres) {
 					res.data.genres.forEach(genre => {
 						Meteor.call('addGenre', genre.id, null, genre.name)
 					})
-					State.update('0', {$set: {cache_genre: epoch()}})
+					State.update('0', {$set: {genreCacheTimestamp: epoch()}})
 				} else {
 					broadcast('Cinematic: Error getting genre list.', true)
 				}
@@ -472,10 +443,10 @@ Meteor.methods({
 	},
 	updateIntel(mid, name, year) {
 		omdbApi.get({
-			omdb_key: settings.omdb_key,
-			apiKey: settings.omdb_key,
+			omdb_key: config.OMDB_KEY,
+			apiKey: config.OMDB_KEY,
 			title: name,
-			plot: settings.overview_length === 'short' ? 'short' : 'full'
+			plot: config.PLOT_LENGTH === 'short' ? 'short' : 'full'
 		},
 		Meteor.bindEnvironment((err, res) => {
 			Meteor.call('queueDone', 'updateIntel')
@@ -564,8 +535,8 @@ Meteor.methods({
 				// Lets parse this shit proper
 				const mov = Movies.findOne({_id: mid})
 				res.backdrop =
-                    settings.base_url +
-                    settings.backdrop_size +
+                    config.IMDB_ENDPOINT +
+                    config.BACKDROP_SIZE +
                     res.backdrop_path
 				if (res.vote_average) {
 					mov.ratings.push({
@@ -582,8 +553,8 @@ Meteor.methods({
 
 				mov.imdb_id = res.imdb_id
 				mov.poster =
-                    settings.base_url +
-                    settings.poster_size +
+                    config.IMDB_ENDPOINT +
+                    config.POSTER_SIZE +
                     res.poster_path
 				mov.title = res.title
 				if (!mov.plot) {
@@ -631,7 +602,7 @@ Meteor.methods({
 		})
 	},
 	queueIt(job, mid, name, year) {
-		if (api_current >= settings.max_connections) {
+		if (api_current >= config.MAX_CONNECTIONS) {
 			// Too many concurrent connections
 			Meteor.setTimeout(() => {
 				Meteor.call('queueIt', job, mid, name, year, (
@@ -642,7 +613,7 @@ Meteor.methods({
 						broadcast('Cinematic/queueIt/retryError: ' + err)
 					}
 				})
-			}, settings.retry_delay)
+			}, config.RETRY_DELAY)
 		} else {
 			api_current += 1
 			Meteor.call(job, mid, name, year, (err, res) => {
@@ -658,10 +629,10 @@ Meteor.methods({
 		// Update loading percent every set
 		if (api_queue === 0) {
 			State.update('0', {$set: {loading: 0}})
-			if (settings.cache) {
+			if (config.CACHE_TIMEOUT) {
 				Meteor.call('cacheMovies')
 			}
-		} else if (api_queue % settings.max_connections === 0) {
+		} else if (api_queue % config.MAX_CONNECTIONS === 0) {
 			State.update('0', {
 				$set: {loading: Math.round(api_queue / api_total * 100)}
 			})
@@ -677,7 +648,7 @@ Meteor.methods({
 		MovieCache.remove({})
 
 		// Set default path
-		const dir = Meteor.call('findMovieDir')
+		const dir = Meteor.call('getOSMediaPath')
 
 		const time = epoch()
 		const sid = State.insert({
@@ -687,7 +658,7 @@ Meteor.methods({
 		})
 
 		// Grab genre list
-		Meteor.call('updateGenres')
+		Meteor.call('syncGenreCache')
 
 		// Initial update
 		Meteor.call('updatePath', dir)

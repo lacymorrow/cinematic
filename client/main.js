@@ -1,60 +1,15 @@
+import NProgress from 'nprogress'
+import {config} from '../imports/config'
+
 const State = new Mongo.Collection('state')
 const Recent = new Mongo.Collection('recent')
 const Watched = new Mongo.Collection('watched')
 const Genres = new Mongo.Collection('genres')
 const Movies = new Mongo.Collection('movies')
 
-/* Secrets - public til they're blocked. 4 years going strong, thank TMDB and OMDB! */
-const DEFAULT_TMDB_KEY = '9d2bff12ed955c7f1f74b83187f188ae'
-const DEFAULT_OMDB_KEY = 'e0341ca3'
-
-const settings = {
-	/* Allow for personal api key secrets for analytics */
-	tmdb_key: process.env.TMDB_KEY ? process.env.TMDB_KEY : DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
-	omdb_key: process.env.OMDB_KEY ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // Omdb api key
-
-	/* Defaults */
-	valid_types: [
-		'.avi',
-		'.flv',
-		'.mp4',
-		'.m4v',
-		'.mov',
-		'.ogg',
-		'.ogv',
-		'.vob',
-		'.wmv',
-		'.mkv'
-	],
-	sort_types: [
-		'Alphabetical',
-		'Popularity',
-		'Release Date',
-		'Runtime',
-		'Random' /* , "Ratings" */
-	],
-	cache: 3600, // Seconds; 604800 = 7 days
-	overview_length: 'full', // Plot Summary length: "short", "full" - from omdb
-
-	/* URLs */
-	base_url: 'https://image.tmdb.org/t/p/',
-	genre_url: 'http://api.themoviedb.org/3/genre/movie/list',
-	backdrop_size: 'w1280', // "w300", "w780", "w1280", "original"
-	poster_size: 'w780', // "w92", "w154", "w185", "w342", "w500", "w780", "original",
-
-	/* app-specific */
-	// -- affects how app is run and may affect performance
-	max_connections: 3, // Max number of simultaneous, more is faster but more api hits at once; 5 is okay...
-	parse_method: 'parse', // Filename parsing options: "regex", "parse"; regex is best for well-organized files lile This[2004].avi
-	rating_delay: 6000, // Milli-seconds of rating rotate interval; 5000 = 5 seconds
-	retry_delay: 4000, // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
-	recurse_level: 1, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-	ignore_list: ['sample', 'etrg'] // A lowercase list of movie titles to ignore; ex: sample.avi
-}
-
 if (Meteor.isDesktop) {
-	// Send settings
-	Desktop.send('desktop', 'load-settings', settings)
+	// Send config
+	Desktop.send('desktop', 'load-settings', config)
 	// Receive files from browser
 	Desktop.on('desktop', 'selected-file', (event, data) => {
 		console.log('Selected File Dialog Data:', event, data)
@@ -156,8 +111,8 @@ Template.details.helpers({
 	rating() {
 		return Session.get('activeRating')
 	},
-	settings() {
-		return settings
+	config() {
+		return config
 	},
 	movie() {
 		const movie = Movies.findOne({_id: Session.get('currentMovie')})
@@ -201,7 +156,7 @@ Template.sort.helpers({
 		return currentSort != 'Recent'
 	},
 	sort() {
-		return settings.sort_types
+		return config.SORT_TYPES
 	},
 	currentSort() {
 		return Session.get('currentSort')
@@ -226,19 +181,19 @@ Template.sort.events({
 		const sort = $(event.currentTarget).val()
 		Session.set('currentSort', sort)
 		// Warning, magic numbers below, indexs reference sort types above
-		if (sort == settings.sort_types[0]) {
+		if (sort == config.SORT_TYPES[0]) {
 			// Alphabetical
 			Session.set('movieSort', {sort: {name: 1}})
-		} else if (sort == settings.sort_types[1]) {
+		} else if (sort == config.SORT_TYPES[1]) {
 			// Popularity
 			Session.set('movieSort', {sort: {'info.popularity': -1}})
-		} else if (sort == settings.sort_types[2]) {
+		} else if (sort == config.SORT_TYPES[2]) {
 			// Release Date
 			Session.set('movieSort', {sort: {'info.release_date': -1}})
-		} else if (sort == settings.sort_types[3]) {
+		} else if (sort == config.SORT_TYPES[3]) {
 			// Runtime
 			Session.set('movieSort', {sort: {'intel.Runtime': 1}})
-		} else if (sort == settings.sort_types[4]) {
+		} else if (sort == config.SORT_TYPES[4]) {
 			// Random
 			Session.set('movieSort', {sort: {seed: 1}})
 		} else if (sort == 'Ratings') {
@@ -434,12 +389,12 @@ var resetRatingInterval = function () {
 		Meteor.clearInterval(ratingTimer)
 	}
 
-	ratingTimer = Meteor.setInterval(rotateRating, settings.rating_delay)
+	ratingTimer = Meteor.setInterval(rotateRating, config.RATING_DELAY)
 }
 
 var resetSort = function () {
 	// Default sort values
-	Session.set('currentSort', settings.sort_types[0])
+	Session.set('currentSort', config.SORT_TYPES[0])
 	Session.set('movieSort', {sort: {name: 1}})
 }
 
@@ -461,6 +416,11 @@ var broadcast = function (msg, err) {
 	if (typeof console !== 'undefined') {
 		console.log(msg)
 	}
+}
+
+const epoch = function () {
+	const d = new Date()
+	return d.getTime() / 1000
 }
 
 resetClient()

@@ -1,8 +1,8 @@
 {
 	"movie-art": "2.0.3",
 	"movie-info": "2.0.4",
-	"movie-trailer": "2.0.3",
+	"movie-trailer": "2.0.4",
 	"omdb-client": "2.0.0",
-	"parse-torrent-name": "0.5.4",
-	"open": "0.0.5"
+	"open": "7.0.0",
+	"parse-torrent-name": "0.5.4"
 }

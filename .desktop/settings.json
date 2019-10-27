@@ -4,7 +4,7 @@
 	"projectName": "Cinematic",
 	"devTools": true,
 	"devtron": true,
-	"desktopHCP": true,
+	"desktopHCP": false,
 	"desktopHCPIgnoreCompatibilityVersion": false,
 	"squirrel": {
 		"autoUpdateFeedUrl": "http://127.0.0.1/update/:platform/:version",
@@ -65,14 +65,17 @@
 		"compression": "maximum",
 		"win": {
 			"target": [
-				"nsis",
-				"msi"
+				"nsis"
 			]
 		},
 		"linux": {
 			"target": [
 			  "deb",
 			  "rpm",
+			  "snap",
+			  "apk",
+			  "pacman",
+			  "freebsd",
 			  "AppImage"
 			],
 			"category": "Development"
