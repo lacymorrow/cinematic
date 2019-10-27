@@ -1,3 +1,7 @@
+/* global Desktop, Meteor, Mongo, Template */
+
+'use strict'
+
 import NProgress from 'nprogress'
 import {config} from '../imports/config'
 

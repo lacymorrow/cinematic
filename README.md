@@ -4,7 +4,7 @@ Cinematic
 
 **Have a digital movie collection?**
 
-Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching 
+Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching
 
 <p align="center">
   <img width="720" height="450" src="http://lacymorrow.com/images/github/cinematic/demo.gif">
@@ -12,7 +12,7 @@ Cinematic is a desktop app to beautifully organize and automatically retrieve in
 
 ### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
-Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found. 
+Point Cinematic to the movie folder on your computer to scan and retrieve movie posters, ratings, trailers and much more about any movie files found.
 Organize your movies by genre and sort by popularity, release date, runtime, or randomize things.
 
 Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
@@ -51,7 +51,7 @@ _Recently packaged for Windows!_
 
 ### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
-### Or build and [run from source](https://github.com/lacymorrow/cinematic/blob/master/docs/building.md)
+### Or build and [run from source](https://github.com/lacymorrow/cinematic/blob/master/docs/build.md)
 
 
 # Design
@@ -62,12 +62,14 @@ Thanks to:
 * [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
 * [bbraithwaite/omdb-client](https://github.com/bbraithwaite/omdb-client)
 * [pwnall/node-open](https://github.com/pwnall/node-open)
-* Made with [Meteor](http://meteor.com) v1.8.0.2
-* Packaged with [Electron](https://electronjs.org/)
+* Built with [Meteor](http://meteor.com)
+* Running on [Electron](https://electronjs.org/)
 * APIs provided by TMDB and OMDB
 
 
 # Road map
+
+**Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
 
  - [ ] Speed boost
  - [ ] Batch request data to save http connections

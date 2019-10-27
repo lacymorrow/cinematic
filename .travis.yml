@@ -55,5 +55,6 @@ matrix:
     skip_cleanup: true
     on:
       repo: lacymorrow/cinematic
+      branch: release
       tags: true
 

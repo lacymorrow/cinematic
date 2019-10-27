@@ -1,3 +1,7 @@
+/* global Meteor, Mongo */
+
+'use strict'
+
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
@@ -7,7 +11,7 @@ import movieInfo from 'movie-info'
 import movieTrailer from 'movie-trailer'
 import parseTorrentName from 'parse-torrent-name'
 
-import {config} from '../imports/config.js'
+import {config} from '../imports/config'
 
 const Log = new Mongo.Collection('log')
 const State = new Mongo.Collection('state')
