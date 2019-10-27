@@ -4,15 +4,8 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteorhacks:npm
-
-
-npm-container
-peerlibrary:fs
-jss:path
 less
 nemo64:bootstrap
-http
 meteor-base
 mobile-experience
 mongo
@@ -22,7 +15,6 @@ jquery
 tracker
 logging
 reload
-random
 ejson
 spacebars
 check

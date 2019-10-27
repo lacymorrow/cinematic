@@ -426,24 +426,18 @@ Meteor.methods({
 			)
 		}
 	},
-	syncGenreCache() {
+	syncGenreCache: async () => {
 		Genres.remove({})
-		HTTP.call(
-			'GET',
-			config.GENRE_ENDPOINT + '?api_key=' + config.TMDB_KEY,
-			(err, res) => {
-				if (err) {
-					broadcast('Cinematic/syncGenreCache: ' + err)
-				} else if (res.data.genres) {
-					res.data.genres.forEach(genre => {
-						Meteor.call('addGenre', genre.id, null, genre.name)
-					})
-					State.update('0', {$set: {genreCacheTimestamp: epoch()}})
-				} else {
-					broadcast('Cinematic: Error getting genre list.', true)
-				}
-			}
-		)
+		try {
+			const response = await fetch(`${config.GENRE_ENDPOINT}?api_key=${config.TMDB_KEY}`);
+			const res = await response.json()
+			res.data.genres.forEach(genre => {
+				Meteor.call('addGenre', genre.id, null, genre.name)
+			})
+			State.update('0', {$set: {genreCacheTimestamp: epoch()}})
+		} catch (error) {
+			broadcast(`Cinematic/syncGenreCache: ${error}`)
+		}
 	},
 	updateIntel(mid, name, year) {
 		omdbApi.get({
