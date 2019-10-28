@@ -12,10 +12,11 @@ export const Recent = new Mongo.Collection('recent')
 export const Watched = new Mongo.Collection('watched')
 
 export const initState = options => {
-	console.log(options)
 	const defaults = {
 		_id: '0', // There can be only one...
-		cwd: process.env.PWD
+		cwd: process.env.PWD,
+		queueTotal: 0,
+		dir: '~'
 	}
 	return State.insert(Object.assign(defaults, options))
 }
@@ -28,16 +29,39 @@ export const updateState = options => {
 	return State.update('0', {$set: options})
 }
 
-export const addGenre = (id, options) => {
+export const indexGenre = (id, name) => {
+	// Create or update genre name
+	const genre = getGenre(id)
+	if (genre) {
+		updateGenre(id, {name})
+	} else {
+		addGenre(id, {name})
+	}
+}
+
+export const indexMovieGenre = (id, mid) => {
+	// Create or update genre and pin a movie to genre
+	const genre = getGenre(id)
+	if (genre) {
+		// Genre is not guaranteed to have .items
+		const items = genre.items || []
+		items.push(mid)
+		updateGenre(id, {items})
+	} else {
+		addGenre(id, {name, items: [mid]})
+	}
+}
+
+const addGenre = (id, options) => {
 	const genre = Object.assign({...options}, {_id: id.toString(), id})
 	return Genres.insert(genre)
 }
 
-export const getGenre = id => {
+const getGenre = id => {
 	return Genres.findOne({_id: id.toString()})
 }
 
-export const updateGenre = (id, options) => {
+const updateGenre = (id, options) => {
 	return Genres.update(id.toString(), {$set: options})
 }
 
@@ -104,15 +128,6 @@ export const resetDB = () => {
 }
 
 // Define observable collections for client
-Meteor.publish('state', () => {
-	return State.find()
-})
-Meteor.publish('recent', () => {
-	return Recent.find()
-})
-Meteor.publish('watched', () => {
-	return Watched.find()
-})
 Meteor.publish('genres', () => {
 	return Genres.find()
 })
@@ -121,4 +136,13 @@ Meteor.publish('movies', () => {
 })
 Meteor.publish('movieCache', () => {
 	return MovieCache.find()
+})
+Meteor.publish('recent', () => {
+	return Recent.find()
+})
+Meteor.publish('state', () => {
+	return State.find()
+})
+Meteor.publish('watched', () => {
+	return Watched.find()
 })

@@ -4,25 +4,23 @@
 
 import fs from 'fs'
 import path from 'path'
+
 import open from 'open'
 import fetch from 'isomorphic-fetch'
-import omdbApi from 'omdb-client'
-import movieInfo from 'movie-info'
-import movieTrailer from 'movie-trailer'
 import parseTorrentName from 'parse-torrent-name'
 
 import {config} from '../imports/config'
 import {broadcast, epoch, parseName} from '../imports/startup/both/util'
 import {getOSMediaPath} from '../imports/startup/server/util'
+import {fetchMeta, fetchOMDB, fetchTMDB, fetchTrailer} from '../imports/startup/server/services'
 import {
 
 	Movies, Genres, Recent, MovieCache, Watched, State,
 	getState,
 	initState,
 
-	addGenre,
-	getGenre,
-	updateGenre,
+	indexGenre,
+	indexMovieGenre,
 
 	getMovies,
 	getMovieById,
@@ -88,50 +86,6 @@ Meteor.startup(() => {
 	start()
 }) // End startup
 
-// Create or update genre name
-const indexGenre = (id, name) => {
-	const genre = getGenre(id)
-	if (genre) {
-		updateGenre(id, {name})
-	} else {
-		addGenre(id, {name})
-	}
-}
-
-// Create or update genre and pin a movie to genre
-const indexMovieGenre = (id, mid) => {
-	const genre = getGenre(id)
-	if (genre) {
-		// Genre is not guaranteed to have .items
-		const items = genre.items || []
-		items.push(mid)
-		updateGenre(id, {items})
-	} else {
-		addGenre(id, {name, items: [mid]})
-	}
-}
-
-const getIntel = (mid, name, year) => {
-	// Updates to gather
-	const jobs = [
-		updateInfo,
-		updateIntel,
-		updateTrailer
-	]
-	_.map(jobs, job => {
-		apiQueue += 1
-		apiTotal += 1
-		queueIt(job, mid, name, year, (
-			err,
-			res
-		) => {
-			if (err) {
-				broadcast('Cinematic/getIntel: ' + err)
-			}
-		})
-	})
-}
-
 const populateMovies = (dirPath, recurse_level) => {
 	try {
 		// Start loading bar
@@ -180,10 +134,6 @@ const populateMovies = (dirPath, recurse_level) => {
 			// Invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
 			const loaded = state && 100 - state.loading
 		}) // End file scan forEach
-
-		if (apiQueue === 0) {
-			State.update('0', {$set: {loading: 0}})
-		}
 	} catch (error) {
 		broadcast(
 			'Error populating movies. ' + error.name + ' ' + error.message,
@@ -206,209 +156,6 @@ const initGenreCache = async () => {
 		broadcast(`Cinematic/initGenreCache: ${error}`)
 	}
 }
-
-const updateIntel = (mid, name, year) => {
-	omdbApi.get({
-		omdb_key: config.OMDB_KEY,
-		apiKey: config.OMDB_KEY,
-		title: name,
-		plot: config.PLOT_LENGTH === 'short' ? 'short' : 'full'
-	},
-	Meteor.bindEnvironment((err, res) => {
-		queueDone('updateIntel')
-		if (err) {
-			broadcast(
-				'ombd-client error: ' + name + ': ' + err,
-				true
-			)
-			return false
-		}
-
-		// Strip runtime characters
-		res.Runtime = res.Runtime.replace(/\D/g, '')
-		// Toss any "N/A" response
-		for (const key in res) {
-			if (res[key] == 'N/A') {
-				res[key] = null
-			}
-		}
-
-		// Lets parse this shit proper
-		const mov = getMovieById(mid)
-
-		if (res.imdbRating) {
-			// TODO: SAFE GET .ratings
-			mov.ratings.push({
-				name: 'IMDB RATING',
-				score: parseFloat(res.imdbRating),
-				count: Array.apply(
-					null,
-					new Array(Math.round(res.imdbRating))
-				).map(() => {
-					return {}
-				})
-			})
-		}
-
-		if (res.Metascore) {
-			mov.ratings.push({
-				name: 'METASCORE RATING',
-				score: res.Metascore / 10,
-				count: Array.apply(
-					null,
-					new Array(Math.round(res.Metascore / 10))
-				).map(() => {
-					return {}
-				})
-			})
-		}
-
-		mov.imdb_id = res.imdbID
-		mov.plot = res.Plot
-		mov.poster = res.Poster
-		mov.release_date = Date.parse(res.Released)
-		mov.title = res.Title
-		if (!mov.poster) {
-			mov.poster = res.Poster
-		}
-
-		if (!mov.year) {
-			mov.year = res.Year
-		}
-
-		mov.intel = res
-		mov.cached = true // WE CACHE HALF-LOADED FILES. BAD? PROBABLY
-		updateMovie(mid, mov)
-	})
-	)
-}
-
-const updateInfo = (mid, name, year) => {
-	movieInfo(
-		name,
-		year,
-		Meteor.bindEnvironment((err, res) => {
-			queueDone('updateInfo')
-			if (err) {
-				broadcast(
-					'movie-info error: ' + name + ': ' + err,
-					true
-				)
-				return false
-			}
-
-			_.each(res.genre_ids, (e, i) => {
-				indexMovieGenre(e, mid)
-			})
-			// Lets parse this shit proper
-			const mov = getMovieById(mid)
-			res.backdrop =
-                config.IMDB_ENDPOINT +
-                config.BACKDROP_SIZE +
-                res.backdrop_path
-			if (res.vote_average) {
-				mov.ratings.push({
-					name: 'TMDB RATING',
-					score: parseFloat(res.vote_average),
-					count: Array.apply(
-						null,
-						new Array(Math.round(res.vote_average))
-					).map(() => {
-						return {}
-					})
-				})
-			}
-
-			mov.imdb_id = res.imdb_id
-			mov.poster =
-                config.IMDB_ENDPOINT +
-                config.POSTER_SIZE +
-                res.poster_path
-			mov.title = res.title
-			if (!mov.plot) {
-				mov.plot = res.overview
-			}
-
-			if (!mov.release_date) {
-				mov.release_date = Date.parse(res.release_date)
-			}
-
-			if (!mov.year) {
-				mov.year = res.Year
-			}
-
-			mov.info = res
-			mov.cached = true // WE CACHE HALF-LOADED FILES. BAD? PROBABLY
-			updateMovie(mid, mov)
-		})
-	)
-}
-
-const updateTrailer = (mid, name, year) => {
-	movieTrailer(
-		name, {
-			year,
-			multi: true
-		},
-		Meteor.bindEnvironment((err, res) => {
-			queueDone('updateTrailer')
-			if (err) {
-				broadcast(
-					'movie-trailer error: ' + name + ': ' + err,
-					true
-				)
-				return false
-			}
-
-			updateMovieTrailer(mid, res)
-		})
-	)
-}
-
-const queueIt = (job, mid, name, year) => {
-	if (apiCurrent >= config.MAX_CONNECTIONS) {
-		// Too many concurrent connections
-		Meteor.setTimeout(() => {
-			queueIt(job, mid, name, year, (
-				err,
-				res
-			) => {
-				if (err) {
-					broadcast('Cinematic/queueIt/retryError: ' + err)
-				}
-			})
-		}, config.RETRY_DELAY)
-	} else {
-		apiCurrent += 1
-		job.call(this, mid, name, year, err => {
-			if (err) {
-				broadcast('Cinematic/queueIt/jobError: ' + err)
-			}
-		})
-	}
-}
-
-const queueDone = job => {
-	apiCurrent -= 1
-	apiQueue -= 1
-	// Update loading percent every set
-	if (apiQueue === 0) {
-		State.update('0', {$set: {loading: 0}})
-		if (config.CACHE_TIMEOUT) {
-			refreshMovieCache()
-		}
-	} else if (apiQueue % config.MAX_CONNECTIONS === 0) {
-		State.update('0', {
-			$set: {loading: Math.round(apiQueue / apiTotal * 100)}
-		})
-	}
-}
-
-// Number of concurrent api connections; currently doesn't distinguish between different api source limits
-// total, number left to process, currently processing
-let apiTotal = 0
-let apiQueue = 0
-let apiCurrent = 0
 
 // Server-side methods
 Meteor.methods({
@@ -542,7 +289,7 @@ Meteor.methods({
 					cached: false
 				})
 				// Make api calls to gather info
-				getIntel(mid, name, year)
+				fetchMeta(mid, name, year)
 			}
 		}
 	},
