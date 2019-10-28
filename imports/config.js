@@ -41,8 +41,8 @@ export const config = {
 	PARSE_METHOD: 'parse', // Filename parsing options: "regex", "parse"; regex is best for well-organized files lile This[2004].avi
 	RATING_DELAY: 6000, // Milli-seconds of rating rotate interval; 5000 = 5 seconds
 	RETRY_DELAY: 4000, // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
-	SCAN_DEPTH: 1, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-	IGNORE_CASE: ['sample', 'etrg'] // A lowercase list of movie titles to ignore; ex: sample.avi
+	SCAN_DEPTH: 2, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
+	IGNORE_PATTERN: ['sample', 'etrg'] // A lowercase list of movie titles to ignore; ex: sample.avi
 }
 
 // Module.exports.config = config

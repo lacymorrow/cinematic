@@ -14,7 +14,7 @@ export const epoch = function () {
 	return d.getTime() / 1000
 }
 
-export const parseName = function (name) {
+export const prettyName = function (name) {
 	name = replaceAll(name, '_', ' ') // Replace underscores with spaces
 	name = replaceAll(name, '-', ' ')
 	return name

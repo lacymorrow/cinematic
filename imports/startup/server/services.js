@@ -1,13 +1,26 @@
+/* global _ */
+
 'use strict'
 
 import queue from 'queue'
 import movieInfo from 'movie-info'
 import movieTrailer from 'movie-trailer'
 import omdbApi from 'omdb-client'
+import fetch from 'isomorphic-fetch'
 
 import {config} from '../../config'
-import {broadcast} from '../both/util'
-import {getMovieById, indexMovieGenre, getState, updateState, updateMovie, updateMovieTrailer, refreshMovieCache} from './database'
+import {broadcast, epoch} from '../both/util'
+import {
+	indexGenre,
+	indexMovieGenre,
+	getState,
+	updateState,
+	getMovieById,
+	updateMovie,
+	updateMovieTrailer,
+	resetGenres,
+	refreshMovieCache
+} from './database'
 
 const q = queue({
 	autostart: true,
@@ -16,22 +29,23 @@ const q = queue({
 	results: []
 })
 
-q.on('success', () => {
-	// Change loading bar when queue updates
-	const {queueTotal} = getState()
+export const resetQueue = () => {
+	q.end()
+}
 
-	console.log(q.length)
-
-	if (q.length === 0) {
-		updateState({loading: 0})
-		if (config.CACHE_TIMEOUT) {
-			// Loading has finished, update cache
-			refreshMovieCache()
-		}
-	} else {
-		updateState({loading: Math.round(q.length / queueTotal * 100)})
+export const initGenreCache = async () => {
+	resetGenres()
+	try {
+		const response = await fetch(`${config.GENRE_ENDPOINT}?api_key=${config.TMDB_KEY}`)
+		const res = await response.json()
+		res.genres.forEach(genre => {
+			indexGenre(genre.id, genre.name)
+		})
+		updateState({genreCacheTimestamp: epoch()})
+	} catch (error) {
+		broadcast(`Cinematic/initGenreCache: ${error}`)
 	}
-})
+}
 
 export const fetchMeta = (mid, name, year) => {
 	const {queueTotal} = getState()
@@ -67,9 +81,27 @@ export const fetchMeta = (mid, name, year) => {
 				broadcast(`Error fetching TMDB meta: ${error}`)
 			})
 	})
+
+	// On every job finish
+	q.on('success', () => {
+		// Change loading bar when queue updates
+		const {queueTotal} = getState()
+
+		console.log(q.length, 'asda')
+
+		if (q.length === 0) {
+			updateState({loading: 0})
+			if (config.CACHE_TIMEOUT) {
+				// Loading has finished, update cache
+				refreshMovieCache()
+			}
+		} else {
+			updateState({loading: Math.round(q.length / queueTotal * 100)})
+		}
+	})
 }
 
-export const fetchOMDB = (mid, name) => {
+const fetchOMDB = (mid, name) => {
 	return new Promise((resolve, reject) => {
 		omdbApi.get({
 			omdb_key: config.OMDB_KEY,
@@ -142,10 +174,10 @@ export const fetchOMDB = (mid, name) => {
 	})
 }
 
-export const fetchTMDB = (mid, name, year) => {
+const fetchTMDB = (mid, name, year) => {
 	return movieInfo(name, year)
 		.then(res => {
-			_.each(res.genre_ids, (e, i) => {
+			_.each(res.genre_ids, e => {
 				indexMovieGenre(e, mid)
 			})
 
@@ -192,7 +224,7 @@ export const fetchTMDB = (mid, name, year) => {
 		})
 }
 
-export const fetchTrailer = (name, year) => {
+const fetchTrailer = (name, year) => {
 	return movieTrailer(name, {
 		year,
 		multi: true

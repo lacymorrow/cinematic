@@ -176,7 +176,7 @@ Template.body.events({
 	'click #refresh'(event) {
 		broadcast('Cinematic: Resetting client...')
 		resetClient()
-		Meteor.call('reset')
+		Meteor.call('handleRefresh')
 	}
 })
 
@@ -206,7 +206,7 @@ Template.sort.events({
 		}
 	},
 	'click #random'(event) {
-		Meteor.call('updateRandom')
+		Meteor.call('handleRandom')
 	}
 })
 
@@ -267,7 +267,7 @@ Template.details.events({
 		const url = event.currentTarget.dataset.src
 		const mid = event.currentTarget.dataset.id
 		Meteor.call('addWatched', mid)
-		Meteor.call('openFile', url)
+		Meteor.call('handleOpenFile', url)
 	},
 	'click #trailer .trailer'(event) {
 		// Switch trailers
@@ -330,12 +330,7 @@ Template.movies.events({
 Template.path.events({
 	'change #browse-input-directory'(event) {
 		event.preventDefault()
-		broadcast(event.target.files)
-
-		// Broadcast
-		for (let i = event.target.files.length - 1; i >= 0; i--) {
-			Meteor.call('addMovie', event.target.files[i].name)
-		}
+		Meteor.call('handleBrowseDialog', event.target.files)
 	},
 	'click #browse-input-link'(event) {
 		$('#browse-input-directory').click()
@@ -373,13 +368,13 @@ var setPath = function () {
 	resetClient()
 	const _path = document.querySelector('#path')
 	if (_path.value != '') {
-		var path = _path.value
+		let path = _path.value
 		if (path.slice(-1) != '/') {
 			path += '/'
 		}
 	}
 
-	Meteor.call('updatePath', path)
+	Meteor.call('scanPath')
 }
 
 var rotateRating = function () {

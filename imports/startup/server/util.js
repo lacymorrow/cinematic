@@ -23,3 +23,9 @@ export const getOSMediaPath = () => {
 	})
 	return dir
 }
+
+export const isDirectory = dirPath => {
+	return fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory()
+}
+
+export const regexPattern = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g

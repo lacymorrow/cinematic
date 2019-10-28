@@ -16,7 +16,7 @@ export const initState = options => {
 		_id: '0', // There can be only one...
 		cwd: process.env.PWD,
 		queueTotal: 0,
-		dir: '~'
+		dir: '~/'
 	}
 	return State.insert(Object.assign(defaults, options))
 }
@@ -27,6 +27,18 @@ export const getState = () => {
 
 export const updateState = options => {
 	return State.update('0', {$set: options})
+}
+
+export const addRecent = mid => {
+	const time = epoch()
+	Recent.upsert({_id: mid}, {time})
+	Movies.update({_id: mid}, {$set: {recentTime: time}})
+}
+
+export const addWatched = mid => {
+	const time = epoch()
+	Watched.upsert({_id: mid}, {time})
+	Movies.update({_id: mid}, {$set: {watchedTime: time}})
 }
 
 export const indexGenre = (id, name) => {
@@ -65,6 +77,10 @@ const updateGenre = (id, options) => {
 	return Genres.update(id.toString(), {$set: options})
 }
 
+export const resetGenres = () => {
+	return Genres.remove({})
+}
+
 export const getMovies = () => {
 	return Movies.find()
 }
@@ -85,35 +101,42 @@ export const updateMovieTrailer = (id, trailer) => {
 	return Movies.update(id, {$set: {trailer}})
 }
 
+export const randomizeMovies = () => {
+	const seeds = Movies.find({}, {fields: {seed: 1}})
+	seeds.forEach(seed => {
+		Movies.update(seed._id, {$set: {seed: Math.random()}})
+	})
+}
+
 export const resetMovies = () => {
 	return Movies.remove({})
 }
 
 const addMovieCache = movie => {
-    MovieCache.insert(movie)
+	MovieCache.insert(movie)
 }
 
 const updateMovieCache = (id, movie) => {
 	movie.cache_date = epoch()
-    MovieCache.upsert({_id: id}, {cache_date: epoch(), movie})
+	MovieCache.upsert({_id: id}, {cache_date: epoch(), movie})
 }
 
 export const cacheMovie = file => {
-    const movie = getMovieByFile(file)
-    movie.cache_date = epoch()
-    // Only cache if it loaded properly
-    if (movie && movie.intel.Title && movie.info.title) {
-        addMovieCache(movie)
-    }
+	const movie = getMovieByFile(file)
+	movie.cache_date = epoch()
+	// Only cache if it loaded properly
+	if (movie && movie.intel.Title && movie.info.title) {
+		addMovieCache(movie)
+	}
 }
 
 export const refreshMovieCache = () => {
-    const movies = getMovies()
-    const time = epoch()
-    movies.forEach(movie => {
-        updateMovieCache(movie.path + movie.file, movie)
-    })
-    updateState({cached_movies_at: time})
+	const movies = getMovies()
+	const time = epoch()
+	movies.forEach(movie => {
+		updateMovieCache(movie.path + movie.file, movie)
+	})
+	updateState({cached_movies_at: time})
 }
 
 export const resetDB = () => {
