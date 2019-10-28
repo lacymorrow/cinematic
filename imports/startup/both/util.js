@@ -14,6 +14,10 @@ export const epoch = function () {
 	return d.getTime() / 1000
 }
 
+export const isDigit = function (str) {
+	return !isNaN(parseFloat(str)) && isFinite(str)
+}
+
 export const prettyName = function (name) {
 	name = replaceAll(name, '_', ' ') // Replace underscores with spaces
 	name = replaceAll(name, '-', ' ')

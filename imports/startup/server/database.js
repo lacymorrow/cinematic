@@ -81,6 +81,10 @@ export const resetGenres = () => {
 	return Genres.remove({})
 }
 
+export const addMovie = movie => {
+	return Movies.insert(movie)
+}
+
 export const getMovies = () => {
 	return Movies.find()
 }
@@ -112,21 +116,25 @@ export const resetMovies = () => {
 	return Movies.remove({})
 }
 
-const addMovieCache = movie => {
+const addCachedMovie = movie => {
 	MovieCache.insert(movie)
 }
 
-const updateMovieCache = (id, movie) => {
-	movie.cache_date = epoch()
-	MovieCache.upsert({_id: id}, {cache_date: epoch(), movie})
+const updateCachedMovie = (id, movie) => {
+	movie.cached_at = epoch()
+	MovieCache.upsert({_id: id}, {cached_at: epoch(), movie})
+}
+
+export const getCachedMovie = key => {
+	return MovieCache.findOne({_id: key})
 }
 
 export const cacheMovie = file => {
 	const movie = getMovieByFile(file)
-	movie.cache_date = epoch()
+	movie.cached_at = epoch()
 	// Only cache if it loaded properly
 	if (movie && movie.intel.Title && movie.info.title) {
-		addMovieCache(movie)
+		addCachedMovie(movie)
 	}
 }
 
@@ -134,7 +142,7 @@ export const refreshMovieCache = () => {
 	const movies = getMovies()
 	const time = epoch()
 	movies.forEach(movie => {
-		updateMovieCache(movie.path + movie.file, movie)
+		updateCachedMovie(movie.path + movie.file, movie)
 	})
 	updateState({cached_movies_at: time})
 }

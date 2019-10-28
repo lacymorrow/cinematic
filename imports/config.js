@@ -26,7 +26,7 @@ export const config = {
 		'Runtime',
 		'Random' /* , "Ratings" */
 	],
-	CACHE_TIMEOUT: 3600, // Seconds; 604800 = 7 days
+	CACHE_TIMEOUT: 3600, // Seconds; 604800 = 7 days; 0 === no caching
 	PLOT_LENGTH: 'full', // Plot Summary length: "short", "full" - from omdb
 
 	/* URLs */
@@ -44,5 +44,3 @@ export const config = {
 	SCAN_DEPTH: 2, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
 	IGNORE_PATTERN: ['sample', 'etrg'] // A lowercase list of movie titles to ignore; ex: sample.avi
 }
-
-// Module.exports.config = config

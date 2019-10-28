@@ -14,8 +14,8 @@ import fetch from 'isomorphic-fetch'
 import parseTorrentName from 'parse-torrent-name'
 
 import {config} from '../imports/config'
-import {broadcast, epoch, prettyName} from '../imports/startup/both/util'
-import {getOSMediaPath, isDirectory, regexPattern} from '../imports/startup/server/util'
+import {broadcast, epoch, isDigit, prettyName} from '../imports/startup/both/util'
+import {defaultMeta, getOSMediaPath, isDirectory, ignorePattern, regexPattern} from '../imports/startup/server/util'
 import {fetchMeta, initGenreCache, resetQueue} from '../imports/startup/server/services'
 import {
 
@@ -27,9 +27,11 @@ import {
 	indexGenre,
 	indexMovieGenre,
 
+	addMovie,
 	getMovies,
 	getMovieById,
 	getMovieByFile,
+	getCachedMovie,
 	updateMovie,
 	updateMovieTrailer,
 	randomizeMovies,
@@ -65,7 +67,7 @@ const setup = () => {
 }
 
 const start = () => {
-	Meteor.call('scanPath')
+	scanPath()
 }
 
 // Server globals
@@ -92,6 +94,17 @@ Meteor.startup(() => {
 	start()
 }) // End startup
 
+const scanPath = () => {
+	const {dir} = getState()
+	if (isDirectory(dir)) {
+		resetMovies()
+		updateState({dir})
+		scanDir(dir, 0)
+	} else {
+		broadcast('Error: Path is not a directory.')
+	}
+}
+
 const scanDir = (dirPath, recurseDepth) => {
 	// Read from filesystem
 	const files = fs.readdirSync(dirPath)
@@ -117,125 +130,74 @@ const scanDir = (dirPath, recurseDepth) => {
 
 const scanFile = options => {
 	const {file, ext, dirPath} = options
-	console.log(file, ext)
-	switch (config.PARSE_METHOD) {
-		case 'regex': {
-			let match = regexPattern.exec(path.basename(file, ext))
-			let name = (year = null)
-			if (match) {
-				name = unescape(match[1])
-				if (
-					match.length > 1 &&
-	                !isNaN(parseFloat(match[3])) &&
-	                isFinite(match[3])
-				) {
-					year = match[3]
-				}
-			}
+	const {name, year} = parseFilename(path.basename(file, ext))
 
-			break;
-		}
-		case 'parse': {}
-		default: {
-			const fileName = file.substr(0, file.length - ext.length)
-			if (fileName === '.') {
-				return
-			}
-
-			const parsedName = parseTorrentName(
-				file.substr(0, file.length - ext.length)
-			)
-			var name = parsedName.title ? parsedName.title : fileName
-			name = prettyName(name)
-			var year = parsedName.year ? parsedName.year : null
-			break;
-
-		}
-	}
-
-	if (
-		name &&
-        name !== ext &&
-        !config.IGNORE_PATTERN.includes(name.toLowerCase())
-	) {
-		// Cache handling
-		const hash = dirPath + file
-		const movc = MovieCache.findOne({_id: hash})
+	if (name !== ext && !ignorePattern(name)) {
+		const key = path.join(dirPath, file)
+		const movc = getCachedMovie(key)
 		if (
 			movc &&
-            movc.cached &&
             config.CACHE_TIMEOUT &&
-            movc.movie &&
-            time < movc.cache_date + config.CACHE_TIMEOUT
+            epoch() < movc.cached_at + config.CACHE_TIMEOUT
 		) {
 			// Cached
-			broadcast('Cinematic: Loading cached movie ' + name)
-			var mid = movc.movie._id
-			Movies.insert(movc.movie)
-			_.each(movc.movie.info.genre_ids, (e, i) => {
-				indexMovieGenre(e, mid)
+			broadcast(`Loading cached movie ${name}`)
+			addMovie(movc.movie)
+			movc.movie.info.genre_ids.forEach(e => {
+				indexMovieGenre(e, movc.movie._id)
 			})
 		} else {
 			// Not cached
-			// add item to collection
-			var mid = Movies.insert({
+			const movie = Object.assign(defaultMeta, {
 				ext,
 				file,
 				name,
 				filepath: dirPath,
 				year,
-				ratings: [],
-				trailer: null,
-				seed: Math.random(),
-				recentTime: null,
-				watchedTime: null,
-				info: {
-					adult: false,
-					backdrop: null,
-					backdrop_path: null,
-					genre_ids: [],
-					imdb_id: null,
-					original_title: null,
-					overview: null,
-					popularity: null,
-					poster_path: null,
-					release_date: year,
-					tagline: null,
-					title: null,
-					vote_average: null
-				},
-				intel: {
-					Actors: null,
-					Awards: null,
-					Country: null,
-					Director: null,
-					Genre: null,
-					Language: null,
-					Metascore: null,
-					Plot: null,
-					Poster: null,
-					Rated: null,
-					Released: null,
-					Runtime: null,
-					Title: null,
-					Type: null,
-					Writer: null,
-					Year: null,
-					imdbID: null,
-					imdbRating: null
-				},
-				// Combined info
-				imdb_id: null,
-				plot: null,
-				poster: null,
 				release_date: year,
-				title: name,
-				cached: false
+				title: name
 			})
+
+			const mid = addMovie(movie)
+
 			// Make api calls to gather info
 			fetchMeta(mid, name, year)
 		}
 	}
+}
+
+const parseFilename = filename => {
+	const meta = {name: filename, year: null}
+	switch (config.PARSE_METHOD) {
+		case 'regex': {
+			const match = regexPattern.exec(filename)
+			if (match) {
+				meta.name = unescape(match[1])
+				if (match.length > 1 && isDigit(match[3])) {
+					meta.year = match[3]
+				}
+			}
+
+			break
+		}
+
+		case 'parse':
+		default: {
+			if (filename === '.') {
+				return
+			}
+
+			const parsedMeta = parseTorrentName(filename)
+			Object.assign(meta, {
+				name: prettyName(parsedMeta.title),
+				year: parsedMeta.year || null
+			})
+
+			break
+		}
+	}
+
+	return meta
 }
 
 const reset = () => {
@@ -261,33 +223,23 @@ Meteor.methods({
 		Watched.upsert({_id: mid}, {time})
 		Movies.update({_id: mid}, {$set: {watchedTime: time}})
 	},
-	addMovie(file, options) {
-
-	},
 	handleBrowseDialog(files) {
 		// Broadcast
-		for (let i = files.length - 1; i >= 0; i--) {
-			Meteor.call('addMovie', files[i].name)
-		}
+		files.forEach(e => {
+			scanFile(e.name)
+		})
 	},
 	handleOpenFile(file) {
 		broadcast('Cinematic: Opening ' + file)
 		open('file://' + file)
-	},
-	async scanPath() {
-		const {dir} = getState()
-		if (isDirectory(dir)) {
-			resetMovies()
-			updateState({dir})
-			scanDir(dir, 0)
-		} else {
-			broadcast('Error: Path is not a directory.')
-		}
 	},
 	handleRandom() {
 		randomizeMovies()
 	},
 	handleRefresh() {
 		reset()
+	},
+	handleConfirmPath() {
+		scanPath()
 	}
 })

@@ -374,7 +374,7 @@ var setPath = function () {
 		}
 	}
 
-	Meteor.call('scanPath')
+	Meteor.call('handleConfirmPath')
 }
 
 var rotateRating = function () {
