@@ -65,7 +65,7 @@ export const fetchMeta = (mid, name, year) => {
 	q.push(() => {
 		fetchOMDB(mid, name)
 			.then(res => {
-				updateMovie(mid, res)
+				console.log(updateMovie(mid, res))
 			})
 			.catch(error => {
 				broadcast(`Error fetching OMDB meta: ${error}`)

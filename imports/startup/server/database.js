@@ -11,6 +11,7 @@ export const State = new Mongo.Collection('state')
 export const Recent = new Mongo.Collection('recent')
 export const Watched = new Mongo.Collection('watched')
 
+/* State */
 export const initState = options => {
 	const defaults = {
 		_id: '0', // There can be only one...
@@ -29,18 +30,21 @@ export const updateState = options => {
 	return State.update('0', {$set: options})
 }
 
+/* Recent */
 export const addRecent = mid => {
 	const time = epoch()
 	Recent.upsert({_id: mid}, {time})
 	Movies.update({_id: mid}, {$set: {recentTime: time}})
 }
 
+/* Watched */
 export const addWatched = mid => {
 	const time = epoch()
 	Watched.upsert({_id: mid}, {time})
 	Movies.update({_id: mid}, {$set: {watchedTime: time}})
 }
 
+/* Genre */
 export const indexGenre = (id, name) => {
 	// Create or update genre name
 	const genre = getGenre(id)
@@ -81,7 +85,9 @@ export const resetGenres = () => {
 	return Genres.remove({})
 }
 
+/* Movies */
 export const addMovie = movie => {
+	console.log(movie)
 	return Movies.insert(movie)
 }
 
@@ -89,26 +95,26 @@ export const getMovies = () => {
 	return Movies.find()
 }
 
-export const getMovieById = id => {
-	return Movies.findOne({_id: id})
+export const getMovieById = mid => {
+	return Movies.findOne({_id: mid})
 }
 
 export const getMovieByFile = file => {
 	return Movies.findOne({file})
 }
 
-export const updateMovie = (id, options) => {
-	return Movies.update(id, options)
+export const updateMovie = (mid, options) => {
+	return Movies.update(mid, options)
 }
 
-export const updateMovieTrailer = (id, trailer) => {
-	return Movies.update(id, {$set: {trailer}})
+export const updateMovieTrailer = (mid, trailer) => {
+	return updateMovie(mid, {$set: {trailer}})
 }
 
 export const randomizeMovies = () => {
 	const seeds = Movies.find({}, {fields: {seed: 1}})
 	seeds.forEach(seed => {
-		Movies.update(seed._id, {$set: {seed: Math.random()}})
+		updateMovie(seed._id, {$set: {seed: Math.random()}})
 	})
 }
 
@@ -116,13 +122,14 @@ export const resetMovies = () => {
 	return Movies.remove({})
 }
 
+/* Cache */
 const addCachedMovie = movie => {
 	MovieCache.insert(movie)
 }
 
-const updateCachedMovie = (id, movie) => {
+const updateCachedMovie = (key, movie) => {
 	movie.cached_at = epoch()
-	MovieCache.upsert({_id: id}, {cached_at: epoch(), movie})
+	MovieCache.upsert({_id: key}, {cached_at: epoch(), movie})
 }
 
 export const getCachedMovie = key => {
@@ -147,6 +154,7 @@ export const refreshMovieCache = () => {
 	updateState({cached_movies_at: time})
 }
 
+/* DB */
 export const resetDB = () => {
 	Genres.remove({})
 	Movies.remove({})
