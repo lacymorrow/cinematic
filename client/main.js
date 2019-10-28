@@ -1,9 +1,10 @@
-/* global Desktop, Meteor, Mongo, Template */
+/* global $, Desktop, Meteor, Mongo, Session, Template */
 
 'use strict'
 
 import NProgress from 'nprogress'
 import {config} from '../imports/config'
+import {broadcast} from '../imports/startup/both/util'
 
 const State = new Mongo.Collection('state')
 const Recent = new Mongo.Collection('recent')
@@ -46,9 +47,9 @@ Template.body.rendered = function () {
 		// Desktop Loaded
 		isDesktop()
 		// Init browse button IPC
-		$('#browse-link').removeClass('hide')
+		document.querySelector('#browse-link').classList.remove('hide')
 	} else {
-		$('#browse-input').removeClass('hide')
+		document.querySelector('#browse-link').classList.remove('hide')
 	}
 
 	$('[data-toggle="tooltip"]').tooltip()
@@ -213,7 +214,7 @@ Template.sort.events({
 Template.navigation.events({
 	'click #links-panel li.link'(event) {
 		const page = Session.get('currentPage')
-		if (Session.get('currentSort') == 'Recent') {
+		if (Session.get('currentSort') === 'Recent') {
 			resetSort()
 		}
 
@@ -228,10 +229,10 @@ Template.navigation.events({
 			Session.set('movieQuery', {
 				_id: {$in: Genres.findOne(pid).items}
 			})
-		} else if (currentPage == 'New') {
+		} else if (currentPage === 'New') {
 			// Browse Recently Released
 			Session.set('movieQuery', {})
-		} else if (currentPage == 'Recent') {
+		} else if (currentPage === 'Recent') {
 			// Browse recently viewed: alphabetical  **** TODO: HAVENT FIGURED OUT SORTING
 			const recent = []
 			_.map(Recent.find().fetch(), e => {
@@ -239,8 +240,8 @@ Template.navigation.events({
 			})
 			Session.set('currentSort', 'Recent')
 			Session.set('movieQuery', {_id: {$in: recent}})
-			Session.set('movieSort', {sort: {recent_time: -1}})
-		} else if (currentPage == 'Watched') {
+			Session.set('movieSort', {sort: {recentTime: -1}})
+		} else if (currentPage === 'Watched') {
 			// Browse watched: order of watched
 			const watched = []
 			_.map(Watched.find().fetch(), e => {
@@ -248,7 +249,7 @@ Template.navigation.events({
 			})
 			Session.set('currentSort', 'Recent')
 			Session.set('movieQuery', {_id: {$in: watched}})
-			Session.set('movieSort', {sort: {watched_time: -1}})
+			Session.set('movieSort', {sort: {watchedTime: -1}})
 		} else {
 			// Main page - All: alphabetical
 			Session.set('movieQuery', {})
@@ -299,13 +300,13 @@ Template.movies.events({
 	'keyup .movie-image'(event) {
 		const magnitude = 3 // $(".keyboard-magnitude").data('id'); // this should equal the number of movies per row
 		event.preventDefault()
-		if (event.which == 37) {
+		if (event.which === 37) {
 			// Left
 			var currTab =
                 parseInt($('.movie-image:focus').attr('tabIndex')) - 1
 			$('.movie-image[tabIndex="' + currTab + '"]').click()
 			$('.movie-image[tabIndex="' + currTab + '"]').focus()
-		} else if (event.which == 39) {
+		} else if (event.which === 39) {
 			// Right
 			var currTab =
                 parseInt($('.movie-image:focus').attr('tabIndex')) + 1
@@ -409,22 +410,6 @@ var resetClient = function () {
 	Session.set('currentMovie', 0)
 	Session.set('currentPage', 'Movies')
 	Session.set('movieQuery', {})
-}
-
-var broadcast = function (msg, err) {
-	if (err === true) {
-		// Log error
-	}
-
-	Log.insert({time: epoch(), msg: (msg || err), error: Boolean(err)})
-	if (typeof console !== 'undefined') {
-		console.log(msg)
-	}
-}
-
-const epoch = function () {
-	const d = new Date()
-	return d.getTime() / 1000
 }
 
 resetClient()
