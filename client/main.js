@@ -30,13 +30,12 @@ let ratingTimer
 let totalRatings
 
 // Observe db collections
-Meteor.subscribe('log') // Application log
 Meteor.subscribe('state')
-Meteor.subscribe('recent') // Recently clicked
-Meteor.subscribe('watched')
 Meteor.subscribe('genres') // A map of genre-firendly-name to genre id
 Meteor.subscribe('movies')
 Meteor.subscribe('movieCache')
+Meteor.subscribe('recent') // Recently clicked
+Meteor.subscribe('watched')
 
 /* Third-Party Progress bar: NProgress */
 NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
@@ -264,10 +263,9 @@ Template.details.events({
 		rotateRating()
 	},
 	'click #open-link'(event) {
-		const url = event.currentTarget.dataset.src
+		const filepath = event.currentTarget.dataset.src
 		const mid = event.currentTarget.dataset.id
-		Meteor.call('addWatched', mid)
-		Meteor.call('handleOpenFile', url)
+		Meteor.call('handleOpenFile', {mid, filepath})
 	},
 	'click #trailer .trailer'(event) {
 		// Switch trailers
@@ -286,14 +284,12 @@ Template.movies.events({
 		totalRatings = ratings.length
 		// Set initial trailer
 		const trailer =
-            trailers &&
             trailers.trailer &&
-            trailers.trailer[0] &&
-            trailers.trailer[0].key
+            trailers.trailer[0];
 		Session.set('currentTrailer', trailer)
 		// Set current movie and add to recent
 		Session.set('currentMovie', id)
-		Meteor.call('addRecent', id)
+		Meteor.call('handleViewMovie', id)
 		// Set timer to rotate ratings
 		resetRatingInterval()
 	},

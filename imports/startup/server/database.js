@@ -87,7 +87,6 @@ export const resetGenres = () => {
 
 /* Movies */
 export const addMovie = movie => {
-	console.log(movie)
 	return Movies.insert(movie)
 }
 
@@ -108,7 +107,7 @@ export const updateMovie = (mid, options) => {
 }
 
 export const updateMovieTrailer = (mid, trailer) => {
-	return updateMovie(mid, {$set: {trailer}})
+	return updateMovie({_id: mid}, {$set: {trailer}})
 }
 
 export const randomizeMovies = () => {

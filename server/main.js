@@ -18,26 +18,19 @@ import {broadcast, epoch, isDigit, prettyName} from '../imports/startup/both/uti
 import {defaultMeta, getOSMediaPath, isDirectory, ignorePattern, regexPattern} from '../imports/startup/server/util'
 import {fetchMeta, initGenreCache, resetQueue} from '../imports/startup/server/services'
 import {
-
-	Movies, Genres, Recent, MovieCache, Watched, State,
 	initState,
 	getState,
 	updateState,
 
-	indexGenre,
+	addMovie,
+	addRecent,
+	addWatched,
+
+	getCachedMovie,
 	indexMovieGenre,
 
-	addMovie,
-	getMovies,
-	getMovieById,
-	getMovieByFile,
-	getCachedMovie,
-	updateMovie,
-	updateMovieTrailer,
 	randomizeMovies,
 	resetMovies,
-
-	refreshMovieCache,
 	resetDB
 } from '../imports/startup/server/database'
 
@@ -213,25 +206,19 @@ const reset = () => {
 
 // Server-side methods exposed to the client
 Meteor.methods({
-	addRecent(mid) {
-		const time = epoch()
-		Recent.upsert({_id: mid}, {time})
-		Movies.update({_id: mid}, {$set: {recentTime: time}})
-	},
-	addWatched(mid) {
-		const time = epoch()
-		Watched.upsert({_id: mid}, {time})
-		Movies.update({_id: mid}, {$set: {watchedTime: time}})
-	},
 	handleBrowseDialog(files) {
 		// Broadcast
 		files.forEach(e => {
 			scanFile(e.name)
 		})
 	},
+	handleConfirmPath() {
+		scanPath()
+	},
 	handleOpenFile(file) {
-		broadcast('Cinematic: Opening ' + file)
-		open('file://' + file)
+		broadcast('Cinematic: Opening ' + file.filepath)
+		addWatched(file.mid)
+		open('file://' + file.filepath)
 	},
 	handleRandom() {
 		randomizeMovies()
@@ -239,7 +226,7 @@ Meteor.methods({
 	handleRefresh() {
 		reset()
 	},
-	handleConfirmPath() {
-		scanPath()
+	handleViewMovie(mid) {
+		addRecent(mid)
 	}
 })

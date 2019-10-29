@@ -17,7 +17,6 @@ import {
 	updateState,
 	getMovieById,
 	updateMovie,
-	updateMovieTrailer,
 	resetGenres,
 	refreshMovieCache
 } from './database'
@@ -53,19 +52,9 @@ export const fetchMeta = (mid, name, year) => {
 
 	// Updates to gather
 	q.push(() => {
-		fetchTrailer(name, year)
-			.then(res => {
-				updateMovieTrailer(mid, res)
-			})
-			.catch(error => {
-				broadcast(`Error fetching trailer meta: ${error}`)
-			})
-	})
-
-	q.push(() => {
 		fetchOMDB(mid, name)
 			.then(res => {
-				console.log(updateMovie(mid, res))
+				updateMovie(mid, res)
 			})
 			.catch(error => {
 				broadcast(`Error fetching OMDB meta: ${error}`)
@@ -81,13 +70,22 @@ export const fetchMeta = (mid, name, year) => {
 				broadcast(`Error fetching TMDB meta: ${error}`)
 			})
 	})
+	q.push(() => {
+		fetchTrailer(name, year)
+			.then(res => {
+				const movie = getMovieById(mid)
+				movie.trailer = res
+				updateMovie(mid, movie)
+			})
+			.catch(error => {
+				broadcast(`Error fetching trailer meta: ${error}`)
+			})
+	})
 
 	// On every job finish
 	q.on('success', () => {
 		// Change loading bar when queue updates
 		const {queueTotal} = getState()
-
-		console.log(q.length, 'asda')
 
 		if (q.length === 0) {
 			updateState({loading: 0})
@@ -229,4 +227,18 @@ const fetchTrailer = (name, year) => {
 		year,
 		multi: true
 	})
+		.then(res => {
+			return res.map(e => {
+				return getYoutubeId(e)
+			})
+		})
+}
+
+const getYoutubeId = url => {
+	// If a URL, strip and return video ID
+	if (url.indexOf('/' > -1)) {
+		return url.split('=').pop()
+	}
+
+	return url
 }
