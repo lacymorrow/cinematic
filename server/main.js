@@ -10,7 +10,6 @@ import fs from 'fs'
 import path from 'path'
 
 import open from 'open'
-import fetch from 'isomorphic-fetch'
 import parseTorrentName from 'parse-torrent-name'
 
 import {config} from '../imports/config'
@@ -33,35 +32,6 @@ import {
 	resetMovies,
 	resetDB
 } from '../imports/startup/server/database'
-
-const setupFromState = () => {
-	broadcast('Starting from previous state.')
-	const state = getState()
-	// If genre cache is expired, update genres
-	if (
-		!config.CACHE_TIMEOUT ||
-        !state.genreCacheTimestamp ||
-        !(epoch() < state.genreCacheTimestamp + config.CACHE_TIMEOUT)
-	) {
-		broadcast('Cinematic: Cache invalid. Fetching genres for cache.')
-		initGenreCache()
-	}
-}
-
-const setup = () => {
-	// Set default path
-	const dir = getOSMediaPath()
-	broadcast('Using ' + dir + ' as media dir.')
-
-	initState({dir})
-
-	// Grab genre list
-	initGenreCache()
-}
-
-const start = () => {
-	scanPath()
-}
 
 // Server globals
 // startup functions
@@ -86,6 +56,35 @@ Meteor.startup(() => {
 
 	start()
 }) // End startup
+
+const start = () => {
+	scanPath()
+}
+
+const setup = () => {
+	// Set default path
+	const dir = getOSMediaPath()
+	broadcast('Using ' + dir + ' as media dir.')
+
+	initState({dir})
+
+	// Grab genre list
+	initGenreCache()
+}
+
+const setupFromState = () => {
+	broadcast('Starting from previous state.')
+	const state = getState()
+	// If genre cache is expired, update genres
+	if (
+		!config.CACHE_TIMEOUT ||
+        !state.genreCacheTimestamp ||
+        !(epoch() < state.genreCacheTimestamp + config.CACHE_TIMEOUT)
+	) {
+		broadcast('Cinematic: Cache invalid. Fetching genres for cache.')
+		initGenreCache()
+	}
+}
 
 const scanPath = () => {
 	const {dir} = getState()
@@ -159,6 +158,11 @@ const scanFile = options => {
 	}
 }
 
+const openFile = fileObj => {
+	addWatched(file.mid)
+	open('file://' + file.filepath)
+}
+
 const parseFilename = filename => {
 	const meta = {name: filename, year: null}
 	switch (config.PARSE_METHOD) {
@@ -195,7 +199,7 @@ const parseFilename = filename => {
 
 const reset = () => {
 	// Reset and init state
-	broadcast('Cinematic: Resetting server...')
+	broadcast('Resetting server...')
 	resetDB()
 	resetQueue()
 
@@ -215,10 +219,9 @@ Meteor.methods({
 	handleConfirmPath() {
 		scanPath()
 	},
-	handleOpenFile(file) {
-		broadcast('Cinematic: Opening ' + file.filepath)
-		addWatched(file.mid)
-		open('file://' + file.filepath)
+	handleOpenFile(fileObj) {
+		broadcast('Opening ' + fileObj.filepath)
+		openFile(fileObj.filepath)
 	},
 	handleRandom() {
 		randomizeMovies()
