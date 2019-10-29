@@ -19,7 +19,7 @@ import {fetchMeta, initGenreCache, resetQueue} from '../imports/startup/server/s
 import {
 	initState,
 	getState,
-	updateState,
+	setState,
 
 	addMovie,
 	addRecent,
@@ -73,8 +73,13 @@ const setup = () => {
 }
 
 const setupFromState = () => {
-	broadcast('Starting from previous state.')
 	const state = getState()
+
+	broadcast('Starting from previous state.')
+
+	// Reset fleeting state
+	setState({queueTotal: 0})
+
 	// If genre cache is expired, update genres
 	if (
 		!config.CACHE_TIMEOUT ||
@@ -90,7 +95,7 @@ const scanPath = () => {
 	const {dir} = getState()
 	if (isDirectory(dir)) {
 		resetMovies()
-		updateState({dir})
+		setState({dir})
 		scanDir(dir, 0)
 	} else {
 		broadcast('Error: Path is not a directory.')
@@ -159,8 +164,8 @@ const scanFile = options => {
 }
 
 const openFile = fileObj => {
-	addWatched(file.mid)
-	open('file://' + file.filepath)
+	addWatched(fileObj.mid)
+	open('file://' + fileObj.filepath)
 }
 
 const parseFilename = filename => {

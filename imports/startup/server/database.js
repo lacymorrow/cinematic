@@ -26,7 +26,7 @@ export const getState = () => {
 	return State.findOne({_id: '0'})
 }
 
-export const updateState = options => {
+export const setState = options => {
 	return State.update('0', {$set: options})
 }
 
@@ -150,7 +150,7 @@ export const refreshMovieCache = () => {
 	movies.forEach(movie => {
 		updateCachedMovie(movie.path + movie.file, movie)
 	})
-	updateState({cached_movies_at: time})
+	setState({cached_movies_at: time})
 }
 
 /* DB */

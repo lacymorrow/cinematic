@@ -285,7 +285,7 @@ Template.movies.events({
 		// Set initial trailer
 		const trailer =
             trailers.trailer &&
-            trailers.trailer[0];
+            trailers.trailer[0]
 		Session.set('currentTrailer', trailer)
 		// Set current movie and add to recent
 		Session.set('currentMovie', id)

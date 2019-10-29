@@ -1,5 +1,3 @@
-/* global _ */
-
 'use strict'
 
 import queue from 'queue'
@@ -14,7 +12,7 @@ import {
 	indexGenre,
 	indexMovieGenre,
 	getState,
-	updateState,
+	setState,
 	getMovieById,
 	updateMovie,
 	resetGenres,
@@ -28,6 +26,28 @@ const q = queue({
 	results: []
 })
 
+// On every job finish
+q.on('success', (result, job) => {
+	// Change loading bar when queue updates
+	const {queueTotal} = getState()
+	console.log('success!!', queueTotal, q.length)
+
+	if (q.length === 0) {
+		setState({loading: 0})
+		if (config.CACHE_TIMEOUT) {
+			// Loading has finished, update cache
+			refreshMovieCache()
+		}
+	} else {
+		setState({loading: Math.round(q.length / queueTotal * 100)})
+	}
+})
+
+q.on('end', () => {
+	console.log('Queue finished.')
+	setState({loading: 0})
+})
+
 export const resetQueue = () => {
 	q.end()
 }
@@ -37,10 +57,11 @@ export const initGenreCache = async () => {
 	try {
 		const response = await fetch(`${config.GENRE_ENDPOINT}?api_key=${config.TMDB_KEY}`)
 		const res = await response.json()
-		res.genres.forEach(genre => {
+		for (const genre of res.genres) {
 			indexGenre(genre.id, genre.name)
-		})
-		updateState({genreCacheTimestamp: epoch()})
+		}
+
+		setState({genreCacheTimestamp: epoch()})
 	} catch (error) {
 		broadcast(`Cinematic/initGenreCache: ${error}`)
 	}
@@ -48,58 +69,51 @@ export const initGenreCache = async () => {
 
 export const fetchMeta = (mid, name, year) => {
 	const {queueTotal} = getState()
-	updateState({queueTotal: queueTotal + 3})
+	setState({queueTotal: queueTotal + 3})
+
+	// Plot release-date year poster
 
 	// Updates to gather
 	q.push(() => {
-		fetchOMDB(mid, name)
+		return fetchOMDB(name)
 			.then(res => {
-				updateMovie(mid, res)
+				return reconcileMovieMeta(mid, res)
 			})
 			.catch(error => {
-				broadcast(`Error fetching OMDB meta: ${error}`)
+				return broadcast(`Error fetching OMDB meta: ${error}`)
 			})
 	})
 
 	q.push(() => {
-		fetchTMDB(mid, name, year)
+		return fetchTMDB(name, year)
 			.then(res => {
-				updateMovie(mid, res)
+				// Add movie genres
+				for (const gid of res.genre_ids) {
+					indexMovieGenre(gid, mid)
+				}
+
+				return reconcileMovieMeta(mid, res)
 			})
 			.catch(error => {
-				broadcast(`Error fetching TMDB meta: ${error}`)
+				return broadcast(`Error fetching TMDB meta: ${error}`)
 			})
 	})
+
 	q.push(() => {
-		fetchTrailer(name, year)
+		return fetchTrailer(name, year)
 			.then(res => {
 				const movie = getMovieById(mid)
 				movie.trailer = res
 				updateMovie(mid, movie)
+				return res
 			})
 			.catch(error => {
-				broadcast(`Error fetching trailer meta: ${error}`)
+				return broadcast(`Error fetching trailer meta: ${error}`)
 			})
-	})
-
-	// On every job finish
-	q.on('success', () => {
-		// Change loading bar when queue updates
-		const {queueTotal} = getState()
-
-		if (q.length === 0) {
-			updateState({loading: 0})
-			if (config.CACHE_TIMEOUT) {
-				// Loading has finished, update cache
-				refreshMovieCache()
-			}
-		} else {
-			updateState({loading: Math.round(q.length / queueTotal * 100)})
-		}
 	})
 }
 
-const fetchOMDB = (mid, name) => {
+const fetchOMDB = name => {
 	return new Promise((resolve, reject) => {
 		omdbApi.get({
 			omdb_key: config.OMDB_KEY,
@@ -108,117 +122,89 @@ const fetchOMDB = (mid, name) => {
 			plot: config.PLOT_LENGTH === 'short' ? 'short' : 'full'
 		}, async (error, res) => {
 			// Process meta
-			if (error) {
-				reject(error)
+			if (error && !res) {
+				return reject(error)
 			}
 
 			// Toss any "N/A" response
-			for (const key in res) {
-				if (Object.prototype.hasOwnProperty.call(res, key) && res[key] === 'N/A') {
+			for (const key of Object.keys(res)) {
+				if (res[key] === 'N/A') {
 					res[key] = null
 				}
 			}
 
-			// Strip runtime characters
-			res.Runtime = res.Runtime.replace(/\D/g, '')
-
-			// Lets parse this shit proper
-			const mov = await getMovieById(mid)
+			// Strip runtime non-digit characters
+			res.Runtime = res.Runtime && res.Runtime.replace(/\D/g, '')
+			res.poster = res.Poster
+			res.year = res.Year
+			res.imdb_id = res.imdbID
+			res.plot = res.Plot
+			res.poster = res.Poster
+			res.release_date = Date.parse(res.Released)
+			res.title = res.Title
+			res.ratings = []
 
 			if (res.imdbRating) {
-				// TODO: SAFE GET .ratings
-				mov.ratings.push({
+				res.ratings.push({
 					name: 'IMDB RATING',
 					score: parseFloat(res.imdbRating),
-					count: Array.apply(
-						null,
-						new Array(Math.round(res.imdbRating))
-					).map(() => {
-						return {}
-					})
+					count: countToArray(res.imdbRating)
 				})
 			}
 
 			if (res.Metascore) {
-				mov.ratings.push({
+				res.ratings.push({
 					name: 'METASCORE RATING',
 					score: res.Metascore / 10,
-					count: Array.apply(
-						null,
-						new Array(Math.round(res.Metascore / 10))
-					).map(() => {
-						return {}
-					})
+					count: countToArray(res.Metascore / 10)
 				})
 			}
 
-			if (!mov.poster) {
-				mov.poster = res.Poster
+			const keys = Object.keys(res)
+			res.intel = {}
+			for (const key of keys) {
+				res.intel[key] = res[key]
 			}
 
-			if (!mov.year) {
-				mov.year = res.Year
-			}
-
-			mov.imdb_id = res.imdbID
-			mov.plot = res.Plot
-			mov.poster = res.Poster
-			mov.release_date = Date.parse(res.Released)
-			mov.title = res.Title
-			mov.intel = res
-
-			resolve(mov)
+			return resolve(res)
 		})
 	})
 }
 
-const fetchTMDB = (mid, name, year) => {
+const fetchTMDB = (name, year) => {
 	return movieInfo(name, year)
 		.then(res => {
-			_.each(res.genre_ids, e => {
-				indexMovieGenre(e, mid)
-			})
+			res.ratings = []
 
-			// Lets parse this shit proper
-			const mov = getMovieById(mid)
 			if (res.vote_average) {
-				mov.ratings.push({
+				res.ratings.push({
 					name: 'TMDB RATING',
 					score: parseFloat(res.vote_average),
-					count: Array.apply(
-						null,
-						new Array(Math.round(res.vote_average))
-					).map(() => {
-						return {}
-					})
+					count: countToArray(res.vote_average)
 				})
 			}
 
-			if (!mov.plot) {
-				mov.plot = res.overview
-			}
+			res.plot = res.overview
+			res.release_date = Date.parse(res.release_date)
+			res.year = res.Year
 
-			if (!mov.release_date) {
-				mov.release_date = Date.parse(res.release_date)
-			}
-
-			if (!mov.year) {
-				mov.year = res.Year
-			}
-
-			mov.backdrop =
+			res.backdrop =
                 config.IMDB_ENDPOINT +
                 config.BACKDROP_SIZE +
                 res.backdrop_path
-			mov.poster =
+			res.poster =
                 config.IMDB_ENDPOINT +
                 config.POSTER_SIZE +
                 res.poster_path
-			mov.imdb_id = res.imdb_id
-			mov.title = res.title
-			mov.info = res
 
-			return mov
+			const keys = Object.keys(res)
+			res.info = {}
+
+			for (const key of keys) {
+				res.info[key] = res[key]
+			}
+
+			return res
 		})
 }
 
@@ -234,6 +220,15 @@ const fetchTrailer = (name, year) => {
 		})
 }
 
+const countToArray = num => {
+	return Array.apply(
+		null,
+		new Array(Math.round(num))
+	).map(() => {
+		return {}
+	})
+}
+
 const getYoutubeId = url => {
 	// If a URL, strip and return video ID
 	if (url.indexOf('/' > -1)) {
@@ -241,4 +236,19 @@ const getYoutubeId = url => {
 	}
 
 	return url
+}
+
+const reconcileMovieMeta = (mid, meta) => {
+	const movie = getMovieById(mid)
+	movie.ratings = [...movie.ratings, ...meta.ratings]
+	Object.assign(
+		movie,
+		meta,
+		{plot: movie.plot || meta.plot},
+		{poster: movie.poster || meta.poster},
+		{release_date: movie.release_date || meta.release_date},
+		{year: movie.year || meta.year},
+	)
+	updateMovie(mid, movie)
+	return movie
 }

@@ -64,11 +64,14 @@
     "queue": "^6.0.1"
   },
   "xo": {
+    "ignore": "client/vendor",
+    "semicolon": false,
     "envs": [
       "node",
       "browser"
     ],
-    "semicolon": false,
-    "ignore": "client/vendor"
+    "rules": {
+        "camelcase": "off"
+    }
   }
 }
