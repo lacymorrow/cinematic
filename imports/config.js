@@ -7,7 +7,7 @@ export const config = {
 	TMDB_KEY: process.env.TMDB_KEY ? process.env.TMDB_KEY : DEFAULT_TMDB_KEY, // http://docs.themoviedb.apiary.io/ config
 	OMDB_KEY: process.env.OMDB_KEY ? process.env.OMDB_KEY : DEFAULT_OMDB_KEY, // Omdb api key
 
-	VALID_TYPES: [
+	VALID_FILETYPES: [
 		'.avi',
 		'.flv',
 		'.mp4',
@@ -18,13 +18,6 @@ export const config = {
 		'.vob',
 		'.wmv',
 		'.mkv'
-	],
-	SORT_TYPES: [
-		'Alphabetical',
-		'Popularity',
-		'Release Date',
-		'Runtime',
-		'Random' /* , "Ratings" */
 	],
 	CACHE_TIMEOUT: 3600, // Seconds; 604800 = 7 days; 0 === no caching
 	PLOT_LENGTH: 'full', // Plot Summary length: "short", "full" - from omdb

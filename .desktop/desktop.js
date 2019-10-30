@@ -6,7 +6,7 @@ import {is} from 'electron-util'
 import unhandled from 'electron-unhandled'
 import debug from 'electron-debug'
 import contextMenu from 'electron-context-menu'
-import {config, defaults} from './config'
+import {config} from '../imports/config'
 import menu from './menu'
 
 unhandled()
@@ -68,6 +68,7 @@ export default class Desktop {
         // reference. This is the reference to the current Electron renderer process (Chrome)
         // displaying your Meteor app.
         eventsBus.on('windowCreated', (window) => {
+        	console.log(config)
         	window.webContents.on('dom-ready', () => {
         	    // set perfect size
         	    // window.setSize(1300,768);
@@ -82,10 +83,6 @@ export default class Desktop {
             Menu.setApplicationMenu(menu);
 
             /* IPC */
-
-            desktop.on('load-settings', (args) => {
-                desktop.cinematic_settings = args;
-            });
 
             // https://stackoverflow.com/questions/44773029/how-to-select-file-or-folder-in-file-dialog
             // listen to an open-file-dialog command and sending back selected information

@@ -23,6 +23,4 @@ standard-minifier-js
 shell-server
 dynamic-import
 underscore
-omega:meteor-desktop-bundler
-omega:meteor-desktop-watcher
 ecmascript

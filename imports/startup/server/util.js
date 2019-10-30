@@ -42,51 +42,21 @@ export const defaultMeta = {
 	name: null,
 	filepath: null,
 	year: null,
-	ratings: [],
 	trailer: null,
 	seed: Math.random(),
 	recentTime: null,
 	watchedTime: null,
-	info: {
-		adult: false,
-		backdrop: null,
-		backdrop_path: null,
-		genre_ids: [],
-		imdb_id: null,
-		original_title: null,
-		overview: null,
-		popularity: null,
-		poster_path: null,
-		release_date: null,
-		tagline: null,
-		title: null,
-		vote_average: null
-	},
-	intel: {
-		Actors: null,
-		Awards: null,
-		Country: null,
-		Director: null,
-		Genre: null,
-		Language: null,
-		Metascore: null,
-		Plot: null,
-		Poster: null,
-		Rated: null,
-		Released: null,
-		Runtime: null,
-		Title: null,
-		Type: null,
-		Writer: null,
-		Year: null,
-		imdbID: null,
-		imdbRating: null
-	},
-	// Combined info
-	imdb_id: null,
+
+	// Stubs
+	ratings: [],
+	info: {},
+	intel: {},
+
+	// Cumulative info
+	imdbId: null,
 	plot: null,
 	poster: null,
-	release_date: null,
+	releaseDate: null,
 	title: null,
 	cached: false
 }

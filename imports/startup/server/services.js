@@ -129,10 +129,10 @@ const fetchOMDB = name => {
 			res.Runtime = res.Runtime && res.Runtime.replace(/\D/g, '')
 			res.poster = res.Poster
 			res.year = res.Year
-			res.imdb_id = res.imdbID
+			res.imdbId = res.imdbID
 			res.plot = res.Plot
 			res.poster = res.Poster
-			res.release_date = Date.parse(res.Released)
+			res.releaseDate = Date.parse(res.Released)
 			res.title = res.Title
 			res.ratings = []
 
@@ -177,7 +177,7 @@ const fetchTMDB = (name, year) => {
 			}
 
 			res.plot = res.overview
-			res.release_date = Date.parse(res.release_date)
+			res.releaseDate = Date.parse(res.release_date)
 			res.year = res.Year
 
 			res.backdrop =
@@ -218,14 +218,14 @@ const countToArray = num => {
 const reconcileMovieMeta = (mid, meta) => {
 	const movie = getMovieById(mid)
 
-	// Merge objects and preserve: plot, poster, release_date, year
+	// Merge objects and preserve: plot, poster, releaseDate, year
 	Object.assign(
 		movie,
 		meta,
 		{ratings: [...movie.ratings, ...meta.ratings]},
 		{plot: movie.plot || meta.plot},
 		{poster: movie.poster || meta.poster},
-		{release_date: movie.release_date || meta.release_date},
+		{releaseDate: movie.releaseDate || meta.releaseDate},
 		{year: movie.year || meta.year},
 	)
 	updateMovie(mid, movie)

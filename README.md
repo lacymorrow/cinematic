@@ -71,12 +71,16 @@ Thanks to:
 
 **Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
 
- - [ ] Speed boost
+ - Remove Jquery
+ - Ignore pattern uses regex
+ - Don't remove movies db on startup (maybe load from cache?)
+ - Save current dirpath and retrieve on startup
+
  - [ ] Batch request data to save http connections
- - [ ] Boost the cache to hold images
- - [ ] Force HTTPS
- - [X] File browser
- - [X] Release for Windows
+ - [ ] Extend the cache to hold images
+ - [X] Speed boost
+ - [X] File open dialog
+ - [X] Release on Windows
 
 
 ### Need help?

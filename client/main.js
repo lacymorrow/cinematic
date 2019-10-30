@@ -1,10 +1,20 @@
-/* global $, Desktop, Meteor, Mongo, Session, Template */
+/* global $, Desktop, Meteor, Mongo, Session */
 
 'use strict'
 
 import NProgress from 'nprogress'
 import {config} from '../imports/config'
 import {broadcast} from '../imports/startup/both/util'
+
+import {
+	bullets,
+	details,
+	directory,
+	header,
+	movies,
+	sidebar,
+	sort
+} from '../imports/ui'
 
 /* Third-Party Progress bar: NProgress */
 NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
@@ -26,25 +36,28 @@ Meteor.subscribe('movieCache')
 Meteor.subscribe('recent') // Recently clicked
 Meteor.subscribe('watched')
 
-if (Meteor.isDesktop) {
-	// Send config
-	Desktop.send('desktop', 'load-settings', config)
-	// Receive files from browser
-	Desktop.on('desktop', 'selected-file', (event, data) => {
-		console.log('Selected File Dialog Data:', event, data)
-		if (data.length === 1) {
-			// Single folder to open
-			$('#path').val(data[0])
-			setPath()
-		}
-	})
-} // End Meteor.isDesktop
+const SORT_TYPES = [
+	'Alphabetical',
+	'Popularity',
+	'Release Date',
+	'Runtime',
+	'Random' /* , "Ratings" */
+]
 
 /* OnReady */
 Template.body.rendered = function () {
 	if (Meteor.isDesktop) {
-		// Desktop Loaded
-		isDesktop()
+		document.body.classList.add('desktop')
+		// Receive files from Electron
+		// Desktop.on('desktop', 'selected-file', (event, data) => {
+		// 	console.log('Selected File Dialog Data:', event, data)
+		// 	if (data.length === 1) {
+		// 		// Single folder to open
+		// 		$('#directory').val(data[0])
+		// 		setPath()
+		// 	}
+		// })
+
 		// Init browse button IPC
 		document.querySelector('#browse-link').classList.remove('hide')
 	} else {
@@ -74,7 +87,7 @@ Template.body.helpers({
 	}
 })
 
-Template.navigation.helpers({
+Template.sidebar.helpers({
 	page() {
 		return Session.get('currentPage')
 	},
@@ -104,10 +117,10 @@ Template.header.helpers({
 })
 
 // Define path helpers
-Template.path.helpers({
-	path() {
+Template.directory.helpers({
+	directory() {
 		const state = State.findOne({_id: '0'})
-		return (state) ? state.path : '---'
+		return (state) ? state.dir : '---'
 	}
 })
 
@@ -162,7 +175,7 @@ Template.sort.helpers({
 		return currentSort !== 'Recent'
 	},
 	sort() {
-		return config.SORT_TYPES
+		return SORT_TYPES
 	},
 	currentSort() {
 		return Session.get('currentSort')
@@ -187,19 +200,19 @@ Template.sort.events({
 		const sort = $(event.currentTarget).val()
 		Session.set('currentSort', sort)
 		// Warning, magic numbers below, indexs reference sort types above
-		if (sort === config.SORT_TYPES[0]) {
+		if (sort === SORT_TYPES[0]) {
 			// Alphabetical
 			Session.set('movieSort', {sort: {name: 1}})
-		} else if (sort === config.SORT_TYPES[1]) {
+		} else if (sort === SORT_TYPES[1]) {
 			// Popularity
 			Session.set('movieSort', {sort: {'info.popularity': -1}})
-		} else if (sort === config.SORT_TYPES[2]) {
+		} else if (sort === SORT_TYPES[2]) {
 			// Release Date
 			Session.set('movieSort', {sort: {'info.release_date': -1}})
-		} else if (sort === config.SORT_TYPES[3]) {
+		} else if (sort === SORT_TYPES[3]) {
 			// Runtime
 			Session.set('movieSort', {sort: {'intel.Runtime': 1}})
-		} else if (sort === config.SORT_TYPES[4]) {
+		} else if (sort === SORT_TYPES[4]) {
 			// Random
 			Session.set('movieSort', {sort: {seed: 1}})
 		} else if (sort === 'Ratings') {
@@ -212,7 +225,7 @@ Template.sort.events({
 })
 
 // Handle filters navigation
-Template.navigation.events({
+Template.sidebar.events({
 	'click #links-panel li.link'(event) {
 		const page = Session.get('currentPage')
 		if (Session.get('currentSort') === 'Recent') {
@@ -294,38 +307,16 @@ Template.movies.events({
 		Meteor.call('handleViewMovie', id)
 		// Set timer to rotate ratings
 		resetRatingInterval()
-	},
-	'keyup .movie-image'(event) {
-		const magnitude = 3 // $(".keyboard-magnitude").data('id'); // this should equal the number of movies per row
-		event.preventDefault()
-		if (event.which === 37) {
-			// Left
-			const currTab =
-                parseInt($('.movie-image:focus').attr('tabIndex'), 10) - 1
-			$('.movie-image[tabIndex="' + currTab + '"]').click()
-			$('.movie-image[tabIndex="' + currTab + '"]').focus()
-		} else if (event.which === 39) {
-			// Right
-			const currTab =
-                parseInt($('.movie-image:focus').attr('tabIndex'), 10) + 1
-			$('.movie-image[tabIndex="' + currTab + '"]').click()
-			$('.movie-image[tabIndex="' + currTab + '"]').focus()
-			// } else if(event.which === 38){
-			//   // up
-			//   var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - magnitude;
-			//   $('.movie-image[tabIndex="'+currTab+'"]').click();
-			//   $('.movie-image[tabIndex="'+currTab+'"]').focus();
-			// } else if(event.which === 40){
-			//   // down
-			//   var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + magnitude;
-			//   $('.movie-image[tabIndex="'+currTab+'"]').click();
-			//   $('.movie-image[tabIndex="'+currTab+'"]').focus();
-		}
 	}
+	// 'keyup .movie-image'(event) {
+	// 	event.preventDefault()
+	// 	if (event.which === 37) { // 38 39 40
+	// 		// Left
+	// }
 })
 
 // Define path events
-Template.path.events({
+Template.directory.events({
 	'change #browse-input-directory'(event) {
 		event.preventDefault()
 		Meteor.call('handleBrowseDialog', event.target.files)
@@ -333,7 +324,7 @@ Template.path.events({
 	'click #browse-input-link'(event) {
 		$('#browse-input-directory').click()
 	},
-	'keyup #path'(event) {
+	'keyup #directory'(event) {
 		if (event.which === 13) {
 			// On <enter> set path
 			setPath()
@@ -353,10 +344,6 @@ Template.path.events({
 
 // Client-side methods
 
-const isDesktop = function () {
-	$('html').addClass('desktop-app')
-}
-
 const setLoaded = function (percentage) {
 	NProgress.start()
 	NProgress.set(percentage)
@@ -364,11 +351,11 @@ const setLoaded = function (percentage) {
 
 const setPath = function () {
 	resetClient()
-	const _path = document.querySelector('#path')
-	if (_path.value !== '') {
-		let path = _path.value
-		if (path.slice(-1) !== '/') {
-			path += '/'
+	const _directory = document.querySelector('#directory')
+	if (_directory.value !== '') {
+		let directory = _directory.value
+		if (directory.slice(-1) !== '/') {
+			directory += '/'
 		}
 	}
 
@@ -392,7 +379,7 @@ const resetRatingInterval = function () {
 
 const resetSort = function () {
 	// Default sort values
-	Session.set('currentSort', config.SORT_TYPES[0])
+	Session.set('currentSort', SORT_TYPES[0])
 	Session.set('movieSort', {sort: {name: 1}})
 }
 
@@ -406,3 +393,14 @@ const resetClient = function () {
 }
 
 resetClient()
+
+// Prevent eslint no-unused
+export {
+	bullets,
+	details,
+	directory,
+	header,
+	movies,
+	sidebar,
+	sort
+}

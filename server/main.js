@@ -2,10 +2,6 @@
 
 'use strict'
 
-// TODO:
-// Loading bar
-// Ignore pattern uses regex
-
 import fs from 'fs'
 import path from 'path'
 
@@ -36,14 +32,11 @@ import {
 // Server globals
 // startup functions
 Meteor.startup(() => {
-	// Todo: remove
 	// Setup db - optionally clear movies, log, and path
 	resetMovies()
 
 	// Welcome message
 	broadcast('\n----- Cinematic -----')
-
-	// TODO: save current dir to store and retrieve on startup
 
 	// Set up state - our redneck appcache
 
@@ -114,7 +107,7 @@ const scanDir = (dirPath, recurseDepth) => {
 
 		if (ext) {
 			// File
-			if (config.VALID_TYPES.includes(ext)) {
+			if (config.VALID_FILETYPES.includes(ext)) {
 				scanFile({dirPath, file, ext})
 			} else {
 				broadcast(`Warning: File ${file} not valid.`)
@@ -151,7 +144,7 @@ const scanFile = options => {
 				name,
 				filepath: dirPath,
 				year,
-				release_date: year,
+				releaseDate: year,
 				title: name
 			})
 
