@@ -1,0 +1,20 @@
+<template name="directory">
+	<div id="directory-wrapper" class="hidden-xs hidden-sm">
+		<div id="search">
+			<span id="search-icon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
+			<input type="text" id="directory" placeholder="Movie directory" value="{{directory}}" size="60" />
+		</div>
+		<span id="search-refresh" class="glyphicon glyphicon-refresh"></span>
+	</div>
+	<a id="browse-link" class="browse-link btn btn-primary hide" role="button">
+		Browse
+		<span class="icon glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+	</a>
+	<div id="browse-input" class="hide">
+		<a id="browse-input-link" class="browse-link btn btn-primary" role="button">
+			Browse
+			<span class="icon glyphicon glyphicon-open" aria-hidden="true"></span>
+		</a>
+		<input id="browse-input-directory" type="file" name="files" webkitdirectory mozdirectory directory multiple />
+	</div>
+</template>

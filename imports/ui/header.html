@@ -1,0 +1,10 @@
+<template name="header">
+	<header>
+		<h2 class="hidden-xl">Cinematic</h2>
+		{{> directory}}
+		{{#if loading }}
+			<div class="loading">
+			</div>
+		{{/if}}
+	</header>
+</template>

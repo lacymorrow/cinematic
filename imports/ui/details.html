@@ -1,0 +1,67 @@
+<template name="details">
+	{{#with movie}}
+	<div id="details-panel" class="height-100 col-md-4 hidden-xs hidden-sm{{#if movie}} active{{/if}}">
+		{{#if backdrop}}
+			<div id="backdrop">
+				<img class="img-responsive center-block" width="500" src="{{backdrop}}">
+				<img id="mirror" class="img-responsive center-block" width="500" src="{{backdrop}}"> -->
+			</div>
+		{{/if}}
+		<div id="details-wrapper" class="{{#unless trailer}}no-trailer{{/unless}}">
+			<div id="details">
+				<h1>
+					{{#if title}}
+						{{title}}
+					{{/if}}
+					{{#if year}}
+						({{year}})
+					{{/if}}
+				</h1>
+
+				{{#if directory}}
+					<a id="open-link" class="btn btn-primary" data-src="{{directory}}{{file}}" data-id="{{_id}}" role="button">Watch</a>
+				{{/if}}
+
+				{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
+				<h5>{{#if intel.Runtime}}{{intel.Runtime}} min{{/if}}{{#if imdbId}} &nbsp;|&nbsp; <a id="imdb-link" target="_blank" href="http://www.imdb.com/title/{{imdbId}}">IMDB <span class="glyphicon glyphicon-link"></span></a>{{/if}}</h5>
+					<div id="rating">
+						{{#each ratings}}
+							<div class="rating {{#if equals index rating}}active{{/if}} {{#if equals indexPlus rating}}old{{/if}}">
+								<h5>{{name}} Rating</h5>
+								{{>bullets}}
+								<div class="bullet-wrap">
+									{{#each count}}
+										<span class="bullet"></span>
+									{{/each}}
+								</div>
+								<h4 class="rating-text">{{score}} / 10</h4>
+							</div>
+						{{/each}}
+					</div>
+				{{#if plot}}
+					<p>{{plot}}</p>
+				{{/if}}
+				{{#if intel.Director}}<p><span>Director:</span> {{intel.Director}}</p>{{/if}}
+				{{#if intel.Writer}}<p><span>Writers:</span> {{intel.Writer}}</p>{{/if}}
+				{{#if intel.Actors}}<p><span>Stars:</span> {{intel.Actors}}</p>{{/if}}
+				{{#if intel.Awards}}<p><span>Awards:</span> {{intel.Awards}}</p>{{/if}}
+
+
+				{{#if trailer}}<p id="trailer-text"><span>PREVIEW</span></p>{{/if}}
+			</div>
+		</div>
+		{{#if trailer}}
+			<div id="trailer">
+				{{#if gt trailer.length 1}}
+					<div id="trailer-bullets">
+						{{#each video in trailer}}
+							<span class="trailer bullet {{#unless equals currentTrailer video}}empty{{/unless}}" data-id="{{video}}"></span>
+						{{/each}}
+					</div>
+				{{/if}}
+				<iframe width="500" height="281" src="https://www.youtube-nocookie.com/embed/{{currentTrailer}}?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+			</div>
+		{{/if}}
+	</div>
+	{{/with}}
+</template>

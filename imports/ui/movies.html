@@ -1,0 +1,27 @@
+<template name="movies">
+	<ul class="row">
+		{{#each movies}}
+			<li class="movie col-xs-12 col-lg-6 col-xl-4">
+				<div class="keyboard-magnitude hidden-lg hidden-xl" data-id="1"></div>
+				<div class="keyboard-magnitude hidden-xs hidden-sm hidden-xl" data-id="2"></div>
+				<div class="keyboard-magnitude hidden-xs hidden-sm hidden-lg" data-id="3"></div>
+				<div class="movie-image" tabindex="{{index}}" data-id="{{_id}}">
+					{{#if poster}}
+						<img class="img-responsive center-block" src="{{poster}}">
+						{{else}}
+						<img class="img-responsive center-block" src="no-photo.png">
+					{{/if}}
+					<div class="caption center-block">
+						<h5>
+							{{#if title}}
+								{{title}}
+							{{/if}}
+						</h5>
+						{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
+						{{#if intel.Runtime}}<h5>{{intel.Runtime}} min</h5>{{/if}}
+					</div>
+				</div>
+			</li>
+		{{/each}}
+	</ul>
+</template>
