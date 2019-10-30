@@ -6,11 +6,25 @@ import NProgress from 'nprogress'
 import {config} from '../imports/config'
 import {broadcast} from '../imports/startup/both/util'
 
+/* Third-Party Progress bar: NProgress */
+NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
+
+let ratingTimer
+let totalRatings
+
 const State = new Mongo.Collection('state')
 const Recent = new Mongo.Collection('recent')
 const Watched = new Mongo.Collection('watched')
 const Genres = new Mongo.Collection('genres')
 const Movies = new Mongo.Collection('movies')
+
+// Observe db collections
+Meteor.subscribe('state')
+Meteor.subscribe('genres') // A map of genre-firendly-name to genre id
+Meteor.subscribe('movies')
+Meteor.subscribe('movieCache')
+Meteor.subscribe('recent') // Recently clicked
+Meteor.subscribe('watched')
 
 if (Meteor.isDesktop) {
 	// Send config
@@ -25,20 +39,6 @@ if (Meteor.isDesktop) {
 		}
 	})
 } // End Meteor.isDesktop
-
-let ratingTimer
-let totalRatings
-
-// Observe db collections
-Meteor.subscribe('state')
-Meteor.subscribe('genres') // A map of genre-firendly-name to genre id
-Meteor.subscribe('movies')
-Meteor.subscribe('movieCache')
-Meteor.subscribe('recent') // Recently clicked
-Meteor.subscribe('watched')
-
-/* Third-Party Progress bar: NProgress */
-NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
 
 /* OnReady */
 Template.body.rendered = function () {
@@ -56,9 +56,9 @@ Template.body.rendered = function () {
 
 /*
  * HELPERS
- * Define nav helpers
  */
 
+// Template tags
 Template.registerHelper('equals', (v1, v2) => {
 	return v1 === v2
 })
@@ -67,6 +67,7 @@ Template.registerHelper('gt', (v1, v2) => {
 	return v1 > v2
 })
 
+// Database getters
 Template.body.helpers({
 	page() {
 		return Session.get('currentPage')
@@ -91,7 +92,7 @@ Template.navigation.helpers({
 	}
 })
 
-// Define loading indicatior
+// Loading indicatior
 Template.header.helpers({
 	loading() {
 		const state = State.findOne({_id: '0'})
@@ -121,9 +122,10 @@ Template.details.helpers({
 	movie() {
 		const movie = Movies.findOne({_id: Session.get('currentMovie')})
 		if (movie) {
+			console.log(movie.ratings)
 			movie.ratings.map((o, i) => {
 				movie.ratings[i].index = i
-				if (i == movie.ratings.length - 1) {
+				if (i === movie.ratings.length - 1) {
 					movie.ratings[i].indexPlus = 0
 				} else {
 					movie.ratings[i].indexPlus = i + 1
@@ -157,7 +159,7 @@ Template.movies.helpers({
 Template.sort.helpers({
 	showSort() {
 		const currentSort = Session.get('currentSort')
-		return currentSort != 'Recent'
+		return currentSort !== 'Recent'
 	},
 	sort() {
 		return config.SORT_TYPES
@@ -185,22 +187,22 @@ Template.sort.events({
 		const sort = $(event.currentTarget).val()
 		Session.set('currentSort', sort)
 		// Warning, magic numbers below, indexs reference sort types above
-		if (sort == config.SORT_TYPES[0]) {
+		if (sort === config.SORT_TYPES[0]) {
 			// Alphabetical
 			Session.set('movieSort', {sort: {name: 1}})
-		} else if (sort == config.SORT_TYPES[1]) {
+		} else if (sort === config.SORT_TYPES[1]) {
 			// Popularity
 			Session.set('movieSort', {sort: {'info.popularity': -1}})
-		} else if (sort == config.SORT_TYPES[2]) {
+		} else if (sort === config.SORT_TYPES[2]) {
 			// Release Date
 			Session.set('movieSort', {sort: {'info.release_date': -1}})
-		} else if (sort == config.SORT_TYPES[3]) {
+		} else if (sort === config.SORT_TYPES[3]) {
 			// Runtime
 			Session.set('movieSort', {sort: {'intel.Runtime': 1}})
-		} else if (sort == config.SORT_TYPES[4]) {
+		} else if (sort === config.SORT_TYPES[4]) {
 			// Random
 			Session.set('movieSort', {sort: {seed: 1}})
-		} else if (sort == 'Ratings') {
+		} else if (sort === 'Ratings') {
 			// Inactive, should use avg ratings
 		}
 	},
@@ -209,7 +211,7 @@ Template.sort.events({
 	}
 })
 
-// Handle page changes with filter
+// Handle filters navigation
 Template.navigation.events({
 	'click #links-panel li.link'(event) {
 		const page = Session.get('currentPage')
@@ -273,7 +275,7 @@ Template.details.events({
 	}
 })
 
-// Define movie events
+// Define movie display events (click, keystroke)
 Template.movies.events({
 	// Show right panel
 	'click .movie-image'(event) {
@@ -298,22 +300,22 @@ Template.movies.events({
 		event.preventDefault()
 		if (event.which === 37) {
 			// Left
-			var currTab =
-                parseInt($('.movie-image:focus').attr('tabIndex')) - 1
+			const currTab =
+                parseInt($('.movie-image:focus').attr('tabIndex'), 10) - 1
 			$('.movie-image[tabIndex="' + currTab + '"]').click()
 			$('.movie-image[tabIndex="' + currTab + '"]').focus()
 		} else if (event.which === 39) {
 			// Right
-			var currTab =
-                parseInt($('.movie-image:focus').attr('tabIndex')) + 1
+			const currTab =
+                parseInt($('.movie-image:focus').attr('tabIndex'), 10) + 1
 			$('.movie-image[tabIndex="' + currTab + '"]').click()
 			$('.movie-image[tabIndex="' + currTab + '"]').focus()
-			// } else if(event.which == 38){
+			// } else if(event.which === 38){
 			//   // up
 			//   var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) - magnitude;
 			//   $('.movie-image[tabIndex="'+currTab+'"]').click();
 			//   $('.movie-image[tabIndex="'+currTab+'"]').focus();
-			// } else if(event.which == 40){
+			// } else if(event.which === 40){
 			//   // down
 			//   var currTab = parseInt($('.movie-image:focus').attr('tabIndex')) + magnitude;
 			//   $('.movie-image[tabIndex="'+currTab+'"]').click();
@@ -332,7 +334,7 @@ Template.path.events({
 		$('#browse-input-directory').click()
 	},
 	'keyup #path'(event) {
-		if (event.which == 13) {
+		if (event.which === 13) {
 			// On <enter> set path
 			setPath()
 		}
@@ -351,21 +353,21 @@ Template.path.events({
 
 // Client-side methods
 
-var isDesktop = function () {
+const isDesktop = function () {
 	$('html').addClass('desktop-app')
 }
 
-var setLoaded = function (percentage) {
+const setLoaded = function (percentage) {
 	NProgress.start()
 	NProgress.set(percentage)
 }
 
-var setPath = function () {
+const setPath = function () {
 	resetClient()
 	const _path = document.querySelector('#path')
-	if (_path.value != '') {
+	if (_path.value !== '') {
 		let path = _path.value
-		if (path.slice(-1) != '/') {
+		if (path.slice(-1) !== '/') {
 			path += '/'
 		}
 	}
@@ -373,14 +375,14 @@ var setPath = function () {
 	Meteor.call('handleConfirmPath')
 }
 
-var rotateRating = function () {
+const rotateRating = function () {
 	// Broadcast(totalRatings); // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
 	let x = Session.get('activeRating')
 	x += 1
-	Session.set('activeRating', x == totalRatings ? 0 : x)
+	Session.set('activeRating', x === totalRatings ? 0 : x)
 }
 
-var resetRatingInterval = function () {
+const resetRatingInterval = function () {
 	if (ratingTimer) {
 		Meteor.clearInterval(ratingTimer)
 	}
@@ -388,14 +390,14 @@ var resetRatingInterval = function () {
 	ratingTimer = Meteor.setInterval(rotateRating, config.RATING_DELAY)
 }
 
-var resetSort = function () {
+const resetSort = function () {
 	// Default sort values
 	Session.set('currentSort', config.SORT_TYPES[0])
 	Session.set('movieSort', {sort: {name: 1}})
 }
 
 // Defaults
-var resetClient = function () {
+const resetClient = function () {
 	resetSort()
 	Session.set('activeRating', 0)
 	Session.set('currentMovie', 0)

@@ -27,25 +27,18 @@ const q = queue({
 })
 
 // On every job finish
-q.on('success', (result, job) => {
+q.on('success', () => {
 	// Change loading bar when queue updates
 	const {queueTotal} = getState()
-	console.log('success!!', queueTotal, q.length)
-
-	if (q.length === 0) {
-		setState({loading: 0})
-		if (config.CACHE_TIMEOUT) {
-			// Loading has finished, update cache
-			refreshMovieCache()
-		}
-	} else {
-		setState({loading: Math.round(q.length / queueTotal * 100)})
-	}
+	setState({loading: Math.round(q.length / queueTotal * 100)})
 })
 
 q.on('end', () => {
-	console.log('Queue finished.')
+	broadcast('Services queue completed.')
 	setState({loading: 0})
+	if (config.CACHE_TIMEOUT) {
+		refreshMovieCache()
+	}
 })
 
 export const resetQueue = () => {
@@ -146,7 +139,7 @@ const fetchOMDB = name => {
 
 			if (res.imdbRating) {
 				res.ratings.push({
-					name: 'IMDB RATING',
+					name: 'IMDB',
 					score: parseFloat(res.imdbRating),
 					count: countToArray(res.imdbRating)
 				})
@@ -154,7 +147,7 @@ const fetchOMDB = name => {
 
 			if (res.Metascore) {
 				res.ratings.push({
-					name: 'METASCORE RATING',
+					name: 'Metascore',
 					score: res.Metascore / 10,
 					count: countToArray(res.Metascore / 10)
 				})
@@ -178,7 +171,7 @@ const fetchTMDB = (name, year) => {
 
 			if (res.vote_average) {
 				res.ratings.push({
-					name: 'TMDB RATING',
+					name: 'TMDB',
 					score: parseFloat(res.vote_average),
 					count: countToArray(res.vote_average)
 				})
@@ -221,10 +214,8 @@ const fetchTrailer = (name, year) => {
 }
 
 const countToArray = num => {
-	return Array.apply(
-		null,
-		new Array(Math.round(num))
-	).map(() => {
+	// Create an array of empty elements with length n
+	return new Array(Math.round(num)).map(() => {
 		return {}
 	})
 }
@@ -240,7 +231,11 @@ const getYoutubeId = url => {
 
 const reconcileMovieMeta = (mid, meta) => {
 	const movie = getMovieById(mid)
+
+	// Merge ratings arrays
 	movie.ratings = [...movie.ratings, ...meta.ratings]
+
+	// Merge objects, preserve plot, poster, release date, year
 	Object.assign(
 		movie,
 		meta,
@@ -250,5 +245,8 @@ const reconcileMovieMeta = (mid, meta) => {
 		{year: movie.year || meta.year},
 	)
 	updateMovie(mid, movie)
+	const mov = getMovieById(mid)
+	console.log('1', movie.ratings, mov.ratings)
+
 	return movie
 }
