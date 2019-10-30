@@ -19,6 +19,7 @@ import {
 	refreshMovieCache
 } from './database'
 
+// Create and start queue
 const q = queue({
 	autostart: true,
 	concurrency: config.MAX_CONNECTIONS,
@@ -64,9 +65,7 @@ export const fetchMeta = (mid, name, year) => {
 	const {queueTotal} = getState()
 	setState({queueTotal: queueTotal + 3})
 
-	// Plot release-date year poster
-
-	// Updates to gather
+	// Queue API calls
 	q.push(() => {
 		return fetchOMDB(name)
 			.then(res => {
@@ -204,13 +203,9 @@ const fetchTMDB = (name, year) => {
 const fetchTrailer = (name, year) => {
 	return movieTrailer(name, {
 		year,
+		id: true,
 		multi: true
 	})
-		.then(res => {
-			return res.map(e => {
-				return getYoutubeId(e)
-			})
-		})
 }
 
 const countToArray = num => {
@@ -220,33 +215,20 @@ const countToArray = num => {
 	})
 }
 
-const getYoutubeId = url => {
-	// If a URL, strip and return video ID
-	if (url.indexOf('/' > -1)) {
-		return url.split('=').pop()
-	}
-
-	return url
-}
-
 const reconcileMovieMeta = (mid, meta) => {
 	const movie = getMovieById(mid)
 
-	// Merge ratings arrays
-	movie.ratings = [...movie.ratings, ...meta.ratings]
-
-	// Merge objects, preserve plot, poster, release date, year
+	// Merge objects and preserve: plot, poster, release_date, year
 	Object.assign(
 		movie,
 		meta,
+		{ratings: [...movie.ratings, ...meta.ratings]},
 		{plot: movie.plot || meta.plot},
 		{poster: movie.poster || meta.poster},
 		{release_date: movie.release_date || meta.release_date},
 		{year: movie.year || meta.year},
 	)
 	updateMovie(mid, movie)
-	const mov = getMovieById(mid)
-	console.log('1', movie.ratings, mov.ratings)
 
 	return movie
 }
