@@ -111,6 +111,9 @@ Template.registerHelper('gt', (v1, v2) => {
 
 // Database getters
 Template.body.helpers({
+	isDesktop() {
+		return Meteor.isDesktop
+	},
 	page() {
 		return Session.get('currentPage')
 	}
@@ -367,9 +370,6 @@ Template.directory.events({
 			setPath()
 		}
 	},
-	'click #search-refresh'() {
-		setPath()
-	},
 	'click #browse-link'() {
 		if (Meteor.isDesktop) {
 			// Desktop
@@ -382,25 +382,18 @@ Template.directory.events({
 
 /* OnReady */
 Template.body.rendered = function () {
-	if (Meteor.isDesktop) {
-		document.body.classList.add('desktop')
-		// Receive files from Electron
-		// Desktop.on('desktop', 'selected-file', (event, data) => {
-		// 	console.log('Selected File Dialog Data:', event, data)
-		// 	if (data.length === 1) {
-		// 		// Single folder to open
-		// 		$('#directory').val(data[0])
-		// 		setPath()
-		// 	}
-		// })
-
-		// Init browse button IPC
-		document.querySelector('#browse-link').classList.remove('hide')
-	} else {
-		document.querySelector('#browse-link').classList.remove('hide')
-	}
-
+	Meteor.isDesktop && document.body.classList.add('desktop')
 	$('[data-toggle="tooltip"]').tooltip()
+
+	// Receive files from Electron
+	// Desktop.on('desktop', 'selected-file', (event, data) => {
+	// 	console.log('Selected File Dialog Data:', event, data)
+	// 	if (data.length === 1) {
+	// 		// Single folder to open
+	// 		$('#directory').val(data[0])
+	// 		setPath()
+	// 	}
+	// })
 }
 
 // Init

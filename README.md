@@ -72,6 +72,7 @@ Thanks to:
 **Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
 
  - Remove Jquery
+ - remove map foreach
  - Ignore pattern uses regex
  - Don't remove movies db on startup (maybe load from cache?)
  - Save current dirpath and retrieve on startup
