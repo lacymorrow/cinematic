@@ -1,10 +1,31 @@
-/* global $, Desktop, Meteor, Mongo, Session */
+/* global $, Desktop, Mongo */
 
 'use strict'
+import { Meteor } from 'meteor/meteor'
+import {Session} from 'meteor/session'
+import { Template } from 'meteor/templating'
 
 import NProgress from 'nprogress'
 import {config} from '../imports/config'
 import {broadcast} from '../imports/startup/both/util'
+
+import {
+	getState,
+	getActiveRating,
+	getCurrentPage,
+	getCurrentTrailer,
+	getGenres,
+	getGenreById,
+
+	getMovie,
+	getMovieQuery,
+	getMovieCount,
+	getRecent,
+	getRecentCount,
+	getWatched,
+	getWatchedCount
+
+} from '../imports/startup/client/database'
 
 import {
 	bullets,
@@ -13,7 +34,7 @@ import {
 	display,
 	header,
 	movies,
-	sidebar,
+	navigation,
 	sort
 } from '../imports/ui'
 
@@ -22,20 +43,6 @@ NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
 
 let ratingTimer
 let totalRatings
-
-const State = new Mongo.Collection('state')
-const Recent = new Mongo.Collection('recent')
-const Watched = new Mongo.Collection('watched')
-const Genres = new Mongo.Collection('genres')
-const Movies = new Mongo.Collection('movies')
-
-// Observe db collections
-Meteor.subscribe('state')
-Meteor.subscribe('genres') // A map of genre-firendly-name to genre id
-Meteor.subscribe('movies')
-Meteor.subscribe('movieCache')
-Meteor.subscribe('recent') // Recently clicked
-Meteor.subscribe('watched')
 
 const SORT_TYPES = [
 	'Alphabetical',
@@ -84,32 +91,32 @@ Template.registerHelper('gt', (v1, v2) => {
 // Database getters
 Template.body.helpers({
 	page() {
-		return Session.get('currentPage')
+		return getCurrentPage()
 	}
 })
 
-Template.sidebar.helpers({
+Template.navigation.helpers({
 	page() {
-		return Session.get('currentPage')
+		return getCurrentPage()
 	},
 	genres() {
-		return Genres.find({items: {$exists: true}}, {sort: {name: 1}}).fetch()
+		return getGenres()
 	},
 	movieCount() {
-		return Movies.find().count()
+		return getMovieCount()
 	},
 	recentCount() {
-		return Recent.find().count()
+		return getRecentCount()
 	},
 	watchedCount() {
-		return Watched.find().count()
+		return getWatchedCount()
 	}
 })
 
 // Loading indicatior
 Template.header.helpers({
 	loading() {
-		const state = State.findOne({_id: '0'})
+		const state = getState()
 		// Invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
 		const loaded = (state) ? 100 - state.loading : 100
 		setLoaded(loaded / 100)
@@ -120,7 +127,7 @@ Template.header.helpers({
 // Define path helpers
 Template.directory.helpers({
 	directory() {
-		const state = State.findOne({_id: '0'})
+		const state = getState()
 		return (state) ? state.dir : '---'
 	}
 })
@@ -128,15 +135,14 @@ Template.directory.helpers({
 // Define details helpers
 Template.details.helpers({
 	rating() {
-		return Session.get('activeRating')
+		return getActiveRating()
 	},
 	config() {
 		return config
 	},
 	movie() {
-		const movie = Movies.findOne({_id: Session.get('currentMovie')})
+		const movie = getMovie(Session.get('currentMovie'))
 		if (movie) {
-			console.log(movie.ratings)
 			movie.ratings.map((o, i) => {
 				movie.ratings[i].index = i
 				if (i === movie.ratings.length - 1) {
@@ -150,17 +156,14 @@ Template.details.helpers({
 		return movie
 	},
 	currentTrailer() {
-		return Session.get('currentTrailer')
+		return getCurrentTrailer()
 	}
 })
 
 // Define movies helpers
 Template.movies.helpers({
 	movies() {
-		const movies = Movies.find(
-			Session.get('movieQuery'),
-			Session.get('movieSort')
-		).fetch()
+		const movies = getMovieQuery(Session.get('movieQuery'), Session.get('movieSort'))
 		let index = 0
 		movies.map((o, i) => {
 			movies[i].index = index++
@@ -226,8 +229,8 @@ Template.sort.events({
 })
 
 // Handle filters navigation
-Template.sidebar.events({
-	'click #links-panel li.link'(event) {
+Template.navigation.events({
+	'click #navigation-panel li.link'(event) {
 		const page = Session.get('currentPage')
 		if (Session.get('currentSort') === 'Recent') {
 			resetSort()
@@ -238,11 +241,11 @@ Template.sidebar.events({
 		Session.set('currentPage', currentPage)
 		// Hide right panel
 		Session.set('currentMovie', 0)
-		const genre = Genres.findOne(pid)
+		const genre = getGenreById(pid)
 		if (genre) {
 			// Genre page - All: alphabetical
 			Session.set('movieQuery', {
-				_id: {$in: Genres.findOne(pid).items}
+				_id: {$in: getGenreById(pid).items}
 			})
 		} else if (currentPage === 'New') {
 			// Browse Recently Released
@@ -250,7 +253,7 @@ Template.sidebar.events({
 		} else if (currentPage === 'Recent') {
 			// Browse recently viewed: alphabetical  **** TODO: HAVENT FIGURED OUT SORTING
 			const recent = []
-			_.map(Recent.find().fetch(), e => {
+			_.map(getRecent(), e => {
 				recent.push(e._id)
 			})
 			Session.set('currentSort', 'Recent')
@@ -259,7 +262,7 @@ Template.sidebar.events({
 		} else if (currentPage === 'Watched') {
 			// Browse watched: order of watched
 			const watched = []
-			_.map(Watched.find().fetch(), e => {
+			_.map(getWatched(), e => {
 				watched.push(e._id)
 			})
 			Session.set('currentSort', 'Recent')
@@ -293,16 +296,14 @@ Template.details.events({
 Template.movies.events({
 	// Show right panel
 	'click .movie-image'(event) {
-		// Switch current movie in details panel
+
+		// Handle changing details when user switches movie
 		const {id} = event.currentTarget.dataset
-		const trailers = Movies.findOne({_id: id}, {fields: {trailer: 1}})
-		const {ratings} = Movies.findOne({_id: id}, {fields: {ratings: 1}})
+		const {ratings, trailer} = getMovie(id)
 		totalRatings = ratings.length
+
 		// Set initial trailer
-		const trailer =
-            trailers.trailer &&
-            trailers.trailer[0]
-		Session.set('currentTrailer', trailer)
+		Session.set('currentTrailer', trailer[0])
 		// Set current movie and add to recent
 		Session.set('currentMovie', id)
 		Meteor.call('handleViewMovie', id)
@@ -364,7 +365,7 @@ const setPath = function () {
 }
 
 const rotateRating = function () {
-	// Broadcast(totalRatings); // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
+	broadcast(totalRatings) // !important! number of ratings sources < ------------------- MAGIC NUMBER HERE
 	let x = Session.get('activeRating')
 	x += 1
 	Session.set('activeRating', x === totalRatings ? 0 : x)
@@ -403,6 +404,6 @@ export {
 	display,
 	header,
 	movies,
-	sidebar,
+	navigation,
 	sort
 }

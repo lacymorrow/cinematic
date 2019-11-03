@@ -4,7 +4,7 @@ import {directory} from './directory'
 import {display} from './display'
 import {header} from './header'
 import {movies} from './movies'
-import {sidebar} from './sidebar'
+import {navigation} from './navigation'
 import {sort} from './sort'
 
 export {
@@ -14,6 +14,6 @@ export {
 	display,
 	header,
 	movies,
-	sidebar,
+	navigation,
 	sort
 }

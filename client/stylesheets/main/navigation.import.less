@@ -1,0 +1,68 @@
+#navigation-wrapper {
+	position: fixed;
+	height: 100%;
+	width: 15em;
+    padding: 70px 0 0 0;
+}
+
+#navigation-panel {
+	height: 100%;
+	overflow-y: scroll;
+	padding: 0 0 90px 0;
+    font-family: @font-family-light;
+	border-right: 2px solid #DFDFDF;
+
+	li {
+		h5 {
+			width: 100%;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			cursor: pointer;
+			font-size: 16px;
+			padding: 6px 6px 6px 35px;
+
+			.badge {
+				margin: -3px 0 0 5px;
+				background: @color-blue;
+			}
+		}
+
+		&:active {
+			background-color: @gray-button-dark;
+		}
+
+		&:hover {
+			background-color: @gray-button-light;
+		}
+
+		&.active {
+			background-color: @color-blue;
+
+			h5 {
+				color: #FFF;
+
+				.badge {
+					color: @color-blue;
+					background-color: #ffffff;
+				}
+			}
+
+			&:active {
+				background-color: @color-blue;
+			}
+
+			&:hover {
+				background-color: @color-blue-dark;
+			}
+		}
+
+		h5.label {
+			cursor: default;
+			margin-top: 2em;
+			padding-left: 25px;
+    		font-family: @font-family-regular;
+    		background-color: white;
+		}
+	}
+}

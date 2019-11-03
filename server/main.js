@@ -1,9 +1,9 @@
-/* global Meteor */
-
 'use strict'
 
 import fs from 'fs'
 import path from 'path'
+
+import { Meteor } from 'meteor/meteor'
 
 import open from 'open'
 import parseTorrentName from 'parse-torrent-name'

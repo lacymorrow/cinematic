@@ -1,6 +1,7 @@
-/* global Meteor, Mongo */
-
 'use strict'
+
+import { Meteor } from 'meteor/meteor'
+import { Mongo } from 'meteor/mongo'
 
 import {epoch} from '../both/util'
 
@@ -22,13 +23,9 @@ export const initState = options => {
 	return State.insert(Object.assign(defaults, options))
 }
 
-export const getState = () => {
-	return State.findOne({_id: '0'})
-}
+export const getState = () => State.findOne({_id: '0'})
 
-export const setState = options => {
-	return State.update('0', {$set: options})
-}
+export const setState = options => State.update('0', {$set: options})
 
 /* Recent */
 export const addRecent = mid => {

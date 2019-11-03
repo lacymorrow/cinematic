@@ -1,0 +1,258 @@
+#details-panel {
+	height: 100%;
+	width: @side-panel-width;
+	right: 0;
+	background: @color-background;
+	position: fixed;
+	z-index: 2;
+    transform: translate(@side-panel-width, 0);
+    transition: transform .2s ease-in;
+	border-left: 2px solid #DFDFDF;
+
+	&.active {
+        transform: translate(0, 0);
+	}
+
+	#backdrop {
+		margin: 0 -15px 0 -15px;
+		position: absolute;
+		z-index: -1;
+	}
+
+	// Mirrored backdrop
+	#mirror {
+		-moz-transform: scaleY(-1);
+        -o-transform: scaleY(-1);
+        -webkit-transform: scaleY(-1);
+        transform: scaleY(-1);
+        filter: FlipV;
+        -ms-filter: "FlipV";
+		-moz-transform: scaleY(-1);
+        -o-transform: scaleY(-1);
+        -webkit-transform: scaleY(-1);
+        transform: scaleY(-1);
+        filter: FlipV;
+        -ms-filter: "FlipV";
+		@media ( max-height: 600px ){
+			display: none;
+		}
+	}
+
+	#details-wrapper {
+		overflow-y: auto;
+		margin: 0 -15px;
+		padding-top: 280px;
+		padding-bottom: 280px;
+		height: 100%;
+		.no-trailer {} //dunno
+	}
+
+	#backdrop-space {
+		position: relative;
+		background:
+		  linear-gradient(
+		    to bottom,
+		    rgba(0, 0, 0, 0),
+		    rgba(0, 0, 0, 0),
+		    rgba(0, 0, 0, 0.2)
+		  );
+		width: 500px;
+		height: 280px;
+		display: block;
+    	@media ( max-height: 800px ){
+        	display: none;
+        }
+	}
+
+	#rated {
+		color: #fff;
+		text-shadow: 1px 1px 1px #000;
+	    border: 2px solid #fff;
+	    display: inline-block;
+	    border-radius: 2px;
+	    padding: 5px 10px;
+	    opacity: .85;
+	    margin: 1em;
+	    position: absolute;
+	    bottom: 0;
+	    right: 0;
+	}
+
+	#release-date {
+		color: #fff;
+		text-shadow: 1px 1px 1px #000;
+		font-family: @font-family-light;
+	    display: inline-block;
+	    opacity: .85;
+	    margin: 1em;
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
+	}
+
+	#rating {
+		position: relative;
+		z-index: 0;
+		margin: 20px 0 25px 0;
+		display: block;
+		height: 50px;
+	}
+
+	.rating {
+		width: 500px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0;
+		transform: translate3d(0, 50%, 0);
+		transition: transform .4s ease-in,
+					opacity .4s ease-in;
+		h5 {
+			float: left;
+			cursor: default;
+		}
+
+		&.active {
+			display: block;
+			opacity: 1;
+			transform: none;
+			transition-delay: .3s;
+		}
+
+		&.old {
+			transform: translate3d(0, -35%, 0);
+		}
+	}
+
+	.rating-text {
+		margin-left: 250px;
+		margin-top: 35px;
+		cursor: default;
+	}
+
+	.bullet-wrap {
+		position: absolute;
+		z-index: 1;
+		top: 35px;
+		left: 0;
+	}
+
+	.bullet-empty-wrap {
+		position: absolute;
+		z-index: 0;
+		top: 35px;
+		left: 0;
+	}
+
+	.bullet {
+		display: inline-block;
+		float: left;
+		margin: 4px 8px 4px 0;
+		border-radius: 50%;
+		width: 14px;
+		height: 14px;
+		background: @color-blue;
+		background-position: center center;
+		box-shadow: 1px 1px 5px #BBB;
+
+		&.empty {
+			background-color: #FFF;
+		}
+	}
+
+	#details {
+		padding: 10px 15px 15px 15px;
+		background: linear-gradient(to bottom, rgba(252, 252, 252, .8), rgba(252, 252, 252, .99), rgba(252, 252, 252, .99));
+		min-height: 300px;
+		overflow-x: hidden;
+
+		h1 {
+			margin-top: 0;
+		}
+
+		#open-link {
+			cursor: pointer;
+			z-index: 1;
+			position: relative;
+			float: right;
+			margin-right: 25px;
+			font-family: @font-family-light;
+		}
+
+		#imdb-link {
+			z-index: 1;
+			position: relative;
+			cursor: pointer;
+			color: @color-dark;
+			&:hover {
+				color: @color-blue;
+			}
+		}
+
+		p {
+			font-family: @font-family-light;
+			font-size: 16px;
+			position: relative;
+			z-index: 1;
+			span {
+				font-family: @font-family-regular;
+			}
+		}
+	}
+
+	#trailer {
+		position: fixed;
+		z-index: 2;
+		bottom: 0;
+		width: 500px;
+		height:280px;
+		margin: 0 -15px;
+	}
+
+	#trailer-bullets {
+		position: absolute;
+		cursor: pointer;
+		z-index: 3;
+		top: 0;
+		left: 0;
+		padding: 1em;
+		opacity: 0.4;
+		transition: opacity .2s ease-in;
+
+		&:hover {
+			opacity: 0.9;
+		}
+	}
+
+	#trailer-text {
+		line-height: 0.5;
+		text-align: center;
+		margin-top: 2em;
+
+		span {
+			display: inline-block;
+			position: relative;
+
+			&:before {
+				right: 100%;
+				margin-right: 15px;
+			}
+
+			&:after {
+				left: 100%;
+				margin-left: 15px;
+			}
+
+			&:before,
+			&:after {
+				content: "";
+				position: absolute;
+				height: 5px;
+				border-bottom: 1px solid @color-h5;
+				border-top: 1px solid @color-h5;
+				top: 0;
+				width: 150px;
+			}
+		}
+	}
+}

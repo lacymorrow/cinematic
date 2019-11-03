@@ -75,6 +75,7 @@ Thanks to:
  - Ignore pattern uses regex
  - Don't remove movies db on startup (maybe load from cache?)
  - Save current dirpath and retrieve on startup
+ - better getosmediapath
 
  - [ ] Batch request data to save http connections
  - [ ] Extend the cache to hold images
