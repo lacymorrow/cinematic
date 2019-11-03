@@ -71,9 +71,9 @@ export const fetchMeta = (mid, name, year) => {
 			.then(res => {
 				return reconcileMovieMeta(mid, res)
 			})
-			.catch(error => {
-				return broadcast(`Error fetching OMDB meta: ${error}`)
-			})
+			// .catch(error => {
+			// 	return broadcast(`Error fetching OMDB meta: ${error}`)
+			// })
 	})
 
 	q.push(() => {
@@ -86,9 +86,9 @@ export const fetchMeta = (mid, name, year) => {
 
 				return reconcileMovieMeta(mid, res)
 			})
-			.catch(error => {
-				return broadcast(`Error fetching TMDB meta: ${error}`)
-			})
+			// .catch(error => {
+			// 	return broadcast(`Error fetching TMDB meta: ${error}`)
+			// })
 	})
 
 	q.push(() => {
@@ -99,9 +99,9 @@ export const fetchMeta = (mid, name, year) => {
 				updateMovie(mid, movie)
 				return res
 			})
-			.catch(error => {
-				return broadcast(`Error fetching trailer meta: ${error}`)
-			})
+			// .catch(error => {
+			// 	return broadcast(`Error fetching trailer meta: ${error}`)
+			// })
 	})
 }
 

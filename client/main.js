@@ -173,6 +173,9 @@ Template.sort.helpers({
 
 // Define movies helpers
 Template.movies.helpers({
+	currentMovie() {
+		return Session.get('currentMovie')
+	},
 	movies() {
 		return getMovieQuery(Session.get('movieQuery'), Session.get('movieSort'))
 	}
