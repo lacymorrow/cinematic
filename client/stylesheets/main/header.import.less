@@ -91,12 +91,27 @@ header {
 		}
 	}
 
-	#browse-input-directory {
+	// Desktop
+	#browse-desktop {
+		display: none;
+	}
+
+	// Web
+	#browse-input-web {
 		position: absolute;
 		top: 0;
 		right: 0;
 		width: 1px;
 		height: 1px;
 		opacity: .1;
+	}
+
+	.desktop {
+		#browse-desktop {
+			display: inline-block;
+		}
+		#browse-web-wrapper {
+			display: none;
+		}
 	}
 }

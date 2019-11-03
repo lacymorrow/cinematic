@@ -211,21 +211,21 @@ Template.body.events({
 
 // Define header events
 Template.directory.events({
-	'change #browse-input-directory'(event) {
+	'change #browse-input-web'(event) {
 		event.preventDefault()
 		Meteor.call('handleBrowseDialog', event.target.files)
 	},
-	'click #browse-input-link'() {
+	'click #browse-web'() {
 		// Desktop
-		$('#browse-input-directory').click()
+		$('#browse-input-web').click()
 	},
 	'keyup #directory'(event) {
+		// On <enter> set path
 		if (event.which === 13) {
-			// On <enter> set path
 			setPath()
 		}
 	},
-	'click #browse-link'() {
+	'click #browse-desktop'() {
 		if (Meteor.isDesktop) {
 			// Desktop
 			Desktop.send('desktop', 'open-file-dialog')
