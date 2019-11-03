@@ -1,11 +1,11 @@
 <template name="header">
+	{{#if loading }}
+		<div class="loading-bar"></div>
+	{{/if}}
 	<header>
 		<h1 id="app-title">Cinematic</h1>
 
 		{{> directory}}
 
-		{{#if loading }}
-			<div class="loading-bar"></div>
-		{{/if}}
 	</header>
 </template>

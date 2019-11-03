@@ -1,5 +1,7 @@
 // header
 header {
+	display: flex;
+	align-items: center;
 	width: 100%;
 	height: 70px;
 	padding-left: 15px;
@@ -12,6 +14,7 @@ header {
 	height: 70px;
 
 	#app-title {
+		margin: 0;
 		float: left;
 		color: @color-blue;
 		cursor: default;
@@ -20,11 +23,10 @@ header {
 	}
 
 	#directory-wrapper {
+		margin-right: 2rem;
 		font-family: @font-family-light;
 		font-size: 14px;
 		color: @gray-light;
-		float: left;
-		margin-top: 22px;
 
 		#search {
 			position: relative;
@@ -57,9 +59,9 @@ header {
 
 	.browse-link {
 		display: inline-block;
+		margin-right: 2rem;
 		position: relative;
 		padding: .8em 1.4em;
-		margin: 1em;
 		padding-right: 4.7em;
 		border: none;
 		border-radius: 0;

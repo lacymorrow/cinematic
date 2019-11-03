@@ -140,9 +140,9 @@ Template.navigation.helpers({
 // Loading indicatior
 Template.header.helpers({
 	loading() {
-		const state = getState()
 		// Invert percentage (0 is done, 100% complete, false, off; 100 is 0% complete)
-		const loaded = state ? 100 - state.loading : 100
+		const state = getState()
+		const loaded = (state && 100 - state.loading) || 100
 		setLoaded(loaded)
 		return loaded
 	}
@@ -152,7 +152,7 @@ Template.header.helpers({
 Template.directory.helpers({
 	directory() {
 		const state = getState()
-		return (state) ? state.dir : '---'
+		return (state && state.dir) || '---'
 	}
 })
 

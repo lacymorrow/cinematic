@@ -71,6 +71,8 @@ Thanks to:
 
 **Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
 
+ - move reset button
+ - cache images
  - Remove Jquery
  - remove map foreach
  - Ignore pattern uses regex
