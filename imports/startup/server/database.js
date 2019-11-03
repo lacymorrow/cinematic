@@ -1,7 +1,7 @@
 'use strict'
 
-import { Meteor } from 'meteor/meteor'
-import { Mongo } from 'meteor/mongo'
+import {Meteor} from 'meteor/meteor'
+import {Mongo} from 'meteor/mongo'
 
 import {epoch} from '../both/util'
 
@@ -17,8 +17,9 @@ export const initState = options => {
 	const defaults = {
 		_id: '0', // There can be only one...
 		cwd: process.env.PWD,
-		queueTotal: 0,
-		dir: '~/'
+		dir: '~/',
+		loading: 100,
+		queueTotal: 0
 	}
 	return State.insert(Object.assign(defaults, options))
 }

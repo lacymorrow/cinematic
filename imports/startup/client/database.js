@@ -1,6 +1,5 @@
-import { Meteor } from 'meteor/meteor'
-import { Mongo } from 'meteor/mongo'
-import {Session} from 'meteor/session'
+import {Meteor} from 'meteor/meteor'
+import {Mongo} from 'meteor/mongo'
 
 // Observe db collection changes
 Meteor.subscribe('state')
@@ -15,11 +14,6 @@ export const Recent = new Mongo.Collection('recent')
 export const Watched = new Mongo.Collection('watched')
 export const Movies = new Mongo.Collection('movies')
 export const Genres = new Mongo.Collection('genres')
-
-// Session
-export const getActiveRating = () => Session.get('activeRating')
-export const getCurrentPage = () => Session.get('currentPage')
-export const getCurrentTrailer = () => Session.get('currentTrailer')
 
 // State
 export const getState = () => State.findOne({_id: '0'})
