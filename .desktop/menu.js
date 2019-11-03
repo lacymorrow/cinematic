@@ -9,7 +9,6 @@ const {
 	openNewGitHubIssue,
 	debugInfo
 } = require('electron-util')
-const config = require('./config')
 
 const showPreferences = () => {
 	console.log('Show Preferences…')
@@ -60,7 +59,7 @@ const debugSubmenu = [
 	{
 		label: 'Show Settings',
 		click() {
-			config.openInEditor()
+			shell.openItem(this.path);
 		}
 	},
 	{
@@ -75,7 +74,6 @@ const debugSubmenu = [
 	{
 		label: 'Delete Settings',
 		click() {
-			config.clear()
 			app.relaunch()
 			app.quit()
 		}

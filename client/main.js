@@ -36,6 +36,8 @@ import {
 	sort
 } from '../imports/ui'
 
+import Main from './main.html'
+
 const SORT_TYPES = [
 	'Alphabetical',
 	'Popularity',

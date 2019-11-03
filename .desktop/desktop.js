@@ -6,26 +6,25 @@ import {is} from 'electron-util'
 import unhandled from 'electron-unhandled'
 import debug from 'electron-debug'
 import contextMenu from 'electron-context-menu'
-import {config} from '../imports/config'
 import menu from './menu'
 
-unhandled()
-debug()
-contextMenu();
+// unhandled()
+// debug()
+// contextMenu();
 
-// Note: Must match `build.appId` in package.json
-app.setAppUserModelId('com.lacymorrow.Cinematic')
+// // Note: Must match `build.appId` in package.json
+// app.setAppUserModelId('com.lacymorrow.Cinematic')
 
-// Uncomment this before publishing your first version.
-// It's commented out as it throws an error if there are no published versions.
-if (!is.development) {
-	const FOUR_HOURS = 1000 * 60 * 60 * 4
-	setInterval(() => {
-		autoUpdater.checkForUpdates()
-	}, FOUR_HOURS)
+// // Uncomment this before publishing your first version.
+// // It's commented out as it throws an error if there are no published versions.
+// if (!is.development) {
+// 	const FOUR_HOURS = 1000 * 60 * 60 * 4
+// 	setInterval(() => {
+// 		autoUpdater.checkForUpdates()
+// 	}, FOUR_HOURS)
 
-	autoUpdater.checkForUpdates()
-}
+// 	autoUpdater.checkForUpdates()
+// }
 /**
  * Entry point to your native desktop code.
  *
@@ -68,7 +67,6 @@ export default class Desktop {
         // reference. This is the reference to the current Electron renderer process (Chrome)
         // displaying your Meteor app.
         eventsBus.on('windowCreated', (window) => {
-        	console.log(config)
         	window.webContents.on('dom-ready', () => {
         	    // set perfect size
         	    // window.setSize(1300,768);
