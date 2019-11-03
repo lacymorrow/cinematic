@@ -18,9 +18,7 @@
 					{{/if}}
 				</h2>
 
-				{{#if directory}}
-					<a id="open-link" class="btn btn-primary" data-src="{{directory}}{{file}}" data-id="{{_id}}" role="button">Watch</a>
-				{{/if}}
+				<a id="open-link" class="btn btn-primary" data-src="{{filepath}}" data-id="{{_id}}" role="button">Watch</a>
 
 				{{#if intel.Genre}}<h5>{{intel.Genre}}</h5>{{/if}}
 
@@ -30,7 +28,7 @@
 
 				<div id="rating">
 					{{#each ratings}}
-						<div class="rating {{#if equals index rating}}active{{/if}}">
+						<div class="rating {{#if equals @index rating}}active{{/if}}">
 							<h5 id="rating-title">{{name}} Rating</h5>
 							{{>bullets}}
 							<div class="bullet-wrap">
@@ -51,7 +49,7 @@
 				{{#if intel.Writer}}<p><span>Writers:</span> {{intel.Writer}}</p>{{/if}}
 				{{#if intel.Actors}}<p><span>Stars:</span> {{intel.Actors}}</p>{{/if}}
 				{{#if intel.Awards}}<p><span>Awards:</span> {{intel.Awards}}</p>{{/if}}
-				{{#if trailer}}<p id="trailer-text"><span>PREVIEW</span></p>{{/if}}
+				{{#if trailer}}<p id="trailer-text"><span>Preview</span></p>{{/if}}
 			</div>
 		</div>
 		{{#if trailer}}

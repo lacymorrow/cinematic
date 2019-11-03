@@ -1,10 +1,11 @@
-/* global $, Desktop */
+/* global Desktop */
 
 'use strict'
 import {Meteor} from 'meteor/meteor'
 import {Session} from 'meteor/session'
 import {Template} from 'meteor/templating'
 
+import $ from 'jquery'
 import NProgress from 'nprogress'
 import {config} from '../imports/config'
 import {broadcast} from '../imports/startup/both/util'
@@ -38,9 +39,10 @@ import {
 const SORT_TYPES = [
 	'Alphabetical',
 	'Popularity',
+	'Ratings',
 	'Release Date',
 	'Runtime',
-	'Random' /* , "Ratings" */
+	'Random'
 ]
 
 /* Third-Party Progress bar: NProgress */
@@ -55,14 +57,10 @@ const setLoaded = function (loaded) {
 }
 
 const setPath = function () {
-	resetClient()
-	let directory = document.querySelector('#directory').value
+	const directory = document.querySelector('#directory').value
 	if (directory !== '') {
-		if (directory.slice(-1) !== '/') {
-			directory += '/'
-		}
-
-		Meteor.call('handleConfirmPath')
+		resetClient()
+		Meteor.call('handleConfirmPath', directory)
 	}
 }
 
@@ -97,7 +95,7 @@ const resetClient = function () {
 }
 
 /*
- * HELPERS
+ * TEMPLATE FUNCTIONS AND PROPERTIES
  */
 
 // Template tags
@@ -113,27 +111,15 @@ Template.registerHelper('gt', (v1, v2) => {
 Template.body.helpers({
 	isDesktop() {
 		return Meteor.isDesktop
-	},
-	page() {
-		return Session.get('currentPage')
 	}
 })
 
-Template.navigation.helpers({
+Template.display.helpers({
 	page() {
-		return Session.get('currentPage')
-	},
-	genres() {
-		return getGenres()
-	},
-	movieCount() {
-		return getMovieCount()
-	},
-	recentCount() {
-		return getRecentCount()
-	},
-	watchedCount() {
-		return getWatchedCount()
+		// Current page display title
+		const currentPage = Session.get('currentPage')
+		const genre = getGenreById(currentPage)
+		return (genre && genre.name) || currentPage
 	}
 })
 
@@ -156,6 +142,42 @@ Template.directory.helpers({
 	}
 })
 
+// Sidebar navigation
+Template.navigation.helpers({
+	page() {
+		return Session.get('currentPage')
+	},
+	genres() {
+		return getGenres()
+	},
+	movieCount() {
+		return getMovieCount()
+	},
+	recentCount() {
+		return getRecentCount()
+	},
+	watchedCount() {
+		return getWatchedCount()
+	}
+})
+
+// Sort helpers
+Template.sort.helpers({
+	currentSort() {
+		return Session.get('currentSort')
+	},
+	sortTypes() {
+		return SORT_TYPES
+	}
+})
+
+// Define movies helpers
+Template.movies.helpers({
+	movies() {
+		return getMovieQuery(Session.get('movieQuery'), Session.get('movieSort'))
+	}
+})
+
 // Define details helpers
 Template.details.helpers({
 	rating() {
@@ -165,52 +187,15 @@ Template.details.helpers({
 		return config
 	},
 	movie() {
-		const movie = getMovie(Session.get('currentMovie'))
-		if (movie) {
-			movie.ratings.map((o, i) => {
-				movie.ratings[i].index = i
-				if (i === movie.ratings.length - 1) {
-					movie.ratings[i].indexPlus = 0
-				} else {
-					movie.ratings[i].indexPlus = i + 1
-				}
-			})
-		}
-
-		return movie
+		return getMovie(Session.get('currentMovie'))
 	},
 	currentTrailer() {
 		return Session.get('currentTrailer')
 	}
 })
 
-// Define movies helpers
-Template.movies.helpers({
-	movies() {
-		const movies = getMovieQuery(Session.get('movieQuery'), Session.get('movieSort'))
-		movies.map((o, i) => {
-			movies[i].index = i
-		})
-		return movies
-	}
-})
-
-// Sort helpers
-Template.sort.helpers({
-	currentSort() {
-		return Session.get('currentSort')
-	},
-	showSort() {
-		const currentSort = Session.get('currentSort')
-		return currentSort !== 'Recent'
-	},
-	sort() {
-		return SORT_TYPES
-	}
-})
-
 /*
- * Events
+ * TEMPLATE EVENTS
  */
 
 Template.body.events({
@@ -221,140 +206,7 @@ Template.body.events({
 	}
 })
 
-// Sort event
-Template.sort.events({
-	'change #sort'(event) {
-		const sort_value = $(event.currentTarget).val()
-		Session.set('currentSort', sort)
-
-		switch (sort_value) {
-			case SORT_TYPES[1]: {
-				// Popularity
-				Session.set('movieSort', {sort: {'info.popularity': -1}})
-				break
-			}
-
-			case SORT_TYPES[2]: {
-				// Release Date
-				Session.set('movieSort', {sort: {'info.release_date': -1}})
-				break
-			}
-
-			case SORT_TYPES[3]: {
-				// Runtime
-				Session.set('movieSort', {sort: {'intel.Runtime': 1}})
-				break
-			}
-
-			case SORT_TYPES[4]: {
-				// Random
-				Session.set('movieSort', {sort: {seed: 1}})
-				break
-			}
-
-			// Alphabetical
-			case SORT_TYPES[0]:
-			case 'Ratings':
-			default:
-				Session.set('movieSort', {sort: {name: 1}})
-				break
-		}
-	},
-	'click #random'() {
-		Meteor.call('handleRandom')
-	}
-})
-
-// Handle filters navigation
-Template.navigation.events({
-	// Sidebar nav link - click
-	'click #navigation-panel li.link'(event) {
-		if (Session.get('currentSort') === 'Recent') {
-			resetSort()
-		}
-
-		// Set page and title
-		const currentPage = $(event.currentTarget).text()
-		Session.set('currentPage', currentPage)
-
-		// Hide right panel
-		Session.set('currentMovie', 0)
-
-		// Set current page
-		const genre = getGenreById(event.currentTarget.dataset.id)
-		if (genre) {
-			// Genre page - All: alphabetical
-			Session.set('movieQuery', {
-				_id: {$in: genre.items}
-			})
-		} else if (currentPage === 'New') {
-			// Browse Recently Released
-			Session.set('movieQuery', {})
-		} else if (currentPage === 'Recent') {
-			// Browse recently viewed: alphabetical  **** TODO: HAVENT FIGURED OUT SORTING
-			const recent = getRecent().map(e => {
-				return e._id
-			})
-			Session.set('currentSort', 'Recent')
-			Session.set('movieQuery', {_id: {$in: recent}})
-			Session.set('movieSort', {sort: {recentTime: -1}})
-		} else if (currentPage === 'Watched') {
-			// Browse watched: order of watched
-			const watched = getWatched().map(e => {
-				return e._id
-			})
-			Session.set('currentSort', 'Recent')
-			Session.set('movieQuery', {_id: {$in: watched}})
-			Session.set('movieSort', {sort: {watchedTime: -1}})
-		} else {
-			// Main page - All: alphabetical
-			Session.set('movieQuery', {})
-		}
-	}
-})
-
-Template.details.events({
-	'click #rating'() {
-		// Switch ratings
-		resetRatingInterval()
-		rotateRating()
-	},
-	'click #open-link'(event) {
-		const filepath = event.currentTarget.dataset.src
-		const mid = event.currentTarget.dataset.id
-		Meteor.call('handleOpenFile', {mid, filepath})
-	},
-	'click #trailer .trailer'(event) {
-		// Switch trailers
-		Session.set('currentTrailer', event.currentTarget.dataset.id)
-	}
-})
-
-// Define movie display events (click, keystroke)
-Template.movies.events({
-	// Show right panel
-	'click .movie-image'(event) {
-		// Handle changing details when user switches movie
-		const {id} = event.currentTarget.dataset
-		const {ratings, trailer} = getMovie(id)
-		Session.set('totalRatings', ratings.length)
-
-		// Set initial trailer
-		Session.set('currentTrailer', trailer[0])
-		// Set current movie and add to recent
-		Session.set('currentMovie', id)
-		Meteor.call('handleViewMovie', id)
-		// Set timer to rotate ratings
-		resetRatingInterval()
-	}
-	// 'keyup .movie-image'(event) {
-	// 	event.preventDefault()
-	// 	if (event.which === 37) { // 38 39 40
-	// 		// Left
-	// }
-})
-
-// Define path events
+// Define header events
 Template.directory.events({
 	'change #browse-input-directory'(event) {
 		event.preventDefault()
@@ -380,9 +232,163 @@ Template.directory.events({
 	}
 })
 
+// Handle filters navigation
+Template.navigation.events({
+	// Sidebar nav link - click
+	'click #navigation-panel li.link'(event) {
+		if (Session.get('currentSort') === 'Recent') {
+			resetSort()
+		}
+
+		// Set page and title
+		const currentPage = event.currentTarget.dataset.id
+		Session.set('currentPage', currentPage)
+
+		// Hide right panel
+		Session.set('currentMovie', 0)
+
+		// Set current page
+		switch (currentPage.toLowerCase()) {
+			case 'new':
+				// Browse Recently Released
+				Session.set('movieQuery', {})
+				break
+
+			case 'recent':
+				// Browse recently viewed: alphabetical  **** TODO: HAVENT FIGURED OUT SORTING
+				Session.set('currentSort', 'Recent')
+				Session.set('movieSort', {sort: {recentTime: -1}})
+				Session.set('movieQuery', {
+					_id: {
+						$in: getRecent().map(e => {
+							return e._id
+						})
+					}
+				})
+				break
+
+			case 'watched':
+				// Browse watched: order of watched
+				Session.set('currentSort', 'Recent')
+				Session.set('movieSort', {sort: {watchedTime: -1}})
+				Session.set('movieQuery', {
+					_id: {
+						$in: getWatched().map(e => {
+							return e._id
+						})
+					}
+				})
+				break
+
+			default: {
+				const genre = getGenreById(currentPage)
+
+				if (genre) {
+					// Genre page - All: alphabetical
+					Session.set('movieQuery', {
+						_id: {$in: genre.items}
+					})
+				} else {
+					// Main page - All: alphabetical
+					Session.set('movieQuery', {})
+				}
+
+				break
+			}
+		}
+	}
+})
+
+// Sort event
+Template.sort.events({
+	'change #sort'(event) {
+		const sort_value = $(event.currentTarget).val()
+		Session.set('currentSort', sort_value)
+
+		switch (sort_value) {
+			case SORT_TYPES[1]:
+				// Popularity
+				Session.set('movieSort', {sort: {popularity: -1}})
+				break
+
+			case SORT_TYPES[2]:
+				// Rating
+				Session.set('movieSort', {sort: {imdbRating: -1}})
+				break
+
+			case SORT_TYPES[3]:
+				// Release Date
+				Session.set('movieSort', {sort: {releaseDate: -1}})
+				break
+
+			case SORT_TYPES[4]:
+				// Runtime
+				Session.set('movieSort', {sort: {runtime: 1}})
+				break
+
+			case SORT_TYPES[5]:
+				// Random
+				Session.set('movieSort', {sort: {seed: 1}})
+				break
+
+			// Alphabetical
+			case SORT_TYPES[0]:
+			default:
+				Session.set('movieSort', {sort: {name: 1}})
+				break
+		}
+	},
+	'click #random'() {
+		Meteor.call('handleRandomSort')
+	}
+})
+
+// Define movie display events (click, keystroke)
+Template.movies.events({
+	// Show right panel
+	'click .movie-image'(event) {
+		// Handle changing details when user switches movie
+		const {id} = event.currentTarget.dataset
+		const {ratings, trailer} = getMovie(id)
+
+		Session.set('totalRatings', ratings.length)
+
+		// Set initial trailer
+		Session.set('currentTrailer', trailer[0])
+		// Set current movie and add to recent
+		Session.set('currentMovie', id)
+		// Set timer to rotate ratings
+		Meteor.call('handleViewMovie', id)
+
+		resetRatingInterval()
+	}
+	// 'keyup .movie-image'(event) {
+	// 	event.preventDefault()
+	// 	if (event.which === 37) { // 38 39 40
+	// 		// Left
+	// }
+})
+
+Template.details.events({
+	'click #rating'() {
+		// Switch ratings
+		resetRatingInterval()
+		rotateRating()
+	},
+	'click #open-link'(event) {
+		const filepath = event.currentTarget.dataset.src
+		const mid = event.currentTarget.dataset.id
+		Meteor.call('handleOpenFile', {mid, filepath})
+	},
+	'click #trailer .trailer'(event) {
+		// Switch trailers
+		Session.set('currentTrailer', event.currentTarget.dataset.id)
+	}
+})
+
 /* OnReady */
 Template.body.rendered = function () {
-	Meteor.isDesktop && document.body.classList.add('desktop')
+	// Jquery tooltip for reset button
 	$('[data-toggle="tooltip"]').tooltip()
 
 	// Receive files from Electron

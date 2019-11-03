@@ -1,12 +1,12 @@
 <template name="sort">
-	{{#if showSort}}
+	{{#unless equals currentSort 'Recent'}}
 		<select class="form-control" id="sort">
-		  {{#each sort}}
+		  {{#each sortTypes}}
 			<option value="{{this}}">{{this}}</option>
 		  {{/each}}
 		</select>
 		{{#if equals currentSort 'Random'}}
 			<span id="random" class="glyphicon glyphicon-refresh"></span>
 		{{/if}}
-	{{/if}}
+	{{/unless}}
 </template>

@@ -71,9 +71,11 @@ Thanks to:
 
 **Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
 
+ - A11y - tab index, keyboard controls
+ - remove magic words for currpage, nav; ('Recent', etc.)
  - move reset button
  - cache images
- - Remove Jquery
+ - Remove Jquery + jquery tooltip
  - remove map foreach
  - Ignore pattern uses regex
  - Don't remove movies db on startup (maybe load from cache?)

@@ -54,6 +54,7 @@
     "@babel/runtime": "^7.6.3",
     "electron-context-menu": "^0.15.0",
     "isomorphic-fetch": "^2.2.1",
+    "jquery": "^3.4.1",
     "movie-art": "^2.0.3",
     "movie-info": "^2.0.4",
     "movie-trailer": "^2.0.5",

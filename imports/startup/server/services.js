@@ -126,7 +126,7 @@ const fetchOMDB = name => {
 			}
 
 			// Strip runtime non-digit characters
-			res.Runtime = res.Runtime && res.Runtime.replace(/\D/g, '')
+			res.runtime = parseInt(res.Runtime && res.Runtime.replace(/\D/g, ''), 10)
 			res.poster = res.Poster
 			res.year = res.Year
 			res.imdbId = res.imdbID

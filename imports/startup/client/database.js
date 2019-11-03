@@ -10,10 +10,10 @@ Meteor.subscribe('recent') // Recently clicked
 Meteor.subscribe('watched')
 
 const State = new Mongo.Collection('state')
-export const Recent = new Mongo.Collection('recent')
-export const Watched = new Mongo.Collection('watched')
-export const Movies = new Mongo.Collection('movies')
-export const Genres = new Mongo.Collection('genres')
+const Recent = new Mongo.Collection('recent')
+const Watched = new Mongo.Collection('watched')
+const Movies = new Mongo.Collection('movies')
+const Genres = new Mongo.Collection('genres')
 
 // State
 export const getState = () => State.findOne({_id: '0'})

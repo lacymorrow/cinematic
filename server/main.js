@@ -97,34 +97,40 @@ const scanPath = () => {
 
 const scanDir = (dirPath, recurseDepth) => {
 	// Read from filesystem
-	const files = fs.readdirSync(dirPath)
-	files.forEach(file => {
-		const ext = path.extname(file)
-		if (file.indexOf('.') === 0) {
-			// Skip dotfiles
-			return false
-		}
+	try {
+		const files = fs.readdirSync(dirPath)
+		files.forEach(file => {
+			const ext = path.extname(file)
+			const filepath = path.join(dirPath, file)
 
-		if (ext) {
-			// File
-			if (config.VALID_FILETYPES.includes(ext)) {
-				scanFile({dirPath, file, ext})
-			} else {
-				broadcast(`Warning: File ${file} not valid.`)
+			if (file.indexOf('.') === 0) {
+				// Skip dotfiles
+				return false
 			}
-		} else if (isDirectory(dirPath) && recurseDepth < config.SCAN_DEPTH) {
-			scanDir(path.join(dirPath, file, '/'), recurseDepth + 1)
-		}
-	}) // End file scan forEach
+
+			if (ext) {
+				// File
+				if (config.VALID_FILETYPES.includes(ext)) {
+					scanFile(filepath)
+				} else {
+					broadcast(`Warning: File ${file} not valid.`)
+				}
+			} else if (isDirectory(filepath) && recurseDepth < config.SCAN_DEPTH) {
+				scanDir(path.join(filepath, '/'), recurseDepth + 1)
+			}
+		}) // End file scan forEach
+	} catch (error) {
+		broadcast(`Error scanning directory ${dirPath}: ${error}`)
+	}
 }
 
-const scanFile = options => {
-	const {file, ext, dirPath} = options
+const scanFile = filepath => {
+	const file = path.basename(filepath)
+	const ext = path.extname(filepath)
 	const {name, year} = parseFilename(path.basename(file, ext))
 
 	if (name !== ext && !ignorePattern(name)) {
-		const key = path.join(dirPath, file)
-		const movc = getCachedMovie(key)
+		const movc = getCachedMovie(filepath)
 		if (
 			movc &&
             config.CACHE_TIMEOUT &&
@@ -142,7 +148,7 @@ const scanFile = options => {
 				ext,
 				file,
 				name,
-				filepath: dirPath,
+				filepath,
 				year,
 				releaseDate: year,
 				title: name
@@ -156,9 +162,8 @@ const scanFile = options => {
 	}
 }
 
-const openFile = fileObj => {
-	addWatched(fileObj.mid)
-	open('file://' + fileObj.filepath)
+const openFile = filepath => {
+	open(path.join('file://', filepath))
 }
 
 const parseFilename = filename => {
@@ -209,19 +214,25 @@ const reset = () => {
 // Server-side methods exposed to the client
 Meteor.methods({
 	handleBrowseDialog(files) {
-		// Broadcast
+		// Receives an array of filenames
 		files.forEach(e => {
 			scanFile(e.name)
 		})
 	},
-	handleConfirmPath() {
+	handleConfirmPath(dirPath) {
+		// Add trailing slash
+		dirPath += dirPath.slice(-1) === '/' ? '' : '/'
+
+		// Set new dir
+		setState({dir: path.normalize(dirPath)})
 		scanPath()
 	},
 	handleOpenFile(fileObj) {
 		broadcast('Opening ' + fileObj.filepath)
+		addWatched(fileObj.mid)
 		openFile(fileObj.filepath)
 	},
-	handleRandom() {
+	handleRandomSort() {
 		randomizeMovies()
 	},
 	handleRefresh() {
