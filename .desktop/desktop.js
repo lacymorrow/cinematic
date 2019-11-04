@@ -8,23 +8,23 @@ import debug from 'electron-debug'
 import contextMenu from 'electron-context-menu'
 import menu from './menu'
 
-// unhandled()
-// debug()
-// contextMenu();
+unhandled()
+debug()
+contextMenu();
 
-// // Note: Must match `build.appId` in package.json
-// app.setAppUserModelId('com.lacymorrow.Cinematic')
+// Note: Must match `build.appId` in package.json
+app.setAppUserModelId('com.lacymorrow.Cinematic')
 
-// // Uncomment this before publishing your first version.
-// // It's commented out as it throws an error if there are no published versions.
-// if (!is.development) {
-// 	const FOUR_HOURS = 1000 * 60 * 60 * 4
-// 	setInterval(() => {
-// 		autoUpdater.checkForUpdates()
-// 	}, FOUR_HOURS)
+// Uncomment this before publishing your first version.
+// It's commented out as it throws an error if there are no published versions.
+if (!is.development) {
+	const FOUR_HOURS = 1000 * 60 * 60 * 4
+	setInterval(() => {
+		autoUpdater.checkForUpdates()
+	}, FOUR_HOURS)
 
-// 	autoUpdater.checkForUpdates()
-// }
+	autoUpdater.checkForUpdates()
+}
 /**
  * Entry point to your native desktop code.
  *
@@ -73,6 +73,7 @@ export default class Desktop {
         	    // window.setFullScreen(true);
         	    // window.minimize();
         	    window.maximize();
+        	    window.show()
         	});
 
             window.webContents.on('crashed', Desktop.windowCrashedHandler);

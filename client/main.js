@@ -47,10 +47,6 @@ const SORT_TYPES = [
 	'Random'
 ]
 
-/* Third-Party Progress bar: NProgress */
-NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
-NProgress.start()
-
 // Client-side methods
 
 const setLoaded = function (loaded) {
@@ -393,6 +389,10 @@ Template.details.events({
 
 /* OnReady */
 Template.body.rendered = function () {
+	/* Third-Party Progress bar: NProgress */
+	NProgress.configure({trickleRate: 0.01, trickleSpeed: 1400})
+	NProgress.start()
+
 	// Jquery tooltip for reset button
 	$('[data-toggle="tooltip"]').tooltip()
 

@@ -22,27 +22,7 @@
 	"windowDev": {
 	},
 	"uglify": true,
-	"plugins": {
-		"meteor-desktop-splash-screen": {
-			"version": "0.5.0",
-			"windowSettings": {
-				"width": 800,
-				"height": 600
-			},
-			"updateScreen": true,
-			"updateScreenSettings": {
-				"imagePath": "updating.gif",
-				"windowSettings": {
-					"width": 400,
-					"height": 300
-				},
-				"clickThrough": false,
-				"style": {
-					"background-size": "auto"
-				}
-			}
-		}
-	},
+	"plugins": {},
 	"dependencies": {},
 	"packageJsonFields": {
 		"description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",

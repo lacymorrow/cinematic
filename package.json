@@ -31,8 +31,7 @@
     "build-linux": "meteor-desktop build-installer --build-meteor --all-archs --linux --production",
     "build": "meteor-desktop build-installer --build-meteor --all-archs --win --mac --linux --production",
     "lint": "xo --fix",
-    "test": "npm run lint && ava --verbose",
-    "desktop": "meteor-desktop"
+    "test": "npm run lint && ava --verbose"
   },
   "license": "GPL-3.0",
   "devDependencies": {
