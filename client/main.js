@@ -411,7 +411,9 @@ Template.body.rendered = function () {
 resetClient()
 
 // Prevent eslint no-unused
+// I know, terrible coding practice. I'll refund you at the door.
 export {
+	Main,
 	bullets,
 	details,
 	directory,

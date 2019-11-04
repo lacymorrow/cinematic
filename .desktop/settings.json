@@ -1,7 +1,7 @@
 {
 	"name": "Cinematic",
-	"version": "1.1.1",
-	"projectName": "Cinematic",
+	"version": "@version",
+	"projectName": "cinematic",
 	"devTools": true,
 	"devtron": true,
 	"desktopHCP": false,
@@ -52,7 +52,6 @@
 			"target": [
 			  "deb",
 			  "rpm",
-			  "snap",
 			  "apk",
 			  "pacman",
 			  "freebsd",

@@ -12,7 +12,7 @@ npm install    # or `yarn install`!
 npm start         # http://localhost:3000
 ```
 
-Running `meteor` from the `cinematic` directory quickstarts the application on [http://localhost:3000](http://localhost:3000).
+_Running `meteor` from the `cinematic` directory quickstarts the application on [http://localhost:3000](http://localhost:3000)._
 
 ### Packaging
 
@@ -20,13 +20,13 @@ To package Cinematic for your machine architecture:
 
 ###### YOU MUST HAVE A METEOR INSTANCE RUNNING WITH MOBILE ARCHITECTURE ENABLED IN A SEPARATE TERMINAL
 
-`npm run serve` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
+`npm run start` - _is an alias for: `meteor --mobile-server=127.0.0.1:3000`_
 
 #### Build and test Desktop version.
 
 In your main terminal:
 
-`npm run electron`
+`npm run desktop`
 
 
 #### Full Cross-platform build
@@ -43,18 +43,18 @@ brew cask install xquartz && brew install wine
 # Get some coffee, this takes awhile.
 
 npm run build
-# alias: npm run electron -- build-installer --buil-meteor --all-archs --win --mac --linux --production
+# alias: npm run desktop -- build-installer --buil-meteor --all-archs --win --mac --linux --production
 
 # Or, to build for a specific platform:
 
 npm run build-mac
-# alias: npm run electron -- build-installer --build-meteor --mac --production"
+# alias: npm run desktop -- build-installer --build-meteor --mac --production"
 
 npm build-win
-# alias: npm run electron -- build-installer --build-meteor --all-archs --win --production"
+# alias: npm run desktop -- build-installer --build-meteor --all-archs --win --production"
 
 npm run build-linux
-# alias: npm run electron -- build-installer --build-meteor --all-archs --linux --production"
+# alias: npm run desktop -- build-installer --build-meteor --all-archs --linux --production"
 ```
 
 To only build for current architecture: `npm run build-current`
