@@ -1,6 +1,6 @@
 {
   "name": "cinematic",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "author": {
     "name": "Lacy Morrow",
     "email": "me@lacymorrow.com",
@@ -29,16 +29,15 @@
     "build-mac": "meteor-desktop build-installer --build-meteor --mac --production",
     "build-win": "meteor-desktop build-installer --build-meteor --all-archs --win --production",
     "build-linux": "meteor-desktop build-installer --build-meteor --all-archs --linux --production",
-    "build": "meteor-desktop build-installer --build-meteor --all-archs --win --mac --linux --production",
+    "build": "rm -rf dist && meteor-desktop build-installer --build-meteor --all-archs --win --mac --linux --production",
     "lint": "xo --fix",
-    "test": "npm run lint && ava --verbose",
-    "release": "np"
+    "test": "npm run lint && ava --verbose"
   },
   "license": "GPL-3.0",
   "devDependencies": {
     "app-builder-lib": "^21.2.0",
     "ava": "^1.2.0",
-    "electron": "2.0.10",
+    "electron": "6.0.7",
     "electron-builder": "^21.2.0",
     "electron-debug": "^3.0.1",
     "electron-packager": "^14.0.6",
@@ -46,8 +45,7 @@
     "electron-updater": "^4.1.2",
     "electron-util": "^0.12.2",
     "eslint-config-xo": "^0.27.2",
-    "meteor-desktop": "^2.0.0",
-    "np": "^5.1.2",
+    "meteor-desktop": "github:lacymorrow/meteor-desktop",
     "spectron": "^5.0.0",
     "xo": "^0.25.3"
   },
@@ -66,8 +64,8 @@
     "queue": "^6.0.1"
   },
   "np": {
-  	"publish": false,
-  	"releaseDraft": false
+    "publish": false,
+    "releaseDraft": false
   },
   "xo": {
     "ignore": "client/vendor",

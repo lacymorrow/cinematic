@@ -1,6 +1,6 @@
 {
 	"name": "Cinematic",
-	"version": "@version",
+	"version": "2.0.0",
 	"projectName": "cinematic",
 	"devTools": true,
 	"devtron": true,
@@ -71,7 +71,10 @@
 		],
 		"mac": {
 			"icon": ".desktop/assets/icon.icns",
-			"appId": null
+			"appId": null,
+			"target": [
+				"dmg"
+			]
 		},
 		"dmg": {
 			"icon": ".desktop/assets/icon.icns",
