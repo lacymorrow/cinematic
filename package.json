@@ -26,7 +26,7 @@
     "start": "meteor --mobile-server=127.0.0.1:3000",
     "desktop": "meteor-desktop",
     "build-current": "meteor-desktop build-installer --build-meteor --production",
-    "build-mac": "meteor-desktop build-installer --build-meteor --mac --production",
+    "build-mac": "meteor-desktop build-installer --build-meteor --mac",
     "build-win": "meteor-desktop build-installer --build-meteor --all-archs --win --production",
     "build-linux": "meteor-desktop build-installer --build-meteor --all-archs --linux --production",
     "build": "rm -rf dist && meteor-desktop build-installer --build-meteor --all-archs --win --mac --linux --production",

@@ -17,14 +17,14 @@ app.setAppUserModelId('com.lacymorrow.Cinematic')
 
 // Uncomment this before publishing your first version.
 // It's commented out as it throws an error if there are no published versions.
-if (!is.development) {
-	const FOUR_HOURS = 1000 * 60 * 60 * 4
-	setInterval(() => {
-		autoUpdater.checkForUpdates()
-	}, FOUR_HOURS)
+// if (!is.development) {
+// 	const FOUR_HOURS = 1000 * 60 * 60 * 4
+// 	setInterval(() => {
+// 		autoUpdater.checkForUpdates()
+// 	}, FOUR_HOURS)
 
-	autoUpdater.checkForUpdates()
-}
+// 	autoUpdater.checkForUpdates()
+// }
 /**
  * Entry point to your native desktop code.
  *
