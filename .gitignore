@@ -23,6 +23,8 @@ coverage
 .grunt
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
+.next
+app
 build/Release
 dist
 

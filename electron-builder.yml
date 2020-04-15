@@ -1,0 +1,45 @@
+appId: com.lacymorrow.cinematic
+productName: Cinematic
+copyright: Copyright © Lacy Morrow
+publish: github
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+
+mac:
+  category: public.app-category.video
+  darkModeSupport: true
+
+dmg:
+  iconSize: 160
+  contents:
+    - x: 180
+      y: 170
+    - x: 480
+      y: 170
+      type: link
+      path: "/Applications"
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: "AudioVideo;Viewer"
+snap:
+  plugs:
+    - default
+    - camera
+    - removable-media
+win:
+  target:
+    - nsis
+    - portable
+  publish: github
+  verifyUpdateCodeSignature: false
