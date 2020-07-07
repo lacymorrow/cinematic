@@ -37,7 +37,7 @@
   "devDependencies": {
     "app-builder-lib": "^21.2.0",
     "ava": "^1.2.0",
-    "electron": "6.0.7",
+    "electron": "7.2.4",
     "electron-builder": "^21.2.0",
     "electron-debug": "^3.0.1",
     "electron-packager": "^14.0.6",
