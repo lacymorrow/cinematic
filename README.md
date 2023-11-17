@@ -1,13 +1,13 @@
 Cinematic
 ===========
-> 🎥  A gorgeous Desktop UI for your digital movie collection.
+> 🎥  A gorgeous Desktop UI for your digital movie collection, works on Mac, Windows, and Linux!
 
 **Have a digital movie collection?**
 
-Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching
+Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching.
 
 <p align="center">
-  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/master/public/demo.gif">
+  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.gif">
 </p>
 
 ### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
@@ -47,23 +47,15 @@ Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily 
 
 # Installation
 
-_Recently packaged for Windows!_
-
 ### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
-### Or build and [run from source](https://github.com/lacymorrow/cinematic/blob/master/docs/build.md)
-
-
 # Design
-User interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/).
 
-Thanks to:
+UI design by [ShadCN](https://ui.shadcn.com)
 
-* [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
-* [bbraithwaite/omdb-client](https://github.com/bbraithwaite/omdb-client)
-* [pwnall/node-open](https://github.com/pwnall/node-open)
-* Built with [Meteor](http://meteor.com)
-* Running on [Electron](https://electronjs.org/)
+Original interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/).
+
+* Built with [Electron](https://electronjs.org/)
 * APIs provided by TMDB and OMDB
 
 
@@ -71,30 +63,53 @@ Thanks to:
 
 **Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
 
- - A11y - tab index, keyboard controls
- - remove magic words for currpage, nav; ('Recent', etc.)
- - move reset button
- - cache images
- - Remove Jquery + jquery tooltip
- - remove map foreach
- - Ignore pattern uses regex
- - Don't remove movies db on startup (maybe load from cache?)
- - Save current dirpath and retrieve on startup
- - better getosmediapath
-
- - [ ] Batch request data to save http connections
- - [ ] Extend the cache to hold images
+ - [ ] Save images to cache
+ - [X] A11y - tab index, keyboard controls
  - [X] Speed boost
  - [X] File open dialog
- - [X] Release on Windows
+ - [X] Windows Release
 
 
 ### Need help?
 
 Please post any questions or issues you come across to our [issues page](https://github.com/lacymorrow/cinematic/issues).
 
-### Want to help?
+## Development
 
-Pull requests welcome!
+```bash
+# Run dev app
+yarn start
 
-[![dependencies Status](https://david-dm.org/lacymorrow/cinematic/status.svg)](https://david-dm.org/lacymorrow/cinematic) [![devDependencies Status](https://david-dm.org/lacymorrow/cinematic/dev-status.svg)](https://david-dm.org/lacymorrow/cinematic?type=dev)
+# Build app for production
+yarn package
+```
+
+### Main Process
+
+Imports must be relative (the alias `@` is only available in the renderer process).
+
+#### Order of operations
+
+1. `main/main` is run.
+
+If there is a previous session it will be restored. The directory is scanned again, and new files are added, missing files are marked deleted, and existing files are loaded from cache, checked for:
+
+- Cache expiration;
+- Missing tmdb/omdb/trailers metadata
+- basic equality checks (file size, last modified date)
+
+If any of the above are true, the file is sent to the queue to fetch updated metadata.
+
+### Renderer Process
+
+You may use the alias `@` to import from the `src` directory.
+
+Entry is `src/renderer/App`, which contains the router. Routing is handled by [react-router](https://reacttraining.com/react-router/web/guides/quick-start). Instead of `<a>` elements, use `<Link to={"/my/path"}>` elements from `react-router-dom`.
+
+To open links in the user's default browser, use the `<ExternalLink>` component from `src/renderer/components/ExternalLink`.
+
+❤️ **Based on [electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate/).** ❤️
+
+#### Debugging
+
+https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400

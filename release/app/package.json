@@ -1,0 +1,18 @@
+{
+  "name": "cinematic",
+  "version": "4.6.0",
+  "description": "A desktop browser for your media library.",
+  "license": "CC-BY-NC-SA-4.0",
+  "author": {
+    "name": "Lacy Morrow",
+    "email": "me@lacymorrow.com",
+    "url": "https://github.com/lacymorrow/cinematic"
+  },
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {}
+}
