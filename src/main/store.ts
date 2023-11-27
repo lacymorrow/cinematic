@@ -1,12 +1,12 @@
 import Store from 'electron-store';
 import getUuidByString from 'uuid-by-string';
-import { MediaType } from '../types/file';
 import { CACHE_TIMEOUT, THROTTLE_DELAY } from '../config/config';
-import { throttle } from '../util';
-import win from './win';
 import { ipcChannels } from '../config/ipc-channels';
 import { reconcileMovieMeta } from '../lib/reconcile-meta';
+import { MediaType } from '../types/file';
 import { CollectionItemType } from '../types/media';
+import { throttle } from '../utils/throttle';
+import win from './win';
 
 type DebouncedFunctionsType = {
   [key: string]: Function;
