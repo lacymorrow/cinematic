@@ -158,7 +158,7 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const libraryWasUpdated = throttle(() => {
-  win.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
+  win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
 }, THROTTLE_DELAY);
 
 export const resetStore = () => {
@@ -311,6 +311,8 @@ export const upsertMediaLibrary = (media: MediaType) => {
   if (!id) {
     return;
   }
+
+  media.dateUpdated = Date.now();
 
   upsertMedia(media);
   afterUpsertMediaLibrary(id);

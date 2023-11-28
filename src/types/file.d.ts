@@ -57,7 +57,7 @@ export interface MediaType extends Partial<MediaMeta> {
   prettyFileName: string;
   liked: boolean;
   dateAdded: number;
-  dateUpdated: number;
+  dateUpdated?: number;
   dateViewed?: number;
   dateWatched?: number;
 }

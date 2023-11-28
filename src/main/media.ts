@@ -3,7 +3,7 @@ import getUuidByString from 'uuid-by-string';
 import { PARSE_METHOD } from '../config/config';
 import { FileType, MediaType } from '../types/file';
 import queue from './q';
-import { upsertMediaLibrary, getCachedObject } from './store';
+import { getCachedObject, upsertMediaLibrary } from './store';
 import { fileNameRegex, isDigit } from './util';
 
 export const prettyFileName = (name: string) => {
@@ -64,20 +64,25 @@ export const addMediaToLibrary = (media: FileType) => {
   const title = prettyFileName(filename);
 
   // METADATA DEFAULTS
+  const now = Date.now();
   let updatedMedia: MediaType = {
     ...media,
     id,
     title,
     prettyFileName: title,
     liked: false,
-    dateAdded: Date.now(),
-    dateUpdated: Date.now(),
+    dateAdded: now,
   };
 
   // check if path in cache
   const cached = getCachedObject(filepath);
   if (cached) {
-    updatedMedia = { ...updatedMedia, ...cached };
+    updatedMedia = {
+      ...updatedMedia,
+      ...cached,
+      // Overwrite dateAdded and dateUpdated from cache
+      dateAdded: now,
+    };
   } else {
     // Gleen meta info from filename and update library
     const meta = parseFileMeta(filename);

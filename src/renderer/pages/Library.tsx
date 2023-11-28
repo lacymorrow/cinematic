@@ -1,17 +1,19 @@
-import React from 'react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaType } from '@/types/file';
-import { GlobalContext } from '../context/global-context';
-import { SectionHeader } from '../components/layout/SectionHeader';
+import React from 'react';
 import { ScrollContainer } from '../components/layout/ScrollContainer';
+import { SectionHeader } from '../components/layout/SectionHeader';
 import { ButtonAddMedia } from '../components/media/ButtonAddMedia';
 import { MediaEmptyPlaceholder } from '../components/media/MediaEmptyPlaceholder';
+import { GlobalContext } from '../context/global-context';
 
 type Props = {};
 
 export function Library(_props: Props) {
   const { libraryArray, randomLibraryArray } = React.useContext(GlobalContext);
+
+  const mostRecent = libraryArray.filter((media) => media.dateUpdated);
   return (
     <ScrollContainer>
       <SectionHeader
@@ -43,12 +45,12 @@ export function Library(_props: Props) {
           </div>
           <SectionHeader
             title="Recently Added"
-            tagline="Pick up right where you left off."
+            tagline="Start up the latest files you've added."
           />
           <div className="relative">
             <ScrollArea>
               <div className="flex space-x-4 pb-4">
-                {libraryArray.map((media) => (
+                {mostRecent.map((media) => (
                   <MediaArtwork
                     key={media.id}
                     media={media}

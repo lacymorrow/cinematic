@@ -1,18 +1,18 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log/main';
+import path from 'path';
+import { AutoUpdate } from './auto-update';
 import MenuBuilder from './menu';
 import { is, resolveHtmlPath } from './util';
-import { AutoUpdate } from './auto-update';
 
+import { debugInfo, DEFAULT_PATH } from './constants';
 import eventListeners from './event-listeners';
 import { scanMedia } from './file';
-import { clearCache, clearLibrary } from './store';
-import { debugInfo, DEFAULT_PATH } from './constants';
-import win from './win';
 import ipc from './ipc';
+import { clearCache } from './store';
+import win from './win';
 
 console.time('startup');
 
@@ -129,7 +129,7 @@ const ready = async () => {
   // todo: load previous session
 
   // if no session, begin fresh scan
-  clearLibrary();
+  // clearLibrary(); // todo: remove
   clearCache();
 };
 

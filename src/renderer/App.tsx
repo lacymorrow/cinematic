@@ -1,3 +1,7 @@
+// bug: "no media" placeholder needs to be shown in all different sizes
+// bug: cannot horizontally scroll in media browser "watch now"
+// bug: files are added with zero metadata (allow this?)
+
 // todo: network status
 // todo: sort/filter media
 // todo: search media  (?filer)
@@ -10,15 +14,16 @@
 // todo: show/hide sidebar
 // todo: show progress
 // todo: show current processing info
+// todo: scrollarea for genre/playlist
 
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import { GlobalContextProvider } from '@/renderer/context/global-context';
 import { Layout } from '@/renderer/components/layout/Layout';
+import { MediaLayout } from '@/renderer/components/layout/MediaLayout';
 import { nav } from '@/renderer/config/nav';
-import { Media } from '@/renderer/pages/Media';
+import { GlobalContextProvider } from '@/renderer/context/global-context';
 import { Genre } from '@/renderer/pages/Genre';
+import { Media } from '@/renderer/pages/Media';
 import Settings from '@/renderer/pages/Settings';
-import { MediaLayout } from '@/renderer/components/media/MediaLayout';
+import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import { Playlist } from './pages/Playlist';
 
 import '@/renderer/styles/globals.scss';
