@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { PlusCircledIcon } from '@radix-ui/react-icons';
+import { ButtonAddMedia } from '../media/ButtonAddMedia';
 
 export function DialogWelcome() {
   return (
@@ -40,10 +40,7 @@ export function DialogWelcome() {
         </DialogHeader>
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              <PlusCircledIcon className="mr-2" />
-              Add Media
-            </Button>
+            <ButtonAddMedia />
           </DialogClose>
           <DialogClose asChild>
             <Button type="submit">

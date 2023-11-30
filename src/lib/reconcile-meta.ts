@@ -7,6 +7,7 @@ export const reconcileMovieMeta = (media: MediaType) => {
 
   media.ratings = [];
 
+  // Set a single "main" trailer
   if (trailers && trailers.length > 0) {
     if (typeof trailers === 'string') {
       media.trailer = trailers;

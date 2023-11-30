@@ -1,3 +1,7 @@
+export const $actions = {
+  addMedia: 'Add Media',
+};
+
 export const $dialog = {
   title: 'Add Media',
   buttonLabel: 'Add',

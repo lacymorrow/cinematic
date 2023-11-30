@@ -1,15 +1,5 @@
 // todo: list view of media (vs grid view)
 // todo: no items placeholder
-import React from 'react';
-import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
-import { MediaType } from '@/types/file';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
-import {
-  BookmarkIcon,
-  DashboardIcon,
-  ListBulletIcon,
-} from '@radix-ui/react-icons';
 import {
   Table,
   TableBody,
@@ -19,10 +9,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ViewModeType } from '@/main/store';
+import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
+import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
 import { GlobalContext } from '@/renderer/context/global-context';
-import { SectionHeader } from '../layout/SectionHeader';
+import { MediaType } from '@/types/file';
+import {
+  BookmarkIcon,
+  DashboardIcon,
+  ListBulletIcon,
+} from '@radix-ui/react-icons';
+import React from 'react';
 import { ScrollContainer } from '../layout/ScrollContainer';
+import { SectionHeader } from '../layout/SectionHeader';
 import { ButtonAddMedia } from './ButtonAddMedia';
 
 type Props = {
@@ -53,7 +53,9 @@ export function MediaBrowser({
       {items.length === 0 ? (
         <>
           <SectionHeader title={title} tagline={tagline}>
-            {addMediaButton && <ButtonAddMedia />}
+            <div className="ml-auto mr-4 group">
+              {addMediaButton && <ButtonAddMedia />}
+            </div>
           </SectionHeader>
           <NotFound />
         </>
@@ -73,7 +75,9 @@ export function MediaBrowser({
                 List
               </TabsTrigger>
             </TabsList>
-            <ButtonAddMedia />
+            <div className="ml-auto mr-4 group">
+              <ButtonAddMedia />
+            </div>
           </div>
           <SectionHeader title={title} tagline={tagline} />
 

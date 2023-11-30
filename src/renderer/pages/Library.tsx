@@ -20,7 +20,9 @@ export function Library(_props: Props) {
         title="Watch Now"
         tagline="Jump right into something new, chosen at random."
       >
-        <ButtonAddMedia />
+        <div className="ml-auto mr-4 group">
+          <ButtonAddMedia />
+        </div>
       </SectionHeader>
       {libraryArray.length === 0 ? (
         <MediaEmptyPlaceholder />

@@ -64,14 +64,7 @@ export default function App() {
               />
             </Route>
             <Route path="/media">
-              <Route
-                path=":id"
-                element={
-                  <MediaLayout>
-                    <Media />
-                  </MediaLayout>
-                }
-              />
+              <Route path=":id" element={<Media />} />
             </Route>
             <Route path="/settings/*" element={<Settings />} />
           </Routes>

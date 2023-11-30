@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
 import React, { useEffect } from 'react';
+import ReactPlayer from 'react-player/youtube';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   PageHeader,
@@ -59,12 +60,9 @@ export function Media(_props: Props) {
     window.electron.openPath(currentMedia.filepath);
   };
 
-  const handleImdb = () => {
-    if (currentMedia?.omdb?.imdbid) {
-      window.electron.openUrl(
-        `https://www.imdb.com/title/${currentMedia.omdb.imdbid}/`,
-      );
-    }
+  const handleUrl = (url: string | undefined) => {
+    if (!url) return;
+    window.electron.openUrl(url);
   };
 
   const {
@@ -82,27 +80,38 @@ export function Media(_props: Props) {
     dateUpdated,
     dateViewed,
     dateWatched,
+    ratings,
+    trailer,
+
+    // unused
     ...rest
   } = currentMedia;
+
+  const trailerUrl = `https://www.youtube.com/watch?v=${trailer}`;
 
   return (
     <>
       <div className="h-full w-full overflow-y-auto">
-        {currentMedia.backdrop && (
+        {backdrop && (
           <div className="w-full relative">
             <div>
-              <img
-                src={currentMedia.backdrop}
-                alt={currentMedia.title}
-                className="w-full"
-              />
+              <img src={backdrop} alt={title} className="w-full" />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t bg-gradi from-black to-black/10" />
+            <div className="absolute" />
             {/* <div className="top-full -scale-y-100 absolute -z-10">
-              <img src={currentMedia.backdrop} alt={currentMedia.title} />
+              <img src={backdrop} alt={title} />
             </div> */}
           </div>
         )}
+
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/skK9CGLrpWY?rel=0&controls=0"
+          width="560"
+          height="315"
+          title="YTTV TrueView NewUsers NFL 23 V1 DR None US EN 10s MP4 VIDEO"
+          frameBorder="0"
+          allowFullScreen
+        />
 
         <PageHeader>
           <PageHeaderHeading>
@@ -111,32 +120,97 @@ export function Media(_props: Props) {
           <PageHeaderDescription />
         </PageHeader>
 
+        {trailerUrl}
+
         <div className="m-6">
           <Button onClick={handleBack}>BACK</Button>
           <Button onClick={handlePlay}>
             Play <PlayIcon className="ml-2" />
           </Button>
-          {currentMedia?.omdb?.imdbid && (
-            <Button onClick={handleImdb}>
+          {omdb?.imdbid && (
+            <Button
+              onClick={() => {
+                if (!omdb?.imdbid) return;
+                handleUrl(`https://www.imdb.com/title/${omdb.imdbid}/`);
+              }}
+            >
               IMDB <Link2Icon className="ml-2" />
             </Button>
           )}
-
-          <img src={currentMedia.poster} alt={currentMedia.title} />
+          {omdb?.tomatourl && (
+            <Button
+              onClick={() => {
+                handleUrl(omdb?.tomatourl);
+              }}
+            >
+              Tomatoes <Link2Icon className="ml-2" />
+            </Button>
+          )}
+          <img src={poster} alt={title} />
+          <img src={`${tmdb?.imageBase}${tmdb?.poster_path}`} alt={title} />
           <SectionHeader
-            title={currentMedia.title}
-            tagline={`${currentMedia.year}${
-              currentMedia.omdb?.genre &&
-              ` • ${Object.values(currentMedia.omdb.genre).join(', ')}`
-            }`}
+            title={title}
+            tagline={`${year}${
+              omdb?.genre && ` • ${Object.values(omdb.genre).join(', ')}`
+            }${omdb?.runtime && ` • ${omdb.runtime}`}`}
           />
-
-          <Table>
+          {ratings?.length && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold tracking-tight">Ratings</h2>
+              <div className="grid grid-cols-2 gap-4">
+                {ratings.map((rating: any) => {
+                  return (
+                    <div key={rating.Source}>
+                      <p>{JSON.stringify(rating)}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          Actors
+          {JSON.stringify(omdb?.actors, null, 2)}
+          <br />
+          Director
+          {JSON.stringify(omdb?.director, null, 2)}
+          <br />
+          Genre
+          {JSON.stringify(omdb?.genre, null, 2)}
+          <br />
+          Writer
+          {JSON.stringify(omdb?.writer, null, 2)}
+          {tmdb?.popularity && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold tracking-tight">
+                Popularity
+              </h2>
+              <p>{tmdb.popularity}</p>
+            </div>
+          )}
+          {tmdb?.vote_count && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold tracking-tight">
+                TMDB Vote Count
+              </h2>
+              <p>{tmdb.vote_count}</p>
+            </div>
+          )}
+          {tmdb?.overview && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold tracking-tight">Overview</h2>
+              <p>{tmdb.overview}</p>
+            </div>
+          )}
+          <ReactPlayer url={trailerUrl} />
+          <Table className="max-w-full break-all">
             <TableBody>
+              <TableRow>
+                <TableCell className="px-0 min-w-[100px]">File</TableCell>
+                <TableCell className="px-0 text-right">{filepath}</TableCell>
+              </TableRow>
               {MediaTable(rest)}
-
+              <h2>OMDB</h2>
               {MediaTable(omdb)}
-              {MediaTable(tmdb)}
             </TableBody>
           </Table>
         </div>

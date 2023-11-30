@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { $actions } from '@/config/strings';
 import { PlusCircledIcon } from '@radix-ui/react-icons';
 
 export function ButtonAddMedia() {
@@ -7,11 +8,9 @@ export function ButtonAddMedia() {
   };
 
   return (
-    <div className="ml-auto mr-4">
-      <Button onClick={handleClick}>
-        <PlusCircledIcon className="mr-2 h-4 w-4" />
-        Add media
-      </Button>
-    </div>
+    <Button onClick={handleClick} className="group">
+      <PlusCircledIcon className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
+      {$actions.addMedia}
+    </Button>
   );
 }
