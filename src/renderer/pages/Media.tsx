@@ -104,14 +104,14 @@ export function Media(_props: Props) {
           </div>
         )}
 
-        <iframe
+        {/* <iframe
           src="https://www.youtube-nocookie.com/embed/skK9CGLrpWY?rel=0&controls=0"
           width="560"
           height="315"
           title="YTTV TrueView NewUsers NFL 23 V1 DR None US EN 10s MP4 VIDEO"
           frameBorder="0"
           allowFullScreen
-        />
+        /> */}
 
         <PageHeader>
           <PageHeaderHeading>
@@ -154,7 +154,7 @@ export function Media(_props: Props) {
               omdb?.genre && ` • ${Object.values(omdb.genre).join(', ')}`
             }${omdb?.runtime && ` • ${omdb.runtime}`}`}
           />
-          {ratings?.length && (
+          {/* {ratings?.length && (
             <div className="space-y-4">
               <h2 className="text-lg font-semibold tracking-tight">Ratings</h2>
               <div className="grid grid-cols-2 gap-4">
@@ -167,7 +167,7 @@ export function Media(_props: Props) {
                 })}
               </div>
             </div>
-          )}
+          )} */}
           Actors
           {JSON.stringify(omdb?.actors, null, 2)}
           <br />
