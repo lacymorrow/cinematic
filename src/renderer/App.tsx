@@ -2,7 +2,9 @@
 // bug: cannot horizontally scroll in media browser "watch now"
 // bug: files are added with zero metadata (allow this?)
 
-// todo: network status
+// bug: we check for missing metadata every launch, even if they will always error (ex: GoPRO.mp4)
+
+// todo: show log - remove console in favor of log
 // todo: sort/filter media
 // todo: search media  (?filer)
 // todo: allow choosing movie poster size
@@ -17,7 +19,7 @@
 // todo: scrollarea for genre/playlist
 
 import { Layout } from '@/renderer/components/layout/Layout';
-import { MediaLayout } from '@/renderer/components/layout/MediaLayout';
+import { MediaLayout } from '@/renderer/components/layout/SidebarLayout';
 import { nav } from '@/renderer/config/nav';
 import { GlobalContextProvider } from '@/renderer/context/global-context';
 import { Genre } from '@/renderer/pages/Genre';

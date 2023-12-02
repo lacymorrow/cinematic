@@ -1,18 +1,21 @@
 // We import queue, so file shouldn't be named queue.ts
-import fastq from 'fastq';
 import type { queueAsPromised } from 'fastq';
-import { OmdbType, TmdbType, TrailersType } from '@/types/meta';
-import { MediaType, SearchMetaType } from '../types/file';
+import fastq from 'fastq';
+import { $messages } from '../config/strings';
 import { fetchOMDB, fetchTMDB, fetchTrailer } from '../lib/fetch-meta';
+import { MediaType, SearchMetaType } from '../types/file';
+import { OmdbType, TmdbType, TrailersType } from '../types/meta';
 import {
   addGenre,
   getCachedObject,
   setCachedObject,
+  updateAppStatusMessage,
   upsertMediaLibrary,
 } from './store';
 
 const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
   async (meta: SearchMetaType) => {
+    updateAppStatusMessage(`${$messages.fetching_omdb}: ${meta.title}`);
     const cacheKey = `omdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
     const cache = getCachedObject(cacheKey);
     if (cache) {
@@ -30,6 +33,7 @@ const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
   async (meta: SearchMetaType) => {
+    updateAppStatusMessage(`${$messages.fetching_tmdb}: ${meta.title}`);
     const cacheKey = `tmdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
     const cache = getCachedObject(cacheKey);
     if (cache) {
@@ -45,6 +49,7 @@ const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
   async (meta: SearchMetaType) => {
+    updateAppStatusMessage(`${$messages.fetching_trailers}: ${meta.title}`);
     const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`; // trailer-<title>-<year>
     const cache = getCachedObject(cacheKey);
     if (cache) {
@@ -66,6 +71,10 @@ const onQueueSuccess = (result: MediaType) => {
   if (typeof result === 'object' && result.filepath) {
     // store result
     upsertMediaLibrary(result);
+  }
+
+  if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
+    updateAppStatusMessage($messages.idle);
   }
 };
 

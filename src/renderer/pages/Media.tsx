@@ -16,6 +16,7 @@ import { GlobalContext } from '../context/global-context';
 type Props = {};
 
 export function MediaTable(data: any) {
+  if (!data) return;
   return (
     <>
       {Object.entries(data).map(([k, v]) => {
@@ -50,6 +51,7 @@ export function Media(_props: Props) {
   };
 
   if (!id || !library[id]) {
+    // this shouldn't be possible
     console.error('cinematic: Navigated to invalid media id', id);
     return handleBack();
   }

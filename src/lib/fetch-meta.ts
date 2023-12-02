@@ -1,10 +1,10 @@
 import movieInfo from 'movie-info';
 import movieTrailer from 'movie-trailer';
 import OmdbApi from 'omdbapi';
-import { $errors } from '../config/strings';
-import { OmdbType, TmdbType } from '../types/meta';
 import { OMDB_KEY, PLOT_LENGTH } from '../config/config';
+import { $errors } from '../config/strings';
 import { SearchMetaType } from '../types/file';
+import { OmdbType, TmdbType } from '../types/meta';
 
 const omdb = new OmdbApi(OMDB_KEY);
 
@@ -26,6 +26,9 @@ export const fetchOMDB = async (meta: SearchMetaType): Promise<OmdbType> => {
 export const fetchTMDB = async (meta: SearchMetaType): Promise<TmdbType> => {
   const response = await movieInfo(meta.title, meta.year)
     .then((data: TmdbType) => {
+      if (!data) {
+        throw new Error($errors.tmdb_api);
+      }
       if (data?.message) {
         throw new Error(data.message);
       }

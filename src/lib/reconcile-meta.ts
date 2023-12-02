@@ -3,6 +3,7 @@ import { MediaType } from '../types/file';
 
 // Last If statement wins, reverse to prefer TMDB or OMDB
 export const reconcileMovieMeta = (media: MediaType) => {
+  // todo, we assume these aren't empty
   const { tmdb, omdb, trailers } = media;
 
   media.ratings = [];
@@ -22,21 +23,27 @@ export const reconcileMovieMeta = (media: MediaType) => {
     media.language = tmdb.original_language;
 
     const released = new Date(tmdb.release_date);
-    media.releaseDate = released.toDateString();
-    media.year = String(released.getFullYear());
+    if (!Number.isNaN(released)) {
+      media.releaseDate = released.toDateString();
+      media.year = String(released.getFullYear());
+    }
 
-    // Images
-    const baseURL = new URL(tmdb.imageBase);
+    try {
+      // Images
+      const baseURL = new URL(tmdb.imageBase);
 
-    media.backdrop = new URL(
-      path.join(baseURL.pathname, tmdb.backdrop_path),
-      baseURL.origin,
-    ).href;
+      media.backdrop = new URL(
+        path.join(baseURL.pathname, tmdb.backdrop_path),
+        baseURL.origin,
+      ).href;
 
-    media.poster = new URL(
-      path.join(baseURL.pathname, tmdb.poster_path),
-      baseURL.origin,
-    ).href;
+      media.poster = new URL(
+        path.join(baseURL.pathname, tmdb.poster_path),
+        baseURL.origin,
+      ).href;
+    } catch (error) {
+      console.warn('No TMDB data');
+    }
 
     // Ratings
     if (tmdb.vote_average) {

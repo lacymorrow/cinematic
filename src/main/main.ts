@@ -3,6 +3,7 @@
 import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log/main';
 import path from 'path';
+import { $messages } from '../config/strings';
 import { AutoUpdate } from './auto-update';
 import MenuBuilder from './menu';
 import { is, resolveHtmlPath } from './util';
@@ -11,7 +12,7 @@ import { debugInfo, DEFAULT_PATH } from './constants';
 import eventListeners from './event-listeners';
 import { scanMedia } from './file';
 import ipc from './ipc';
-import { clearCache } from './store';
+import { clearCache, clearLibrary, updateAppStatusMessage } from './store';
 import win from './win';
 
 console.time('startup');
@@ -118,6 +119,16 @@ const ready = async () => {
     await installExtensions();
   }
 
+  // Report to renderer
+  updateAppStatusMessage($messages.init);
+
+  // todo: load previous session
+
+  // if no session, begin fresh scan
+  clearLibrary(); // todo: remove
+  clearCache();
+  updateAppStatusMessage('App ready');
+
   createWindow();
 
   app.on('activate', () => {
@@ -125,12 +136,6 @@ const ready = async () => {
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) createWindow();
   });
-
-  // todo: load previous session
-
-  // if no session, begin fresh scan
-  // clearLibrary(); // todo: remove
-  clearCache();
 };
 
 // BEGIN
@@ -146,6 +151,11 @@ app
     }
 
     // Idle
+  })
+  .then(() => {
+    updateAppStatusMessage('Idle');
+
+    console.timeLog('startup', 'idle');
   })
   .catch((error: Error) => {
     console.error('cinematic: ', error);

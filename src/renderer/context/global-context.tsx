@@ -2,7 +2,6 @@
 // Do not use this context to update data, only to read it
 // Use IPC to update data
 
-import React, { useEffect, useMemo } from 'react';
 import { LIBRARY_UPDATED } from '@/config/ipc-channels';
 import {
   CollectionStoreType,
@@ -10,6 +9,7 @@ import {
   SettingsType,
 } from '@/main/store';
 import { CollectionType, LibraryType } from '@/types/media';
+import React, { useEffect, useMemo } from 'react';
 
 import DEFAULT_SETTINGS from '@/config/settings';
 
@@ -48,16 +48,16 @@ export function GlobalContextProvider({
   const [settings, setSettings] =
     React.useState<SettingsType>(DEFAULT_SETTINGS);
 
-  const syncronize = async () => {
-    console.log('synchronize');
-
-    setGenres(await window.electron.getGenres());
-    setPlaylists(await window.electron.getPlaylists());
-    setSettings(await window.electron.getSettings());
-    setLibrary(await window.electron.getLibrary());
-  };
-
   useEffect(() => {
+    const syncronize = async () => {
+      console.log('synchronize');
+
+      setGenres(await window.electron.getGenres());
+      setPlaylists(await window.electron.getPlaylists());
+      setSettings(await window.electron.getSettings());
+      setLibrary(await window.electron.getLibrary());
+    };
+
     window.electron.ipcRenderer.on(LIBRARY_UPDATED, async (_event) => {
       await syncronize();
     });

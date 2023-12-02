@@ -1,30 +1,32 @@
 // // Node file utilities
 import fs from 'fs/promises';
 import path from 'path';
-import { FileType } from '@/types/file';
 import {
   DEFAULT_FILE_META,
   DIRECTORY_IGNORE_PATTERN,
   FILE_SCAN_DEPTH,
   VALID_FILETYPES,
 } from '../config/config';
-import { ignorePattern } from './util';
+import { FileType } from '../types/file';
 import { addMediaToLibrary } from './media';
 import { addPath } from './store';
-
-const getExt = (mediaPath: string) =>
-  path.extname(mediaPath).replace('.', '').toLowerCase();
+import { ignorePattern } from './util';
 
 // scan a file and add it to the movies state
 export const scanFile = async (media: FileType) => {
   const { ext, filename, filepath } = media;
+
+  // create a pretty file extension
+  const extension = ext.replace('.', '').toLowerCase();
+
   // Ignore files that match the ignore pattern like "sample.avi"
-  if (VALID_FILETYPES.includes(ext) && !ignorePattern(filename)) {
+  if (VALID_FILETYPES.includes(extension) && !ignorePattern(filename)) {
     // File is good! Add to library
     addMediaToLibrary({ ...DEFAULT_FILE_META, ext, filename, filepath });
   } else {
     console.warn(`Invalid filetype: ${ext} ${filepath}`);
     // todo: add to invalid files state
+    // report to user files that were not added
   }
 };
 
@@ -42,7 +44,7 @@ export const scanDirectory = async (directoryPath: string, depth: number) => {
       return false;
     }
 
-    const ext = getExt(name);
+    const ext = path.extname(name);
     const filename = path.basename(name, ext); // Remove the extension
     const filepath = path.join(directoryPath, name);
 
@@ -62,14 +64,6 @@ export const scanDirectory = async (directoryPath: string, depth: number) => {
 
 // Begin the scanning operation on the movies folder
 export const scanMedia = async (mediaPath: string) => {
-  // check if path to movies folder is set
-  if (!mediaPath) {
-    console.error(
-      'Please set path to movies folder in environment variable MOVIES_PATH',
-    );
-    return;
-  }
-
   console.warn('Begin scanning media: ', mediaPath);
 
   // check if movies folder exists, readable, and is directory
@@ -82,10 +76,12 @@ export const scanMedia = async (mediaPath: string) => {
     // todo: reset movies state here, since we are beginning a new scan
     await scanDirectory(mediaPath, 0);
   } else if (stats?.isFile()) {
-    const ext = getExt(mediaPath);
+    const ext = path.extname(mediaPath);
+    const filename = path.basename(mediaPath, ext); // Remove the extension
+
     scanFile({
       ext,
-      filename: path.basename(mediaPath, ext),
+      filename,
       filepath: mediaPath,
     });
   }

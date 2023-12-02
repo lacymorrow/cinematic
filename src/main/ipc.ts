@@ -1,5 +1,7 @@
 import { app, ipcMain, shell } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
+import { openMediaPathDialog } from './dialog';
+import { scanMedia } from './file';
 import {
   HistoryActionType,
   SettingsType,
@@ -7,6 +9,7 @@ import {
   addToPlaylist,
   clearLibrary,
   deletePlaylist,
+  getAppMessages,
   getGenres,
   getLibrary,
   getPlaylists,
@@ -14,8 +17,6 @@ import {
   setMediaLike,
   setSettings,
 } from './store';
-import { scanMedia } from './file';
-import { openMediaPathDialog } from './dialog';
 
 export default {
   init() {
@@ -24,6 +25,8 @@ export default {
     ipcMain.handle(ipcChannels.GET_LIBRARY, getLibrary);
     ipcMain.handle(ipcChannels.GET_PLAYLISTS, getPlaylists);
     ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
+    ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
+
     ipcMain.handle(
       ipcChannels.SET_SETTINGS,
       (_event, settings: Partial<SettingsType>) => {

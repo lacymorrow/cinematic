@@ -8,8 +8,6 @@ import {
   VideoIcon,
 } from '@radix-ui/react-icons';
 
-import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -21,12 +19,14 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { MediaType } from '@/types/file';
-import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import { GlobalContext } from '@/renderer/context/global-context';
-import { MoviePlaceholder } from '../images/Placeholder';
+import { MediaType } from '@/types/file';
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { ExternalLink } from '../ExternalLink';
 import { DialogContentNewPlaylist } from '../dialog/DialogContentNewPlaylist';
+import { MoviePlaceholder } from '../images/Placeholder';
 
 interface MediaArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   media: MediaType;
@@ -87,7 +87,9 @@ export function MediaArtwork({
                 {/* todo: Make placeholder beter ^^^; both of these should probably use the same classes  */}
               </div>
               <div className="space-y-1 text-sm pt-3">
-                <h3 className="font-medium leading-none">{media.title}</h3>
+                <h3 className="font-medium leading-none">
+                  {media.title || media.prettyFileName}
+                </h3>
                 <p className="text-xs text-muted-foreground">
                   {media.year}&#xfeff;
                 </p>

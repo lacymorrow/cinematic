@@ -12,6 +12,7 @@ const electronHandler = {
   getLibrary: () => ipcRenderer.invoke(ipcChannels.GET_LIBRARY),
   getPlaylists: () => ipcRenderer.invoke(ipcChannels.GET_PLAYLISTS),
   getSettings: () => ipcRenderer.invoke(ipcChannels.GET_SETTINGS),
+  getMessages: () => ipcRenderer.invoke(ipcChannels.GET_MESSAGES),
   setSettings: (settings: Partial<SettingsType>) =>
     ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
   setMediaLike: (id: string, liked: boolean) =>

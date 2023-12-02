@@ -129,6 +129,8 @@
     "electron-store": "^8.1.0",
     "electron-updater": "^6.1.4",
     "fastq": "^1.15.0",
+    "is-online": "^10.0.0",
+    "lucide-react": "^0.294.0",
     "movie-info": "^3.0.2",
     "movie-trailer": "^3.2.2",
     "omdb-client": "^2.0.0",

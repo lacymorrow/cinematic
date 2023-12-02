@@ -27,6 +27,10 @@ export interface CacheType {
   value: any;
 }
 
+export type AppMessageType = string;
+
+export type AppMessageLogType = AppMessageType[];
+
 export type HistoryActionType = 'view' | 'watch' | 'like' | 'dislike' | 'added';
 
 export interface HistoryType {
@@ -83,6 +87,8 @@ export interface StoreType {
   history: HistoryType[];
 
   settings: SettingsType;
+
+  appMessageLog: AppMessageLogType;
 }
 
 const schema: Store.Schema<StoreType> = {
@@ -103,6 +109,10 @@ const schema: Store.Schema<StoreType> = {
     default: {},
   },
   history: {
+    type: 'array',
+    default: [],
+  },
+  appMessageLog: {
     type: 'array',
     default: [],
   },
@@ -161,6 +171,13 @@ const libraryWasUpdated = throttle(() => {
   win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
 }, THROTTLE_DELAY);
 
+const appMessageUpdated = () => {
+  win?.mainWindow?.webContents.send(
+    ipcChannels.APP_STATUS_MESSAGE,
+    store.get('appMessageLog'),
+  );
+};
+
 export const resetStore = () => {
   store.clear();
 
@@ -172,6 +189,7 @@ export const clearLibrary = () => {
   store.delete('genres');
   store.delete('playlists');
   store.delete('history');
+  store.delete('appMessageLog');
 
   libraryWasUpdated();
 };
@@ -190,6 +208,7 @@ export const setSettings = (settings: Partial<SettingsType>) => {
     ...settings,
   });
 
+  // Sync with renderer
   libraryWasUpdated();
 };
 
@@ -204,6 +223,20 @@ export const addPath = (path: string) => {
 
   settings.paths.push(path);
   store.set('settings', settings);
+};
+
+export const updateAppStatusMessage = (message: AppMessageType) => {
+  console.log('updateAppStatusMessage', message);
+  const appMessageLog = store.get('appMessageLog');
+  appMessageLog.push(message);
+  store.set('appMessageLog', appMessageLog);
+
+  // Sync with renderer
+  appMessageUpdated();
+};
+
+export const getAppMessages = () => {
+  return store.get('appMessageLog');
 };
 
 export const getHistory = () => {
