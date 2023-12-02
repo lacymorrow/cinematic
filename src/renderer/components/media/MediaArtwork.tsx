@@ -80,7 +80,7 @@ export function MediaArtwork({
                   <MoviePlaceholder
                     className={cn(
                       `w-[${width}px]`,
-                      aspectRatio === 'portrait' ? 'h-[375px]' : 'h-[250px]',
+                      aspectRatio === 'portrait' ? 'h-[375px]' : 'h-[150px]',
                     )}
                   />
                 )}

@@ -89,7 +89,11 @@ export function Media(_props: Props) {
     ...rest
   } = currentMedia;
 
+  console.log('currentMedia', tmdb, omdb);
+
   const trailerUrl = `https://www.youtube.com/watch?v=${trailer}`;
+
+  const poster2 = `${tmdb?.imageBase}${tmdb?.poster_path}`;
 
   return (
     <>
@@ -149,7 +153,7 @@ export function Media(_props: Props) {
             </Button>
           )}
           <img src={poster} alt={title} />
-          <img src={`${tmdb?.imageBase}${tmdb?.poster_path}`} alt={title} />
+          <img src={poster2} alt={title} />
           <SectionHeader
             title={title}
             tagline={`${year}${
@@ -181,12 +185,12 @@ export function Media(_props: Props) {
           <br />
           Writer
           {JSON.stringify(omdb?.writer, null, 2)}
-          {tmdb?.popularity && (
+          {[tmdb?.popularity] && (
             <div className="space-y-4">
               <h2 className="text-lg font-semibold tracking-tight">
                 Popularity
               </h2>
-              <p>{tmdb.popularity}</p>
+              <p>{tmdb?.popularity}</p>
             </div>
           )}
           {tmdb?.vote_count && (
