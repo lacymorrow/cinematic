@@ -6942,7 +6942,7 @@ is-obj@^2.0.0:
   resolved "https://registry.yarnpkg.com/is-obj/-/is-obj-2.0.0.tgz#473fb05d973705e3fd9620545018ca8e22ef4982"
   integrity sha512-drqDG3cbczxxEJRoOXcOjtdp1J/lyp1mNn0xaznRs8+muBhgQcrnbspox5X5fOw0HnMnbfDzvnEMEtqDEJEo8w==
 
-is-online@^10.0.0:
+is-online@10, is-online@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/is-online/-/is-online-10.0.0.tgz#5e02cee9f822fd9c19b060f0ecbdc798d37295a3"
   integrity sha512-WCPdKwNDjXJJmUubf2VHLMDBkUZEtuOvpXUfUnUFbEnM6In9ByiScL4f4jKACz/fsb2qDkesFerW3snf/AYz3A==
@@ -9488,6 +9488,13 @@ react-hook-form@^7.48.2:
   version "7.48.2"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.48.2.tgz#01150354d2be61412ff56a030b62a119283b9935"
   integrity sha512-H0T2InFQb1hX7qKtDIZmvpU1Xfn/bdahWBN1fH19gSe4bBEqTfmlr7H3XWTaVtiK4/tpPaI1F3355GPMZYge+A==
+
+react-is-online-context@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-is-online-context/-/react-is-online-context-1.0.2.tgz#11bd865735ef4c1ed875d0330952b2e92a38f629"
+  integrity sha512-GXNt14acfazl6ckweCqOFi4QTov6Yj7ZKDA6m+ekLWbadsbCs6yxYzRE/iee0ESoKIk9HtCB1BHodtTOHGrJ0A==
+  dependencies:
+    is-online "10"
 
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"

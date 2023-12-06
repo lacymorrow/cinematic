@@ -31,47 +31,47 @@ import { Playlist } from './pages/Playlist';
 import '@/renderer/styles/globals.scss';
 
 export default function App() {
-  return (
-    <GlobalContextProvider>
-      <Router>
-        <Layout>
-          <Routes>
-            {nav.map((item) => {
-              return (
-                <Route
-                  key={item.name}
-                  path={item.path}
-                  element={<MediaLayout>{item.element}</MediaLayout>}
-                />
-              );
-            })}
-            <Route path="/genres">
-              <Route
-                path=":id"
-                element={
-                  <MediaLayout>
-                    <Genre />
-                  </MediaLayout>
-                }
-              />
-            </Route>
-            <Route path="/playlists">
-              <Route
-                path=":id"
-                element={
-                  <MediaLayout>
-                    <Playlist />
-                  </MediaLayout>
-                }
-              />
-            </Route>
-            <Route path="/media">
-              <Route path=":id" element={<Media />} />
-            </Route>
-            <Route path="/settings/*" element={<Settings />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </GlobalContextProvider>
-  );
+	return (
+		<GlobalContextProvider>
+			<Router>
+				<Layout>
+					<Routes>
+						{nav.map((item) => {
+							return (
+								<Route
+									key={item.name}
+									path={item.path}
+									element={<MediaLayout>{item.element}</MediaLayout>}
+								/>
+							);
+						})}
+						<Route path="/genres">
+							<Route
+								path=":id"
+								element={
+									<MediaLayout>
+										<Genre />
+									</MediaLayout>
+								}
+							/>
+						</Route>
+						<Route path="/playlists">
+							<Route
+								path=":id"
+								element={
+									<MediaLayout>
+										<Playlist />
+									</MediaLayout>
+								}
+							/>
+						</Route>
+						<Route path="/media">
+							<Route path=":id" element={<Media />} />
+						</Route>
+						<Route path="/settings/*" element={<Settings />} />
+					</Routes>
+				</Layout>
+			</Router>
+		</GlobalContextProvider>
+	);
 }
