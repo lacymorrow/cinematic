@@ -18,6 +18,12 @@
 // todo: show current processing info
 // todo: scrollarea for genre/playlist
 
+import {
+	pathGenres,
+	pathMedia,
+	pathPlaylists,
+	pathSettings,
+} from '@/config/nav';
 import { Layout } from '@/renderer/components/layout/Layout';
 import { MediaLayout } from '@/renderer/components/layout/SidebarLayout';
 import { nav } from '@/renderer/config/nav';
@@ -45,7 +51,7 @@ export default function App() {
 								/>
 							);
 						})}
-						<Route path="/genres">
+						<Route path={pathGenres}>
 							<Route
 								path=":id"
 								element={
@@ -55,7 +61,7 @@ export default function App() {
 								}
 							/>
 						</Route>
-						<Route path="/playlists">
+						<Route path={pathPlaylists}>
 							<Route
 								path=":id"
 								element={
@@ -65,10 +71,10 @@ export default function App() {
 								}
 							/>
 						</Route>
-						<Route path="/media">
+						<Route path={pathMedia}>
 							<Route path=":id" element={<Media />} />
 						</Route>
-						<Route path="/settings/*" element={<Settings />} />
+						<Route path={`${pathSettings}/*`} element={<Settings />} />
 					</Routes>
 				</Layout>
 			</Router>

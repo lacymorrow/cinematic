@@ -5,23 +5,23 @@ const DEFAULT_OMDB_KEY = 'e0341ca3';
 const DEFAULT_TMDB_KEY = '9d2bff12ed955c7f1f74b83187f188ae';
 
 export const TMDB_KEY = process.env.TMDB_KEY
-  ? process.env.TMDB_KEY
-  : DEFAULT_TMDB_KEY; // http://docs.themoviedb.apiary.io/ config
+	? process.env.TMDB_KEY
+	: DEFAULT_TMDB_KEY; // http://docs.themoviedb.apiary.io/ config
 export const OMDB_KEY = process.env.OMDB_KEY
-  ? process.env.OMDB_KEY
-  : DEFAULT_OMDB_KEY; // Omdb api key
+	? process.env.OMDB_KEY
+	: DEFAULT_OMDB_KEY; // Omdb api key
 
 export const VALID_FILETYPES = [
-  'avi',
-  'flv',
-  'mp4',
-  'm4v',
-  'mov',
-  'ogg',
-  'ogv',
-  'vob',
-  'wmv',
-  'mkv',
+	'avi',
+	'flv',
+	'mp4',
+	'm4v',
+	'mov',
+	'ogg',
+	'ogv',
+	'vob',
+	'wmv',
+	'mkv',
 ];
 export const CACHE_TIMEOUT = 3600; // Seconds; 604800 = 7 days; 0 === no caching
 
