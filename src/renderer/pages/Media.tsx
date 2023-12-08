@@ -52,7 +52,10 @@ export function Media(_props: Props) {
 
 	if (!id || !library[id]) {
 		// this shouldn't be possible
-		console.error('cinematic: Navigated to invalid media id', id);
+		console.error(
+			'renderer/pages/Media.tsx: Navigated to invalid media id',
+			id,
+		);
 		return handleBack();
 	}
 

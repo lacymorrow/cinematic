@@ -2,19 +2,19 @@
 const installer = require('electron-devtools-installer');
 
 const installExtensions = async () => {
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+	const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+	const extensions = ['REACT_DEVELOPER_TOOLS'];
 
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.warn);
+	return installer
+		.default(
+			extensions.map((name) => installer[name]),
+			forceDownload,
+		)
+		.catch(console.warn);
 };
 
 const debugging = {
-  installExtensions,
+	installExtensions,
 };
 
 export default debugging;

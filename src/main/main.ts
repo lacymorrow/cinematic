@@ -21,145 +21,145 @@ console.time('startup');
 let mainWindow: BrowserWindow | null = null;
 
 const start = () => {
-  // Register ipcMain listeners
-  ipc.init();
+	// Register ipcMain listeners
+	ipc.init();
 
-  // Enable source map support in production
-  if (is.prod) {
-    const sourceMapSupport = require('source-map-support');
-    sourceMapSupport.install();
-  }
+	// Enable source map support in production
+	if (is.prod) {
+		const sourceMapSupport = require('source-map-support');
+		sourceMapSupport.install();
+	}
 
-  // Enable debug utilities in development
-  if (is.debug) {
-    require('electron-debug')();
-  }
+	// Enable debug utilities in development
+	if (is.debug) {
+		require('electron-debug')();
+	}
 
-  // app.on()
-  eventListeners.register();
+	// app.on()
+	eventListeners.register();
 };
 
 // Add debugging extensions like `react-devtools` and `redux-devtools`
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+	const installer = require('electron-devtools-installer');
+	const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+	const extensions = ['REACT_DEVELOPER_TOOLS'];
 
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.warn);
+	return installer
+		.default(
+			extensions.map((name) => installer[name]),
+			forceDownload,
+		)
+		.catch(console.warn);
 };
 
 const createWindow = async () => {
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
+	const RESOURCES_PATH = app.isPackaged
+		? path.join(process.resourcesPath, 'assets')
+		: path.join(__dirname, '../../assets');
 
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
+	const getAssetPath = (...paths: string[]): string => {
+		return path.join(RESOURCES_PATH, ...paths);
+	};
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    minWidth: 550,
-    height: 728,
-    minHeight: 420,
-    icon: getAssetPath('icon.png'), // todo: set icon
-    webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
-    },
-  });
+	mainWindow = new BrowserWindow({
+		show: false,
+		width: 1024,
+		minWidth: 550,
+		height: 728,
+		minHeight: 420,
+		icon: getAssetPath('icon.png'), // todo: set icon
+		webPreferences: {
+			preload: app.isPackaged
+				? path.join(__dirname, 'preload.js')
+				: path.join(__dirname, '../../.erb/dll/preload.js'),
+		},
+	});
 
-  // Save reference to main window
-  win.mainWindow = mainWindow;
+	// Save reference to main window
+	win.mainWindow = mainWindow;
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+	mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  mainWindow.on('ready-to-show', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-    }
-  });
+	mainWindow.on('ready-to-show', () => {
+		if (!mainWindow) {
+			throw new Error('"mainWindow" is not defined');
+		}
+		if (process.env.START_MINIMIZED) {
+			mainWindow.minimize();
+		} else {
+			mainWindow.show();
+		}
+	});
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+	mainWindow.on('closed', () => {
+		mainWindow = null;
+	});
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+	const menuBuilder = new MenuBuilder(mainWindow);
+	menuBuilder.buildMenu();
 
-  // Open urls in the user's browser
-  mainWindow.webContents.setWindowOpenHandler((edata) => {
-    shell.openExternal(edata.url);
-    return { action: 'deny' };
-  });
+	// Open urls in the user's browser
+	mainWindow.webContents.setWindowOpenHandler((edata) => {
+		shell.openExternal(edata.url);
+		return { action: 'deny' };
+	});
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
+	// Remove this if your app does not use auto updates
+	// eslint-disable-next-line
   new AutoUpdate();
 };
 
 const ready = async () => {
-  // initialize the logger for any renderer process
-  log.initialize({ preload: true });
+	// initialize the logger for any renderer process
+	log.initialize({ preload: true });
 
-  if (is.debug) {
-    log.info(debugInfo());
-    await installExtensions();
-  }
+	if (is.debug) {
+		log.info(debugInfo());
+		await installExtensions();
+	}
 
-  // Report to renderer
-  updateAppStatusMessage($messages.init);
+	// Report to renderer
+	updateAppStatusMessage($messages.init);
 
-  // todo: load previous session
+	// todo: load previous session
 
-  // if no session, begin fresh scan
-  clearLibrary(); // todo: remove
-  clearCache();
-  updateAppStatusMessage('App ready');
+	// if no session, begin fresh scan
+	clearLibrary(); // todo: remove
+	clearCache();
+	updateAppStatusMessage('App ready');
 
-  createWindow();
+	createWindow();
 
-  app.on('activate', () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) createWindow();
-  });
+	app.on('activate', () => {
+		// On macOS it's common to re-create a window in the app when the
+		// dock icon is clicked and there are no other windows open.
+		if (mainWindow === null) createWindow();
+	});
 };
 
 // BEGIN
 console.timeLog('startup', 'init');
 
 app
-  .whenReady()
-  .then(ready)
-  .then(() => console.timeLog('startup', 'ready'))
-  .then(() => {
-    if (process.argv.includes('--scan')) {
-      scanMedia(DEFAULT_PATH);
-    }
+	.whenReady()
+	.then(ready)
+	.then(() => console.timeLog('startup', 'ready'))
+	.then(() => {
+		if (process.argv.includes('--scan')) {
+			scanMedia(DEFAULT_PATH);
+		}
 
-    // Idle
-  })
-  .then(() => {
-    updateAppStatusMessage('Idle');
+		// Idle
+	})
+	.then(() => {
+		updateAppStatusMessage('Idle');
 
-    console.timeLog('startup', 'idle');
-  })
-  .catch((error: Error) => {
-    console.error('cinematic: ', error);
-  });
+		console.timeLog('startup', 'idle');
+	})
+	.catch((error: Error) => {
+		console.error('main> ', error);
+	});
 
 start();
 

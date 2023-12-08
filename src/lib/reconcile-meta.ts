@@ -1,91 +1,92 @@
+import log from 'electron-log/main';
 import path from 'path';
 import { MediaType } from '../types/file';
 
 // Last If statement wins, reverse to prefer TMDB or OMDB
 export const reconcileMovieMeta = (media: MediaType) => {
-  // todo, we assume these aren't empty
-  const { tmdb, omdb, trailers } = media;
+	// todo, we assume these aren't empty
+	const { tmdb, omdb, trailers } = media;
 
-  media.ratings = [];
+	media.ratings = [];
 
-  // Set a single "main" trailer
-  if (trailers && trailers.length > 0) {
-    if (typeof trailers === 'string') {
-      media.trailer = trailers;
-    } else if (trailers.length > 0) {
-      [media.trailer] = trailers;
-    }
-  }
+	// Set a single "main" trailer
+	if (trailers && trailers.length > 0) {
+		if (typeof trailers === 'string') {
+			media.trailer = trailers;
+		} else if (trailers.length > 0) {
+			[media.trailer] = trailers;
+		}
+	}
 
-  if (tmdb && Object.keys(tmdb).length > 0) {
-    media.title = tmdb.title;
-    media.plot = tmdb.overview;
-    media.language = tmdb.original_language;
+	if (tmdb && Object.keys(tmdb).length > 0) {
+		media.title = tmdb.title;
+		media.plot = tmdb.overview;
+		media.language = tmdb.original_language;
 
-    const released = new Date(tmdb.release_date);
-    if (!Number.isNaN(released)) {
-      media.releaseDate = released.toDateString();
-      media.year = String(released.getFullYear());
-    }
+		const released = new Date(tmdb.release_date);
+		if (!Number.isNaN(released)) {
+			media.releaseDate = released.toDateString();
+			media.year = String(released.getFullYear());
+		}
 
-    try {
-      // Images
-      const baseURL = new URL(tmdb.imageBase);
+		try {
+			// Images
+			const baseURL = new URL(tmdb.imageBase);
 
-      media.backdrop = new URL(
-        path.join(baseURL.pathname, tmdb.backdrop_path),
-        baseURL.origin,
-      ).href;
+			media.backdrop = new URL(
+				path.join(baseURL.pathname, tmdb.backdrop_path),
+				baseURL.origin,
+			).href;
 
-      media.poster = new URL(
-        path.join(baseURL.pathname, tmdb.poster_path),
-        baseURL.origin,
-      ).href;
-    } catch (error) {
-      console.warn('No TMDB data');
-    }
+			media.poster = new URL(
+				path.join(baseURL.pathname, tmdb.poster_path),
+				baseURL.origin,
+			).href;
+		} catch (error) {
+			log.warn('No TMDB data');
 
-    // Ratings
-    if (tmdb.vote_average) {
-      const score = tmdb.vote_average;
-      media.ratings.push({
-        name: 'TMDB',
-        score,
-      });
-    }
-  }
+			// Ratings
+			if (tmdb.vote_average) {
+				const score = tmdb.vote_average;
+				media.ratings.push({
+					name: 'TMDB',
+					score,
+				});
+			}
+		}
+	}
 
-  if (omdb && Object.keys(omdb).length > 0) {
-    media.year = omdb.year;
-    media.runtime = omdb.runtime;
-    media.poster = omdb.poster;
-    media.plot = omdb.plot;
-    media.releaseDate = new Date(omdb.released).toDateString();
-    media.title = omdb.title;
+	if (omdb && Object.keys(omdb).length > 0) {
+		media.year = omdb.year;
+		media.runtime = omdb.runtime;
+		media.poster = omdb.poster;
+		media.plot = omdb.plot;
+		media.releaseDate = new Date(omdb.released).toDateString();
+		media.title = omdb.title;
 
-    if (omdb.metascore) {
-      const score = parseFloat(omdb.metascore);
-      media.ratings.push({
-        name: 'Metascore',
-        score,
-      });
-    }
+		if (omdb.metascore) {
+			const score = parseFloat(omdb.metascore);
+			media.ratings.push({
+				name: 'Metascore',
+				score,
+			});
+		}
 
-    if (omdb.imdbrating) {
-      const score = parseFloat(omdb.imdbrating);
-      media.ratings.push({
-        name: 'IMDB',
-        score,
-      });
-    }
-  }
+		if (omdb.imdbrating) {
+			const score = parseFloat(omdb.imdbrating);
+			media.ratings.push({
+				name: 'IMDB',
+				score,
+			});
+		}
+	}
 
-  return media;
+	return media;
 
-  // // Add movie genres
-  // for (const genre of response.genres) {
-  //   indexMovieGenre(genre.id, mid);
-  // }
+	// // Add movie genres
+	// for (const genre of response.genres) {
+	//   indexMovieGenre(genre.id, mid);
+	// }
 };
 
 // Queue Success: {

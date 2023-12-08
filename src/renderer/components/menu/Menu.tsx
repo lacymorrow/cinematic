@@ -11,15 +11,27 @@ import {
 	MenubarSubTrigger,
 	MenubarTrigger,
 } from '@/components/ui/menubar';
+import { pathSettings } from '@/config/nav';
+import { $app } from '@/config/strings';
 import { cn } from '@/lib/utils';
+import { EnterFullScreenIcon } from '@radix-ui/react-icons';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function Menu({ className }: { className?: string }) {
 	const navigate = useNavigate();
 
-	function handleClickPreferences() {
-		navigate('/settings');
-	}
+	const handleClickAbout = useCallback(() => {
+		// todo
+	}, []);
+
+	const handleClickPreferences = useCallback(() => {
+		navigate(pathSettings);
+	}, [navigate]);
+
+	const handleClickClose = useCallback(() => {
+		// todo
+	}, []);
 
 	return (
 		<Menubar
@@ -29,29 +41,34 @@ export function Menu({ className }: { className?: string }) {
 			)}
 		>
 			<MenubarMenu>
-				<MenubarTrigger className="font-bold">Cinematic</MenubarTrigger>
+				<MenubarTrigger className="font-bold">{$app.name}</MenubarTrigger>
 				<MenubarContent>
-					<MenubarItem>About Cinematic</MenubarItem>
+					<MenubarItem onClick={handleClickAbout}>
+						About {$app.name}
+					</MenubarItem>
 					<MenubarSeparator />
 					<MenubarItem onClick={handleClickPreferences}>
 						Preferences... <MenubarShortcut>⌘,</MenubarShortcut>
 					</MenubarItem>
 					<MenubarSeparator />
 					<MenubarItem>
-						Hide Music... <MenubarShortcut>⌘H</MenubarShortcut>
+						Hide {$app.name}... <MenubarShortcut>⌘H</MenubarShortcut>
 					</MenubarItem>
 					<MenubarItem>
 						Hide Others... <MenubarShortcut>⇧⌘H</MenubarShortcut>
 					</MenubarItem>
 					<MenubarShortcut />
 					<MenubarItem>
-						Quit Music <MenubarShortcut>⌘Q</MenubarShortcut>
+						Quit {$app.name} <MenubarShortcut>⌘Q</MenubarShortcut>
 					</MenubarItem>
 				</MenubarContent>
 			</MenubarMenu>
 			<MenubarMenu>
 				<MenubarTrigger className="relative">File</MenubarTrigger>
 				<MenubarContent>
+					<MenubarItem>
+						Add Media... <MenubarShortcut>⌘O</MenubarShortcut>
+					</MenubarItem>
 					<MenubarSub>
 						<MenubarSubTrigger>New</MenubarSubTrigger>
 						<MenubarSubContent className="w-[230px]">
@@ -65,13 +82,20 @@ export function Menu({ className }: { className?: string }) {
 							{/* <MenubarItem>Playlist Folder</MenubarItem> */}
 						</MenubarSubContent>
 					</MenubarSub>
-					<MenubarItem>
+					{/* <MenubarItem>
 						Open Stream URL... <MenubarShortcut>⌘U</MenubarShortcut>
+					</MenubarItem> */}
+					<MenubarSeparator />
+					<MenubarItem disabled>
+						Play File <MenubarShortcut>⌘P</MenubarShortcut>
 					</MenubarItem>
-					<MenubarItem>
+					<MenubarItem disabled>
+						Show in Finder <MenubarShortcut>⇧⌘R</MenubarShortcut>
+					</MenubarItem>
+					<MenubarItem onClick={handleClickClose}>
 						Close Window <MenubarShortcut>⌘W</MenubarShortcut>
 					</MenubarItem>
-					<MenubarSeparator />
+					{/* <MenubarSeparator />
 					<MenubarSub>
 						<MenubarSubTrigger>Library</MenubarSubTrigger>
 						<MenubarSubContent>
@@ -88,24 +112,10 @@ export function Menu({ className }: { className?: string }) {
 							<MenubarItem>Get Album Artwork</MenubarItem>
 							<MenubarItem disabled>Get Track Names</MenubarItem>
 						</MenubarSubContent>
-					</MenubarSub>
-					<MenubarItem>
-						Import... <MenubarShortcut>⌘O</MenubarShortcut>
-					</MenubarItem>
-					<MenubarItem disabled>Burn Playlist to Disc...</MenubarItem>
-					<MenubarSeparator />
-					<MenubarItem>
-						Show in Finder <MenubarShortcut>⇧⌘R</MenubarShortcut>{' '}
-					</MenubarItem>
-					<MenubarItem>Convert</MenubarItem>
-					<MenubarSeparator />
-					<MenubarItem>Page Setup...</MenubarItem>
-					<MenubarItem disabled>
-						Print... <MenubarShortcut>⌘P</MenubarShortcut>
-					</MenubarItem>
+					</MenubarSub> */}
 				</MenubarContent>
 			</MenubarMenu>
-			<MenubarMenu>
+			{/* <MenubarMenu>
 				<MenubarTrigger>Edit</MenubarTrigger>
 				<MenubarContent>
 					<MenubarItem disabled>
@@ -169,19 +179,26 @@ export function Menu({ className }: { className?: string }) {
 						</MenubarShortcut>
 					</MenubarItem>
 				</MenubarContent>
-			</MenubarMenu>
+			</MenubarMenu> */}
 			<MenubarMenu>
 				<MenubarTrigger>View</MenubarTrigger>
 				<MenubarContent>
-					<MenubarCheckboxItem>Show Playing Next</MenubarCheckboxItem>
-					<MenubarCheckboxItem checked>Show Lyrics</MenubarCheckboxItem>
+					<MenubarCheckboxItem checked disabled>
+						Show Watching Next
+					</MenubarCheckboxItem>
+					<MenubarCheckboxItem>Show Runtime</MenubarCheckboxItem>
 					<MenubarSeparator />
 					<MenubarItem inset disabled>
 						Show Status Bar
 					</MenubarItem>
 					<MenubarSeparator />
-					<MenubarItem inset>Hide Sidebar</MenubarItem>
-					<MenubarItem inset>Enter Full Screen</MenubarItem>
+					<MenubarItem inset disabled>
+						Hide Sidebar
+					</MenubarItem>
+					<MenubarItem disabled>
+						<EnterFullScreenIcon className="mr-2" />
+						Enter Full Screen <MenubarShortcut>⌘F</MenubarShortcut>
+					</MenubarItem>
 				</MenubarContent>
 			</MenubarMenu>
 			{/* <MenubarMenu>
