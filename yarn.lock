@@ -10805,6 +10805,11 @@ toidentifier@1.0.1:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
+torrent-name-parser@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/torrent-name-parser/-/torrent-name-parser-0.6.5.tgz#0795d7763a3be2694d632e2721dcd14aa71b53b1"
+  integrity sha512-ao92tzD6DjYKN0dedEZxfylL4ZWYaYFgPktKxkEmlsLrF/ia41Sg+l3rJ2XLJufQUR3uTbd7bYMqxbh/kxb1pQ==
+
 totalist@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/totalist/-/totalist-3.0.1.tgz#ba3a3d600c915b1a97872348f79c127475f6acf8"

@@ -2,10 +2,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 import {
-  DEFAULT_FILE_META,
-  DIRECTORY_IGNORE_PATTERN,
-  FILE_SCAN_DEPTH,
-  VALID_FILETYPES,
+	DEFAULT_FILE_META,
+	DIRECTORY_IGNORE_PATTERN,
+	FILE_SCAN_DEPTH,
+	VALID_FILETYPES,
 } from '../config/config';
 import { FileType } from '../types/file';
 import { addMediaToLibrary } from './media';
@@ -14,75 +14,75 @@ import { ignorePattern } from './util';
 
 // scan a file and add it to the movies state
 export const scanFile = async (media: FileType) => {
-  const { ext, filename, filepath } = media;
+	const { ext, filename, filepath } = media;
 
-  // create a pretty file extension
-  const extension = ext.replace('.', '').toLowerCase();
+	// create a pretty file extension
+	const extension = ext.replace('.', '').toLowerCase();
 
-  // Ignore files that match the ignore pattern like "sample.avi"
-  if (VALID_FILETYPES.includes(extension) && !ignorePattern(filename)) {
-    // File is good! Add to library
-    addMediaToLibrary({ ...DEFAULT_FILE_META, ext, filename, filepath });
-  } else {
-    console.warn(`Invalid filetype: ${ext} ${filepath}`);
-    // todo: add to invalid files state
-    // report to user files that were not added
-  }
+	// Ignore files that match the ignore pattern like "sample.avi"
+	if (VALID_FILETYPES.includes(extension) && !ignorePattern(filename)) {
+		// File is good! Add to library
+		addMediaToLibrary({ ...DEFAULT_FILE_META, ext, filename, filepath });
+	} else {
+		console.warn(`Invalid filetype: ${ext} ${filepath}`);
+		// todo: add to invalid files state
+		// report to user files that were not added
+	}
 };
 
 // scan users movies or media folder and create an array of video files
 export const scanDirectory = async (directoryPath: string, depth: number) => {
-  // store the path in the settings
-  addPath(directoryPath);
+	// store the path in the settings
+	addPath(directoryPath);
 
-  const files = await fs.readdir(directoryPath, { withFileTypes: true }); // https://stackoverflow.com/a/70328065/939330 - withFileTypes has isDirectory() method
-  files.forEach((file) => {
-    const { name } = file;
+	const files = await fs.readdir(directoryPath, { withFileTypes: true }); // https://stackoverflow.com/a/70328065/939330 - withFileTypes has isDirectory() method
+	files.forEach((file) => {
+		const { name } = file;
 
-    // Skip dotfiles
-    if (name.startsWith('.')) {
-      return false;
-    }
+		// Skip dotfiles
+		if (name.startsWith('.')) {
+			return false;
+		}
 
-    const ext = path.extname(name);
-    const filename = path.basename(name, ext); // Remove the extension
-    const filepath = path.join(directoryPath, name);
+		const ext = path.extname(name);
+		const filename = path.basename(name, ext); // Remove the extension
+		const filepath = path.join(directoryPath, name);
 
-    if (file.isFile()) {
-      // File
-      scanFile({ ext, filename, filepath });
-    } else if (file.isDirectory() && depth < FILE_SCAN_DEPTH) {
-      // Directory
-      if (!DIRECTORY_IGNORE_PATTERN.includes(filename.toLowerCase())) {
-        scanDirectory(filepath, depth + 1);
-      } else {
-        console.warn(`Ignoring directory: ${filename}`);
-      }
-    }
-  });
+		if (file.isFile()) {
+			// File
+			scanFile({ ext, filename, filepath });
+		} else if (file.isDirectory() && depth < FILE_SCAN_DEPTH) {
+			// Directory
+			if (!DIRECTORY_IGNORE_PATTERN.includes(filename.toLowerCase())) {
+				scanDirectory(filepath, depth + 1);
+			} else {
+				console.warn(`Ignoring directory: ${filename}`);
+			}
+		}
+	});
 };
 
 // Begin the scanning operation on the movies folder
 export const scanMedia = async (mediaPath: string) => {
-  console.warn('Begin scanning media: ', mediaPath);
+	console.warn('Begin scanning media: ', mediaPath);
 
-  // check if movies folder exists, readable, and is directory
-  const stats = await fs.stat(mediaPath).catch((err) => {
-    console.error(`Media is not accessible: ${err}`);
-  });
+	// check if movies folder exists, readable, and is directory
+	const stats = await fs.stat(mediaPath).catch((err) => {
+		console.error(`Media is not accessible: ${err}`);
+	});
 
-  if (stats?.isDirectory()) {
-    // scan movies folder
-    // todo: reset movies state here, since we are beginning a new scan
-    await scanDirectory(mediaPath, 0);
-  } else if (stats?.isFile()) {
-    const ext = path.extname(mediaPath);
-    const filename = path.basename(mediaPath, ext); // Remove the extension
+	if (stats?.isDirectory()) {
+		// scan movies folder
+		// todo: reset movies state here, since we are beginning a new scan
+		await scanDirectory(mediaPath, 0);
+	} else if (stats?.isFile()) {
+		const ext = path.extname(mediaPath);
+		const filename = path.basename(mediaPath, ext); // Remove the extension
 
-    scanFile({
-      ext,
-      filename,
-      filepath: mediaPath,
-    });
-  }
+		scanFile({
+			ext,
+			filename,
+			filepath: mediaPath,
+		});
+	}
 };

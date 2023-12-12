@@ -125,8 +125,8 @@ const ready = async () => {
 	// todo: load previous session
 
 	// if no session, begin fresh scan
-	clearLibrary(); // todo: remove
 	clearCache();
+	clearLibrary(); // todo: remove
 	updateAppStatusMessage('App ready');
 
 	createWindow();
