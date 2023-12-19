@@ -43,3 +43,44 @@ jobs:
             !release/**/linux*
             !release/**/mac*
             !release/**/win*
+
+  build-linux:
+    # To enable auto publishing to github, update your electron publisher
+    # config in package.json > "build" and remove the conditional below
+    if: ${{ github.repository_owner == 'lacymorrow' }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+
+      - name: Install Node and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: sudo apt install libarchive-tools
+
+      - name: Install and build
+        run: |
+          npm install
+          npm run postinstall
+          npm run package:linux
+
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: |
+            release/build
+            !release/**/builder*
+            !release/**/linux*
+            !release/**/mac*
+            !release/**/win*
