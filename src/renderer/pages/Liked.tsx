@@ -6,15 +6,15 @@ import { LikedEmptyPlaceholder } from '../components/media/LikedEmptyPlaceholder
 type Props = {};
 
 export function Liked(_props: Props) {
-  const { liked } = React.useContext(GlobalContext);
+	const { liked } = React.useContext(GlobalContext);
 
-  return (
-    <MediaBrowser
-      items={liked}
-      title="Liked Media"
-      tagline="Showing the best of the best, the things you liked most."
-      NotFound={LikedEmptyPlaceholder}
-      addMediaButton={false}
-    />
-  );
+	return (
+		<MediaBrowser
+			items={liked}
+			title="Liked Media"
+			tagline="Showing the best of the best, the things you liked most."
+			NotFound={LikedEmptyPlaceholder}
+			addMediaButton={false}
+		/>
+	);
 }

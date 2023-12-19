@@ -1,18 +1,18 @@
 import { SettingsType } from '@/main/store';
 
 const settings: SettingsType = {
-  paths: [],
+	paths: [],
 
-  autoUpdate: true,
-  quitOnWindowClose: false,
+	autoUpdate: true,
+	quitOnWindowClose: false,
 
-  showSidebar: true,
-  showDockIcon: true,
-  showTrayIcon: true,
+	showSidebar: true,
+	showDockIcon: true,
+	showTrayIcon: true,
 
-  theme: 'light',
-  thumbnailSize: 'large',
+	theme: 'light',
+	thumbnailSize: 'large',
 
-  viewMode: 'grid',
+	viewMode: 'grid',
 };
 export default settings;

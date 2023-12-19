@@ -1,23 +1,26 @@
 module.exports = {
 	extends: ['erb'],
 	plugins: ['@typescript-eslint'],
+	ignorePatterns: ['**/components/ui/'],
+
 	rules: {
 		'consistent-return': 'off',
+		'no-shadow': 'off',
+		'no-unused-vars': 'off',
 		'no-useless-return': 'warn',
+		'react/prop-types': 'off',
 		'react/react-in-jsx-scope': 'off',
-		'react/jsx-filename-extension': 'off',
 		'react/require-default-props': 'off',
-		'react/jsx-props-no-spreading': 'off',
+		'react/jsx-filename-extension': 'off',
 		'react/jsx-no-useless-fragment': 'off',
+		'react/jsx-props-no-spreading': 'off',
 		// A temporary hack related to IDE not resolving correct package.json
 		'import/no-extraneous-dependencies': 'off',
 		'import/prefer-default-export': 'off',
 		'import/extensions': 'off',
 		'import/no-unresolved': 'off',
 		'import/no-import-module-exports': 'off',
-		'no-shadow': 'off',
 		'@typescript-eslint/no-shadow': 'error',
-		'no-unused-vars': 'off',
 		'@typescript-eslint/no-unused-vars': [
 			'warn',
 			{

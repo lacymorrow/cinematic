@@ -10,11 +10,8 @@ import {
 } from '@/components/ui/card';
 import { $app } from '@/config/strings';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export function CardGithub() {
-	const navigate = useNavigate();
-
 	const handleClickStar = useCallback(() => {
 		window?.electron?.openUrl($app.github);
 	}, []);

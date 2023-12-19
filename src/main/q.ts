@@ -6,113 +6,113 @@ import { fetchOMDB, fetchTMDB, fetchTrailer } from '../lib/fetch-meta';
 import { MediaType, SearchMetaType } from '../types/file';
 import { OmdbType, TmdbType, TrailersType } from '../types/meta';
 import {
-  addGenre,
-  getCachedObject,
-  setCachedObject,
-  updateAppStatusMessage,
-  upsertMediaLibrary,
+	addGenre,
+	getCachedObject,
+	setCachedObject,
+	updateAppStatusMessage,
+	upsertMediaLibrary,
 } from './store';
 
 const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
-  async (meta: SearchMetaType) => {
-    updateAppStatusMessage(`${$messages.fetching_omdb}: ${meta.title}`);
-    const cacheKey = `omdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
-    const cache = getCachedObject(cacheKey);
-    if (cache) {
-      return cache;
-    }
+	async (meta: SearchMetaType) => {
+		updateAppStatusMessage(`${$messages.fetching_omdb}: ${meta.title}`);
+		const cacheKey = `omdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
+		const cache = getCachedObject(cacheKey);
+		if (cache) {
+			return cache;
+		}
 
-    // Not in cache, fetch and cache
-    const result = await fetchOMDB(meta);
-    setCachedObject(cacheKey, result);
+		// Not in cache, fetch and cache
+		const result = await fetchOMDB(meta);
+		setCachedObject(cacheKey, result);
 
-    return result;
-  },
-  1,
+		return result;
+	},
+	1,
 );
 
 const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
-  async (meta: SearchMetaType) => {
-    updateAppStatusMessage(`${$messages.fetching_tmdb}: ${meta.title}`);
-    const cacheKey = `tmdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
-    const cache = getCachedObject(cacheKey);
-    if (cache) {
-      return cache;
-    }
+	async (meta: SearchMetaType) => {
+		updateAppStatusMessage(`${$messages.fetching_tmdb}: ${meta.title}`);
+		const cacheKey = `tmdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
+		const cache = getCachedObject(cacheKey);
+		if (cache) {
+			return cache;
+		}
 
-    const result = await fetchTMDB(meta);
-    setCachedObject(cacheKey, result);
-    return result;
-  },
-  1,
+		const result = await fetchTMDB(meta);
+		setCachedObject(cacheKey, result);
+		return result;
+	},
+	1,
 );
 
 const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
-  async (meta: SearchMetaType) => {
-    updateAppStatusMessage(`${$messages.fetching_trailers}: ${meta.title}`);
-    const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`; // trailer-<title>-<year>
-    const cache = getCachedObject(cacheKey);
-    if (cache) {
-      return cache;
-    }
+	async (meta: SearchMetaType) => {
+		updateAppStatusMessage(`${$messages.fetching_trailers}: ${meta.title}`);
+		const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`; // trailer-<title>-<year>
+		const cache = getCachedObject(cacheKey);
+		if (cache) {
+			return cache;
+		}
 
-    const result = await fetchTrailer(meta);
-    setCachedObject(cacheKey, result);
-    return result;
-  },
-  1,
+		const result = await fetchTrailer(meta);
+		setCachedObject(cacheKey, result);
+		return result;
+	},
+	1,
 );
 
 const onQueueError = (err: Error | undefined) => {
-  console.error('Queue Error: ', err);
+	console.error('Queue Error: ', err);
 };
 
 const onQueueSuccess = (result: MediaType) => {
-  if (typeof result === 'object' && result.filepath) {
-    // store result
-    upsertMediaLibrary(result);
-  }
+	if (typeof result === 'object' && result.filepath) {
+		// store result
+		upsertMediaLibrary(result);
+	}
 
-  if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
-    updateAppStatusMessage($messages.idle);
-  }
+	if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
+		updateAppStatusMessage($messages.idle);
+	}
 };
 
 // Add to queue
 const add = (media: MediaType) => {
-  if (!media.title) {
-    return;
-  }
+	if (!media.title) {
+		return;
+	}
 
-  qTrailer
-    .push(media)
-    .then((result: TrailersType) => {
-      return { ...media, trailers: result };
-    })
-    .then(onQueueSuccess)
-    .catch(onQueueError);
-  qTMDB
-    .push(media)
-    .then((result: TmdbType) => {
-      // track queue progress
-      console.log('progress', qTMDB.length());
-      return { ...media, tmdb: result };
-    })
-    .then(onQueueSuccess)
-    .catch(onQueueError);
-  qOMDB
-    .push(media)
-    .then((result: OmdbType) => {
-      // Index genres
-      if (result?.genre) {
-        Object.values(result.genre).forEach((genre) => {
-          addGenre({ genre, id: media.id });
-        });
-      }
-      return { ...media, omdb: result };
-    })
-    .then(onQueueSuccess)
-    .catch(onQueueError);
+	qTrailer
+		.push(media)
+		.then((result: TrailersType) => {
+			return { ...media, trailers: result };
+		})
+		.then(onQueueSuccess)
+		.catch(onQueueError);
+	qTMDB
+		.push(media)
+		.then((result: TmdbType) => {
+			// track queue progress
+			console.log('progress', qTMDB.length());
+			return { ...media, tmdb: result };
+		})
+		.then(onQueueSuccess)
+		.catch(onQueueError);
+	qOMDB
+		.push(media)
+		.then((result: OmdbType) => {
+			// Index genres
+			if (result?.genre) {
+				Object.values(result.genre).forEach((genre) => {
+					addGenre({ genre, id: media.id });
+				});
+			}
+			return { ...media, omdb: result };
+		})
+		.then(onQueueSuccess)
+		.catch(onQueueError);
 };
 
 export default { add };
