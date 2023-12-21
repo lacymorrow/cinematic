@@ -2,13 +2,15 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { pathSettings } from '@/config/nav';
 import { cn } from '@/lib/utils';
+import { DialogDeletePlaylist } from '@/renderer/components/dialog/DialogDeletePlaylist';
+import Icons from '@/renderer/components/images/Icons';
 import { nav } from '@/renderer/config/nav';
+import { GlobalContext } from '@/renderer/context/global-context';
 import { BookmarkIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { GlobalContext } from '../../context/global-context';
-import { DialogDeletePlaylist } from '../dialog/DialogDeletePlaylist';
-import Icons from '../images/Icons';
+
+import styles from '@/renderer/styles/Sidebar.module.scss';
 
 const linkProps = {
 	draggable: false,
@@ -25,7 +27,9 @@ export function Sidebar({ className }: SidebarProps) {
 
 	return (
 		<div className="flex flex-col">
-			<ScrollArea className={cn('container-sidebar grow', className)}>
+			<ScrollArea
+				className={cn('container-sidebar grow', styles.masked, className)}
+			>
 				<div className="h-full space-y-4 p-4 flex flex-col justify-between">
 					<div>
 						<div className="py-2">
@@ -138,7 +142,7 @@ export function Sidebar({ className }: SidebarProps) {
 					</div>
 				</div>
 			</ScrollArea>
-			<div className="p-4 shrink-0">
+			<div className="p-2 shrink-0">
 				<Link to={pathSettings} {...linkProps}>
 					{/* todo? */}
 					<Button

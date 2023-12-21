@@ -27,7 +27,7 @@ export function Library(_props: Props) {
 			{libraryArray.length === 0 ? (
 				<MediaEmptyPlaceholder />
 			) : (
-				<div>
+				<div className="">
 					<div className="relative">
 						<ScrollArea>
 							<div className="flex space-x-4 pb-4">
