@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/context-menu';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { GlobalContext } from '@/renderer/context/global-context';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -43,7 +43,7 @@ export function MediaArtwork({
 	className,
 	...props
 }: MediaArtworkProps) {
-	const { playlistsArray } = React.useContext(GlobalContext);
+	const { playlistsArray } = useGlobalContext();
 
 	const url = useMemo(() => `/media/${media.id}`, [media.id]);
 

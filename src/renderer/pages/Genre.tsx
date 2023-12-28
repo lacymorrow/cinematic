@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import { MediaType } from '@/types/file';
-import { GlobalContext } from '../context/global-context';
+import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { MediaBrowser } from '../components/media/MediaBrowser';
+import { useGlobalContext } from '../context/global-context';
 
 type Props = {};
 
 export function Genre(_props: Props) {
 	const { id }: { id?: string } = useParams();
-	const { genres, libraryArray } = React.useContext(GlobalContext);
+	const { genres, libraryArray } = useGlobalContext();
 
 	const [mediaArray, title] = useMemo(() => {
 		// todo: something else

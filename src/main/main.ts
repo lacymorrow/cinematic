@@ -110,6 +110,11 @@ const createWindow = async () => {
   new AutoUpdate();
 };
 
+const resetApp = () => {
+	clearCache();
+	clearLibrary();
+};
+
 const ready = async () => {
 	// initialize the logger for any renderer process
 	log.initialize({ preload: true });
@@ -119,14 +124,15 @@ const ready = async () => {
 		await installExtensions();
 	}
 
+	resetApp();
+
 	// Report to renderer
 	updateAppStatusMessage($messages.init);
 
 	// todo: load previous session
 
 	// if no session, begin fresh scan
-	clearCache();
-	clearLibrary(); // todo: remove
+
 	updateAppStatusMessage('App ready');
 
 	createWindow();

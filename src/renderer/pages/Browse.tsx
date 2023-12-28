@@ -1,11 +1,10 @@
-import React from 'react';
 import { MediaBrowser } from '../components/media/MediaBrowser';
-import { GlobalContext } from '../context/global-context';
+import { useGlobalContext } from '../context/global-context';
 
 type Props = {};
 
 export function Browse(_props: Props) {
-	const { libraryArray } = React.useContext(GlobalContext);
+	const { libraryArray } = useGlobalContext();
 
 	return (
 		<MediaBrowser

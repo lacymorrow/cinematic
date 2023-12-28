@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
 	Form,
 	FormControl,
@@ -15,49 +15,40 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { toast } from '@/components/ui/use-toast';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
-const items = [
+const sidebarItems = [
 	{
-		id: 'recents',
-		label: 'Recents',
+		id: 'watch',
+		label: 'Watch now',
 	},
 	{
-		id: 'home',
-		label: 'Home',
+		id: 'liked',
+		label: 'Liked media',
 	},
 	{
-		id: 'applications',
-		label: 'Applications',
+		id: 'genres',
+		label: 'Genres',
 	},
 	{
-		id: 'desktop',
-		label: 'Desktop',
-	},
-	{
-		id: 'downloads',
-		label: 'Downloads',
-	},
-	{
-		id: 'documents',
-		label: 'Documents',
+		id: 'playlists',
+		label: 'Playlists',
 	},
 ] as const;
 
 const displayFormSchema = z.object({
-	items: z.array(z.string()).refine((value) => value.some((item) => item), {
-		message: 'You have to select at least one item.',
-	}),
+	sidebarItems: z.array(z.string()),
 });
 
 type DisplayFormValues = z.infer<typeof displayFormSchema>;
 
-// This can come from your database or API.
-const defaultValues: Partial<DisplayFormValues> = {
-	items: ['recents', 'home'],
-};
-
 export function DisplayForm() {
+	const { settings, setSettings } = useGlobalContext();
+
+	const defaultValues: Partial<DisplayFormValues> = {
+		sidebarItems: settings.visibleSidebarElements,
+	};
+
 	const form = useForm<DisplayFormValues>({
 		resolver: zodResolver(displayFormSchema),
 		defaultValues,
@@ -74,25 +65,35 @@ export function DisplayForm() {
 		});
 	}
 
+	const handleSidebarChange = (e: string[]) => {
+		setSettings({
+			visibleSidebarElements: e,
+		});
+	};
+
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="space-y-8"
+				onChange={() => handleSidebarChange(form.getValues('sidebarItems'))}
+			>
 				<FormField
 					control={form.control}
-					name="items"
+					name="sidebarItems"
 					render={() => (
 						<FormItem>
 							<div className="mb-4">
-								<FormLabel className="text-base">Sidebar</FormLabel>
+								<FormLabel className="text-base">User Interface</FormLabel>
 								<FormDescription>
-									Select the items you want to display in the sidebar.
+									Show or hide sidebarItems in the application interface.
 								</FormDescription>
 							</div>
-							{items.map((item) => (
+							{sidebarItems.map((item) => (
 								<FormField
 									key={item.id}
 									control={form.control}
-									name="items"
+									name="sidebarItems"
 									render={({ field }) => {
 										return (
 											<FormItem
@@ -125,7 +126,54 @@ export function DisplayForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Update display</Button>
+				<FormField
+					control={form.control}
+					name="sidebarItems"
+					render={() => (
+						<FormItem>
+							<div className="mb-4">
+								<FormLabel className="text-base">Sidebar</FormLabel>
+								<FormDescription>
+									Select the sidebarItems you want to display in the sidebar.
+								</FormDescription>
+							</div>
+							{sidebarItems.map((item) => (
+								<FormField
+									key={item.id}
+									control={form.control}
+									name="sidebarItems"
+									render={({ field }) => {
+										return (
+											<FormItem
+												key={item.id}
+												className="flex flex-row sidebarItems-start space-x-3 space-y-0"
+											>
+												<FormControl>
+													<Checkbox
+														checked={field.value?.includes(item.id)}
+														onCheckedChange={(checked) => {
+															return checked
+																? field.onChange([...field.value, item.id])
+																: field.onChange(
+																		field.value?.filter(
+																			(value) => value !== item.id,
+																		),
+																  );
+														}}
+													/>
+												</FormControl>
+												<FormLabel className="font-normal">
+													{item.label}
+												</FormLabel>
+											</FormItem>
+										);
+									}}
+								/>
+							))}
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 			</form>
 		</Form>
 	);

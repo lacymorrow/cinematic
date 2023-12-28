@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ViewModeType } from '@/main/store';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
-import { GlobalContext } from '@/renderer/context/global-context';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import {
 	BookmarkIcon,
@@ -21,9 +21,9 @@ import {
 	ListBulletIcon,
 } from '@radix-ui/react-icons';
 import React from 'react';
-import { ScrollContainer } from '../layout/ScrollContainer';
-import { SectionHeader } from '../layout/SectionHeader';
-import { ButtonAddMedia } from './ButtonAddMedia';
+import { ButtonAddMedia } from '../ui/ButtonAddMedia';
+import { ScrollContainer } from '../ui/ScrollContainer';
+import { SectionHeader } from '../ui/SectionHeader';
 
 type Props = {
 	items: MediaType[];
@@ -40,11 +40,10 @@ export function MediaBrowser({
 	addMediaButton = true,
 	NotFound = MediaEmptyPlaceholder,
 }: Props) {
-	const { settings } = React.useContext(GlobalContext);
+	const { settings, setSettings } = useGlobalContext();
 
 	const handleViewChange = (value: string) => {
-		console.log('handleViewChange', value);
-		window.electron.setSettings({
+		setSettings({
 			viewMode: value as ViewModeType,
 		});
 	};
@@ -52,10 +51,12 @@ export function MediaBrowser({
 		<ScrollContainer>
 			{items.length === 0 ? (
 				<>
-					<SectionHeader title={title} tagline={tagline}>
-						<div className="ml-auto mr-4 group">
-							{addMediaButton && <ButtonAddMedia />}
-						</div>
+					<SectionHeader
+						title={title}
+						tagline={tagline}
+						className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4"
+					>
+						{addMediaButton && <ButtonAddMedia />}
 					</SectionHeader>
 					<NotFound />
 				</>
@@ -65,8 +66,8 @@ export function MediaBrowser({
 					className="space-y-6 h-full min-h-0 flex flex-col select-none"
 					onValueChange={handleViewChange}
 				>
-					<div className="space-between flex items-center">
-						<TabsList>
+					<div className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4">
+						<TabsList className="grow-0">
 							<TabsTrigger value="grid" className="relative">
 								<DashboardIcon className="mr-2" /> Grid
 							</TabsTrigger>
@@ -75,7 +76,7 @@ export function MediaBrowser({
 								List
 							</TabsTrigger>
 						</TabsList>
-						<div className="ml-auto mr-4 group">
+						<div className="group">
 							<ButtonAddMedia />
 						</div>
 					</div>

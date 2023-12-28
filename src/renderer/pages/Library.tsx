@@ -1,17 +1,16 @@
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ScrollContainer } from '@/renderer/components/layout/ScrollContainer';
-import { SectionHeader } from '@/renderer/components/layout/SectionHeader';
-import { ButtonAddMedia } from '@/renderer/components/media/ButtonAddMedia';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
-import { GlobalContext } from '@/renderer/context/global-context';
+import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
+import { ScrollContainer } from '@/renderer/components/ui/ScrollContainer';
+import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
-import React from 'react';
 
 type Props = {};
 
 export function Library(_props: Props) {
-	const { libraryArray, randomLibraryArray } = React.useContext(GlobalContext);
+	const { libraryArray, randomLibraryArray } = useGlobalContext();
 
 	const mostRecent = libraryArray.filter((media) => media.dateUpdated);
 	return (
@@ -19,8 +18,9 @@ export function Library(_props: Props) {
 			<SectionHeader
 				title="Watch Now"
 				tagline="Jump right into something new, chosen at random."
+				className="flex-col-reverse md:flex-row md:items-center justify-between gap-4"
 			>
-				<div className="ml-auto mr-4 group">
+				<div className="group">
 					<ButtonAddMedia />
 				</div>
 			</SectionHeader>

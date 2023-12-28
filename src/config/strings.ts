@@ -4,6 +4,16 @@ export const $app = {
 	github: 'https://github.com/lacymorrow/cinematic',
 };
 
+export const $settings = {
+	appearance: {
+		themeLabel: 'Theme',
+		themeDescription: 'Select the theme for the application',
+		light: 'Light',
+		dark: 'Dark',
+		system: 'System',
+	},
+};
+
 export const $actions = {
 	addMedia: 'Add Media',
 };
@@ -36,4 +46,19 @@ export const $messages = {
 	fetching_omdb: 'Fetching OMDB metadata',
 	fetching_tmdb: 'Fetching TBDB metadata',
 	fetching_trailers: 'Fetching trailers',
+};
+
+export const $placeholders = {
+	media: {
+		title: 'No media added',
+		description:
+			'You have not added any media directories or files. Select a directory to scan for media files.',
+		button: 'Add Media',
+	},
+	liked: {
+		title: 'No liked media',
+		description:
+			'You have not added any media directories or files. Select a directory to scan for media files.',
+		button: 'Back to Library',
+	},
 };

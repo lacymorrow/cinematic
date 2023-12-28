@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { $placeholders } from '@/config/strings';
 import { ViewNoneIcon } from '@radix-ui/react-icons';
 
 export function MediaEmptyPlaceholder() {
@@ -8,15 +9,16 @@ export function MediaEmptyPlaceholder() {
 
 	return (
 		<div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
-			<div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
+			<div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center p-2">
 				<ViewNoneIcon className="w-16 h-16 text-muted-foreground" />
-				<h3 className="mt-4 text-lg font-semibold">No media added</h3>
+				<h3 className="mt-4 text-lg font-semibold">
+					{$placeholders.media.title}
+				</h3>
 				<p className="mb-4 mt-2 text-sm text-muted-foreground">
-					You have not added any media directories or files. Select a directory
-					to scan for media files.
+					{$placeholders.media.description}
 				</p>
 				<Button size="sm" className="relative" onClick={handleClick}>
-					Add media files
+					{$placeholders.media.button}
 				</Button>
 			</div>
 		</div>

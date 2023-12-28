@@ -1,12 +1,11 @@
-import React from 'react';
-import { GlobalContext } from '../context/global-context';
-import { MediaBrowser } from '../components/media/MediaBrowser';
 import { LikedEmptyPlaceholder } from '../components/media/LikedEmptyPlaceholder';
+import { MediaBrowser } from '../components/media/MediaBrowser';
+import { useGlobalContext } from '../context/global-context';
 
 type Props = {};
 
 export function Liked(_props: Props) {
-	const { liked } = React.useContext(GlobalContext);
+	const { liked } = useGlobalContext();
 
 	return (
 		<MediaBrowser

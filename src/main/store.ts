@@ -60,6 +60,7 @@ export interface SettingsType {
 	showDockIcon: boolean;
 	showSidebar: boolean;
 	showTrayIcon: boolean;
+	visibleSidebarElements: string[];
 	// alwaysOnTop: boolean;
 	// showAlwaysOnTopPrompt: boolean;
 	// autoHideMenuBar: boolean;
@@ -146,6 +147,9 @@ const schema: Store.Schema<StoreType> = {
 			showTrayIcon: {
 				type: 'boolean',
 			},
+			visibleSidebarElements: {
+				type: 'array',
+			},
 			viewMode: {
 				type: 'string',
 				enum: ['grid', 'list'],
@@ -160,6 +164,13 @@ const schema: Store.Schema<StoreType> = {
 			showSidebar: true,
 			showDockIcon: true,
 			showTrayIcon: true,
+			visibleSidebarElements: [
+				'watch',
+				'liked',
+				'genres',
+				'playlists',
+				'history',
+			],
 			viewMode: 'grid',
 		},
 	},
@@ -167,9 +178,10 @@ const schema: Store.Schema<StoreType> = {
 
 const store = new Store<StoreType>({ schema });
 
-const libraryWasUpdated = throttle(() => {
+const synchronizeApp = () =>
 	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
-}, THROTTLE_DELAY);
+
+const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
 
 const appMessageUpdated = () => {
 	win?.mainWindow?.webContents.send(
@@ -181,7 +193,7 @@ const appMessageUpdated = () => {
 export const resetStore = () => {
 	store.clear();
 
-	libraryWasUpdated();
+	appWasUpdated();
 };
 
 export const clearLibrary = () => {
@@ -190,8 +202,9 @@ export const clearLibrary = () => {
 	store.delete('playlists');
 	store.delete('history');
 	store.delete('appMessageLog');
+	store.delete('settings');
 
-	libraryWasUpdated();
+	appWasUpdated();
 };
 
 export const clearCache = () => {
@@ -203,13 +216,14 @@ export const getSettings = () => {
 };
 
 export const setSettings = (settings: Partial<SettingsType>) => {
+	console.log('setSettings', settings);
 	store.set('settings', {
 		...getSettings(),
 		...settings,
 	});
 
 	// Sync with renderer
-	libraryWasUpdated();
+	synchronizeApp();
 };
 
 // Add a media path to the library
@@ -226,7 +240,6 @@ export const addPath = (path: string) => {
 };
 
 export const updateAppStatusMessage = (message: AppMessageType) => {
-	console.log('updateAppStatusMessage', message);
 	const appMessageLog = store.get('appMessageLog');
 	appMessageLog.push(message);
 	store.set('appMessageLog', appMessageLog);
@@ -312,7 +325,7 @@ const upsertMedia = (media: MediaType) => {
 	store.set('library', library);
 
 	// throttled
-	libraryWasUpdated();
+	appWasUpdated();
 };
 
 const afterUpsertMediaLibrary = (key: string) => {
@@ -385,14 +398,14 @@ export const addToPlaylist = (id: string, name: string) => {
 		playlists[playlistId].values.push(id);
 		store.set('playlists', playlists);
 	}
-	libraryWasUpdated();
+	appWasUpdated();
 };
 
 export const deletePlaylist = (id: string) => {
 	const playlists = store.get('playlists');
 	delete playlists[id];
 	store.set('playlists', playlists);
-	libraryWasUpdated();
+	appWasUpdated();
 };
 
 export const getCachedObject = (key: string) => {

@@ -9,7 +9,7 @@ import {
 	SettingsType,
 } from '@/main/store';
 import { CollectionType, LibraryType } from '@/types/media';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import DEFAULT_SETTINGS from '@/config/settings';
 
@@ -23,6 +23,7 @@ interface GlobalContextType {
 	playlistsArray: CollectionType;
 	randomLibraryArray: LibraryType;
 	settings: SettingsType;
+	setSettings: (newSettings: Partial<SettingsType>) => void;
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
@@ -35,6 +36,7 @@ export const GlobalContext = React.createContext<GlobalContextType>({
 	playlistsArray: [],
 	randomLibraryArray: [],
 	settings: DEFAULT_SETTINGS,
+	setSettings: () => {},
 });
 
 export function GlobalContextProvider({
@@ -45,7 +47,7 @@ export function GlobalContextProvider({
 	const [genres, setGenres] = React.useState<CollectionStoreType>({});
 	const [library, setLibrary] = React.useState<LibraryStoreType>({});
 	const [playlists, setPlaylists] = React.useState<CollectionStoreType>({});
-	const [settings, setSettings] =
+	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
 	useEffect(() => {
@@ -54,7 +56,7 @@ export function GlobalContextProvider({
 
 			setGenres(await window.electron.getGenres());
 			setPlaylists(await window.electron.getPlaylists());
-			setSettings(await window.electron.getSettings());
+			setCurrentSettings(await window.electron.getSettings());
 			setLibrary(await window.electron.getLibrary());
 		};
 
@@ -66,6 +68,11 @@ export function GlobalContextProvider({
 		return () => {
 			window.electron.ipcRenderer.removeAllListeners(LIBRARY_UPDATED);
 		};
+	}, []);
+
+	// Electron API functions
+	const setSettings = useCallback((newSettings: Partial<SettingsType>) => {
+		window.electron.setSettings(newSettings);
 	}, []);
 
 	const libraryArray = useMemo(() => Object.values(library), [library]);
@@ -91,6 +98,7 @@ export function GlobalContextProvider({
 			playlistsArray,
 			randomLibraryArray,
 			settings,
+			setSettings,
 		};
 	}, [
 		genres,
@@ -102,9 +110,19 @@ export function GlobalContextProvider({
 		playlistsArray,
 		randomLibraryArray,
 		settings,
+		setSettings,
 	]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
 	);
 }
+
+export const useGlobalContext = () => {
+	const context = useContext(GlobalContext);
+
+	if (context === undefined)
+		throw new Error('useGlobalContext must be used within a GlobalContext');
+
+	return context;
+};

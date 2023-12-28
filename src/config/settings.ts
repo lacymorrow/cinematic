@@ -10,6 +10,8 @@ const settings: SettingsType = {
 	showDockIcon: true,
 	showTrayIcon: true,
 
+	visibleSidebarElements: ['watch', 'liked', 'genres', 'playlists', 'history'],
+
 	theme: 'light',
 	thumbnailSize: 'large',
 

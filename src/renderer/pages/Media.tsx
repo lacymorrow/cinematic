@@ -2,16 +2,16 @@
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
 	PageHeader,
 	PageHeaderDescription,
 	PageHeaderHeading,
-} from '../components/layout/PageHeader';
-import { SectionHeader } from '../components/layout/SectionHeader';
-import { GlobalContext } from '../context/global-context';
+} from '../components/ui/PageHeader';
+import { SectionHeader } from '../components/ui/SectionHeader';
+import { useGlobalContext } from '../context/global-context';
 
 type Props = {};
 
@@ -34,7 +34,7 @@ export function MediaTable(data: any) {
 
 export function Media(_props: Props) {
 	const { id } = useParams();
-	const { library } = React.useContext(GlobalContext);
+	const { library } = useGlobalContext();
 	const navigate = useNavigate();
 
 	useEffect(() => {
