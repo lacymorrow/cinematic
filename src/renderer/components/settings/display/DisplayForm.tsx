@@ -19,10 +19,6 @@ import { useGlobalContext } from '@/renderer/context/global-context';
 
 const sidebarItems = [
 	{
-		id: 'watch',
-		label: 'Watch now',
-	},
-	{
 		id: 'liked',
 		label: 'Liked media',
 	},

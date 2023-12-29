@@ -8,7 +8,6 @@ export const nav = [
 		id: 'watch',
 		name: 'Watch Now',
 		path: '/',
-		// icon: Icons.playIcon,
 		icon: <VideoIcon className="mr-2" />,
 		element: <Library />,
 	},

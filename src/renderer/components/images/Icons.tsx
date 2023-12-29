@@ -1,4 +1,4 @@
-const browseIcon = (
+const browseIcon = ({ className }: { className?: string }) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
@@ -7,7 +7,7 @@ const browseIcon = (
 		strokeWidth="2"
 		strokeLinecap="round"
 		strokeLinejoin="round"
-		className="mr-2 h-4 w-4"
+		className={className}
 	>
 		<rect width="7" height="7" x="3" y="3" rx="1" />
 		<rect width="7" height="7" x="14" y="3" rx="1" />
@@ -16,10 +16,10 @@ const browseIcon = (
 	</svg>
 );
 
-const closeIcon = (
+const closeIcon = ({ className }: { className?: string }) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
-		className="h-7 w-7 text-inherit"
+		className={className}
 		fill="none"
 		viewBox="0 0 24 24"
 		stroke="currentColor"
@@ -33,7 +33,7 @@ const closeIcon = (
 	</svg>
 );
 
-const playIcon = (
+const playIcon = ({ className }: { className?: string }) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
@@ -42,14 +42,14 @@ const playIcon = (
 		strokeWidth="2"
 		strokeLinecap="round"
 		strokeLinejoin="round"
-		className="mr-2 h-4 w-4"
+		className={className}
 	>
 		<circle cx="12" cy="12" r="10" />
 		<polygon points="10 8 16 12 10 16 10 8" />
 	</svg>
 );
 
-const podcastIcon = (
+const podcastIcon = ({ className }: { className?: string }) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		fill="none"
@@ -57,7 +57,7 @@ const podcastIcon = (
 		strokeLinecap="round"
 		strokeLinejoin="round"
 		strokeWidth="2"
-		className="h-10 w-10 text-muted-foreground"
+		className={className}
 		viewBox="0 0 24 24"
 	>
 		<circle cx="12" cy="11" r="1" />
@@ -66,7 +66,7 @@ const podcastIcon = (
 	</svg>
 );
 
-const stacksIcon = (
+const stacksIcon = ({ className }: { className?: string }) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ const stacksIcon = (
 		strokeWidth="2"
 		strokeLinecap="round"
 		strokeLinejoin="round"
-		className="mr-2 h-4 w-4"
+		className={className}
 	>
 		<path d="m16 6 4 14" />
 		<path d="M12 6v14" />

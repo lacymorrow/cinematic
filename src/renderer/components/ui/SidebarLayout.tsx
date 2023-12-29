@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sidebar } from './Sidebar';
 
-export function MediaLayout({ children }: { children: React.ReactNode }) {
+export function SidebarLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
 			<Sidebar className="w-60" />

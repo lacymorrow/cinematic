@@ -12,7 +12,7 @@ import { IsOnlineContextProvider } from 'react-is-online-context';
 // We can't use the ScrollArea here or the scroll will persist between navigations
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<ThemeProvider defaultTheme="light" storageKey="app-ui-theme">
+		<ThemeProvider>
 			<div className="w-full h-full flex flex-col">
 				<Menu className="shrink-0" />
 				<div className="border-t grow flex min-h-0">
