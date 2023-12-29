@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { $placeholders } from '@/config/strings';
-import { BookmarkIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, BookmarkIcon } from '@radix-ui/react-icons';
 import { useNavigate } from 'react-router-dom';
 
 export function LikedEmptyPlaceholder() {
@@ -19,8 +19,12 @@ export function LikedEmptyPlaceholder() {
 				<p className="mb-4 mt-2 text-sm text-muted-foreground">
 					{$placeholders.liked.description}
 				</p>
-				<Button size="sm" className="relative" onClick={handleClick}>
-					{$placeholders.liked.button}
+				<Button
+					size="sm"
+					className="relative flex items-center justify-center gap-2"
+					onClick={handleClick}
+				>
+					<ArrowLeftIcon /> {$placeholders.liked.button}
 				</Button>
 			</div>
 		</div>

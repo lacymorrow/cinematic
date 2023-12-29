@@ -63,10 +63,10 @@ export function MediaBrowser({
 			) : (
 				<Tabs
 					defaultValue={settings.viewMode}
-					className="space-y-6 h-full min-h-0 flex flex-col select-none"
+					className="space-y-6 h-full min-h-0 flex flex-col"
 					onValueChange={handleViewChange}
 				>
-					<div className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4">
+					<div className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4 select-none">
 						<TabsList className="grow-0">
 							<TabsTrigger value="grid" className="relative">
 								<DashboardIcon className="mr-2" /> Grid

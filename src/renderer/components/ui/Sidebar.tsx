@@ -25,7 +25,7 @@ export function Sidebar({ className }: SidebarProps) {
 	const { genresArray, liked, playlistsArray, settings } = useGlobalContext();
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col select-none">
 			<ScrollArea
 				className={cn('container-sidebar grow', styles.masked, className)}
 			>

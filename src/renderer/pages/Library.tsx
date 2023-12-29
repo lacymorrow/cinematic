@@ -18,17 +18,15 @@ export function Library(_props: Props) {
 			<SectionHeader
 				title="Watch Now"
 				tagline="Jump right into something new, chosen at random."
-				className="flex-col-reverse md:flex-row md:items-center justify-between gap-4"
+				className="flex-col-reverse md:flex-row md:items-start justify-between gap-4"
 			>
-				<div className="group">
-					<ButtonAddMedia />
-				</div>
+				<ButtonAddMedia />
 			</SectionHeader>
 			{libraryArray.length === 0 ? (
 				<MediaEmptyPlaceholder />
 			) : (
 				<div className="">
-					<div className="relative">
+					<div className="relative mb-4 select-none">
 						<ScrollArea>
 							<div className="flex space-x-4 pb-4">
 								{randomLibraryArray.map((media: MediaType) => (
@@ -49,7 +47,7 @@ export function Library(_props: Props) {
 						title="Recently Added"
 						tagline="Start up the latest files you've added."
 					/>
-					<div className="relative">
+					<div className="relative select-none">
 						<ScrollArea>
 							<div className="flex space-x-4 pb-4">
 								{mostRecent.map((media) => (
