@@ -102,7 +102,7 @@ export function ResizableLayout({
 						'flex flex-col',
 					)}
 				>
-					<ScrollArea className={cn('grow static', styles.masked)}>
+					<ScrollArea className={cn('grow', styles.faded)}>
 						<div className={cn(!isCollapsed && 'p-2 md:px-4 lg:px-6')}>
 							{!isCollapsed && <Header text="Library" />}
 							<Nav isCollapsed={isCollapsed} links={nav} />

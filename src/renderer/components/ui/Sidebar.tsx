@@ -104,7 +104,7 @@ export function Sidebar({ className }: SidebarProps) {
 														'w-full justify-start font-normal',
 													)}
 												>
-													{Icons.stacksIcon}
+													<Icons.stacksIcon className="mr-2 h-4 w-4" />
 													{value.name}
 												</Link>
 											);
@@ -136,7 +136,7 @@ export function Sidebar({ className }: SidebarProps) {
 													)}
 												>
 													<div className="flex">
-														{Icons.stacksIcon}
+														<Icons.stacksIcon className="mr-2 h-4 w-4" />
 														{playlist.name}
 													</div>
 													{/* todo: if you mess with a dialog on another page, then click delete, it navigates instead */}
