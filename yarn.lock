@@ -5226,10 +5226,10 @@ electron-updater@^6.1.7:
     semver "^7.3.8"
     tiny-typed-emitter "^2.1.0"
 
-electron@^28.1.0:
-  version "28.1.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-28.1.0.tgz#9de1ecdaafcb0ec5753827f14dfb199e6c84545e"
-  integrity sha512-82Y7o4PSWPn1o/aVwYPsgmBw6Gyf2lVHpaBu3Ef8LrLWXxytg7ZRZr/RtDqEMOzQp3+mcuy3huH84MyjdmP50Q==
+electron@27.1.0:
+  version "27.1.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-27.1.0.tgz#d759885e552d7d926526cfc433ab312796f74a9a"
+  integrity sha512-XPdJiO475QJ8cx59/goWNNWnlV0vab+Ut3occymos7VDxkHV5mFrlW6tcGi+M3bW6gBfwpJocWMng8tw542vww==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"
