@@ -17,12 +17,14 @@ import {
 } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { TokensIcon, VideoIcon } from '@radix-ui/react-icons';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { pathSettings } from '@/config/nav';
 import { $ui } from '@/config/strings';
+import { DEBOUNCE_DELAY } from '@/renderer/config/config';
 import styles from '@/renderer/styles/Sidebar.module.scss';
+import { debounce } from '@/utils/debounce';
 import { DialogDeletePlaylist } from '../dialog/DialogDeletePlaylist';
 
 const Header = ({ text }: { text: string }) => (
@@ -38,21 +40,35 @@ interface Props {
 
 export function ResizableLayout({
 	children,
-	defaultLayout = [265, 440, 655],
+	defaultLayout = [20, 80],
 	defaultCollapsed = false,
 	navCollapsedSize = 4,
 }: Props) {
 	const { pathname } = useLocation();
-	const { genresArray, liked, playlistsArray, settings } = useGlobalContext();
+	const { genresArray, liked, playlistsArray, settings, setSettings } =
+		useGlobalContext();
 
-	const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
+	console.log('genresArray', settings.sidebarCollapsed);
 
-	const handleCollapseExpand = (collapsed: boolean) => {
+	const [isCollapsed, setIsCollapsed] = React.useState(
+		settings.sidebarCollapsed,
+	);
+
+	const handleLayoutChange = useCallback(
+		debounce((layout: number[]) => {
+			setSettings({
+				sidebarLayout: layout,
+			});
+		}, DEBOUNCE_DELAY),
+		[],
+	);
+
+	const handleCollapseExpand = useCallback((collapsed: boolean) => {
 		setIsCollapsed(collapsed);
-		document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-			collapsed,
-		)}`;
-	};
+		setSettings({
+			sidebarCollapsed: collapsed,
+		});
+	}, []);
 
 	const nav: NavLinkProps[] = [
 		{
@@ -83,19 +99,15 @@ export function ResizableLayout({
 		<TooltipProvider delayDuration={0}>
 			<ResizablePanelGroup
 				direction="horizontal"
-				onLayout={(sizes: number[]) => {
-					document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-						sizes,
-					)}`;
-				}}
+				onLayout={handleLayoutChange}
 				className="h-full items-stretch"
 			>
 				<ResizablePanel
-					defaultSize={defaultLayout[0]}
+					defaultSize={settings.sidebarLayout[0] || defaultLayout[0]}
 					collapsedSize={navCollapsedSize}
 					collapsible
-					minSize={15}
-					maxSize={30}
+					minSize={18}
+					maxSize={40}
 					onCollapse={() => handleCollapseExpand(true)}
 					onExpand={() => handleCollapseExpand(false)}
 					className={cn(
@@ -156,7 +168,6 @@ export function ResizableLayout({
 															/>
 														</div>
 													),
-													// label: <DialogDeletePlaylist playlist={playlist} />,
 													...(pathname === playlistPath
 														? { variant: 'default' }
 														: {}),
@@ -183,7 +194,7 @@ export function ResizableLayout({
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel
-					defaultSize={defaultLayout[1]}
+					defaultSize={settings.sidebarLayout[1] || defaultLayout[1]}
 					minSize={30}
 					className="flex flex-col"
 				>

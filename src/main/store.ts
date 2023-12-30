@@ -2,6 +2,7 @@ import Store from 'electron-store';
 import getUuidByString from 'uuid-by-string';
 import { CACHE_TIMEOUT, THROTTLE_DELAY } from '../config/config';
 import { ipcChannels } from '../config/ipc-channels';
+import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
 import { reconcileMovieMeta } from '../lib/reconcile-meta';
 import { MediaType } from '../types/file';
 import { CollectionItemType } from '../types/media';
@@ -37,43 +38,6 @@ export interface HistoryType {
 	action: HistoryActionType;
 	timestamp: number;
 	id: string;
-}
-
-export type ViewModeType = 'grid' | 'list';
-
-export type ThemeType = 'system' | 'light' | 'dark';
-
-export type ThumbnailSizeType = 'small' | 'medium' | 'large';
-
-export interface SettingsType {
-	autoUpdate: boolean;
-
-	paths: string[];
-	thumbnailSize: ThumbnailSizeType;
-	theme: ThemeType;
-
-	viewMode: ViewModeType;
-	// vibrancy: 'none' | 'sidebar' | 'full';
-	// autoplayVideos: boolean;
-	// zoomFactor: number;
-	// menuBarMode: boolean;
-	showDockIcon: boolean;
-	showSidebar: boolean;
-	showTrayIcon: boolean;
-	visibleSidebarElements: string[];
-	// alwaysOnTop: boolean;
-	// showAlwaysOnTopPrompt: boolean;
-	// autoHideMenuBar: boolean;
-	// notificationsMuted: boolean;
-	// hardwareAcceleration: boolean;
-	quitOnWindowClose: boolean;
-	// lastWindowState: {
-	// 	x: number;
-	// 	y: number;
-	// 	width: number;
-	// 	height: number;
-	// 	isMaximized: boolean;
-	// };
 }
 
 export interface StoreType {
@@ -123,14 +87,8 @@ const schema: Store.Schema<StoreType> = {
 			paths: {
 				type: 'array',
 			},
-			theme: {
-				type: 'string',
-				enum: ['system', 'light', 'dark'],
-			},
-
-			thumbnailSize: {
-				type: 'string',
-				enum: ['small', 'medium', 'large'],
+			sidebarLayout: {
+				type: 'array',
 			},
 			autoUpdate: {
 				type: 'boolean',
@@ -147,6 +105,14 @@ const schema: Store.Schema<StoreType> = {
 			showTrayIcon: {
 				type: 'boolean',
 			},
+			theme: {
+				type: 'string',
+				enum: ['system', 'light', 'dark'],
+			},
+			thumbnailSize: {
+				type: 'string',
+				enum: ['small', 'medium', 'large'],
+			},
 			visibleSidebarElements: {
 				type: 'array',
 			},
@@ -155,24 +121,7 @@ const schema: Store.Schema<StoreType> = {
 				enum: ['grid', 'list'],
 			},
 		},
-		default: {
-			paths: [],
-			theme: 'light',
-			thumbnailSize: 'large',
-			autoUpdate: true,
-			quitOnWindowClose: false,
-			showSidebar: true,
-			showDockIcon: true,
-			showTrayIcon: true,
-			visibleSidebarElements: [
-				'watch',
-				'liked',
-				'genres',
-				'playlists',
-				'history',
-			],
-			viewMode: 'grid',
-		},
+		default: DEFAULT_SETTINGS,
 	},
 };
 
@@ -216,7 +165,6 @@ export const getSettings = () => {
 };
 
 export const setSettings = (settings: Partial<SettingsType>) => {
-	console.log('setSettings', settings);
 	store.set('settings', {
 		...getSettings(),
 		...settings,

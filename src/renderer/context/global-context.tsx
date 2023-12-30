@@ -3,15 +3,11 @@
 // Use IPC to update data
 
 import { LIBRARY_UPDATED } from '@/config/ipc-channels';
-import {
-	CollectionStoreType,
-	LibraryStoreType,
-	SettingsType,
-} from '@/main/store';
+import { CollectionStoreType, LibraryStoreType } from '@/main/store';
 import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import DEFAULT_SETTINGS from '@/config/settings';
+import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
 
 interface GlobalContextType {
 	genres: CollectionStoreType;

@@ -38,7 +38,7 @@ export const POSTER_SIZE = 'w780'; // "w92", "w154", "w185", "w342", "w500", "w7
 // -- affects how app is run and may affect performance
 export const FILE_SCAN_DEPTH = 1; // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
 export const MAX_CONNECTIONS = 3; // Max number of simultaneous, more is faster but more api hits at once; 5 is okay...
-export const THROTTLE_DELAY = 2000; // Milli-seconds delay
+export const THROTTLE_DELAY = 1000; // Milli-seconds delay; todo
 export const RETRY_DELAY = 4000; // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 export const DIRECTORY_IGNORE_PATTERN = ['private']; // A lowercase list of movie titles to ignore; ex: sample.avi
 export const FILE_IGNORE_PATTERN = ['sample', 'etrg']; // A lowercase list of movie titles to ignore; ex: sample.avi

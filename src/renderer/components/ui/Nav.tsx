@@ -69,9 +69,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
 									variant: link.variant ? link.variant : 'ghost',
 									size: 'sm',
 								}),
+								// This is the currently selected link
 								link.variant === 'default' &&
 									'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
-								'justify-start min-w-0 group',
+								'justify-start min-w-0 group overflow-hidden', // group for the delete playlist button
 							)}
 						>
 							<link.icon className="mr-2 h-4 w-4 shrink-0" />
