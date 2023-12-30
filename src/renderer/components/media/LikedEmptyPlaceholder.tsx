@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { $placeholders } from '@/config/strings';
-import { ArrowLeftIcon, BookmarkIcon } from '@radix-ui/react-icons';
+import { BackIcon, DislikedIcon } from '@/renderer/config/icons';
 import { useNavigate } from 'react-router-dom';
 
 export function LikedEmptyPlaceholder() {
@@ -12,7 +12,7 @@ export function LikedEmptyPlaceholder() {
 	return (
 		<div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
 			<div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center p-2">
-				<BookmarkIcon className="w-16 h-16 text-muted-foreground" />
+				<DislikedIcon className="w-16 h-16 text-muted-foreground" />
 				<h3 className="mt-4 text-lg font-semibold">
 					{$placeholders.liked.title}
 				</h3>
@@ -24,7 +24,7 @@ export function LikedEmptyPlaceholder() {
 					className="relative flex items-center justify-center gap-2"
 					onClick={handleClick}
 				>
-					<ArrowLeftIcon /> {$placeholders.liked.button}
+					<BackIcon /> {$placeholders.liked.button}
 				</Button>
 			</div>
 		</div>

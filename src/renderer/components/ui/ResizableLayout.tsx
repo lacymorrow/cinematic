@@ -21,7 +21,9 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { pathSettings } from '@/config/nav';
+import { $ui } from '@/config/strings';
 import styles from '@/renderer/styles/Sidebar.module.scss';
+import { DialogDeletePlaylist } from '../dialog/DialogDeletePlaylist';
 
 const Header = ({ text }: { text: string }) => (
 	<h2 className="p-2 text-lg font-semibold tracking-tight">{text}</h2>
@@ -69,7 +71,7 @@ export function ResizableLayout({
 
 	if (settings.visibleSidebarElements?.includes('liked')) {
 		nav.push({
-			title: 'Liked',
+			title: $ui.liked.liked,
 			icon: liked.length < 1 ? DislikedIcon : LikedIcon,
 			label: liked.length < 1 ? '' : liked.length.toString(),
 			href: '/liked',
@@ -99,11 +101,12 @@ export function ResizableLayout({
 					className={cn(
 						isCollapsed &&
 							'min-w-[50px] transition-all duration-300 ease-in-out',
-						'flex flex-col',
+						'flex flex-col @container',
 					)}
 				>
+					{/* todo: fade out the sidebar */}
 					<ScrollArea className={cn('grow', styles.faded)}>
-						<div className={cn(!isCollapsed && 'p-2 md:px-4 lg:px-6')}>
+						<div className={cn(!isCollapsed && 'p-2 lg:px-4')}>
 							{!isCollapsed && <Header text="Library" />}
 							<Nav isCollapsed={isCollapsed} links={nav} />
 
@@ -117,9 +120,10 @@ export function ResizableLayout({
 											links={genresArray.map((genre) => {
 												const genrePath = `/genres/${genre.id}`;
 												return {
-													title: genre.name,
+													title: `${genre.name}`,
 													icon: GenresIcon,
 													href: genrePath,
+													label: `${genre.values.length}`,
 													...(pathname === genrePath
 														? { variant: 'default' }
 														: {}),
@@ -141,6 +145,18 @@ export function ResizableLayout({
 													title: playlist.name,
 													icon: PlaylistIcon,
 													href: playlistPath,
+													label: (
+														<div className="flex items-center gap-2">
+															<span className="transition-transform translate-x-6 group-hover:translate-x-0 group-focus-within:translate-x-0">
+																{playlist.values.length}
+															</span>
+															<DialogDeletePlaylist
+																playlist={playlist}
+																className="w-8 transition-all opacity-0 translate-x-6 group-hover:opacity-90 group-hover:translate-x-0 group-focus-within:opacity-90 group-focus-within:translate-x-0"
+															/>
+														</div>
+													),
+													// label: <DialogDeletePlaylist playlist={playlist} />,
 													...(pathname === playlistPath
 														? { variant: 'default' }
 														: {}),
@@ -166,10 +182,16 @@ export function ResizableLayout({
 					</div>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-					<div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-						{children}
-					</div>
+				<ResizablePanel
+					defaultSize={defaultLayout[1]}
+					minSize={30}
+					className="flex flex-col"
+				>
+					<ScrollArea className={cn('grow')}>
+						<div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+							{children}
+						</div>
+					</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</TooltipProvider>

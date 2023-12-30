@@ -1,13 +1,4 @@
-import {
-	ArrowTopRightIcon,
-	BookmarkFilledIcon,
-	BookmarkIcon,
-	CardStackIcon,
-	MixIcon,
-	PlusCircledIcon,
-	VideoIcon,
-} from '@radix-ui/react-icons';
-
+// todo: strings
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -20,6 +11,15 @@ import {
 } from '@/components/ui/context-menu';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import {
+	AddIcon,
+	DislikedIcon,
+	ExternalLinkIcon,
+	LikedIcon,
+	OpenIcon,
+	PlayIcon,
+	PlaylistIcon,
+} from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';
@@ -98,29 +98,25 @@ export function MediaArtwork({
 					</ContextMenuTrigger>
 					<ContextMenuContent className="w-40">
 						<Link to={url} draggable={false}>
-							<ContextMenuItem>
-								<CardStackIcon className="mr-2" />
+							<ContextMenuItem className="flex gap-2">
+								<OpenIcon />
 								Open
 							</ContextMenuItem>
 						</Link>
-						<ContextMenuItem onClick={handleOpenFile}>
-							<VideoIcon className="mr-2" />
+						<ContextMenuItem className="flex gap-2" onClick={handleOpenFile}>
+							<PlayIcon />
 							Play file
 						</ContextMenuItem>
-						<ContextMenuItem onClick={handleLike}>
-							{media.liked ? (
-								<BookmarkFilledIcon className="mr-2" />
-							) : (
-								<BookmarkIcon className="mr-2" />
-							)}
+						<ContextMenuItem onClick={handleLike} className="flex gap-2">
+							{media.liked ? <LikedIcon /> : <DislikedIcon />}
 							Like
 						</ContextMenuItem>
 						<ContextMenuSub>
 							<ContextMenuSubTrigger>Add to Playlist</ContextMenuSubTrigger>
 							<ContextMenuSubContent className="w-48">
 								<DialogTrigger asChild>
-									<ContextMenuItem>
-										<PlusCircledIcon className="mr-2 h-4 w-4" />
+									<ContextMenuItem className="flex gap-2">
+										<AddIcon className="h-4 w-4" />
 										New Playlist
 									</ContextMenuItem>
 								</DialogTrigger>
@@ -128,8 +124,8 @@ export function MediaArtwork({
 									<>
 										<ContextMenuSeparator />
 										{playlistsArray.map((playlist) => (
-											<ContextMenuItem key={playlist.id}>
-												<MixIcon className="mr-2" />
+											<ContextMenuItem key={playlist.id} className="flex gap-2">
+												<PlaylistIcon />
 												{playlist.name}
 											</ContextMenuItem>
 										))}
@@ -145,7 +141,7 @@ export function MediaArtwork({
 									`${media.title} ${media.year ? media.year : ''}`,
 								)}`}
 							>
-								Open in Google <ArrowTopRightIcon />
+								Open in Google <ExternalLinkIcon />
 							</ExternalLink>
 						</ContextMenuItem>
 
@@ -154,7 +150,7 @@ export function MediaArtwork({
 								<ExternalLink
 									href={`https://www.imdb.com/title/${media.omdb.imdbid}/`}
 								>
-									Open in IMDB <ArrowTopRightIcon />
+									Open in IMDB <ExternalLinkIcon />
 								</ExternalLink>
 							</ContextMenuItem>
 						)}

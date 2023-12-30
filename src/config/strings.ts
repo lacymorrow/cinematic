@@ -48,6 +48,32 @@ export const $messages = {
 	fetching_trailers: 'Fetching trailers',
 };
 
+export const $ui = {
+	liked: {
+		liked: 'Liked',
+		disliked: 'Disliked',
+	},
+	view: {
+		grid: 'Grid',
+		list: 'List',
+	},
+};
+
+export const $media = {
+	title: 'Title',
+	year: 'Year',
+	released: 'Release Date',
+	runtime: 'Runtime',
+	rating: 'Rating',
+	genres: 'Genres',
+	actors: 'Actors',
+	directors: 'Directors',
+	plot: 'Plot',
+	awards: 'Awards',
+	production: 'Production',
+	website: 'Website',
+};
+
 export const $placeholders = {
 	media: {
 		title: 'No media added',

@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 export interface NavLinkProps {
 	title: string;
-	label?: string;
+	label?: string | JSX.Element;
 	icon: LucideIcon | React.FC;
 	variant?: 'default' | 'ghost' | 'secondary';
 	href?: string;
@@ -71,7 +71,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
 								}),
 								link.variant === 'default' &&
 									'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
-								'justify-start min-w-0',
+								'justify-start min-w-0 group',
 							)}
 						>
 							<link.icon className="mr-2 h-4 w-4 shrink-0" />
@@ -81,7 +81,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
 							{link.label && (
 								<span
 									className={cn(
-										'pl-2 ml-auto',
+										'pl-2 ml-auto text-muted-foreground',
 										link.variant === 'default' &&
 											'text-background dark:text-white',
 									)}

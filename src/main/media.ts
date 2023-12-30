@@ -100,7 +100,7 @@ export const addMediaToLibrary = (media: FileType) => {
 
 	// Add to library - allow showing in the ui before meta is retrieved
 	upsertMediaLibrary(updatedMedia);
-	Logger.info(`Update ${updatedMedia} to library`);
+	Logger.info(`Updated ${updatedMedia.title} metadata`);
 
 	// If we're missing meta info, add to queue to retrieve it
 	if (!updatedMedia.tmdb || !updatedMedia.omdb || !updatedMedia.trailers) {

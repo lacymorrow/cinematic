@@ -10,16 +10,14 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { $media, $ui } from '@/config/strings';
 import { ViewModeType } from '@/main/store';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
+import { GridIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
-import {
-	BookmarkIcon,
-	DashboardIcon,
-	ListBulletIcon,
-} from '@radix-ui/react-icons';
+import { BookmarkIcon } from '@radix-ui/react-icons';
 import React from 'react';
 import { ButtonAddMedia } from '../ui/ButtonAddMedia';
 import { ScrollContainer } from '../ui/ScrollContainer';
@@ -68,12 +66,12 @@ export function MediaBrowser({
 				>
 					<div className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4 select-none">
 						<TabsList className="grow-0">
-							<TabsTrigger value="grid" className="relative">
-								<DashboardIcon className="mr-2" /> Grid
+							<TabsTrigger value="grid" className="relative flex gap-2">
+								<GridIcon /> {$ui.view.grid}
 							</TabsTrigger>
-							<TabsTrigger value="list">
-								<ListBulletIcon className="mr-2" />
-								List
+							<TabsTrigger value="list" className="flex gap-2">
+								<ListIcon />
+								{$ui.view.list}
 							</TabsTrigger>
 						</TabsList>
 						<div className="group">
@@ -104,10 +102,12 @@ export function MediaBrowser({
 							<TableCaption>{tagline}</TableCaption>
 							<TableHeader>
 								<TableRow>
-									<TableHead className="">Title</TableHead>
-									<TableHead>Released</TableHead>
-									<TableHead>Runtime</TableHead>
-									<TableHead className="text-right">Amount</TableHead>
+									<TableHead className="">{$media.title}</TableHead>
+									<TableHead>{$media.released}</TableHead>
+									<TableHead>{$media.runtime}</TableHead>
+									<TableHead className="text-right">
+										{$ui.liked.liked}
+									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -116,8 +116,8 @@ export function MediaBrowser({
 										<TableCell className="font-medium">{media.title}</TableCell>
 										<TableCell>{media.year}</TableCell>
 										<TableCell>{media.runtime}</TableCell>
-										<TableCell className="text-right">
-											<BookmarkIcon />
+										<TableCell>
+											<BookmarkIcon className="ml-auto" />
 										</TableCell>
 									</TableRow>
 								))}

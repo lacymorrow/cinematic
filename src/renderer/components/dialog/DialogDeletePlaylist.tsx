@@ -9,14 +9,15 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { CloseIcon } from '@/renderer/config/icons';
 import { CollectionItemType } from '@/types/media';
-import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { Link } from 'react-router-dom';
 
 export function DialogDeletePlaylist({
+	className,
 	playlist,
 }: {
+	className?: string;
 	playlist: CollectionItemType;
 }) {
 	const handleSubmit = () => {
@@ -25,12 +26,27 @@ export function DialogDeletePlaylist({
 
 	return (
 		<AlertDialog>
-			<AlertDialogTrigger>
-				<div className="h-full flex items-center justify-center text-muted-foreground opacity-0 transition-opacity group-hover:opacity-90 hover:text-foreground -m-2 p-2">
-					<CrossCircledIcon />
+			<AlertDialogTrigger
+				onClick={(e) => {
+					e.stopPropagation();
+					e.nativeEvent.preventDefault();
+				}}
+			>
+				<div
+					className={cn(
+						'h-full flex items-center justify-center text-muted-foreground transition-opacity group-hover:opacity-90 group-focus-within:opacity-90 hover:text-foreground -m-2 p-2',
+						className,
+					)}
+				>
+					<CloseIcon />
 				</div>
 			</AlertDialogTrigger>
-			<AlertDialogContent>
+			<AlertDialogContent
+				onClick={(e) => {
+					e.stopPropagation();
+					e.nativeEvent.preventDefault();
+				}}
+			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
 						Are you sure you want to delete this playlist?
@@ -42,16 +58,7 @@ export function DialogDeletePlaylist({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction>
-						<Link
-							to="/"
-							draggable={false}
-							className={buttonVariants()}
-							onClick={handleSubmit}
-						>
-							Delete
-						</Link>
-					</AlertDialogAction>
+					<AlertDialogAction onClick={handleSubmit}>Delete</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

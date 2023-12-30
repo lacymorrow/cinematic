@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: ['class'],
@@ -72,6 +73,6 @@ module.exports = {
 			addVariant('child', '& > *');
 			addVariant('child-hover', '& > *:hover');
 		},
-		'tailwindcss-animate',
+		require('tailwindcss-animate'),
 	],
 };

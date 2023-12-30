@@ -124,7 +124,7 @@ const ready = async () => {
 		await installExtensions();
 	}
 
-	resetApp();
+	// resetApp();
 
 	// Report to renderer
 	updateAppStatusMessage($messages.init);
