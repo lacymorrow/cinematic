@@ -1,5 +1,3 @@
-'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -16,7 +14,8 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from '@/components/ui/use-toast';
 import { $settings } from '@/config/strings';
-import { ThemeType } from '@/main/store';
+
+import { ThemeType } from '@/config/settings';
 import { useTheme } from '@/renderer/context/theme-context';
 
 const appearanceFormSchema = z.object({
@@ -68,7 +67,7 @@ export function AppearanceForm() {
 							</FormDescription>
 							<FormMessage />
 							<RadioGroup
-								onValueChange={(e) => {
+								onValueChange={(e: ThemeType) => {
 									onThemeChange(e);
 									field.onChange(e);
 								}}
