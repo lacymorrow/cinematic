@@ -1,16 +1,11 @@
-export const $app = {
-	name: 'Cinematic',
-	link: 'https://github.com/lacymorrow/cinematic',
-	github: 'https://github.com/lacymorrow/cinematic',
-};
-
 export const $settings = {
-	appearance: {
+	theme: {
 		themeLabel: 'Theme',
 		themeDescription: 'Select the theme for the application',
 		light: 'Light',
 		dark: 'Dark',
 		system: 'System',
+		action: 'Change Theme',
 	},
 };
 
@@ -30,16 +25,16 @@ export const $dialog = {
 export const $errors = {
 	prefix_main: 'Main> ',
 	main_window: '"mainWindow" is not defined',
-	queue: 'Queue error',
 };
 
 export const $messages = {
 	// Timing messages
 	init: 'Initializing...',
 	ready: 'App Ready',
+	started: 'Started',
 	idle: 'Idle',
-	window_created: 'Window created',
-	resetting_store: 'Resetting store',
+	reset_store: 'Reset App',
+	auto_update: 'Checking for updates...',
 	synchronize_settings: 'Synchronizing settings',
 
 	// Network messages

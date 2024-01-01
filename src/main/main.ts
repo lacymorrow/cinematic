@@ -6,11 +6,13 @@ import { $errors, $messages } from '../config/strings';
 import { is } from './util';
 
 import appListeners from './app-listeners';
+import { AutoUpdate } from './auto-update';
 import { debugInfo } from './constants';
 import debugging from './debugging';
 import ipc from './ipc';
 import logger from './logger';
-import { resetStore } from './store';
+import shortcuts from './shortcuts';
+import { getSetting, resetStore } from './store';
 import win from './window';
 
 console.time(app.name);
@@ -42,14 +44,25 @@ app
 
 		if (is.debug) {
 			await debugging.installExtensions();
+
+			// Reset the app and store to default settings
 			resetStore();
 		}
 	})
 	.then(async () => {
 		// Create the main browser window.
 		win.createWindow();
+
+		// Remove this if your app does not use auto updates
+		if (getSetting('autoUpdate')) {
+			// eslint-disable-next-line no-new
+			new AutoUpdate();
+		}
+
+		// Register shortcuts
+		shortcuts.init();
 	})
-	.then(() => console.timeLog(app.name, $messages.window_created))
+	.then(() => console.timeLog(app.name, $messages.started))
 	.finally(() => {
 		// Idle
 		console.timeLog(app.name, $messages.idle);

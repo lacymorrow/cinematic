@@ -1,12 +1,9 @@
+import Logger from 'electron-log';
 import Store from 'electron-store';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
-import { CollectionItemType } from '../types/media';
+import { $messages } from '../config/strings';
 import win from './window';
-
-export interface CollectionStoreType {
-	[key: string]: CollectionItemType;
-}
 
 export type AppMessageType = string;
 
@@ -49,9 +46,6 @@ const store = new Store<StoreType>({ schema });
 const synchronizeApp = () =>
 	win?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
 
-// Throttle the app update
-// const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
-
 const appMessageUpdated = () => {
 	win?.mainWindow?.webContents.send(
 		ipcChannels.APP_STATUS_MESSAGE,
@@ -60,9 +54,17 @@ const appMessageUpdated = () => {
 };
 
 export const resetStore = () => {
+	Logger.status($messages.reset_store);
 	store.clear();
 
 	synchronizeApp();
+};
+
+export const getSetting = (setting: keyof SettingsType) => {
+	const settings = store.get('settings');
+	if (settings[setting] !== undefined) {
+		return settings[setting];
+	}
 };
 
 export const getSettings = () => {
@@ -79,7 +81,7 @@ export const setSettings = (settings: Partial<SettingsType>) => {
 	synchronizeApp();
 };
 
-export const logAppMessage = (message: AppMessageType) => {
+export const addAppMessage = (message: AppMessageType) => {
 	const appMessageLog = store.get('appMessageLog');
 	appMessageLog.push(message);
 	store.set('appMessageLog', appMessageLog);

@@ -10,11 +10,13 @@ import { $messages } from '@/config/strings';
 import Logger from 'electron-log';
 
 interface GlobalContextType {
+	appName: string;
 	settings: SettingsType;
 	setSettings: (newSettings: Partial<SettingsType>) => void;
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
+	appName: '',
 	settings: DEFAULT_SETTINGS,
 	setSettings: () => {},
 });
@@ -24,6 +26,7 @@ export function GlobalContextProvider({
 }: {
 	children?: React.ReactNode;
 }) {
+	const [appName, setAppName] = React.useState<string>('');
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
@@ -42,6 +45,9 @@ export function GlobalContextProvider({
 		// Request initial data when the app loads
 		synchronizeSettings();
 
+		// Set app name
+		window.electron.getAppName().then(setAppName).catch(Logger.error);
+
 		return () => {
 			// Clean up listeners when the component unmounts
 			window.electron.ipcRenderer.removeAllListeners(SETTINGS_UPDATED);
@@ -55,10 +61,11 @@ export function GlobalContextProvider({
 
 	const value = useMemo(() => {
 		return {
+			appName,
 			settings,
 			setSettings,
 		};
-	}, [settings, setSettings]);
+	}, [appName, settings, setSettings]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

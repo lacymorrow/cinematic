@@ -1,9 +1,6 @@
 import { BrowserWindow, app, shell } from 'electron';
 import path from 'path';
 import { $errors } from '../config/strings';
-import { AutoUpdate } from './auto-update';
-import MenuBuilder from './menu';
-import shortcuts from './shortcuts';
 import { resolveHtmlPath } from './util';
 
 interface Window {
@@ -51,25 +48,16 @@ const win: Window = {
 			}
 		});
 
+		// Clean
 		win.mainWindow.on('closed', () => {
 			win.mainWindow = null;
 		});
-
-		const menuBuilder = new MenuBuilder(win.mainWindow);
-		menuBuilder.buildMenu();
 
 		// Open urls in the user's browser
 		win.mainWindow.webContents.setWindowOpenHandler((data) => {
 			shell.openExternal(data.url);
 			return { action: 'deny' };
 		});
-
-		// Remove this if your app does not use auto updates
-		// eslint-disable-next-line no-new
-		new AutoUpdate();
-
-		// Register shortcuts
-		shortcuts.init();
 	},
 };
 

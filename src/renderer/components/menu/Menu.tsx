@@ -11,14 +11,15 @@ import {
 	MenubarSubTrigger,
 	MenubarTrigger,
 } from '@/components/ui/menubar';
-import { pathSettings } from '@/config/nav';
-import { $app } from '@/config/strings';
+import nav from '@/config/nav';
 import { cn } from '@/lib/utils';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { EnterFullScreenIcon } from '@radix-ui/react-icons';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function Menu({ className }: { className?: string }) {
+	const { appName } = useGlobalContext();
 	const navigate = useNavigate();
 
 	const handleClickAbout = useCallback(() => {
@@ -26,7 +27,7 @@ export function Menu({ className }: { className?: string }) {
 	}, []);
 
 	const handleClickPreferences = useCallback(() => {
-		navigate(pathSettings);
+		navigate(nav.settings.path);
 	}, [navigate]);
 
 	const handleClickClose = useCallback(() => {
@@ -41,25 +42,23 @@ export function Menu({ className }: { className?: string }) {
 			)}
 		>
 			<MenubarMenu>
-				<MenubarTrigger className="font-bold">{$app.name}</MenubarTrigger>
+				<MenubarTrigger className="font-bold">{appName}</MenubarTrigger>
 				<MenubarContent>
-					<MenubarItem onClick={handleClickAbout}>
-						About {$app.name}
-					</MenubarItem>
+					<MenubarItem onClick={handleClickAbout}>About {appName}</MenubarItem>
 					<MenubarSeparator />
 					<MenubarItem onClick={handleClickPreferences}>
 						Preferences... <MenubarShortcut>⌘,</MenubarShortcut>
 					</MenubarItem>
 					<MenubarSeparator />
 					<MenubarItem>
-						Hide {$app.name}... <MenubarShortcut>⌘H</MenubarShortcut>
+						Hide {appName}... <MenubarShortcut>⌘H</MenubarShortcut>
 					</MenubarItem>
 					<MenubarItem>
 						Hide Others... <MenubarShortcut>⇧⌘H</MenubarShortcut>
 					</MenubarItem>
 					<MenubarShortcut />
 					<MenubarItem>
-						Quit {$app.name} <MenubarShortcut>⌘Q</MenubarShortcut>
+						Quit {appName} <MenubarShortcut>⌘Q</MenubarShortcut>
 					</MenubarItem>
 				</MenubarContent>
 			</MenubarMenu>

@@ -2,7 +2,6 @@
 export type Channels = string;
 
 // Main -> Renderer
-export const ADD_MEDIA_PATH = 'add-media-path';
 export const SETTINGS_UPDATED = 'settings-updated';
 export const APP_STATUS_MESSAGE = 'app-status-message';
 

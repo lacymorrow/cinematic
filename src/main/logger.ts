@@ -2,7 +2,7 @@ import { app, dialog } from 'electron';
 import Logger from 'electron-log';
 import path from 'path';
 import { $dialog } from '../config/strings';
-import { logAppMessage } from './store';
+import { addAppMessage } from './store';
 
 const { bugs } = require('../../package.json');
 
@@ -71,7 +71,7 @@ const initialize = () => {
 	Logger.hooks.push((message, _transport) => {
 		// @ts-ignore
 		if (message.level === 'status' || message.level === 'error') {
-			logAppMessage(message.data.join(' '));
+			addAppMessage(message.data.join(' '));
 		}
 		return message;
 	});

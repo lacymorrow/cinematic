@@ -2,6 +2,7 @@
 import { app } from 'electron';
 import EXIT_CODES from '../config/exit-codes';
 import shortcuts from './shortcuts';
+import { getSetting } from './store';
 import win from './window';
 
 const register = () => {
@@ -43,7 +44,7 @@ const register = () => {
 	app.on('window-all-closed', () => {
 		// Respect the OSX convention of having the application in memory even
 		// after all windows have been closed
-		if (process.platform !== 'darwin') {
+		if (process.platform !== 'darwin' || getSetting('quitOnWindowClose')) {
 			app.quit();
 		}
 	});
