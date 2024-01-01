@@ -1,3 +1,14 @@
 {
-  "recommendations": ["dbaeumer.vscode-eslint", "EditorConfig.EditorConfig"]
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"EditorConfig.EditorConfig",
+		"ecmel.vscode-html-css",
+		"bradlc.vscode-tailwindcss",
+		"formulahendry.auto-rename-tag",
+		"dzannotti.vscode-babel-coloring",
+		"michelemelluso.code-beautifier",
+		"aeschli.vscode-css-formatter",
+		"mikestead.dotenv",
+		"github.vscode-github-actions"
+	]
 }

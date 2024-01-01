@@ -1,11 +1,11 @@
 ---
 name: Feature request
-about: You want something added to the boilerplate. 🎉
+about: You want something added. 🎉
 labels: 'enhancement'
 ---
 
 <!---
-❗️❗️ Also, please consider donating (https://opencollective.com/electron-react-boilerplate-594) ❗️❗️
+❗️❗️ Also, please consider donating (https://www.patreon.com/lacymorrow) ❗️❗️
 
 Donations will ensure the following:
 
