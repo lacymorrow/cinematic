@@ -17,6 +17,9 @@ export function Settings(props: Props) {
 				<ModeToggle />
 			</div>
 			<pre>{JSON.stringify(settings, null, 2)}</pre>
+			<pre>{JSON.stringify(settings, null, 2)}</pre>
+			<pre>{JSON.stringify(settings, null, 2)}</pre>
+			<pre>{JSON.stringify(settings, null, 2)}</pre>
 			<Link to="/" className={cn(buttonVariants())}>
 				Home
 			</Link>

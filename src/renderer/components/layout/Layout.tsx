@@ -1,3 +1,4 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Toaster } from '@/components/ui/toaster';
 import AppStatus from '@/renderer/components/footer/AppStatus';
 import { Footer } from '@/renderer/components/footer/Footer';
@@ -17,7 +18,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Menu className="shrink-0" />
 				<div className="border-t grow flex min-h-0">
 					<div className="grow min-w-0">
-						<div className="flex h-full">{children}</div>
+						<div className="flex h-full">
+							<ScrollArea className="h-full w-full">{children}</ScrollArea>
+						</div>
 					</div>
 				</div>
 				<Footer>
