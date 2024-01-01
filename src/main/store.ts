@@ -3,7 +3,7 @@ import Store from 'electron-store';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
-import win from './window';
+import windows from './windows';
 
 export type AppMessageType = string;
 
@@ -43,11 +43,12 @@ const schema: Store.Schema<StoreType> = {
 
 const store = new Store<StoreType>({ schema });
 
-const synchronizeApp = () =>
-	win?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
+const synchronizeApp = () => {
+	windows?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
+};
 
 const appMessageUpdated = () => {
-	win?.mainWindow?.webContents.send(
+	windows?.mainWindow?.webContents.send(
 		ipcChannels.APP_STATUS_MESSAGE,
 		store.get('appMessageLog'),
 	);

@@ -7,6 +7,7 @@ export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 export interface SettingsType {
 	autoUpdate: boolean;
 	showDockIcon: boolean;
+	startMinimized: boolean;
 	quitOnWindowClose: boolean;
 
 	theme: ThemeType;
@@ -33,8 +34,9 @@ export interface SettingsType {
 // These are the default settings, imported by the store
 export const DEFAULT_SETTINGS: SettingsType = {
 	autoUpdate: true,
-	quitOnWindowClose: false,
 	showDockIcon: true,
+	startMinimized: false,
+	quitOnWindowClose: false,
 
 	theme: 'light',
 };

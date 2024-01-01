@@ -1,6 +1,6 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-import { app } from 'electron';
+import { app, shell } from 'electron';
 import Logger from 'electron-log/main';
 import { $errors, $messages } from '../config/strings';
 import { is } from './util';
@@ -8,12 +8,13 @@ import { is } from './util';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';
 import { debugInfo } from './constants';
+import { createMainWindow } from './create-window';
 import debugging from './debugging';
 import ipc from './ipc';
 import logger from './logger';
 import shortcuts from './shortcuts';
 import { getSetting, resetStore } from './store';
-import win from './window';
+import windows from './windows';
 
 console.time(app.name);
 
@@ -51,7 +52,36 @@ app
 	})
 	.then(async () => {
 		// Create the main browser window.
-		win.createWindow();
+		windows.mainWindow = await createMainWindow();
+
+		windows.mainWindow.on('ready-to-show', () => {
+			if (!windows.mainWindow) {
+				throw new Error($errors.main_window);
+			}
+
+			// Setting: Start minimized
+			if (process.env.START_MINIMIZED || getSetting('startMinimized')) {
+				windows.mainWindow.minimize();
+			} else {
+				windows.mainWindow.show();
+			}
+
+			// Setting: Show dock icon
+			if (is.macos && !getSetting('showDockIcon')) {
+				app.dock.hide();
+			}
+		});
+
+		// Clean
+		windows.mainWindow.on('closed', () => {
+			windows.mainWindow = null;
+		});
+
+		// Open urls in the user's browser
+		windows.mainWindow.webContents.setWindowOpenHandler((data) => {
+			shell.openExternal(data.url);
+			return { action: 'deny' };
+		});
 
 		// Remove this if your app does not use auto updates
 		if (getSetting('autoUpdate')) {

@@ -1,27 +1,28 @@
 /* eslint-disable promise/always-return */
 import { app } from 'electron';
 import EXIT_CODES from '../config/exit-codes';
+import { createMainWindow } from './create-window';
 import shortcuts from './shortcuts';
 import { getSetting } from './store';
-import win from './window';
+import windows from './windows';
 
 const register = () => {
 	/**
 	 * Add app event listeners...
 	 */
 
-	app.on('activate', () => {
+	app.on('activate', async () => {
 		// On macOS it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
-		if (win.mainWindow === null) win.createWindow();
+		if (windows.mainWindow === null) await createMainWindow();
 	});
 
 	app.on('second-instance', () => {
 		// Someone tried to run a second instance, we should focus our window.
-		if (win.mainWindow) {
+		if (windows.mainWindow) {
 			// If the window is minimized, we should restore it and focus it.
-			if (win.mainWindow.isMinimized()) win.mainWindow.restore();
-			win.mainWindow.focus();
+			if (windows.mainWindow.isMinimized()) windows.mainWindow.restore();
+			windows.mainWindow.focus();
 		}
 	});
 
