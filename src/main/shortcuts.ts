@@ -2,14 +2,8 @@ import { globalShortcut } from 'electron';
 
 type ShortcutType = {
 	init: () => void;
-
-	// Inherited from globalShortcut
-	// isRegistered: (shortcut: string) => boolean;
-	// register: (shortcut: string, callback: () => void) => void;
-	// registerAll: (accelerators: string[], callback: () => void) => void;
-	// unregister: (shortcut: string) => void;
-	// unregisterAll: () => void;
-};
+	// eslint-disable-next-line no-undef
+} & Electron.GlobalShortcut;
 
 const shortcuts: ShortcutType = {
 	init: () => {
@@ -17,6 +11,8 @@ const shortcuts: ShortcutType = {
 		// 	console.log('CommandOrControl+Shift+I is pressed');
 		// });
 	},
+
+	// Inherit all methods from Electron's globalShortcut
 	...globalShortcut,
 };
 
