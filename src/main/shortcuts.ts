@@ -7,9 +7,9 @@ type ShortcutType = {
 
 const shortcuts: ShortcutType = {
 	init: () => {
-		// globalShortcut.register('CommandOrControl+Shift+I', () => {
-		// 	console.log('CommandOrControl+Shift+I is pressed');
-		// });
+		globalShortcut.register('CommandOrControl+Shift+I', () => {
+			console.log('CommandOrControl+Shift+I is pressed');
+		});
 	},
 
 	// Inherit all methods from Electron's globalShortcut

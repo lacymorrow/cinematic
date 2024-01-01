@@ -1,4 +1,3 @@
-import { app } from 'electron';
 import Logger from 'electron-log';
 import { VALID_FILETYPES } from '../config/config';
 import { $dialog } from '../config/strings';
@@ -6,18 +5,18 @@ import { scanMedia } from './file';
 
 const { dialog } = require('electron');
 
-export const openMediaPathDialog = () => {
+export const openMediaDialog = () => {
 	return (
 		dialog
 			.showOpenDialog({
 				title: $dialog.add.title,
 				buttonLabel: $dialog.add.buttonLabel,
-				defaultPath: app.getPath('videos'),
+				// defaultPath: app.getPath('home'),
 				properties: [
-					'dontAddToRecent',
+					// 'dontAddToRecent',
 					'openFile',
-					'openDirectory',
-					'multiSelections',
+					// 'openDirectory',
+					// 'multiSelections',
 				],
 				filters: [
 					{

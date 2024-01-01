@@ -42,7 +42,7 @@ const win: Window = {
 
 		win.mainWindow.on('ready-to-show', () => {
 			if (!win.mainWindow) {
-				throw new Error($errors.mainWindow);
+				throw new Error($errors.main_window);
 			}
 			if (process.env.START_MINIMIZED) {
 				win.mainWindow.minimize();
@@ -59,8 +59,8 @@ const win: Window = {
 		menuBuilder.buildMenu();
 
 		// Open urls in the user's browser
-		win.mainWindow.webContents.setWindowOpenHandler((edata) => {
-			shell.openExternal(edata.url);
+		win.mainWindow.webContents.setWindowOpenHandler((data) => {
+			shell.openExternal(data.url);
 			return { action: 'deny' };
 		});
 

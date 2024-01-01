@@ -1,7 +1,6 @@
 /* eslint import/prefer-default-export: off */
-import { URL } from 'url';
 import path from 'path';
-import { FILE_IGNORE_PATTERN } from '../config/config';
+import { URL } from 'url';
 
 export const is = {
 	debug:
@@ -18,14 +17,3 @@ export function resolveHtmlPath(htmlFileName: string) {
 	}
 	return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
-
-export const fileNameRegex = /^(.*?)(?:\[? ([\d]{4})?\]?|\(?([\d]{4})?\)?)$/g;
-
-export const isDigit = (str: string) => {
-	const digit = /^\d+$/;
-	return digit.test(str);
-};
-
-export const ignorePattern = (str: string) => {
-	return FILE_IGNORE_PATTERN.includes(str.toLowerCase());
-};

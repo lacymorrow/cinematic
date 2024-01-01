@@ -6,9 +6,8 @@ import { $errors, $messages } from '../config/strings';
 import { is } from './util';
 
 import appListeners from './app-listeners';
-import { debugInfo, DEFAULT_PATH } from './constants';
+import { debugInfo } from './constants';
 import debugging from './debugging';
-import { scanMedia } from './file';
 import ipc from './ipc';
 import logger from './logger';
 import { resetStore } from './store';
@@ -46,7 +45,7 @@ app
 		}
 
 		if (app.commandLine.hasSwitch('reset')) {
-			Logger.warn('Resetting app');
+			Logger.warn($messages.resetting_store);
 			resetStore();
 		}
 	})
@@ -55,21 +54,15 @@ app
 		win.createWindow();
 	})
 	.then(() => console.timeLog(app.name, $messages.window_created))
-	.then(() => {
-		// App tidying, initial actions
-		if (app.commandLine.hasSwitch('scan')) {
-			scanMedia(DEFAULT_PATH);
-		}
-	})
 	.finally(() => {
 		// Idle
 		console.timeLog(app.name, $messages.idle);
-		Logger.status('Idle');
+		Logger.status($messages.idle);
 	})
 	.catch((error: Error) => {
 		Logger.error($errors.prefix_main, error);
 	});
 
 // LAUNCH THE APP
-console.timeLog(app.name, 'Initialized');
+console.timeLog(app.name, $messages.init);
 start();
