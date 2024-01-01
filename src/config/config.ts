@@ -1,3 +1,4 @@
+// Limit the file types that can be selected using the file input dialog
 export const VALID_FILETYPES = [
 	'avi',
 	'flv',

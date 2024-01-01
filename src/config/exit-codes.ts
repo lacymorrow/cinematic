@@ -1,3 +1,4 @@
+// Application exit codes
 const SUCCESS = 0;
 const GENERAL_ERROR = 1;
 const VALIDATION_ERROR = 2;

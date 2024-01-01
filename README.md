@@ -1,6 +1,4 @@
-<p>
-  Bases on the [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate), this boilerplate adds UI components from [Shadcn](https://ui.shadcn.com/), Tailwind CSS, and a few other goodies.
-</p>
+Based on the [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate), this boilerplate adds UI components from [Shadcn](https://ui.shadcn.com/), styling with [Tailwind CSS](https://tailwindcss.com/), persistance with [electron-store](https://github.com/sindresorhus/electron-store), and a structured React context that promotes a data flow from the top down: Main process -> Renderer process.
 
 <br>
 
@@ -12,7 +10,7 @@
 </div>
 
 
-## ERB Docs
+## Electron-React-Boilerplate Docs
 
 See the Electron React Boilerplate [docs and guides here](https://electron-react-boilerplate.js.org/docs/installation)
 

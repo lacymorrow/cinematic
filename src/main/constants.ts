@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import os from 'os';
 
-export const electronVersion = process.versions.electron || '0.0.0';
+export const electronVersion = process.versions.electron;
 
 export const debugInfo = () =>
 	`
