@@ -18,21 +18,10 @@
 // todo: show current processing info
 // todo: scrollarea for genre/playlist
 
-import {
-	pathGenres,
-	pathMedia,
-	pathPlaylists,
-	pathSettings,
-} from '@/config/nav';
 import { Layout } from '@/renderer/components/layout/Layout';
-import { ResizableLayout } from '@/renderer/components/ui/ResizableLayout';
-import { nav } from '@/renderer/config/nav';
 import { GlobalContextProvider } from '@/renderer/context/global-context';
-import { Genre } from '@/renderer/pages/Genre';
-import { Media } from '@/renderer/pages/Media';
-import Settings from '@/renderer/pages/Settings';
+import { MainWindow } from '@/renderer/pages/MainWindow';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
-import { Playlist } from './pages/Playlist';
 
 import '@/renderer/styles/globals.scss';
 
@@ -42,39 +31,7 @@ export default function App() {
 			<Router>
 				<Layout>
 					<Routes>
-						{nav.map((item) => {
-							return (
-								<Route
-									key={item.name}
-									path={item.path}
-									element={<ResizableLayout>{item.element}</ResizableLayout>}
-								/>
-							);
-						})}
-						<Route path={pathGenres}>
-							<Route
-								path=":id"
-								element={
-									<ResizableLayout>
-										<Genre />
-									</ResizableLayout>
-								}
-							/>
-						</Route>
-						<Route path={pathPlaylists}>
-							<Route
-								path=":id"
-								element={
-									<ResizableLayout>
-										<Playlist />
-									</ResizableLayout>
-								}
-							/>
-						</Route>
-						<Route path={pathMedia}>
-							<Route path=":id" element={<Media />} />
-						</Route>
-						<Route path={`${pathSettings}/*`} element={<Settings />} />
+						<Route path="/" element={<MainWindow />} />
 					</Routes>
 				</Layout>
 			</Router>

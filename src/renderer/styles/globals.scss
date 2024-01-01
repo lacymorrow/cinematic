@@ -100,17 +100,4 @@
 		justify-content: center;
 		align-items: center;
 	}
-
-	/* Prevent pre from overflowing */
-	pre {
-		height: 100%;
-		overflow: auto;
-		white-space: normal;
-		word-break: break-word;
-	}
-
-	/* Force sidebar to take 100% height, push the settings button to the bottom */
-	.container-sidebar [data-radix-scroll-area-viewport] > div {
-		height: 100%;
-	}
 }
