@@ -1,12 +1,13 @@
 import { SettingsType } from '@/config/settings';
 import { app, ipcMain, shell } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
-import { getSettings, setSettings } from './store';
+import { getAppMessages, getSettings, setSettings } from './store';
 
 export default {
 	initialize() {
 		ipcMain.handle(ipcChannels.GET_APP_NAME, () => app.getName());
 		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
+		ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
 
 		ipcMain.handle(
 			ipcChannels.SET_SETTINGS,

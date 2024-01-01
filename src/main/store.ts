@@ -1,9 +1,7 @@
 import Store from 'electron-store';
-import { THROTTLE_DELAY } from '../config/config';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
 import { CollectionItemType } from '../types/media';
-import { throttle } from '../utils/throttle';
 import win from './window';
 
 export interface CollectionStoreType {
@@ -49,13 +47,10 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const synchronizeApp = () =>
-	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
-
-const synchronizeSettings = () =>
-	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
+	win?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
 
 // Throttle the app update
-const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
+// const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
 
 const appMessageUpdated = () => {
 	win?.mainWindow?.webContents.send(
@@ -66,14 +61,6 @@ const appMessageUpdated = () => {
 
 export const resetStore = () => {
 	store.clear();
-
-	synchronizeApp();
-	synchronizeSettings();
-};
-
-export const clearLibrary = () => {
-	store.delete('appMessageLog');
-	store.delete('settings');
 
 	synchronizeApp();
 };
@@ -89,7 +76,7 @@ export const setSettings = (settings: Partial<SettingsType>) => {
 	});
 
 	// Sync with renderer
-	synchronizeSettings();
+	synchronizeApp();
 };
 
 export const logAppMessage = (message: AppMessageType) => {

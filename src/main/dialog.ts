@@ -1,7 +1,6 @@
 import Logger from 'electron-log';
 import { VALID_FILETYPES } from '../config/config';
 import { $dialog } from '../config/strings';
-import { scanMedia } from './file';
 
 const { dialog } = require('electron');
 
@@ -28,7 +27,7 @@ export const openMediaDialog = () => {
 			.then((response) => {
 				if (!response.canceled) {
 					response.filePaths.forEach((path: string) => {
-						scanMedia(path);
+						// do something with the file
 					});
 				}
 				return [];

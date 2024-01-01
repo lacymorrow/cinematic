@@ -1,19 +1,24 @@
-import { Outlet, Route, Routes } from 'react-router-dom';
-import SettingsLayout, {
-	settingsNav,
-} from '../components/settings/SettingsLayout';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ModeToggle } from '@/renderer/components/ui/ModeToggle';
+import { useGlobalContext } from '@/renderer/context/global-context';
+import { Link } from 'react-router-dom';
 
-export default function Settings() {
+type Props = {};
+
+export function Settings(props: Props) {
+	const context = useGlobalContext();
+
 	return (
-		<SettingsLayout>
-			<Routes>
-				{settingsNav.map((item) => {
-					return (
-						<Route key={item.title} path={item.href} element={item.element} />
-					);
-				})}
-			</Routes>
-			<Outlet />
-		</SettingsLayout>
+		<div className="flex flex-col gap-4">
+			<h1>Settings</h1>
+			<div>
+				<span>Change theme: </span>
+				<ModeToggle />
+			</div>
+			<Link to="/" className={cn(buttonVariants())}>
+				Home
+			</Link>
+		</div>
 	);
 }

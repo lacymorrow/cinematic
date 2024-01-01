@@ -40,6 +40,7 @@ export const $messages = {
 	idle: 'Idle',
 	window_created: 'Window created',
 	resetting_store: 'Resetting store',
+	synchronize_settings: 'Synchronizing settings',
 
 	// Network messages
 	online: 'Connected',
