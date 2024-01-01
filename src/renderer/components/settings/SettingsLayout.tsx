@@ -1,12 +1,12 @@
 import { Separator } from '@/components/ui/separator';
+import { CloseIcon } from '@/renderer/config/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { SettingsSidebar } from './SettingsSidebar';
-import SettingsAppearance from './appearance/SettingsAppearance';
-import SettingsNotifications from './notifications/SettingsNotifications';
-import SettingsDisplay from './display/SettingsDisplay';
-import Icons from '../images/Icons';
 import SettingsAbout from './about/SettingsAbout';
+import SettingsAppearance from './appearance/SettingsAppearance';
+import SettingsDisplay from './display/SettingsDisplay';
+import SettingsNotifications from './notifications/SettingsNotifications';
 
 export const settingsNav = [
 	{
@@ -53,7 +53,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 					to="/"
 					className="flex justify-center items-center rounded-full border border-muted-foreground text-muted-foreground hover:text-foreground p-2"
 				>
-					{Icons.closeIcon}
+					<CloseIcon />
 				</Link>
 			</div>
 			<Separator className="my-6" />

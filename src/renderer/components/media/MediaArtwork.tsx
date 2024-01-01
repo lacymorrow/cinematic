@@ -24,9 +24,9 @@ import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink } from '../ExternalLink';
 import { DialogContentNewPlaylist } from '../dialog/DialogContentNewPlaylist';
 import { MoviePlaceholder } from '../images/Placeholder';
+import { ExternalLink } from '../ui/ExternalLink';
 
 interface MediaArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
 	media: MediaType;

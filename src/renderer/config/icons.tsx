@@ -5,7 +5,7 @@ import {
 	BookmarkFilledIcon,
 	BookmarkIcon,
 	CardStackIcon,
-	CrossCircledIcon,
+	Cross1Icon,
 	DashboardIcon,
 	ListBulletIcon,
 	MixerHorizontalIcon,
@@ -18,7 +18,7 @@ export const WatchIcon = VideoIcon;
 export const BrowseIcon = TokensIcon;
 export const LikedIcon = BookmarkFilledIcon;
 export const DislikedIcon = BookmarkIcon;
-export const CloseIcon = CrossCircledIcon;
+export const CloseIcon = Cross1Icon;
 export const GenresIcon = Icons.stacksIcon;
 export const PlaylistIcon = Icons.stacksIcon;
 

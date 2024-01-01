@@ -4,7 +4,7 @@ export type Channels = string;
 // Main -> Renderer
 export const ADD_MEDIA_PATH = 'add-media-path';
 export const LIBRARY_UPDATED = 'library-updated';
-export const SETTINGS_UPDATED = 'library-updated';
+export const SETTINGS_UPDATED = 'settings-updated';
 export const APP_STATUS_MESSAGE = 'app-status-message';
 
 // Renderer -> Main
@@ -29,6 +29,7 @@ export const OPEN_URL = 'open-url';
 export const ipcChannels = {
 	// main -> renderer
 	APP_STATUS_MESSAGE,
+	SETTINGS_UPDATED,
 	LIBRARY_UPDATED,
 
 	// renderer -> main

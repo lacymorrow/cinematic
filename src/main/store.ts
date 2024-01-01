@@ -133,7 +133,7 @@ const synchronizeApp = () =>
 	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
 
 const synchronizeSettings = () =>
-	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
+	win?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
 
 // Throttle the app update
 const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
