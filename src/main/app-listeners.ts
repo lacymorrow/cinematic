@@ -1,6 +1,7 @@
 /* eslint-disable promise/always-return */
 import { app } from 'electron';
 import EXIT_CODES from '../config/exit-codes';
+import shortcuts from './shortcuts';
 import win from './window';
 
 const register = () => {
@@ -17,6 +18,7 @@ const register = () => {
 	app.on('second-instance', () => {
 		// Someone tried to run a second instance, we should focus our window.
 		if (win.mainWindow) {
+			// If the window is minimized, we should restore it and focus it.
 			if (win.mainWindow.isMinimized()) win.mainWindow.restore();
 			win.mainWindow.focus();
 		}
@@ -24,7 +26,7 @@ const register = () => {
 
 	app.on('will-quit', () => {
 		// Unregister all shortcuts.
-		// shortcuts.unregisterAll();
+		shortcuts.unregisterAll();
 	});
 
 	// Sending a `SIGINT` (e.g: Ctrl-C) to an Electron app that registers
