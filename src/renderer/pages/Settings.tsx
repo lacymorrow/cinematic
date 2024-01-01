@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 type Props = {};
 
 export function Settings(props: Props) {
-	const context = useGlobalContext();
+	const { settings } = useGlobalContext();
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -16,6 +16,7 @@ export function Settings(props: Props) {
 				<span>Change theme: </span>
 				<ModeToggle />
 			</div>
+			<pre>{JSON.stringify(settings, null, 2)}</pre>
 			<Link to="/" className={cn(buttonVariants())}>
 				Home
 			</Link>

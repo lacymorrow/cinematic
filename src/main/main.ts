@@ -42,10 +42,6 @@ app
 
 		if (is.debug) {
 			await debugging.installExtensions();
-		}
-
-		if (app.commandLine.hasSwitch('reset')) {
-			Logger.warn($messages.resetting_store);
 			resetStore();
 		}
 	})
