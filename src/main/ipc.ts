@@ -1,6 +1,6 @@
-import { SettingsType } from '@/config/settings';
 import { app, ipcMain, shell } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
+import { SettingsType } from '../config/settings';
 import { getAppMessages, getSettings, setSettings } from './store';
 
 export default {
