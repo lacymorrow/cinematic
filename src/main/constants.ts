@@ -1,6 +1,8 @@
-import os from 'os';
 import { app } from 'electron';
+import Logger from 'electron-log';
+import os from 'os';
 import path from 'path';
+import { $errors } from '../config/strings';
 
 export const electronVersion = process.versions.electron || '0.0.0';
 
@@ -19,7 +21,7 @@ const getDefaultPath = () => {
 		try {
 			return app.getPath('home');
 		} catch (error) {
-			console.error('Could not get app path: ', error);
+			Logger.error($errors.noDefaultPath, error);
 		}
 	}
 	return path.join(__dirname, 'media');

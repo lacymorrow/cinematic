@@ -2,12 +2,13 @@
 // Do not use this context to update data, only to read it
 // Use IPC to update data
 
-import { LIBRARY_UPDATED } from '@/config/ipc-channels';
+import { LIBRARY_UPDATED, SETTINGS_UPDATED } from '@/config/ipc-channels';
 import { CollectionStoreType, LibraryStoreType } from '@/main/store';
 import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
+import Logger from 'electron-log';
 
 interface GlobalContextType {
 	genres: CollectionStoreType;
@@ -47,22 +48,37 @@ export function GlobalContextProvider({
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
 	useEffect(() => {
+		// Create handler for receiving asynchronous messages from the main process
 		const syncronize = async () => {
-			console.log('synchronize');
+			Logger.log('Synchronize Library');
 
+			setLibrary(await window.electron.getLibrary());
 			setGenres(await window.electron.getGenres());
 			setPlaylists(await window.electron.getPlaylists());
-			setCurrentSettings(await window.electron.getSettings());
-			setLibrary(await window.electron.getLibrary());
 		};
 
+		const syncronizeSettings = async () => {
+			Logger.log('Synchronize Library');
+			setCurrentSettings(await window.electron.getSettings());
+		};
+
+		// Listen for messages from the main process
 		window.electron.ipcRenderer.on(LIBRARY_UPDATED, async (_event) => {
 			await syncronize();
 		});
 
+		window.electron.ipcRenderer.on(SETTINGS_UPDATED, async (_event) => {
+			await syncronizeSettings();
+		});
+
+		// Request initial data when the app loads
 		syncronize();
+		syncronizeSettings();
+
 		return () => {
+			// Clean up listeners when the component unmounts
 			window.electron.ipcRenderer.removeAllListeners(LIBRARY_UPDATED);
+			window.electron.ipcRenderer.removeAllListeners(SETTINGS_UPDATED);
 		};
 	}, []);
 
@@ -78,6 +94,7 @@ export function GlobalContextProvider({
 		() => libraryArray.filter((media) => media.liked),
 		[libraryArray],
 	);
+
 	const randomLibraryArray = useMemo(() => {
 		const shuffled = [...libraryArray];
 		return shuffled.sort(() => 0.5 - Math.random());

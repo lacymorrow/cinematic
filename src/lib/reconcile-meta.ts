@@ -1,4 +1,4 @@
-import log from 'electron-log/main';
+import Logger from 'electron-log/main';
 import path from 'path';
 import { MediaType } from '../types/file';
 
@@ -43,7 +43,7 @@ export const reconcileMovieMeta = (media: MediaType) => {
 				baseURL.origin,
 			).href;
 		} catch (error) {
-			log.warn('No TMDB data');
+			Logger.warn('No TMDB data');
 
 			// Ratings
 			if (tmdb.vote_average) {

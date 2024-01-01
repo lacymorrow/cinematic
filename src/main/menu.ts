@@ -5,6 +5,7 @@ import {
 	app,
 	shell,
 } from 'electron';
+import { homepage } from '../../package.json';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 	selector?: string;
@@ -54,17 +55,17 @@ export default class MenuBuilder {
 
 	buildDarwinTemplate(): MenuItemConstructorOptions[] {
 		const subMenuAbout: DarwinMenuItemConstructorOptions = {
-			label: 'Electron',
+			label: app.name,
 			submenu: [
 				{
-					label: 'About ElectronReact',
+					label: `About ${app.name}`,
 					selector: 'orderFrontStandardAboutPanel:',
 				},
 				{ type: 'separator' },
 				{ label: 'Services', submenu: [] },
 				{ type: 'separator' },
 				{
-					label: 'Hide ElectronReact',
+					label: `Hide ${app.name}`,
 					accelerator: 'Command+H',
 					selector: 'hide:',
 				},
@@ -157,7 +158,7 @@ export default class MenuBuilder {
 				{
 					label: 'Learn More',
 					click() {
-						shell.openExternal('https://electronjs.org');
+						shell.openExternal(homepage);
 					},
 				},
 				{
@@ -239,7 +240,7 @@ export default class MenuBuilder {
 										this.mainWindow.webContents.toggleDevTools();
 									},
 								},
-						  ]
+							]
 						: [
 								{
 									label: 'Toggle &Full Screen',
@@ -250,7 +251,7 @@ export default class MenuBuilder {
 										);
 									},
 								},
-						  ],
+							],
 			},
 			{
 				label: 'Help',
@@ -258,7 +259,7 @@ export default class MenuBuilder {
 					{
 						label: 'Learn More',
 						click() {
-							shell.openExternal('https://electronjs.org');
+							shell.openExternal(homepage);
 						},
 					},
 					{

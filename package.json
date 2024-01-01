@@ -4,8 +4,8 @@
 	"appId": "com.lacymorrow.cinematic",
 	"version": "3.0.0",
 	"description": "A desktop browser for your media library.",
-	"copyright": "Copyright © Lacy Morrow",
 	"license": "CC-BY-NC-SA-4.0",
+	"copyright": "Copyright © Lacy Morrow",
 	"repository": "lacymorrow/cinematic",
 	"homepage": "https://lacymorrow.github.io/cinematic",
 	"keywords": [
@@ -20,7 +20,8 @@
 		"reload"
 	],
 	"bugs": {
-		"url": "https://github.com/lacymorrow/cinematic/issues"
+		"url": "https://github.com/lacymorrow/cinematic/issues",
+		"email": "me@lacymorrow.com"
 	},
 	"author": {
 		"name": "Lacy Morrow",

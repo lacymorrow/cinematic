@@ -1,172 +1,75 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-import { app, BrowserWindow, shell } from 'electron';
-import log from 'electron-log/main';
-import path from 'path';
-import { $messages } from '../config/strings';
-import { AutoUpdate } from './auto-update';
-import MenuBuilder from './menu';
-import { is, resolveHtmlPath } from './util';
+import { app } from 'electron';
+import Logger from 'electron-log/main';
+import { $errors, $messages } from '../config/strings';
+import { is } from './util';
 
+import appListeners from './app-listeners';
 import { debugInfo, DEFAULT_PATH } from './constants';
-import eventListeners from './event-listeners';
+import debugging from './debugging';
 import { scanMedia } from './file';
 import ipc from './ipc';
-import { clearCache, clearLibrary, updateAppStatusMessage } from './store';
-import win from './win';
+import logger from './logger';
+import { resetStore } from './store';
+import win from './window';
 
-console.time('startup');
-
-// Prevent window from being garbage collected
-let mainWindow: BrowserWindow | null = null;
+console.time(app.name);
 
 const start = () => {
+	// Initialize logger and error handler
+	logger.initialize();
+
 	// Register ipcMain listeners
-	ipc.init();
+	ipc.initialize();
 
-	// Enable source map support in production
-	if (is.prod) {
-		const sourceMapSupport = require('source-map-support');
-		sourceMapSupport.install();
-	}
+	// Enable electron debug and source map support
+	debugging.initialize();
 
-	// Enable debug utilities in development
-	if (is.debug) {
-		require('electron-debug')();
-	}
-
-	// app.on()
-	eventListeners.register();
+	// Register app listeners, e.g. `app.on()`
+	appListeners.register();
 };
 
-// Add debugging extensions like `react-devtools` and `redux-devtools`
-const installExtensions = async () => {
-	const installer = require('electron-devtools-installer');
-	const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-	const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-	return installer
-		.default(
-			extensions.map((name) => installer[name]),
-			forceDownload,
-		)
-		.catch(console.warn);
-};
-
-const createWindow = async () => {
-	const RESOURCES_PATH = app.isPackaged
-		? path.join(process.resourcesPath, 'assets')
-		: path.join(__dirname, '../../assets');
-
-	const getAssetPath = (...paths: string[]): string => {
-		return path.join(RESOURCES_PATH, ...paths);
-	};
-
-	mainWindow = new BrowserWindow({
-		show: false,
-		width: 1024,
-		minWidth: 550,
-		height: 728,
-		minHeight: 420,
-		icon: getAssetPath('icon.png'), // todo: set icon
-		webPreferences: {
-			preload: app.isPackaged
-				? path.join(__dirname, 'preload.js')
-				: path.join(__dirname, '../../.erb/dll/preload.js'),
-		},
-	});
-
-	// Save reference to main window
-	win.mainWindow = mainWindow;
-
-	mainWindow.loadURL(resolveHtmlPath('index.html'));
-
-	mainWindow.on('ready-to-show', () => {
-		if (!mainWindow) {
-			throw new Error('"mainWindow" is not defined');
-		}
-		if (process.env.START_MINIMIZED) {
-			mainWindow.minimize();
-		} else {
-			mainWindow.show();
-		}
-	});
-
-	mainWindow.on('closed', () => {
-		mainWindow = null;
-	});
-
-	const menuBuilder = new MenuBuilder(mainWindow);
-	menuBuilder.buildMenu();
-
-	// Open urls in the user's browser
-	mainWindow.webContents.setWindowOpenHandler((edata) => {
-		shell.openExternal(edata.url);
-		return { action: 'deny' };
-	});
-
-	// Remove this if your app does not use auto updates
-	// eslint-disable-next-line
-  new AutoUpdate();
-};
-
-const resetApp = () => {
-	clearCache();
-	clearLibrary();
-};
-
-const ready = async () => {
-	// initialize the logger for any renderer process
-	log.initialize({ preload: true });
-
-	if (is.debug) {
-		log.info(debugInfo());
-		await installExtensions();
-	}
-
-	// resetApp();
-
-	// Report to renderer
-	updateAppStatusMessage($messages.init);
-
-	// todo: load previous session
-
-	// if no session, begin fresh scan
-
-	updateAppStatusMessage('App ready');
-
-	createWindow();
-
-	app.on('activate', () => {
-		// On macOS it's common to re-create a window in the app when the
-		// dock icon is clicked and there are no other windows open.
-		if (mainWindow === null) createWindow();
-	});
-};
-
-// BEGIN
-console.timeLog('startup', 'init');
-
+// This happens when the app is loaded, AFTER the 'ready' event is fired
 app
 	.whenReady()
-	.then(ready)
-	.then(() => console.timeLog('startup', 'ready'))
-	.then(() => {
-		if (process.argv.includes('--scan')) {
-			scanMedia(DEFAULT_PATH);
+	.then(async () => {
+		// initialize  the logger for any renderer process
+		Logger.initialize({ preload: true });
+		console.timeLog(app.name, $messages.ready);
+
+		// Log Node/Electron versions
+		Logger.info(debugInfo());
+
+		if (is.debug) {
+			await debugging.installExtensions();
 		}
 
-		// Idle
+		if (app.commandLine.hasSwitch('reset')) {
+			Logger.warn('Resetting app');
+			resetStore();
+		}
 	})
+	.then(async () => {
+		// Create the main browser window.
+		win.createWindow();
+	})
+	.then(() => console.timeLog(app.name, $messages.window_created))
 	.then(() => {
-		updateAppStatusMessage('Idle');
-
-		console.timeLog('startup', 'idle');
+		// App tidying, initial actions
+		if (app.commandLine.hasSwitch('scan')) {
+			scanMedia(DEFAULT_PATH);
+		}
+	})
+	.finally(() => {
+		// Idle
+		console.timeLog(app.name, $messages.idle);
+		Logger.status('Idle');
 	})
 	.catch((error: Error) => {
-		console.error('main> ', error);
+		Logger.error($errors.prefix_main, error);
 	});
 
+// LAUNCH THE APP
+console.timeLog(app.name, 'Initialized');
 start();
-
-console.timeLog('startup', 'start');

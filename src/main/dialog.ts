@@ -1,4 +1,5 @@
 import { app } from 'electron';
+import Logger from 'electron-log';
 import { VALID_FILETYPES } from '../config/config';
 import { $dialog } from '../config/strings';
 import { scanMedia } from './file';
@@ -9,8 +10,8 @@ export const openMediaPathDialog = () => {
 	return (
 		dialog
 			.showOpenDialog({
-				title: $dialog.title,
-				buttonLabel: $dialog.buttonLabel,
+				title: $dialog.add.title,
+				buttonLabel: $dialog.add.buttonLabel,
 				defaultPath: app.getPath('videos'),
 				properties: [
 					'dontAddToRecent',
@@ -20,7 +21,7 @@ export const openMediaPathDialog = () => {
 				],
 				filters: [
 					{
-						name: 'Movies',
+						name: 'Media',
 						extensions: VALID_FILETYPES,
 					},
 				],
@@ -34,6 +35,6 @@ export const openMediaPathDialog = () => {
 				return [];
 			})
 			// todo: handle error
-			.catch((err) => console.log(err))
+			.catch(Logger.error)
 	);
 };

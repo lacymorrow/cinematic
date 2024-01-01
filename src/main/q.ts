@@ -1,7 +1,8 @@
 // We import queue, so file shouldn't be named queue.ts
+import Logger from 'electron-log';
 import type { queueAsPromised } from 'fastq';
 import fastq from 'fastq';
-import { $messages } from '../config/strings';
+import { $errors, $messages } from '../config/strings';
 import { fetchOMDB, fetchTMDB, fetchTrailer } from '../lib/fetch-meta';
 import { MediaType, SearchMetaType } from '../types/file';
 import { OmdbType, TmdbType, TrailersType } from '../types/meta';
@@ -9,13 +10,12 @@ import {
 	addGenre,
 	getCachedObject,
 	setCachedObject,
-	updateAppStatusMessage,
 	upsertMediaLibrary,
 } from './store';
 
 const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
-		updateAppStatusMessage(`${$messages.fetching_omdb}: ${meta.title}`);
+		Logger.info(`${$messages.fetching_omdb}: ${meta.title}`);
 		const cacheKey = `omdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
@@ -33,7 +33,7 @@ const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
-		updateAppStatusMessage(`${$messages.fetching_tmdb}: ${meta.title}`);
+		Logger.info(`${$messages.fetching_tmdb}: ${meta.title}`);
 		const cacheKey = `tmdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
@@ -49,7 +49,7 @@ const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
-		updateAppStatusMessage(`${$messages.fetching_trailers}: ${meta.title}`);
+		Logger.info(`${$messages.fetching_trailers}: ${meta.title}`);
 		const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`; // trailer-<title>-<year>
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
@@ -64,7 +64,7 @@ const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
 );
 
 const onQueueError = (err: Error | undefined) => {
-	console.error('Queue Error: ', err);
+	Logger.error($errors.queue, err);
 };
 
 const onQueueSuccess = (result: MediaType) => {
@@ -74,7 +74,7 @@ const onQueueSuccess = (result: MediaType) => {
 	}
 
 	if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
-		updateAppStatusMessage($messages.idle);
+		Logger.info($messages.idle);
 	}
 };
 
@@ -94,7 +94,7 @@ const add = (media: MediaType) => {
 	qTMDB
 		.push(media)
 		.then((result: TmdbType) => {
-			// track queue progress
+			// todo: track queue progress
 			console.log('progress', qTMDB.length());
 			return { ...media, tmdb: result };
 		})

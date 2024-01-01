@@ -1,10 +1,10 @@
+import { SettingsType } from '@/config/settings';
 import { app, ipcMain, shell } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
 import {
 	HistoryActionType,
-	SettingsType,
 	addToHistory,
 	addToPlaylist,
 	clearLibrary,
@@ -19,7 +19,7 @@ import {
 } from './store';
 
 export default {
-	init() {
+	initialize() {
 		ipcMain.handle(ipcChannels.GET_APP_NAME, () => app.getName());
 		ipcMain.handle(ipcChannels.GET_GENRES, getGenres);
 		ipcMain.handle(ipcChannels.GET_LIBRARY, getLibrary);

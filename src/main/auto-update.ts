@@ -1,10 +1,12 @@
 import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+
+import Logger from 'electron-log';
 
 export class AutoUpdate {
 	constructor() {
-		log.transports.file.level = 'info';
-		autoUpdater.logger = log;
+		// Configure log debugging to file
+		Logger.transports.file.level = 'silly';
+		autoUpdater.logger = Logger;
 
 		autoUpdater.checkForUpdatesAndNotify();
 	}

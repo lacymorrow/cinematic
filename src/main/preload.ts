@@ -2,7 +2,7 @@
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
-import { SettingsType } from './store';
+import { SettingsType } from '../config/settings';
 
 const channels = Object.values(ipcChannels);
 

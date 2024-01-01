@@ -1,13 +1,15 @@
+import Logger from 'electron-log';
 import Store from 'electron-store';
 import getUuidByString from 'uuid-by-string';
 import { CACHE_TIMEOUT, THROTTLE_DELAY } from '../config/config';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
+import { $messages } from '../config/strings';
 import { reconcileMovieMeta } from '../lib/reconcile-meta';
 import { MediaType } from '../types/file';
 import { CollectionItemType } from '../types/media';
 import { throttle } from '../utils/throttle';
-import win from './win';
+import win from './window';
 
 type DebouncedFunctionsType = {
 	[key: string]: Function;
@@ -130,6 +132,10 @@ const store = new Store<StoreType>({ schema });
 const synchronizeApp = () =>
 	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
 
+const synchronizeSettings = () =>
+	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
+
+// Throttle the app update
 const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
 
 const appMessageUpdated = () => {
@@ -142,7 +148,8 @@ const appMessageUpdated = () => {
 export const resetStore = () => {
 	store.clear();
 
-	appWasUpdated();
+	synchronizeApp();
+	synchronizeSettings();
 };
 
 export const clearLibrary = () => {
@@ -153,7 +160,7 @@ export const clearLibrary = () => {
 	store.delete('appMessageLog');
 	store.delete('settings');
 
-	appWasUpdated();
+	synchronizeApp();
 };
 
 export const clearCache = () => {
@@ -171,7 +178,7 @@ export const setSettings = (settings: Partial<SettingsType>) => {
 	});
 
 	// Sync with renderer
-	synchronizeApp();
+	synchronizeSettings();
 };
 
 // Add a media path to the library
@@ -364,11 +371,11 @@ export const getCachedObject = (key: string) => {
 		if (cached) {
 			if (cached.cached_at + CACHE_TIMEOUT > Date.now()) {
 				// cache expired
-				console.log('cache expired for', key);
+				Logger.log($messages.cache_expire, key);
 				delete cache[key];
 				store.set('cache', cache);
 			} else {
-				console.log('cache hit', key);
+				Logger.log($messages.cache_hit, key);
 				return cached.value;
 			}
 		}

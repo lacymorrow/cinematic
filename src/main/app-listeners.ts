@@ -1,14 +1,30 @@
+/* eslint-disable promise/always-return */
 import { app } from 'electron';
 import EXIT_CODES from '../config/exit-codes';
+import win from './window';
 
 const register = () => {
 	/**
-	 * Add event listeners...
+	 * Add app event listeners...
 	 */
+
+	app.on('activate', () => {
+		// On macOS it's common to re-create a window in the app when the
+		// dock icon is clicked and there are no other windows open.
+		if (win.mainWindow === null) win.createWindow();
+	});
+
+	app.on('second-instance', () => {
+		// Someone tried to run a second instance, we should focus our window.
+		if (win.mainWindow) {
+			if (win.mainWindow.isMinimized()) win.mainWindow.restore();
+			win.mainWindow.focus();
+		}
+	});
 
 	app.on('will-quit', () => {
 		// Unregister all shortcuts.
-		// keyboard.unregisterShortcuts();
+		// shortcuts.unregisterAll();
 	});
 
 	// Sending a `SIGINT` (e.g: Ctrl-C) to an Electron app that registers

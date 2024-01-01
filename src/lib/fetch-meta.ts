@@ -1,4 +1,4 @@
-import log from 'electron-log/main';
+import Logger from 'electron-log/main';
 import movieInfo from 'movie-info';
 import movieTrailer from 'movie-trailer';
 import OmdbApi from 'omdbapi';
@@ -19,7 +19,7 @@ export const fetchOMDB = async (meta: SearchMetaType): Promise<OmdbType> => {
 			...(meta.year ? { year: meta.year } : {}), // optional
 		})
 		.catch((error: Error) => {
-			log.error(`omdbapi: ${error} ${meta.title} ${meta.year}`);
+			Logger.error(`omdbapi: ${error} ${meta.title} ${meta.year}`);
 		});
 	return response;
 };
@@ -36,7 +36,7 @@ export const fetchTMDB = async (meta: SearchMetaType): Promise<TmdbType> => {
 			return data;
 		})
 		.catch((error: Error) => {
-			log.error(`movie-info: ${error} ${meta.title} ${meta.year}`);
+			Logger.error(`movie-info: ${error} ${meta.title} ${meta.year}`);
 		});
 
 	return response;
@@ -55,7 +55,7 @@ export const fetchTrailer = async (meta: SearchMetaType): Promise<string[]> => {
 			return data;
 		})
 		.catch((error: Error) => {
-			log.error(`movie-trailer: ${error} ${meta.title} ${meta.year}`);
+			Logger.error(`movie-trailer: ${error} ${meta.title} ${meta.year}`);
 		});
 	return response;
 };

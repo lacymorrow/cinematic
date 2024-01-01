@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
+import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -52,10 +53,7 @@ export function Media(_props: Props) {
 
 	if (!id || !library[id]) {
 		// this shouldn't be possible
-		console.error(
-			'renderer/pages/Media.tsx: Navigated to invalid media id',
-			id,
-		);
+		Logger.error('renderer/pages/Media.tsx: Navigated to invalid media id', id);
 		return handleBack();
 	}
 

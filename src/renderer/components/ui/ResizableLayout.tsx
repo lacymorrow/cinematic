@@ -48,8 +48,6 @@ export function ResizableLayout({
 	const { genresArray, liked, playlistsArray, settings, setSettings } =
 		useGlobalContext();
 
-	console.log('genresArray', settings.sidebarCollapsed);
-
 	const [isCollapsed, setIsCollapsed] = React.useState(
 		settings.sidebarCollapsed,
 	);

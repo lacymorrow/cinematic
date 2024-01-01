@@ -19,30 +19,62 @@ export const $actions = {
 };
 
 export const $dialog = {
-	title: 'Add Media',
-	buttonLabel: 'Add',
+	add: {
+		title: 'Add Media',
+		buttonLabel: 'Add',
+	},
+	error: {
+		title: 'An error occurred',
+		ignore: 'Ignore',
+		report: 'Report',
+		quit: 'Quit',
+	},
 };
 
 export const $errors = {
+	prefix_main: 'Main> ',
+
+	mainWindow: '"mainWindow" is not defined',
+
+	noDefaultPath: 'Could not get default media path: ',
+	inaccessiblePath: 'Inaccessible path: ',
 	invalidPath: 'Invalid path',
 	invalidFile: 'Invalid file',
+	invalidFiletype: 'Invalid filetype',
 	invalidFolder: 'Invalid folder',
 	invalidMedia: 'Invalid media',
 	invalidMeta: 'Invalid meta',
 
 	tmdb_api: 'Unable to find tmdb metadata',
 	trailers_api: 'No trailers for this media',
+
+	queue: 'Queue error',
 };
 
 export const $messages = {
+	// Timing messages
 	init: 'Initializing...',
+	ready: 'App Ready',
 	idle: 'Idle',
+	window_created: 'Window created',
+
+	// Network messages
+	online: 'Connected',
+	offline: 'Disconnected - Cannot fetch metadata',
+
+	// Cinematic messages
 	addFile: 'Scanning file',
 	addFolder: 'Scanning path',
 	ignoreFile: 'Ignoring file',
-	online: 'Connected',
-	offline: 'Disconnected - Cannot fetch metadata',
-	invalidPath: 'Invalid path',
+	ignoreFolder: 'Ignoring folder',
+	cache_expire: 'Cache expired',
+	cache_miss: 'Cache miss',
+	cache_hit: 'Cache hit',
+
+	// Function messages
+	scanMedia: 'Begin scanning media path: ',
+
+	// Metadata messages
 	fetching_omdb: 'Fetching OMDB metadata',
 	fetching_tmdb: 'Fetching TBDB metadata',
 	fetching_trailers: 'Fetching trailers',

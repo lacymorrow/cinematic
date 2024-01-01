@@ -1,4 +1,5 @@
 // // Node file utilities
+import Logger from 'electron-log';
 import fs from 'fs/promises';
 import path from 'path';
 import {
@@ -7,6 +8,7 @@ import {
 	FILE_SCAN_DEPTH,
 	VALID_FILETYPES,
 } from '../config/config';
+import { $errors, $messages } from '../config/strings';
 import { FileType } from '../types/file';
 import { addMediaToLibrary } from './media';
 import { addPath } from './store';
@@ -24,9 +26,9 @@ export const scanFile = async (media: FileType) => {
 		// File is good! Add to library
 		addMediaToLibrary({ ...DEFAULT_FILE_META, ext, filename, filepath });
 	} else {
-		console.warn(`Invalid filetype: ${ext} ${filepath}`);
+		// Report to user files that were not added
+		Logger.status(`${$errors.invalidFiletype}: ${ext} ${filepath}`);
 		// todo: add to invalid files state
-		// report to user files that were not added
 	}
 };
 
@@ -56,7 +58,7 @@ export const scanDirectory = async (directoryPath: string, depth: number) => {
 			if (!DIRECTORY_IGNORE_PATTERN.includes(filename.toLowerCase())) {
 				scanDirectory(filepath, depth + 1);
 			} else {
-				console.warn(`Ignoring directory: ${filename}`);
+				Logger.status($messages.ignoreFolder, filename);
 			}
 		}
 	});
@@ -64,11 +66,11 @@ export const scanDirectory = async (directoryPath: string, depth: number) => {
 
 // Begin the scanning operation on the movies folder
 export const scanMedia = async (mediaPath: string) => {
-	console.warn('Begin scanning media: ', mediaPath);
+	Logger.status($messages.scanMedia, mediaPath);
 
 	// check if movies folder exists, readable, and is directory
 	const stats = await fs.stat(mediaPath).catch((err) => {
-		console.error(`Media is not accessible: ${err}`);
+		Logger.error($errors.inaccessiblePath, err);
 	});
 
 	if (stats?.isDirectory()) {
