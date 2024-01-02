@@ -2,32 +2,32 @@
 export type Channels = string;
 
 // Main -> Renderer
-export const ADD_MEDIA_PATH = 'add-media-path';
-export const LIBRARY_UPDATED = 'library-updated';
-export const SETTINGS_UPDATED = 'settings-updated';
-export const APP_STATUS_MESSAGE = 'app-status-message';
+const ADD_MEDIA_PATH = 'add-media-path';
+const LIBRARY_UPDATED = 'library-updated';
+const SETTINGS_UPDATED = 'settings-updated';
+const APP_STATUS_MESSAGE = 'app-status-message';
 
 // Renderer -> Main
-export const CLEAR_LIBRARY = 'clear-library';
+const CLEAR_LIBRARY = 'clear-library';
 
 const GET_APP_MENU = 'get-app-menu';
-export const GET_APP_NAME = 'get-app-name';
-export const GET_LIBRARY = 'get-library';
-export const GET_GENRES = 'get-genres';
-export const GET_PLAYLISTS = 'get-playlists';
-export const GET_SETTINGS = 'get-settings';
-export const SET_SETTINGS = 'set-settings';
-export const GET_MESSAGES = 'get-messages';
+const GET_APP_NAME = 'get-app-name';
+const GET_LIBRARY = 'get-library';
+const GET_GENRES = 'get-genres';
+const GET_PLAYLISTS = 'get-playlists';
+const GET_SETTINGS = 'get-settings';
+const SET_SETTINGS = 'set-settings';
+const GET_MESSAGES = 'get-messages';
 
 const TRIGGER_APP_MENU_ITEM_BY_ID = 'trigger-app-menu-item-by-id';
 
-export const SET_MEDIA_LIKE = 'set-media-like';
-export const ADD_TO_HISTORY = 'add-to-history';
-export const ADD_TO_PLAYLIST = 'add-to-playlist';
-export const DELETE_PLAYLIST = 'delete-playlist';
-export const OPEN_MEDIA_PATH = 'open-media-path';
-export const OPEN_PATH = 'open-path';
-export const OPEN_URL = 'open-url';
+const SET_MEDIA_LIKE = 'set-media-like';
+const ADD_TO_HISTORY = 'add-to-history';
+const ADD_TO_PLAYLIST = 'add-to-playlist';
+const DELETE_PLAYLIST = 'delete-playlist';
+const OPEN_MEDIA_PATH = 'open-media-path';
+const OPEN_PATH = 'open-path';
+const OPEN_URL = 'open-url';
 
 export const ipcChannels = {
 	// main -> renderer

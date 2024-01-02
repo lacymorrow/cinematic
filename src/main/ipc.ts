@@ -1,8 +1,9 @@
-import { app, ipcMain, shell } from 'electron';
+import { Menu, app, ipcMain, shell } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
+import { serializeMenu, triggerMenuItemById } from './menu';
 import {
 	HistoryActionType,
 	addToHistory,

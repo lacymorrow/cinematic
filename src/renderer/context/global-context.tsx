@@ -2,7 +2,7 @@
 // Do not use this context to update data, only to read it
 // Use IPC to update data
 
-import { LIBRARY_UPDATED } from '@/config/ipc-channels';
+import { ipcChannels } from '@/config/ipc-channels';
 import { CollectionStoreType, LibraryStoreType } from '@/main/store';
 import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
@@ -10,6 +10,7 @@ import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
 import Logger from 'electron-log';
 import { MenuItemConstructorOptions } from 'electron/renderer';
+import { $messages } from '../../config/strings';
 
 interface GlobalContextType {
 	appName: string;
@@ -59,7 +60,7 @@ export function GlobalContextProvider({
 
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
-		const syncronize = async () => {
+		const synchronize = async () => {
 			Logger.log('Synchronize Library');
 
 			setLibrary(await window.electron.getLibrary());
@@ -67,15 +68,18 @@ export function GlobalContextProvider({
 			setPlaylists(await window.electron.getPlaylists());
 		};
 
-		const syncronizeSettings = async () => {
+		const synchronizeSettings = async () => {
 			Logger.log($messages.synchronize_settings);
 			setCurrentSettings(await window.electron.getSettings());
 		};
 
 		// Listen for messages from the main process
-		window.electron.ipcRenderer.on(LIBRARY_UPDATED, async (_event) => {
-			await syncronize();
-		});
+		window.electron.ipcRenderer.on(
+			ipcChannels.LIBRARY_UPDATED,
+			async (_event) => {
+				await synchronize();
+			},
+		);
 
 		window.electron.ipcRenderer.on(
 			ipcChannels.SETTINGS_UPDATED,
@@ -85,8 +89,8 @@ export function GlobalContextProvider({
 		);
 
 		// Request initial data when the app loads
-		syncronize();
-		syncronizeSettings();
+		synchronize();
+		synchronizeSettings();
 
 		// Get app name
 		window.electron.getAppName().then(setAppName).catch(Logger.error);
