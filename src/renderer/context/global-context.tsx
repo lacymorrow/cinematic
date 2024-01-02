@@ -61,7 +61,7 @@ export function GlobalContextProvider({
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
 		const synchronize = async () => {
-			Logger.log('Synchronize Library');
+			Logger.log($messages.synchronize_library);
 
 			setLibrary(await window.electron.getLibrary());
 			setGenres(await window.electron.getGenres());

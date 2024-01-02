@@ -58,6 +58,7 @@ export const $messages = {
 	started: 'Started',
 	reset_store: 'Reset App',
 	auto_update: 'Checking for updates...',
+	synchronize_library: 'Synchronizing library',
 	synchronize_settings: 'Synchronizing settings',
 
 	// Network messages
