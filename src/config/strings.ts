@@ -25,6 +25,7 @@ export const $dialog = {
 export const $errors = {
 	prefix_main: 'Main> ',
 	main_window: '"mainWindow" is not defined',
+	blocked_navigation: 'Blocked navigation to: ',
 };
 
 export const $messages = {

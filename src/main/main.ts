@@ -12,6 +12,7 @@ import { createMainWindow } from './create-window';
 import debugging from './debugging';
 import ipc from './ipc';
 import logger from './logger';
+import MenuBuilder from './menu';
 import shortcuts from './shortcuts';
 import { getSetting, resetStore } from './store';
 import windows from './windows';
@@ -53,6 +54,9 @@ app
 	.then(async () => {
 		// Create the main browser window.
 		windows.mainWindow = await createMainWindow();
+
+		const menuBuilder = new MenuBuilder(windows.mainWindow);
+		menuBuilder.buildMenu();
 
 		windows.mainWindow.on('ready-to-show', () => {
 			if (!windows.mainWindow) {

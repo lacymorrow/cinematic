@@ -1,9 +1,9 @@
 import { globalShortcut } from 'electron';
 
-type ShortcutType = {
+// eslint-disable-next-line no-undef
+interface ShortcutType extends Electron.GlobalShortcut {
 	init: () => void;
-	// eslint-disable-next-line no-undef
-} & Electron.GlobalShortcut;
+}
 
 const shortcuts: ShortcutType = {
 	init: () => {
