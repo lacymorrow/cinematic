@@ -9,13 +9,13 @@ import { reconcileMovieMeta } from '../lib/reconcile-meta';
 import { MediaType } from '../types/file';
 import { CollectionItemType } from '../types/media';
 import { throttle } from '../utils/throttle';
-import win from './window';
+import win from './windows';
 
-type DebouncedFunctionsType = {
+type ThrottledFunctionsType = {
 	[key: string]: Function;
 };
 
-const throttledFunctions: DebouncedFunctionsType = {};
+const throttledFunctions: ThrottledFunctionsType = {};
 
 export interface CollectionStoreType {
 	[key: string]: CollectionItemType;
@@ -146,6 +146,7 @@ const appMessageUpdated = () => {
 };
 
 export const resetStore = () => {
+	Logger.status($messages.reset_store);
 	store.clear();
 
 	synchronizeApp();
@@ -165,6 +166,13 @@ export const clearLibrary = () => {
 
 export const clearCache = () => {
 	store.delete('cache');
+};
+
+export const getSetting = (setting: keyof SettingsType) => {
+	const settings = store.get('settings');
+	if (settings[setting] !== undefined) {
+		return settings[setting];
+	}
 };
 
 export const getSettings = () => {
@@ -194,7 +202,7 @@ export const addPath = (path: string) => {
 	store.set('settings', settings);
 };
 
-export const updateAppStatusMessage = (message: AppMessageType) => {
+export const addAppMessage = (message: AppMessageType) => {
 	const appMessageLog = store.get('appMessageLog');
 	appMessageLog.push(message);
 	store.set('appMessageLog', appMessageLog);

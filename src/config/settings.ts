@@ -6,6 +6,9 @@ export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 
 export interface SettingsType {
 	autoUpdate: boolean;
+	showDockIcon: boolean;
+	startMinimized: boolean;
+	quitOnWindowClose: boolean;
 
 	paths: string[];
 	thumbnailSize: ThumbnailSizeType;
@@ -18,7 +21,7 @@ export interface SettingsType {
 	// menuBarMode: boolean;
 	sidebarCollapsed: boolean;
 	sidebarLayout: number[];
-	showDockIcon: boolean;
+
 	showSidebar: boolean;
 	showTrayIcon: boolean;
 	visibleSidebarElements: string[];
@@ -27,7 +30,7 @@ export interface SettingsType {
 	// autoHideMenuBar: boolean;
 	// notificationsMuted: boolean;
 	// hardwareAcceleration: boolean;
-	quitOnWindowClose: boolean;
+
 	// lastWindowState: {
 	// 	x: number;
 	// 	y: number;
@@ -42,13 +45,14 @@ export const DEFAULT_SETTINGS: SettingsType = {
 	paths: [],
 
 	autoUpdate: true,
+	showDockIcon: true,
+	startMinimized: false,
 	quitOnWindowClose: false,
 
 	sidebarCollapsed: false,
 	sidebarLayout: [20, 80],
 
 	showSidebar: true,
-	showDockIcon: true,
 	showTrayIcon: true,
 
 	visibleSidebarElements: ['watch', 'liked', 'genres', 'playlists', 'history'],

@@ -21,6 +21,9 @@ import {
 export default {
 	initialize() {
 		ipcMain.handle(ipcChannels.GET_APP_NAME, () => app.getName());
+		ipcMain.handle(ipcChannels.GET_APP_MENU, () =>
+			serializeMenu(Menu.getApplicationMenu()),
+		);
 		ipcMain.handle(ipcChannels.GET_GENRES, getGenres);
 		ipcMain.handle(ipcChannels.GET_LIBRARY, getLibrary);
 		ipcMain.handle(ipcChannels.GET_PLAYLISTS, getPlaylists);
@@ -33,18 +36,29 @@ export default {
 				setSettings(settings);
 			},
 		);
+
 		ipcMain.handle(
 			ipcChannels.SET_MEDIA_LIKE,
 			(_event, id: string, liked: boolean) => {
 				setMediaLike(id, liked);
 			},
 		);
+
 		ipcMain.handle(
 			ipcChannels.ADD_TO_PLAYLIST,
 			(_event, id: string, playlist: string) => {
 				addToPlaylist(id, playlist);
 			},
 		);
+
+		// Trigger an app menu item by its id
+		ipcMain.on(
+			ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID,
+			(_event: any, id: string) => {
+				triggerMenuItemById(Menu.getApplicationMenu(), id);
+			},
+		);
+
 		ipcMain.on(ipcChannels.DELETE_PLAYLIST, (_event: any, id: string) => {
 			deletePlaylist(id);
 		});

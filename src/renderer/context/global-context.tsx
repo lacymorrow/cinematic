@@ -2,15 +2,18 @@
 // Do not use this context to update data, only to read it
 // Use IPC to update data
 
-import { LIBRARY_UPDATED, SETTINGS_UPDATED } from '@/config/ipc-channels';
+import { LIBRARY_UPDATED } from '@/config/ipc-channels';
 import { CollectionStoreType, LibraryStoreType } from '@/main/store';
 import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
 import Logger from 'electron-log';
+import { MenuItemConstructorOptions } from 'electron/renderer';
 
 interface GlobalContextType {
+	appName: string;
+	appMenu: MenuItemConstructorOptions[];
 	genres: CollectionStoreType;
 	genresArray: CollectionType;
 	library: LibraryStoreType;
@@ -24,6 +27,8 @@ interface GlobalContextType {
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
+	appName: '',
+	appMenu: [],
 	genres: {},
 	genresArray: [],
 	library: {},
@@ -41,11 +46,16 @@ export function GlobalContextProvider({
 }: {
 	children?: React.ReactNode;
 }) {
+	const [appName, setAppName] = React.useState<string>('');
+	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
+		[],
+	);
+	const [settings, setCurrentSettings] =
+		React.useState<SettingsType>(DEFAULT_SETTINGS);
+
 	const [genres, setGenres] = React.useState<CollectionStoreType>({});
 	const [library, setLibrary] = React.useState<LibraryStoreType>({});
 	const [playlists, setPlaylists] = React.useState<CollectionStoreType>({});
-	const [settings, setCurrentSettings] =
-		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
@@ -58,7 +68,7 @@ export function GlobalContextProvider({
 		};
 
 		const syncronizeSettings = async () => {
-			Logger.log('Synchronize Library');
+			Logger.log($messages.synchronize_settings);
 			setCurrentSettings(await window.electron.getSettings());
 		};
 
@@ -67,18 +77,35 @@ export function GlobalContextProvider({
 			await syncronize();
 		});
 
-		window.electron.ipcRenderer.on(SETTINGS_UPDATED, async (_event) => {
-			await syncronizeSettings();
-		});
+		window.electron.ipcRenderer.on(
+			ipcChannels.SETTINGS_UPDATED,
+			async (_event) => {
+				await synchronizeSettings();
+			},
+		);
 
 		// Request initial data when the app loads
 		syncronize();
 		syncronizeSettings();
 
+		// Get app name
+		window.electron.getAppName().then(setAppName).catch(Logger.error);
+
+		// Get app menu
+		window.electron
+			.getAppMenu()
+			// .then(console.dir)
+			.then(setAppMenu)
+			.catch(Logger.error);
+
 		return () => {
 			// Clean up listeners when the component unmounts
-			window.electron.ipcRenderer.removeAllListeners(LIBRARY_UPDATED);
-			window.electron.ipcRenderer.removeAllListeners(SETTINGS_UPDATED);
+			window.electron.ipcRenderer.removeAllListeners(
+				ipcChannels.LIBRARY_UPDATED,
+			);
+			window.electron.ipcRenderer.removeAllListeners(
+				ipcChannels.SETTINGS_UPDATED,
+			);
 		};
 	}, []);
 
@@ -102,6 +129,8 @@ export function GlobalContextProvider({
 
 	const value = useMemo(() => {
 		return {
+			appName,
+			appMenu,
 			genres,
 			genresArray,
 			library,
@@ -114,6 +143,8 @@ export function GlobalContextProvider({
 			setSettings,
 		};
 	}, [
+		appName,
+		appMenu,
 		genres,
 		genresArray,
 		library,

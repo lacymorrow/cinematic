@@ -1,7 +1,5 @@
 export const $app = {
 	name: 'Cinematic',
-	link: 'https://github.com/lacymorrow/cinematic',
-	github: 'https://github.com/lacymorrow/cinematic',
 };
 
 export const $settings = {
@@ -34,7 +32,8 @@ export const $dialog = {
 export const $errors = {
 	prefix_main: 'Main> ',
 
-	mainWindow: '"mainWindow" is not defined',
+	main_window: '"mainWindow" is not defined',
+	blocked_navigation: 'Blocked navigation to: ',
 
 	noDefaultPath: 'Could not get default media path: ',
 	inaccessiblePath: 'Inaccessible path: ',
@@ -56,7 +55,10 @@ export const $messages = {
 	init: 'Initializing...',
 	ready: 'App Ready',
 	idle: 'Idle',
-	window_created: 'Window created',
+	started: 'Started',
+	reset_store: 'Reset App',
+	auto_update: 'Checking for updates...',
+	synchronize_settings: 'Synchronizing settings',
 
 	// Network messages
 	online: 'Connected',

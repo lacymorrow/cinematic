@@ -7,6 +7,8 @@ import { SettingsType } from '../config/settings';
 const channels = Object.values(ipcChannels);
 
 const electronHandler = {
+	isMac: process.platform === 'darwin',
+	getAppMenu: () => ipcRenderer.invoke(ipcChannels.GET_APP_MENU),
 	getAppName: () => ipcRenderer.invoke(ipcChannels.GET_APP_NAME),
 	getGenres: () => ipcRenderer.invoke(ipcChannels.GET_GENRES),
 	getLibrary: () => ipcRenderer.invoke(ipcChannels.GET_LIBRARY),
@@ -27,6 +29,9 @@ const electronHandler = {
 	openMediaPath: () => ipcRenderer.send(ipcChannels.OPEN_MEDIA_PATH),
 	openPath: (path: string) => ipcRenderer.send(ipcChannels.OPEN_PATH, path),
 	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),
+	triggerAppMenuItemById: (id: string) =>
+		ipcRenderer.send(ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID, id),
+
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {
 			if (!channels.includes(channel)) {

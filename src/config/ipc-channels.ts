@@ -10,6 +10,7 @@ export const APP_STATUS_MESSAGE = 'app-status-message';
 // Renderer -> Main
 export const CLEAR_LIBRARY = 'clear-library';
 
+const GET_APP_MENU = 'get-app-menu';
 export const GET_APP_NAME = 'get-app-name';
 export const GET_LIBRARY = 'get-library';
 export const GET_GENRES = 'get-genres';
@@ -17,6 +18,8 @@ export const GET_PLAYLISTS = 'get-playlists';
 export const GET_SETTINGS = 'get-settings';
 export const SET_SETTINGS = 'set-settings';
 export const GET_MESSAGES = 'get-messages';
+
+const TRIGGER_APP_MENU_ITEM_BY_ID = 'trigger-app-menu-item-by-id';
 
 export const SET_MEDIA_LIKE = 'set-media-like';
 export const ADD_TO_HISTORY = 'add-to-history';
@@ -35,6 +38,7 @@ export const ipcChannels = {
 	// renderer -> main
 	CLEAR_LIBRARY,
 
+	GET_APP_MENU,
 	GET_APP_NAME,
 	GET_GENRES,
 	GET_LIBRARY,
@@ -42,6 +46,9 @@ export const ipcChannels = {
 	GET_MESSAGES,
 	GET_SETTINGS,
 	SET_SETTINGS,
+
+	TRIGGER_APP_MENU_ITEM_BY_ID,
+
 	SET_MEDIA_LIKE,
 	ADD_TO_HISTORY,
 	ADD_TO_PLAYLIST,
