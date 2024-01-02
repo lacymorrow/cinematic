@@ -43,10 +43,11 @@ app
 
 		if (is.debug) {
 			await debugging.installExtensions();
+			resetStore(); // todo: remove
 		}
 
 		if (app.commandLine.hasSwitch('reset')) {
-			Logger.warn('Resetting app');
+			// Reset the app and store to default settings
 			resetStore();
 		}
 	})
