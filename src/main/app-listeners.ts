@@ -7,7 +7,7 @@ import { createMainWindow } from './create-window';
 import shortcuts from './shortcuts';
 import { getSetting } from './store';
 import { is } from './util';
-import win from './windows';
+import windows from './windows';
 
 const register = () => {
 	/**
@@ -17,14 +17,16 @@ const register = () => {
 	app.on('activate', async () => {
 		// On macOS it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
-		if (win.mainWindow === null) win.mainWindow = await createMainWindow();
+		if (windows.mainWindow === null) {
+			windows.mainWindow = await createMainWindow();
+		}
 	});
 
 	app.on('second-instance', () => {
 		// Someone tried to run a second instance, we should focus our window.
-		if (win.mainWindow) {
-			if (win.mainWindow.isMinimized()) win.mainWindow.restore();
-			win.mainWindow.focus();
+		if (windows.mainWindow) {
+			if (windows.mainWindow.isMinimized()) windows.mainWindow.restore();
+			windows.mainWindow.focus();
 		}
 	});
 
