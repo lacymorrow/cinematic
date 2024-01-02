@@ -6,17 +6,26 @@ import { SettingsType } from '../config/settings';
 
 const channels = Object.values(ipcChannels);
 
-console.log('preload.ts');
 const electronHandler = {
-	isMac: process.platform === 'darwin',
 	getAppName: () => ipcRenderer.invoke(ipcChannels.GET_APP_NAME),
-	getAppMenu: () => ipcRenderer.invoke(ipcChannels.GET_APP_MENU),
+	getGenres: () => ipcRenderer.invoke(ipcChannels.GET_GENRES),
+	getLibrary: () => ipcRenderer.invoke(ipcChannels.GET_LIBRARY),
+	getPlaylists: () => ipcRenderer.invoke(ipcChannels.GET_PLAYLISTS),
 	getSettings: () => ipcRenderer.invoke(ipcChannels.GET_SETTINGS),
 	getMessages: () => ipcRenderer.invoke(ipcChannels.GET_MESSAGES),
 	setSettings: (settings: Partial<SettingsType>) =>
 		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
-	triggerAppMenuItemById: (id: string) =>
-		ipcRenderer.send(ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID, id),
+	setMediaLike: (id: string, liked: boolean) =>
+		ipcRenderer.invoke(ipcChannels.SET_MEDIA_LIKE, id, liked),
+	addToPlaylist: (id: string, playlist: string) =>
+		ipcRenderer.invoke(ipcChannels.ADD_TO_PLAYLIST, id, playlist),
+	deletePlaylist: (id: string) =>
+		ipcRenderer.send(ipcChannels.DELETE_PLAYLIST, id),
+	addMediaPath: () => ipcRenderer.send(ipcChannels.ADD_MEDIA_PATH),
+	addRecentlyViewed: (id: string) =>
+		ipcRenderer.send(ipcChannels.ADD_TO_HISTORY, 'view', id),
+	openMediaPath: () => ipcRenderer.send(ipcChannels.OPEN_MEDIA_PATH),
+	openPath: (path: string) => ipcRenderer.send(ipcChannels.OPEN_PATH, path),
 	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {

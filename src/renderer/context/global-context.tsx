@@ -2,24 +2,36 @@
 // Do not use this context to update data, only to read it
 // Use IPC to update data
 
-import { ipcChannels } from '@/config/ipc-channels';
+import { LIBRARY_UPDATED, SETTINGS_UPDATED } from '@/config/ipc-channels';
+import { CollectionStoreType, LibraryStoreType } from '@/main/store';
+import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
-import { $messages } from '@/config/strings';
 import Logger from 'electron-log';
-import { MenuItemConstructorOptions } from 'electron/renderer';
 
 interface GlobalContextType {
-	appName: string;
-	appMenu: MenuItemConstructorOptions[];
+	genres: CollectionStoreType;
+	genresArray: CollectionType;
+	library: LibraryStoreType;
+	libraryArray: LibraryType;
+	liked: LibraryType;
+	playlists: CollectionStoreType;
+	playlistsArray: CollectionType;
+	randomLibraryArray: LibraryType;
 	settings: SettingsType;
 	setSettings: (newSettings: Partial<SettingsType>) => void;
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
-	appName: '',
-	appMenu: [],
+	genres: {},
+	genresArray: [],
+	library: {},
+	libraryArray: [],
+	liked: [],
+	playlists: {},
+	playlistsArray: [],
+	randomLibraryArray: [],
 	settings: DEFAULT_SETTINGS,
 	setSettings: () => {},
 });
@@ -29,47 +41,44 @@ export function GlobalContextProvider({
 }: {
 	children?: React.ReactNode;
 }) {
-	const [appName, setAppName] = React.useState<string>('');
-	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
-		[],
-	);
+	const [genres, setGenres] = React.useState<CollectionStoreType>({});
+	const [library, setLibrary] = React.useState<LibraryStoreType>({});
+	const [playlists, setPlaylists] = React.useState<CollectionStoreType>({});
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
-		const synchronizeSettings = async () => {
-			Logger.log($messages.synchronize_settings);
+		const syncronize = async () => {
+			Logger.log('Synchronize Library');
+
+			setLibrary(await window.electron.getLibrary());
+			setGenres(await window.electron.getGenres());
+			setPlaylists(await window.electron.getPlaylists());
+		};
+
+		const syncronizeSettings = async () => {
+			Logger.log('Synchronize Library');
 			setCurrentSettings(await window.electron.getSettings());
 		};
 
 		// Listen for messages from the main process
-		window.electron.ipcRenderer.on(
-			ipcChannels.SETTINGS_UPDATED,
-			async (_event) => {
-				await synchronizeSettings();
-			},
-		);
+		window.electron.ipcRenderer.on(LIBRARY_UPDATED, async (_event) => {
+			await syncronize();
+		});
+
+		window.electron.ipcRenderer.on(SETTINGS_UPDATED, async (_event) => {
+			await syncronizeSettings();
+		});
 
 		// Request initial data when the app loads
-		synchronizeSettings();
-
-		// Get app name
-		window.electron.getAppName().then(setAppName).catch(Logger.error);
-
-		// Get app menu
-		// Set app name
-		window.electron
-			.getAppMenu()
-			// .then(console.dir)
-			.then(setAppMenu)
-			.catch(Logger.error);
+		syncronize();
+		syncronizeSettings();
 
 		return () => {
 			// Clean up listeners when the component unmounts
-			window.electron.ipcRenderer.removeAllListeners(
-				ipcChannels.SETTINGS_UPDATED,
-			);
+			window.electron.ipcRenderer.removeAllListeners(LIBRARY_UPDATED);
+			window.electron.ipcRenderer.removeAllListeners(SETTINGS_UPDATED);
 		};
 	}, []);
 
@@ -78,14 +87,44 @@ export function GlobalContextProvider({
 		window.electron.setSettings(newSettings);
 	}, []);
 
+	const libraryArray = useMemo(() => Object.values(library), [library]);
+	const playlistsArray = useMemo(() => Object.values(playlists), [playlists]);
+	const genresArray = useMemo(() => Object.values(genres), [genres]);
+	const liked = useMemo(
+		() => libraryArray.filter((media) => media.liked),
+		[libraryArray],
+	);
+
+	const randomLibraryArray = useMemo(() => {
+		const shuffled = [...libraryArray];
+		return shuffled.sort(() => 0.5 - Math.random());
+	}, [libraryArray]);
+
 	const value = useMemo(() => {
 		return {
-			appName,
-			appMenu,
+			genres,
+			genresArray,
+			library,
+			libraryArray,
+			liked,
+			playlists,
+			playlistsArray,
+			randomLibraryArray,
 			settings,
 			setSettings,
 		};
-	}, [appName, appMenu, settings, setSettings]);
+	}, [
+		genres,
+		genresArray,
+		library,
+		libraryArray,
+		liked,
+		playlists,
+		playlistsArray,
+		randomLibraryArray,
+		settings,
+		setSettings,
+	]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

@@ -2,7 +2,7 @@
 // Do not use this context to update data, only to read it
 // Use IPC to update data
 
-import { ipcChannels } from '@/config/ipc-channels';
+import { APP_STATUS_MESSAGE } from '@/config/ipc-channels';
 import React, { useEffect, useMemo } from 'react';
 
 interface StatusMessageContextType {
@@ -29,19 +29,14 @@ export function StatusMessageContextProvider({
 			setMessages(await window.electron.getMessages());
 		};
 
-		window.electron.ipcRenderer.on(
-			ipcChannels.APP_STATUS_MESSAGE,
-			async (_event) => {
-				synchronizeMessages();
-			},
-		);
+		window.electron.ipcRenderer.on(APP_STATUS_MESSAGE, async (_event) => {
+			synchronizeMessages();
+		});
 
 		synchronizeMessages();
 
 		return () => {
-			window.electron.ipcRenderer.removeAllListeners(
-				ipcChannels.APP_STATUS_MESSAGE,
-			);
+			window.electron.ipcRenderer.removeAllListeners(APP_STATUS_MESSAGE);
 		};
 	}, []);
 

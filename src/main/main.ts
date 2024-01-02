@@ -1,21 +1,18 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-import { app, shell } from 'electron';
+import { app } from 'electron';
 import Logger from 'electron-log/main';
 import { $errors, $messages } from '../config/strings';
 import { is } from './util';
 
 import appListeners from './app-listeners';
-import { AutoUpdate } from './auto-update';
-import { debugInfo } from './constants';
-import { createMainWindow } from './create-window';
+import { debugInfo, DEFAULT_PATH } from './constants';
 import debugging from './debugging';
+import { scanMedia } from './file';
 import ipc from './ipc';
 import logger from './logger';
-import MenuBuilder from './menu';
-import shortcuts from './shortcuts';
-import { getSetting, resetStore } from './store';
-import windows from './windows';
+import { resetStore } from './store';
+import win from './window';
 
 console.time(app.name);
 
@@ -46,66 +43,33 @@ app
 
 		if (is.debug) {
 			await debugging.installExtensions();
+		}
 
-			// Reset the app and store to default settings
+		if (app.commandLine.hasSwitch('reset')) {
+			Logger.warn('Resetting app');
 			resetStore();
 		}
 	})
 	.then(async () => {
 		// Create the main browser window.
-		windows.mainWindow = await createMainWindow();
-
-		const menuBuilder = new MenuBuilder(windows.mainWindow);
-		menuBuilder.buildMenu();
-
-		windows.mainWindow.on('ready-to-show', () => {
-			if (!windows.mainWindow) {
-				throw new Error($errors.main_window);
-			}
-
-			// Setting: Start minimized
-			if (process.env.START_MINIMIZED || getSetting('startMinimized')) {
-				windows.mainWindow.minimize();
-			} else {
-				windows.mainWindow.show();
-			}
-
-			// Setting: Show dock icon
-			if (is.macos && !getSetting('showDockIcon')) {
-				app.dock.hide();
-			}
-		});
-
-		// Clean
-		windows.mainWindow.on('closed', () => {
-			windows.mainWindow = null;
-		});
-
-		// Open urls in the user's browser
-		windows.mainWindow.webContents.setWindowOpenHandler((data) => {
-			shell.openExternal(data.url);
-			return { action: 'deny' };
-		});
-
-		// Remove this if your app does not use auto updates
-		if (getSetting('autoUpdate')) {
-			// eslint-disable-next-line no-new
-			new AutoUpdate();
-		}
-
-		// Register shortcuts
-		shortcuts.init();
+		win.createWindow();
 	})
-	.then(() => console.timeLog(app.name, $messages.started))
+	.then(() => console.timeLog(app.name, $messages.window_created))
+	.then(() => {
+		// App tidying, initial actions
+		if (app.commandLine.hasSwitch('scan')) {
+			scanMedia(DEFAULT_PATH);
+		}
+	})
 	.finally(() => {
 		// Idle
 		console.timeLog(app.name, $messages.idle);
-		Logger.status($messages.idle);
+		Logger.status('Idle');
 	})
 	.catch((error: Error) => {
 		Logger.error($errors.prefix_main, error);
 	});
 
 // LAUNCH THE APP
-console.timeLog(app.name, $messages.init);
+console.timeLog(app.name, 'Initialized');
 start();
