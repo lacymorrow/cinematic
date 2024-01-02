@@ -15,7 +15,7 @@ import {
 
 const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
-		Logger.info(`${$messages.fetching_omdb}: ${meta.title}`);
+		Logger.status(`${$messages.fetching_omdb}: ${meta.title}`);
 		const cacheKey = `omdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
@@ -33,7 +33,7 @@ const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
-		Logger.info(`${$messages.fetching_tmdb}: ${meta.title}`);
+		Logger.status(`${$messages.fetching_tmdb}: ${meta.title}`);
 		const cacheKey = `tmdb-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
@@ -49,7 +49,7 @@ const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
-		Logger.info(`${$messages.fetching_trailers}: ${meta.title}`);
+		Logger.status(`${$messages.fetching_trailers}: ${meta.title}`);
 		const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`; // trailer-<title>-<year>
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
@@ -74,7 +74,7 @@ const onQueueSuccess = (result: MediaType) => {
 	}
 
 	if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
-		Logger.info($messages.idle);
+		Logger.status($messages.idle);
 	}
 };
 

@@ -70,7 +70,7 @@ export const addMediaToLibrary = (media: FileType) => {
 	// Enforce a title at this point
 	const title = prettyFileName(filename.replace(ext, ''));
 
-	Logger.info(`Adding ${title} to library`);
+	Logger.status(`Adding ${title} to library`);
 
 	// METADATA DEFAULTS
 	const now = Date.now();
@@ -100,7 +100,7 @@ export const addMediaToLibrary = (media: FileType) => {
 
 	// Add to library - allow showing in the ui before meta is retrieved
 	upsertMediaLibrary(updatedMedia);
-	Logger.info(`Updated ${updatedMedia.title} metadata`);
+	Logger.status(`Updated metadata for ${updatedMedia.title}`);
 
 	// If we're missing meta info, add to queue to retrieve it
 	if (!updatedMedia.tmdb || !updatedMedia.omdb || !updatedMedia.trailers) {

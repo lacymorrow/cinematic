@@ -76,6 +76,7 @@ app
 
 		if (is.debug) {
 			await debugging.installExtensions();
+			resetStore(); // todo: remove
 		}
 
 		if (app.commandLine.hasSwitch('reset')) {
