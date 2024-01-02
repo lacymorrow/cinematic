@@ -58,7 +58,6 @@ export function GlobalContextProvider({
 		window.electron.getAppName().then(setAppName).catch(Logger.error);
 
 		// Get app menu
-		// Set app name
 		window.electron
 			.getAppMenu()
 			// .then(console.dir)
