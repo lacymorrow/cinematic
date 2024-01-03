@@ -111,7 +111,7 @@ export function ResizableLayout({
 					className={cn(
 						isCollapsed &&
 							'min-w-[50px] transition-all duration-300 ease-in-out',
-						'flex flex-col @container',
+						'flex flex-col max-w-xs @container',
 					)}
 				>
 					{/* todo: fade out the sidebar */}
