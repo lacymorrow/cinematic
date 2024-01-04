@@ -22,10 +22,10 @@ import { useLocation } from 'react-router-dom';
 
 import { pathSettings } from '@/config/nav';
 import { $ui } from '@/config/strings';
+import { DialogDeletePlaylist } from '@/renderer/components/dialog/DialogDeletePlaylist';
 import { DEBOUNCE_DELAY } from '@/renderer/config/config';
 import styles from '@/renderer/styles/Sidebar.module.scss';
 import { debounce } from '@/utils/debounce';
-import { DialogDeletePlaylist } from '../dialog/DialogDeletePlaylist';
 
 const Header = ({ text }: { text: string }) => (
 	<h2 className="p-2 text-lg font-semibold tracking-tight">{text}</h2>
