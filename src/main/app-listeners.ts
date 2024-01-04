@@ -14,23 +14,6 @@ const register = () => {
 	 * Add app event listeners...
 	 */
 
-	app.on('activate', async () => {
-		// On macOS it's common to re-create a window in the app when the
-		// dock icon is clicked and there are no other windows open.
-		if (windows.mainWindow === null) {
-			windows.mainWindow = await createMainWindow();
-		}
-	});
-
-	app.on('second-instance', () => {
-		// Someone tried to run a second instance, we should focus our window.
-		if (windows.mainWindow) {
-			// If the window is minimized, we should restore it and focus it.
-			if (windows.mainWindow.isMinimized()) windows.mainWindow.restore();
-			windows.mainWindow.focus();
-		}
-	});
-
 	app.on('will-quit', () => {
 		// Unregister all shortcuts.
 		shortcuts.unregisterAll();
@@ -66,4 +49,26 @@ const register = () => {
 	});
 };
 
-export default { register };
+const ready = () => {
+	app.on('activate', async () => {
+		// On macOS it's common to re-create a window in the app when the
+		// dock icon is clicked and there are no other windows open.
+		if (windows.mainWindow === null || windows.mainWindow?.isDestroyed()) {
+			// Because we're adding these listeners outside the main.ts file, the window object doesn't get set to null
+			// when the window is closed. So we check `windows.mainWindow?.isDestroyed()` and explicitly set it to null
+			windows.mainWindow = null;
+			windows.mainWindow = await createMainWindow(windows.mainWindow);
+		}
+	});
+
+	app.on('second-instance', () => {
+		// Someone tried to run a second instance, we should focus our window.
+		if (windows.mainWindow) {
+			// If the window is minimized, we should restore it and focus it.
+			if (windows.mainWindow.isMinimized()) windows.mainWindow.restore();
+			windows.mainWindow.focus();
+		}
+	});
+};
+
+export default { register, ready };

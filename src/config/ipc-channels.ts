@@ -2,15 +2,14 @@
 export type Channels = string;
 
 // Main -> Renderer
-const SETTINGS_UPDATED = 'settings-updated';
+const APP_UPDATED = 'app-updated';
 const APP_STATUS_MESSAGE = 'app-status-message';
 
 // Renderer -> Main
 const GET_APP_NAME = 'get-app-name';
-const GET_SETTINGS = 'get-settings';
-const GET_MESSAGES = 'get-messages';
 const GET_APP_MENU = 'get-app-menu';
-
+const GET_MESSAGES = 'get-messages';
+const GET_SETTINGS = 'get-settings';
 const SET_SETTINGS = 'set-settings';
 
 const TRIGGER_APP_MENU_ITEM_BY_ID = 'trigger-app-menu-item-by-id';
@@ -19,7 +18,7 @@ const OPEN_URL = 'open-url';
 export const ipcChannels = {
 	// main -> renderer
 	APP_STATUS_MESSAGE,
-	SETTINGS_UPDATED,
+	APP_UPDATED,
 
 	// renderer -> main
 	GET_APP_NAME,

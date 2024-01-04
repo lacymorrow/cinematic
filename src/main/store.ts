@@ -44,7 +44,7 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const synchronizeApp = () => {
-	windows?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
+	windows?.mainWindow?.webContents.send(ipcChannels.APP_UPDATED);
 };
 
 const appMessageUpdated = () => {

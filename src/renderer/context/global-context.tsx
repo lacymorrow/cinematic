@@ -38,21 +38,27 @@ export function GlobalContextProvider({
 
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
-		const synchronizeSettings = async () => {
-			Logger.log($messages.synchronize_settings);
+		const synchronizeAppState = async () => {
+			Logger.log($messages.synchronize);
+
+			// Get settings
 			setCurrentSettings(await window.electron.getSettings());
+
+			// Get app menu
+			window.electron
+				.getAppMenu()
+				// .then(console.dir)
+				.then(setAppMenu)
+				.catch(Logger.error);
 		};
 
 		// Listen for messages from the main process
-		window.electron.ipcRenderer.on(
-			ipcChannels.SETTINGS_UPDATED,
-			async (_event) => {
-				await synchronizeSettings();
-			},
-		);
+		window.electron.ipcRenderer.on(ipcChannels.APP_UPDATED, async (_event) => {
+			await synchronizeAppState();
+		});
 
 		// Request initial data when the app loads
-		synchronizeSettings();
+		synchronizeAppState();
 
 		// Get app name
 		window.electron.getAppName().then(setAppName).catch(Logger.error);
@@ -66,9 +72,7 @@ export function GlobalContextProvider({
 
 		return () => {
 			// Clean up listeners when the component unmounts
-			window.electron.ipcRenderer.removeAllListeners(
-				ipcChannels.SETTINGS_UPDATED,
-			);
+			window.electron.ipcRenderer.removeAllListeners(ipcChannels.APP_UPDATED);
 		};
 	}, []);
 

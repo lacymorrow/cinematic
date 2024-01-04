@@ -36,7 +36,7 @@ export const $messages = {
 	idle: 'Idle',
 	reset_store: 'Reset App',
 	auto_update: 'Checking for updates...',
-	synchronize_settings: 'Synchronizing settings',
+	synchronize: 'Synchronizing state...',
 
 	// Network messages
 	online: 'Connected',
