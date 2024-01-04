@@ -71,6 +71,13 @@ export function GlobalContextProvider({
 		const synchronizeSettings = async () => {
 			Logger.log($messages.synchronize_settings);
 			setCurrentSettings(await window.electron.getSettings());
+
+			// Get app menu
+			window.electron
+				.getAppMenu()
+				// .then(console.dir)
+				.then(setAppMenu)
+				.catch(Logger.error);
 		};
 
 		// Listen for messages from the main process
