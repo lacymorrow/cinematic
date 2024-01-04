@@ -1,7 +1,7 @@
 module.exports = {
 	extends: ['erb'],
 	plugins: ['@typescript-eslint'],
-	ignorePatterns: ['**/components/ui/'],
+	ignorePatterns: ['**/components/ui/', '.erb/'],
 
 	rules: {
 		'consistent-return': 'off',
