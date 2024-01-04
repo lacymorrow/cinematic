@@ -6,6 +6,7 @@ import {
 	shell,
 } from 'electron';
 import { homepage } from '../../package.json';
+import { getSetting, setSettings } from './store';
 import { is } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -84,6 +85,39 @@ export default class MenuBuilder {
 		});
 	}
 
+	subMenuSettings: MenuItemConstructorOptions = {
+		label: 'Settings',
+		submenu: [
+			{
+				label: 'Auto Update',
+				type: 'checkbox',
+				id: 'autoUpdate',
+				enabled: false,
+				checked: !!getSetting('autoUpdate'),
+			},
+			{
+				label: 'Show Dock Icon',
+				type: 'checkbox',
+				id: 'showDockIcon',
+				checked: !!getSetting('showDockIcon'),
+				click: () => {
+					setSettings({ showDockIcon: !getSetting('showDockIcon') });
+				},
+			},
+			{
+				label: 'Quit on Close',
+				type: 'checkbox',
+				id: 'quitOnWindowClose',
+				checked: !!getSetting('quitOnWindowClose'),
+				click: () => {
+					setSettings({
+						quitOnWindowClose: !getSetting('quitOnWindowClose'),
+					});
+				},
+			},
+		],
+	};
+
 	buildDarwinTemplate(): MenuItemConstructorOptions[] {
 		const subMenuAbout: DarwinMenuItemConstructorOptions = {
 			label: app.name,
@@ -97,17 +131,6 @@ export default class MenuBuilder {
 				{ type: 'separator' },
 				{
 					label: 'Services',
-					submenu: [
-						{ label: 'Item1', type: 'radio', id: 'item1' },
-						{ label: 'Item2', type: 'radio', id: 'item2' },
-						{ label: 'Item3', type: 'radio', checked: true, id: 'item3' },
-						{
-							label: 'Item4',
-							type: 'radio',
-							checked: false,
-							id: 'item4',
-						},
-					],
 				},
 				{ type: 'separator' },
 				{
@@ -176,6 +199,34 @@ export default class MenuBuilder {
 		const subMenuViewDev: MenuItemConstructorOptions = {
 			label: 'View',
 			submenu: [
+				{
+					label: 'Auto Update',
+					type: 'checkbox',
+					id: 'autoUpdate',
+					enabled: false,
+					checked: !!getSetting('autoUpdate'),
+				},
+				{
+					label: 'Show Dock Icon',
+					type: 'checkbox',
+					id: 'showDockIcon',
+					checked: !!getSetting('showDockIcon'),
+					click: () => {
+						setSettings({ showDockIcon: !getSetting('showDockIcon') });
+					},
+				},
+				{
+					label: 'Quit on Close',
+					type: 'checkbox',
+					id: 'quitOnWindowClose',
+					checked: !!getSetting('quitOnWindowClose'),
+					click: () => {
+						setSettings({
+							quitOnWindowClose: !getSetting('quitOnWindowClose'),
+						});
+					},
+				},
+				{ type: 'separator' },
 				{
 					label: 'Reload',
 					accelerator: 'Command+R',
@@ -280,7 +331,14 @@ export default class MenuBuilder {
 				? subMenuViewDev
 				: subMenuViewProd;
 
-		return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+		return [
+			subMenuAbout,
+			subMenuEdit,
+			subMenuView,
+			subMenuWindow,
+			this.subMenuSettings,
+			subMenuHelp,
+		];
 	}
 
 	buildDefaultTemplate() {
@@ -349,6 +407,7 @@ export default class MenuBuilder {
 								},
 							],
 			},
+			this.subMenuSettings,
 			{
 				label: 'Help',
 				submenu: [
