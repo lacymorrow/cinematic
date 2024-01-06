@@ -61,9 +61,6 @@ const catchErrors = () => {
 
 // Initialize logger and error handler
 const initialize = () => {
-	// Catch uncaught errors
-	catchErrors();
-
 	// Add custom log level to display app status messages
 	Logger.addLevel('status', 0);
 
@@ -77,4 +74,4 @@ const initialize = () => {
 	});
 };
 
-export default { initialize };
+export default { initialize, catchErrors };

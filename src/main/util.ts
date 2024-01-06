@@ -1,6 +1,10 @@
 /* eslint import/prefer-default-export: off */
+import { app } from 'electron';
+import os from 'os';
 import path from 'path';
 import { URL } from 'url';
+
+export const electronVersion = process.versions.electron;
 
 // Via electron-util: https://github.com/sindresorhus/electron-util/blob/main/source/is.js
 export const is = {
@@ -26,3 +30,11 @@ export function resolveHtmlPath(htmlFileName: string) {
 	}
 	return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
+
+export const debugInfo = () =>
+	`
+  ${app.getName()} ${app.getVersion()}
+  Electron ${electronVersion}
+  ${process.platform} ${os.release()}
+  Locale: ${app.getLocale()}
+  `.trim();

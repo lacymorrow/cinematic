@@ -1,12 +1,9 @@
-// Disable no-unused-vars, broken for spread args
-/* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 
 const channels = Object.values(ipcChannels);
 
-console.log('preload.ts');
 const electronHandler = {
 	isMac: process.platform === 'darwin',
 	getAppName: () => ipcRenderer.invoke(ipcChannels.GET_APP_NAME),

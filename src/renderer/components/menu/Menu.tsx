@@ -27,6 +27,10 @@ function formatLabel(label: string | undefined | null) {
 		return null;
 	}
 
+	if (window.electron.isMac) {
+		return label.replace(/&&/g, '&');
+	}
+
 	if (/^[^&]*&([^&])/g.test(label)) {
 		const index = label.indexOf('&');
 		const firstPart = label.slice(0, index);

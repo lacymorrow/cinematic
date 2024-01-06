@@ -1,13 +1,13 @@
 {
-	"name": "cinematic",
-	"productName": "Cinematic",
-	"appId": "com.lacymorrow.cinematic",
+	"name": "hotplate",
+	"productName": "Hotplate",
+	"appId": "com.lacymorrow.hotplate",
 	"version": "3.0.0",
-	"description": "A desktop browser for your media library.",
+	"description": "A batteries-included Electron boilerplate.",
 	"license": "CC-BY-NC-SA-4.0",
 	"copyright": "Copyright © Lacy Morrow",
-	"repository": "lacymorrow/cinematic",
-	"homepage": "https://lacymorrow.github.io/cinematic",
+	"repository": "lacymorrow/hotplate",
+	"homepage": "https://lacymorrow.github.io/hotplate",
 	"keywords": [
 		"electron",
 		"boilerplate",
@@ -20,7 +20,7 @@
 		"reload"
 	],
 	"bugs": {
-		"url": "https://github.com/lacymorrow/cinematic/issues",
+		"url": "https://github.com/lacymorrow/hotplate/issues",
 		"email": "me@lacymorrow.com"
 	},
 	"author": {
@@ -131,6 +131,7 @@
 		"electron-debug": "^3.2.0",
 		"electron-log": "^5.0.3",
 		"electron-store": "^8.1.0",
+		"electron-unhandled": "^4.0.1",
 		"electron-updater": "^6.1.7",
 		"fastq": "^1.16.0",
 		"is-online": "^10.0.0",
@@ -177,7 +178,7 @@
 		"@typescript-eslint/parser": "^6.17.0",
 		"autoprefixer": "^10.4.16",
 		"browserslist-config-erb": "^0.0.3",
-		"chalk": "4.1.2",
+		"chalk": "~4.1.2",
 		"concurrently": "^8.2.2",
 		"core-js": "^3.35.0",
 		"cross-env": "^7.0.3",
@@ -230,7 +231,7 @@
 		"webpack-merge": "^5.10.0"
 	},
 	"build": {
-		"appId": "com.lacymorrow.cinematic",
+		"appId": "com.lacymorrow.hotplate",
 		"asar": true,
 		"asarUnpack": "**\\*.{node,dll}",
 		"files": [
@@ -287,11 +288,11 @@
 			"artifactName": "${productName}-${version}.${ext}"
 		},
 		"appx": {
-			"applicationId": "CinematicCrosshairOverlay",
+			"applicationId": "HotplateElectron",
 			"artifactName": "${productName}.${ext}",
 			"backgroundColor": "#5500ff",
-			"displayName": "Cinematic: Crosshair Overlay",
-			"identityName": "2886Fly5.CinematicCrosshairOverlay",
+			"displayName": "Hotplate",
+			"identityName": "2886Fly5.HotplateElectron",
 			"publisher": "CN=C53C0091-1EEB-40B4-8537-082E06A4D328",
 			"publisherDisplayName": "Fly5",
 			"showNameOnTiles": true
@@ -308,8 +309,8 @@
 			"category": "Game;Shooter"
 		},
 		"snap": {
-			"summary": "🎯 A Crosshair Overlay for any screen.",
-			"description": "Cinematic allows you to place a customizable crosshair overlay above any application window. Improve your aim and gain a competitive advantage with a permanent colored crosshair to mark center screen.",
+			"summary": "🎯 A batteries-included boilerplate for making Electron apps.",
+			"description": "A batteries-included boilerplate for making Electron apps.",
 			"plugs": [
 				"default",
 				"removable-media"
@@ -330,7 +331,7 @@
 		"publish": {
 			"provider": "github",
 			"owner": "lacymorrow",
-			"repo": "cinematic"
+			"repo": "hotplate"
 		}
 	},
 	"devEngines": {

@@ -3,7 +3,11 @@ export type Channels = string;
 
 // Main -> Renderer
 const APP_UPDATED = 'app-updated';
-const APP_STATUS_MESSAGE = 'app-status-message';
+const APP_STATUS_MESSAGE = 'app-status-message'; // for the renderer to display status messages
+const APP_NOTIFICATION = 'app-notification'; // to display a notification using the OS notification system
+
+const PRELOAD_SOUNDS = 'preload-sounds';
+const PLAY_SOUND = 'play-sound';
 
 // Renderer -> Main
 const GET_APP_NAME = 'get-app-name';
@@ -17,8 +21,11 @@ const OPEN_URL = 'open-url';
 
 export const ipcChannels = {
 	// main -> renderer
+	APP_NOTIFICATION,
 	APP_STATUS_MESSAGE,
 	APP_UPDATED,
+	PRELOAD_SOUNDS,
+	PLAY_SOUND,
 
 	// renderer -> main
 	GET_APP_NAME,

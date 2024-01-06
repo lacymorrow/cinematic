@@ -1,25 +1,37 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
+// todo: user alerts
+
+// todo: boot:
+// app.setLoginItemSettings( {
+// 	openAtLogin: false, // or true
+// } )
+
 import { BrowserWindow, app } from 'electron';
 import Logger from 'electron-log/main';
 import { $errors, $messages } from '../config/strings';
-import { is } from './util';
+import { debugInfo, is } from './util';
 
 import appListeners from './app-listeners';
-import { debugInfo } from './constants';
 
 import { createMainWindow } from './create-window';
 import debugging from './debugging';
+import errorHandling from './error-handling';
 import ipc from './ipc';
 import logger from './logger';
-import { resetStore } from './store';
+import protocol from './protocol';
+import { resetApp } from './reset';
+import SystemTray from './tray';
 import windows from './windows';
 
 console.time(app.name);
 let mainWindow: BrowserWindow | null = null;
 
 const start = () => {
-	// Initialize logger and error handler
+	// Initialize the error handler
+	errorHandling.initialize();
+
+	// Initialize logger
 	logger.initialize();
 
 	// Register ipcMain listeners
@@ -47,14 +59,23 @@ app
 			await debugging.installExtensions();
 
 			// Reset the app and store to default settings
-			resetStore();
+			resetApp();
 		}
 	})
 	.then(async () => {
 		// Create the main browser window.
 		mainWindow = await createMainWindow(mainWindow);
 		windows.mainWindow = mainWindow;
+	})
+	.then(() => {
+		// Add remaining app listeners
 		appListeners.ready();
+
+		// Setup Tray
+		windows.tray = new SystemTray();
+
+		// Register custom protocol like `app://`
+		protocol.initialize();
 	})
 	.then(() => console.timeLog(app.name, $messages.started))
 	.finally(() => {
