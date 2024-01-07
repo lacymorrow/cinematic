@@ -9,6 +9,19 @@ Based on the [Electron React Boilerplate](https://github.com/electron-react-boil
 
 </div>
 
+## Features
+
+- [Electron](https://electronjs.org/)
+- [React](https://reactjs.org/)
+- [React Router](https://reacttraining.com/react-router/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn](https://ui.shadcn.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+
+### Shadcn
+
+Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
+Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
 
 ## Electron-React-Boilerplate Docs
 
