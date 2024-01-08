@@ -19,7 +19,7 @@ import {
 	OpenIcon,
 	PlayIcon,
 	PlaylistIcon,
-} from '@/renderer/config/icons';
+} from '@/renderer/components/layout/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';

@@ -89,11 +89,17 @@ const schema: Store.Schema<StoreType> = {
 			paths: {
 				type: 'array',
 			},
-			sidebarLayout: {
-				type: 'array',
+			allowNotifications: {
+				type: 'boolean',
+			},
+			allowSounds: {
+				type: 'boolean',
 			},
 			autoUpdate: {
 				type: 'boolean',
+			},
+			sidebarLayout: {
+				type: 'array',
 			},
 			quitOnWindowClose: {
 				type: 'boolean',

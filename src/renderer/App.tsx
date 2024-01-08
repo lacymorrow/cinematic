@@ -21,8 +21,8 @@ import {
 	pathSettings,
 } from '@/config/nav';
 import { Layout } from '@/renderer/components/layout/Layout';
+import { nav } from '@/renderer/components/layout/nav';
 import { ResizableLayout } from '@/renderer/components/ui/ResizableLayout';
-import { nav } from '@/renderer/config/nav';
 import { GlobalContextProvider } from '@/renderer/context/global-context';
 import { Genre } from '@/renderer/pages/Genre';
 import { Media } from '@/renderer/pages/Media';

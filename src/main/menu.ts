@@ -5,7 +5,10 @@ import {
 	app,
 	shell,
 } from 'electron';
-import { homepage } from '../../package.json';
+import { bugs, homepage } from '../../package.json';
+import notification from './notification';
+import sound from './sound';
+import { getSetting, setSettings } from './store';
 import { is } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -13,6 +16,10 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 	submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
 
+// MAGIC!
+// Create a menu for the renderer process, based on the main process menu
+// This creates a serializable version of the menu so that we can render an HTML version of it
+// This is necessary because Electron's Menu class is not serializable
 export const serializeMenu = (
 	menu: Menu | null,
 ): MenuItemConstructorOptions[] => {
@@ -39,9 +46,37 @@ export const serializeMenu = (
 	});
 };
 
+// Allow the renderer process to trigger a menu item by ID, so that the click events are triggered
 export const triggerMenuItemById = (menu: Menu | null, id: string) => {
 	if (!menu) return;
 	menu.getMenuItemById(id)?.click();
+};
+
+// Menu items
+export const aboutMenuItem: any = {
+	label: `About ${app.name}`,
+	selector: 'orderFrontStandardAboutPanel:',
+	id: 'about',
+	accelerator: 'CommandOrControl+Z',
+};
+
+export const testNotificationMenuItem: any = {
+	label: 'Test Notification',
+	id: 'testNotification',
+	click: () => {
+		notification({
+			title: 'Test Notification',
+			description: 'This is a test notification',
+		});
+	},
+};
+
+export const testSoundMenuItem: any = {
+	label: 'Test Sound',
+	id: 'testSound',
+	click: () => {
+		sound.play('UPDATE');
+	},
 };
 
 export default class MenuBuilder {
@@ -69,6 +104,8 @@ export default class MenuBuilder {
 		return menu;
 	}
 
+	// Add the "Inspect Element" menu item to the context menu
+	// This is only available in development mode
 	setupDevelopmentEnvironment(): void {
 		this.mainWindow.webContents.on('context-menu', (_, props) => {
 			const { x, y } = props;
@@ -84,30 +121,92 @@ export default class MenuBuilder {
 		});
 	}
 
+	subMenuDev: MenuItemConstructorOptions = {
+		label: 'Development',
+		submenu: [
+			{
+				label: 'Reload',
+				accelerator: 'Command+R',
+				click: () => {
+					this.mainWindow.webContents.reload();
+				},
+				id: 'reload',
+			},
+			{
+				label: 'Toggle Developer Tools',
+				accelerator: 'Alt+Command+I',
+				click: () => {
+					this.mainWindow.webContents.toggleDevTools();
+				},
+				id: 'toggleDevTools',
+			},
+			testNotificationMenuItem,
+			testSoundMenuItem,
+		],
+	};
+
+	subMenuSettings: MenuItemConstructorOptions = {
+		label: 'Settings',
+		submenu: [
+			{
+				label: 'Auto Update',
+				type: 'checkbox',
+				id: 'autoUpdate',
+				enabled: false,
+				checked: !!getSetting('autoUpdate'),
+			},
+			{
+				label: 'Show Dock Icon',
+				type: 'checkbox',
+				id: 'showDockIcon',
+				checked: !!getSetting('showDockIcon'),
+				click: () => {
+					setSettings({ showDockIcon: !getSetting('showDockIcon') });
+				},
+			},
+			{
+				label: 'Quit on Close',
+				type: 'checkbox',
+				id: 'quitOnWindowClose',
+				checked: !!getSetting('quitOnWindowClose'),
+				click: () => {
+					setSettings({
+						quitOnWindowClose: !getSetting('quitOnWindowClose'),
+					});
+				},
+			},
+		],
+	};
+
+	subMenuHelp: MenuItemConstructorOptions = {
+		label: 'Help',
+		submenu: [
+			...(!is.macos ? [aboutMenuItem] : []),
+			{
+				label: 'Learn More',
+				click() {
+					shell.openExternal(homepage);
+				},
+				id: 'learnMore',
+			},
+			{
+				label: 'Report an Issue...',
+				click() {
+					shell.openExternal(bugs.url);
+				},
+				id: 'documentation',
+			},
+		],
+	};
+
 	buildDarwinTemplate(): MenuItemConstructorOptions[] {
 		const subMenuAbout: DarwinMenuItemConstructorOptions = {
 			label: app.name,
 			submenu: [
-				{
-					label: `About ${app.name}`,
-					selector: 'orderFrontStandardAboutPanel:',
-					id: 'about',
-					accelerator: 'CommandOrControl+Z',
-				},
+				aboutMenuItem,
 				{ type: 'separator' },
 				{
 					label: 'Services',
-					submenu: [
-						{ label: 'Item1', type: 'radio', id: 'item1' },
-						{ label: 'Item2', type: 'radio', id: 'item2' },
-						{ label: 'Item3', type: 'radio', checked: true, id: 'item3' },
-						{
-							label: 'Item4',
-							type: 'radio',
-							checked: false,
-							id: 'item4',
-						},
-					],
 				},
 				{ type: 'separator' },
 				{
@@ -192,14 +291,6 @@ export default class MenuBuilder {
 					},
 					id: 'toggleFullScreen',
 				},
-				{
-					label: 'Toggle Developer Tools',
-					accelerator: 'Alt+Command+I',
-					click: () => {
-						this.mainWindow.webContents.toggleDevTools();
-					},
-					id: 'toggleDevTools',
-				},
 			],
 		};
 		const subMenuViewProd: MenuItemConstructorOptions = {
@@ -238,41 +329,6 @@ export default class MenuBuilder {
 				},
 			],
 		};
-		const subMenuHelp: MenuItemConstructorOptions = {
-			label: 'Help',
-			submenu: [
-				{
-					label: 'Learn More',
-					click() {
-						shell.openExternal(homepage);
-					},
-					id: 'learnMore',
-				},
-				{
-					label: 'Documentation',
-					click() {
-						shell.openExternal(
-							'https://github.com/electron/electron/tree/main/docs#readme',
-						);
-					},
-					id: 'documentation',
-				},
-				{
-					label: 'Community Discussions',
-					click() {
-						shell.openExternal('https://www.electronjs.org/community');
-					},
-					id: 'communityDiscussions',
-				},
-				{
-					label: 'Search Issues',
-					click() {
-						shell.openExternal('https://github.com/electron/electron/issues');
-					},
-					id: 'searchIssues',
-				},
-			],
-		};
 
 		const subMenuView =
 			process.env.NODE_ENV === 'development' ||
@@ -280,7 +336,15 @@ export default class MenuBuilder {
 				? subMenuViewDev
 				: subMenuViewProd;
 
-		return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+		return [
+			subMenuAbout,
+			subMenuEdit,
+			subMenuView,
+			subMenuWindow,
+			this.subMenuSettings,
+			this.subMenuHelp,
+			...(is.debug ? [this.subMenuDev] : []),
+		];
 	}
 
 	buildDefaultTemplate() {
@@ -335,6 +399,7 @@ export default class MenuBuilder {
 									},
 									id: 'toggleDevTools',
 								},
+								testNotificationMenuItem,
 							]
 						: [
 								{
@@ -349,41 +414,9 @@ export default class MenuBuilder {
 								},
 							],
 			},
-			{
-				label: 'Help',
-				submenu: [
-					{
-						label: 'Learn More',
-						click() {
-							shell.openExternal(homepage);
-						},
-						id: 'learnMore',
-					},
-					{
-						label: 'Documentation',
-						click() {
-							shell.openExternal(
-								'https://github.com/electron/electron/tree/main/docs#readme',
-							);
-						},
-						id: 'documentation',
-					},
-					{
-						label: 'Community Discussions',
-						click() {
-							shell.openExternal('https://www.electronjs.org/community');
-						},
-						id: 'communityDiscussions',
-					},
-					{
-						label: 'Search Issues',
-						click() {
-							shell.openExternal('https://github.com/electron/electron/issues');
-						},
-						id: 'searchIssues',
-					},
-				],
-			},
+			this.subMenuSettings,
+			this.subMenuHelp,
+			...(is.debug ? [this.subMenuDev] : []),
 		];
 
 		return templateDefault;

@@ -5,6 +5,8 @@ export type ThemeType = 'system' | 'light' | 'dark';
 export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 
 export interface SettingsType {
+	allowNotifications: boolean;
+	allowSounds: boolean;
 	autoUpdate: boolean;
 	showDockIcon: boolean;
 	startMinimized: boolean;
@@ -44,6 +46,8 @@ export interface SettingsType {
 export const DEFAULT_SETTINGS: SettingsType = {
 	paths: [],
 
+	allowNotifications: true,
+	allowSounds: true,
 	autoUpdate: true,
 	showDockIcon: true,
 	startMinimized: false,

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ export function SettingsSidebar({
 	...props
 }: SettingsSidebarProps) {
 	const { pathname } = useLocation();
-	console.log('pathname', pathname);
+
 	return (
 		<nav
 			className={cn(

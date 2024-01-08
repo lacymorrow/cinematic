@@ -27,6 +27,10 @@ function formatLabel(label: string | undefined | null) {
 		return null;
 	}
 
+	if (window.electron.isMac) {
+		return label.replace(/&&/g, '&');
+	}
+
 	if (/^[^&]*&([^&])/g.test(label)) {
 		const index = label.indexOf('&');
 		const firstPart = label.slice(0, index);
@@ -42,9 +46,6 @@ function formatLabel(label: string | undefined | null) {
 	}
 
 	return label.replace(/&&/g, '&');
-
-	// 	return <span className="text-sm">{label.replace(/&/g, '&&')}</span>;
-	// label.replace(/^&([^&])/g, '$1').replace(/^&&([^&])/g, '$1');
 }
 
 function convertAcceleratorToElement(accelerator?: string | null) {
@@ -105,6 +106,11 @@ export function Menu({ className }: { className?: string }) {
 						key={key}
 						checked={item.checked}
 						disabled={item.enabled === false}
+						onClick={() => {
+							if (item.id) {
+								window.electron.triggerAppMenuItemById(item.id);
+							}
+						}}
 					>
 						{formatLabel(item.label)}
 					</MenubarCheckboxItem>
@@ -114,7 +120,15 @@ export function Menu({ className }: { className?: string }) {
 			if (item.type === 'radio') {
 				return (
 					<MenubarRadioGroup key={key} value={item.checked ? key : ''}>
-						<MenubarRadioItem value={key} disabled={item.enabled === false}>
+						<MenubarRadioItem
+							value={key}
+							disabled={item.enabled === false}
+							onClick={() => {
+								if (item.id) {
+									window.electron.triggerAppMenuItemById(item.id);
+								}
+							}}
+						>
 							{formatLabel(item.label)}
 						</MenubarRadioItem>
 					</MenubarRadioGroup>
@@ -124,7 +138,14 @@ export function Menu({ className }: { className?: string }) {
 			if (item.type === 'submenu') {
 				return (
 					<MenubarSub key={key}>
-						<MenubarSubTrigger disabled={item.enabled === false}>
+						<MenubarSubTrigger
+							disabled={item.enabled === false}
+							onClick={() => {
+								if (item.id) {
+									window.electron.triggerAppMenuItemById(item.id);
+								}
+							}}
+						>
 							{formatLabel(item.label)}
 						</MenubarSubTrigger>
 						<MenubarSubContent>

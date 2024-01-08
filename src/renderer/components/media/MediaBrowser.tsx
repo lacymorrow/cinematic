@@ -10,18 +10,18 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ViewModeType } from '@/config/settings';
 import { $media, $ui } from '@/config/strings';
-import { ViewModeType } from '@/main/store';
+import { GridIcon, ListIcon } from '@/renderer/components/layout/icons';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
-import { GridIcon, ListIcon } from '@/renderer/config/icons';
+import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
+import { ScrollContainer } from '@/renderer/components/ui/ScrollContainer';
+import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import { BookmarkIcon } from '@radix-ui/react-icons';
 import React from 'react';
-import { ButtonAddMedia } from '../ui/ButtonAddMedia';
-import { ScrollContainer } from '../ui/ScrollContainer';
-import { SectionHeader } from '../ui/SectionHeader';
 
 type Props = {
 	items: MediaType[];

@@ -1,7 +1,13 @@
 /* eslint import/prefer-default-export: off */
+import { app } from 'electron';
+import Logger from 'electron-log';
+import os from 'os';
 import path from 'path';
 import { URL } from 'url';
 import { FILE_IGNORE_PATTERN } from '../config/config';
+import { $errors } from '../config/strings';
+
+export const electronVersion = process.versions.electron;
 
 // Via electron-util: https://github.com/sindresorhus/electron-util/blob/main/source/is.js
 export const is = {
@@ -38,3 +44,25 @@ export const isDigit = (str: string) => {
 export const ignorePattern = (str: string) => {
 	return FILE_IGNORE_PATTERN.includes(str.toLowerCase());
 };
+export const debugInfo = () =>
+	`
+  ${app.getName()} ${app.getVersion()}
+  Electron ${electronVersion}
+  ${process.platform} ${os.release()}
+  Locale: ${app.getLocale()}
+  `.trim();
+
+const getDefaultPath = () => {
+	try {
+		return app.getPath('videos');
+	} catch (_e) {
+		try {
+			return app.getPath('home');
+		} catch (error) {
+			Logger.error($errors.noDefaultPath, error);
+		}
+	}
+	return path.join(__dirname, 'media');
+};
+
+export const DEFAULT_PATH = getDefaultPath();

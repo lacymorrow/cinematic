@@ -8,9 +8,11 @@ import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
+import { $messages } from '@/config/strings';
+import { play, preload } from '@/renderer/lib/sounds';
 import Logger from 'electron-log';
 import { MenuItemConstructorOptions } from 'electron/renderer';
-import { $messages } from '../../config/strings';
+import { toast } from 'sonner';
 
 interface GlobalContextType {
 	appName: string;
@@ -73,11 +75,7 @@ export function GlobalContextProvider({
 			setCurrentSettings(await window.electron.getSettings());
 
 			// Get app menu
-			window.electron
-				.getAppMenu()
-				// .then(console.dir)
-				.then(setAppMenu)
-				.catch(Logger.error);
+			window.electron.getAppMenu().then(setAppMenu).catch(Logger.error);
 		};
 
 		// Listen for messages from the main process
@@ -95,6 +93,30 @@ export function GlobalContextProvider({
 			},
 		);
 
+		// Create notifications using the renderer
+		window.electron.ipcRenderer.on(
+			ipcChannels.APP_NOTIFICATION,
+			({ title, description, action }: any) => {
+				toast(title, {
+					...(description ? { description } : {}),
+					...(action ? { action } : {}),
+					// action: {
+					// 	label: 'Ok',
+					// 	onClick: () => {},
+					// },
+				});
+			},
+		);
+
+		window.electron.ipcRenderer.on(
+			ipcChannels.PRELOAD_SOUNDS,
+			(basepath: any) => preload(basepath),
+		);
+
+		window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
+			play(sound);
+		});
+
 		// Request initial data when the app loads
 		synchronize();
 		synchronizeSettings();
@@ -103,11 +125,7 @@ export function GlobalContextProvider({
 		window.electron.getAppName().then(setAppName).catch(Logger.error);
 
 		// Get app menu
-		window.electron
-			.getAppMenu()
-			// .then(console.dir)
-			.then(setAppMenu)
-			.catch(Logger.error);
+		window.electron.getAppMenu().then(setAppMenu).catch(Logger.error);
 
 		return () => {
 			// Clean up listeners when the component unmounts

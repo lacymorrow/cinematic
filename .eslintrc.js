@@ -8,6 +8,7 @@ module.exports = {
 		'no-shadow': 'off',
 		'no-unused-vars': 'off',
 		'no-useless-return': 'warn',
+		'promise/always-return': 'off',
 		'react/prop-types': 'off',
 		'react/react-in-jsx-scope': 'off',
 		'react/require-default-props': 'off',

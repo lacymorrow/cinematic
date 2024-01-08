@@ -44,7 +44,6 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 		return {
 			theme: settings.theme,
 			setTheme: (newTheme: Theme) => {
-				// localStorage.setItem(storageKey, newTheme);
 				window.electron.setSettings({
 					theme: newTheme,
 				});

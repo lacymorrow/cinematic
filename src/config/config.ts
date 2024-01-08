@@ -11,6 +11,22 @@ export const OMDB_KEY = process.env.OMDB_KEY
 	? process.env.OMDB_KEY
 	: DEFAULT_OMDB_KEY; // Omdb api key
 
+// Constants
+
+// App width/height MUST BE EVEN for followMouse to work
+// 16/10: 125x200 16/9: 126x224
+export const APP_HEIGHT = 130;
+export const APP_WIDTH = 208;
+// 16/10: 220x352 16/9: 224x356
+
+export const ALERT_URL =
+	'https://raw.githubusercontent.com/lacymorrow/crossover/master/CROSSOVER_ALERT';
+export const APP_ASPECT_RATIO = 16 / 10;
+export const APP_BACKGROUND_OPACITY = 0.6;
+
+export const PROTOCOL = 'electronapp'; // Custom app protocol handler for Electron, e.g. `app://`
+
+// Limit the file types that can be selected using the file input dialog
 export const VALID_FILETYPES = [
 	'avi',
 	'flv',
@@ -29,17 +45,16 @@ type PlotLengthType = 'short' | 'full';
 export const PLOT_LENGTH: PlotLengthType = 'full'; // Plot Summary length: "short", "full" - from omdb
 
 /* URLs */
-export const TMDB_ENDPOINT = 'https://image.tmdb.org/t/p/';
-export const GENRE_ENDPOINT = 'http://api.themoviedb.org/3/genre/movie/list';
-export const BACKDROP_SIZE = 'w1280'; // "w300", "w780", "w1280", "original"
-export const POSTER_SIZE = 'w780'; // "w92", "w154", "w185", "w342", "w500", "w780", "original",
+// export const TMDB_ENDPOINT = 'https://image.tmdb.org/t/p/';
+// export const GENRE_ENDPOINT = 'http://api.themoviedb.org/3/genre/movie/list';
+// export const BACKDROP_SIZE = 'w1280'; // "w300", "w780", "w1280", "original"
+// export const POSTER_SIZE = 'w780'; // "w92", "w154", "w185", "w342", "w500", "w780", "original",
 
 /* app-specific */
 // -- affects how app is run and may affect performance
 export const FILE_SCAN_DEPTH = 1; // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-export const MAX_CONNECTIONS = 3; // Max number of simultaneous, more is faster but more api hits at once; 5 is okay...
 export const THROTTLE_DELAY = 1000; // Milli-seconds delay; todo
-export const RETRY_DELAY = 4000; // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
+// export const RETRY_DELAY = 4000; // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 export const DIRECTORY_IGNORE_PATTERN = ['private']; // A lowercase list of movie titles to ignore; ex: sample.avi
 export const FILE_IGNORE_PATTERN = ['sample', 'etrg']; // A lowercase list of movie titles to ignore; ex: sample.avi
 export const DEFAULT_FILE_META: Partial<MediaType> = {};
