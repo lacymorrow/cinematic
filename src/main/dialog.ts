@@ -24,6 +24,7 @@ export const openMediaPathDialog = () => {
 						name: 'Media',
 						extensions: VALID_FILETYPES,
 					},
+					{ name: 'All Files', extensions: ['*'] },
 				],
 			})
 			.then((response) => {
