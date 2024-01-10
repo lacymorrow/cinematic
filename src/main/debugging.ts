@@ -29,9 +29,7 @@ const installExtensions = async () => {
 		.catch(Logger.warn);
 };
 
-const debugging = {
+export default {
 	initialize,
 	installExtensions,
 };
-
-export default debugging;

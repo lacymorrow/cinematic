@@ -10,6 +10,8 @@ export interface TmdbErrorType {
 
 export interface TmdbType {
 	message?: string; // Error message
+	backdrop?: string; // Full URL to backdrop image
+	poster?: string; // Full URL to poster image
 
 	adult: boolean;
 	backdrop_path: string;

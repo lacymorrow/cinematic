@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { TableCell, TableRow } from '@/components/ui/table';
 import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
 import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
-import ReactPlayer from 'react-player/youtube';
 import { useNavigate, useParams } from 'react-router-dom';
+import { PosterRotator } from '../components/media/PosterRotator';
+import { RatingIcon } from '../components/media/RatingIcon';
+import { InfoBlock } from '../components/ui/InfoBlock';
 import {
 	PageHeader,
 	PageHeaderDescription,
@@ -94,7 +96,10 @@ export function Media(_props: Props) {
 
 	const trailerUrl = `https://www.youtube.com/watch?v=${trailer}`;
 
-	const poster2 = `${tmdb?.imageBase}${tmdb?.poster_path}`;
+	const posters = [
+		...(tmdb?.poster ? [tmdb.poster] : []),
+		...(omdb?.poster ? [omdb.poster] : []),
+	];
 
 	return (
 		<>
@@ -110,6 +115,10 @@ export function Media(_props: Props) {
             </div> */}
 					</div>
 				)}
+
+				<div className="">
+					<PosterRotator images={posters} />
+				</div>
 
 				{/* <iframe
           src="https://www.youtube-nocookie.com/embed/skK9CGLrpWY?rel=0&controls=0"
@@ -128,6 +137,12 @@ export function Media(_props: Props) {
 				</PageHeader>
 
 				{trailerUrl}
+				{rest.trailers && (
+					<div className="grid grid-cols-2 gap-4">
+						{rest.trailers.join(', ')}
+					</div>
+				)}
+				<RatingIcon rated="R" />
 
 				<div className="m-6">
 					<Button onClick={handleBack}>BACK</Button>
@@ -153,8 +168,6 @@ export function Media(_props: Props) {
 							Tomatoes <Link2Icon className="ml-2" />
 						</Button>
 					)}
-					<img src={poster} alt={title} />
-					<img src={poster2} alt={title} />
 					<SectionHeader
 						title={title}
 						tagline={`${year}${
@@ -175,41 +188,108 @@ export function Media(_props: Props) {
               </div>
             </div>
           )} */}
-					Actors
-					{JSON.stringify(omdb?.actors, null, 2)}
-					<br />
-					Director
-					{JSON.stringify(omdb?.director, null, 2)}
-					<br />
-					Genre
-					{JSON.stringify(omdb?.genre, null, 2)}
-					<br />
-					Writer
-					{JSON.stringify(omdb?.writer, null, 2)}
-					{[tmdb?.popularity] && (
-						<div className="space-y-4">
-							<h2 className="text-lg font-semibold tracking-tight">
-								Popularity
-							</h2>
-							<p>{tmdb?.popularity}</p>
-						</div>
-					)}
-					{tmdb?.vote_count && (
-						<div className="space-y-4">
-							<h2 className="text-lg font-semibold tracking-tight">
-								TMDB Vote Count
-							</h2>
-							<p>{tmdb.vote_count}</p>
-						</div>
-					)}
-					{tmdb?.overview && (
-						<div className="space-y-4">
-							<h2 className="text-lg font-semibold tracking-tight">Overview</h2>
-							<p>{tmdb.overview}</p>
-						</div>
-					)}
-					<ReactPlayer url={trailerUrl} />
-					<Table className="max-w-full break-all">
+					<div className="flex flex-wrap gap-4">
+						{omdb?.actors && (
+							<InfoBlock
+								title="Actors"
+								value={Object.values(omdb.actors).join(', ')}
+							/>
+						)}
+						{omdb?.runtime && (
+							<InfoBlock title="Runtime" value={omdb?.runtime} />
+						)}
+
+						{omdb?.rated && <InfoBlock title="Rated" value={omdb?.rated} />}
+
+						{omdb?.released && (
+							<InfoBlock title="Released" value={omdb?.released} />
+						)}
+
+						{omdb?.country && (
+							<InfoBlock title="Country" value={omdb?.country} />
+						)}
+
+						{omdb?.language && (
+							<InfoBlock title="Language" value={omdb?.language} />
+						)}
+
+						{omdb?.awards && <InfoBlock title="Awards" value={omdb?.awards} />}
+
+						{omdb?.boxoffice && (
+							<InfoBlock title="Box Office" value={omdb?.boxoffice} />
+						)}
+
+						{omdb?.dvd && <InfoBlock title="DVD Release" value={omdb?.dvd} />}
+
+						{omdb?.production && (
+							<InfoBlock title="Production" value={omdb?.production} />
+						)}
+
+						{omdb?.website && (
+							<InfoBlock title="Website" value={omdb?.website} />
+						)}
+
+						{omdb?.imdbid && <InfoBlock title="IMDB ID" value={omdb?.imdbid} />}
+
+						{omdb?.imdbvotes && (
+							<InfoBlock title="IMDB Votes" value={omdb?.imdbvotes} />
+						)}
+
+						{omdb?.imdbrating && (
+							<InfoBlock title="IMDB Rating" value={omdb?.imdbrating} />
+						)}
+
+						{omdb?.metascore && (
+							<InfoBlock title="Metascore" value={omdb?.metascore} />
+						)}
+
+						{omdb?.director && (
+							<InfoBlock
+								title="Director"
+								value={Object.values(omdb.director).join(', ')}
+							/>
+						)}
+
+						{omdb?.writer && (
+							<InfoBlock
+								title="Writer"
+								value={Object.values(omdb.writer).join(', ')}
+							/>
+						)}
+
+						{tmdb?.popularity && (
+							<InfoBlock title="Popularity" value={tmdb?.popularity} />
+						)}
+
+						{tmdb?.vote_count && (
+							<InfoBlock title="TMDB Vote Count" value={tmdb.vote_count} />
+						)}
+
+						{tmdb?.vote_average && (
+							<InfoBlock title="TMDB Vote Average" value={tmdb.vote_average} />
+						)}
+
+						{tmdb?.id && <InfoBlock title="TMDB ID" value={tmdb.id} />}
+
+						{filepath && <InfoBlock title="File" value={filepath} />}
+
+						{currentMedia.ext && (
+							<InfoBlock
+								title="Extension"
+								value={currentMedia.ext.replaceAll('.', '')}
+							/>
+						)}
+
+						{tmdb?.overview && (
+							<InfoBlock title="Overview" value={tmdb?.overview} />
+						)}
+
+						{currentMedia?.plot && (
+							<InfoBlock title="Plot" value={currentMedia?.plot} />
+						)}
+					</div>
+					{/* <ReactPlayer url={trailerUrl} /> */}
+					{/* <Table className="max-w-full break-all">
 						<TableBody>
 							<TableRow>
 								<TableCell className="px-0 min-w-[100px]">File</TableCell>
@@ -219,9 +299,8 @@ export function Media(_props: Props) {
 							<h2>OMDB</h2>
 							{MediaTable(omdb)}
 						</TableBody>
-					</Table>
+					</Table> */}
 				</div>
-				{/* <pre>{JSON.stringify(currentMedia, null, 2)}</pre> */}
 			</div>
 		</>
 	);

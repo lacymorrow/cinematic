@@ -1,13 +1,13 @@
 {
-	"name": "hotplate",
-	"productName": "Hotplate",
-	"appId": "com.lacymorrow.hotplate",
+	"name": "cinematic",
+	"productName": "Cinematic",
+	"appId": "com.lacymorrow.cinematic",
 	"version": "3.0.0",
-	"description": "A batteries-included Electron boilerplate.",
+	"description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
 	"license": "CC-BY-NC-SA-4.0",
 	"copyright": "Copyright © Lacy Morrow",
-	"repository": "lacymorrow/hotplate",
-	"homepage": "https://lacymorrow.github.io/hotplate",
+	"repository": "lacymorrow/cinematic",
+	"homepage": "https://lacymorrow.github.io/cinematic",
 	"keywords": [
 		"electron",
 		"boilerplate",
@@ -20,7 +20,7 @@
 		"reload"
 	],
 	"bugs": {
-		"url": "https://github.com/lacymorrow/hotplate/issues",
+		"url": "https://github.com/lacymorrow/cinematic/issues",
 		"email": "me@lacymorrow.com"
 	},
 	"author": {
@@ -232,7 +232,7 @@
 		"webpack-merge": "^5.10.0"
 	},
 	"build": {
-		"appId": "com.lacymorrow.hotplate",
+		"appId": "com.lacymorrow.cinematic",
 		"asar": true,
 		"asarUnpack": "**\\*.{node,dll}",
 		"files": [
@@ -289,13 +289,13 @@
 			"artifactName": "${productName}-${version}.${ext}"
 		},
 		"appx": {
-			"applicationId": "HotplateElectron",
+			"publisherDisplayName": "Fly5",
+			"applicationId": "Cinematic",
+			"identityName": "2886Fly5.Cinematic",
 			"artifactName": "${productName}.${ext}",
 			"backgroundColor": "#5500ff",
-			"displayName": "Hotplate",
-			"identityName": "2886Fly5.HotplateElectron",
+			"displayName": "Cinematic",
 			"publisher": "CN=C53C0091-1EEB-40B4-8537-082E06A4D328",
-			"publisherDisplayName": "Fly5",
 			"showNameOnTiles": true
 		},
 		"linux": {
@@ -310,8 +310,8 @@
 			"category": "Game;Shooter"
 		},
 		"snap": {
-			"summary": "🎯 A batteries-included boilerplate for making Electron apps.",
-			"description": "A batteries-included boilerplate for making Electron apps.",
+			"summary": "A simple, powerful media library manager.",
+			"description": "Organize your media and find what to watch in a beautiful, customizable interface.",
 			"plugs": [
 				"default",
 				"removable-media"
@@ -332,7 +332,7 @@
 		"publish": {
 			"provider": "github",
 			"owner": "lacymorrow",
-			"repo": "hotplate"
+			"repo": "cinematic"
 		}
 	},
 	"devEngines": {

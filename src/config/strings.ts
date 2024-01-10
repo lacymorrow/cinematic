@@ -14,6 +14,7 @@ export const $settings = {
 
 export const $actions = {
 	addMedia: 'Add Media',
+	rotatePoster: 'Click to rotate poster',
 };
 
 export const $dialog = {

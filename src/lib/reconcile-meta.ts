@@ -33,17 +33,17 @@ export const reconcileMovieMeta = (media: MediaType) => {
 			// Images
 			const baseURL = new URL(tmdb.imageBase);
 
-			media.backdrop = new URL(
+			tmdb.backdrop = new URL(
 				path.join(baseURL.pathname, tmdb.backdrop_path),
 				baseURL.origin,
 			).href;
+			media.backdrop = tmdb.backdrop;
 
-			media.poster = new URL(
+			tmdb.poster = new URL(
 				path.join(baseURL.pathname, tmdb.poster_path),
 				baseURL.origin,
 			).href;
-		} catch (error) {
-			Logger.warn('No TMDB data');
+			media.poster = tmdb.poster;
 
 			// Ratings
 			if (tmdb.vote_average) {
@@ -53,6 +53,18 @@ export const reconcileMovieMeta = (media: MediaType) => {
 					score,
 				});
 			}
+
+			if (tmdb.vote_count) {
+				const score = tmdb.vote_count;
+				media.ratings.push({
+					name: 'TMDB Votes',
+					score,
+				});
+			}
+
+			media.tmdb = tmdb;
+		} catch (error) {
+			Logger.warn('No TMDB data');
 		}
 	}
 

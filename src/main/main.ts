@@ -21,7 +21,6 @@ import ipc from './ipc';
 import logger from './logger';
 import protocol from './protocol';
 import { resetApp } from './reset';
-import { resetStore } from './store';
 import SystemTray from './tray';
 import windows from './windows';
 
@@ -58,7 +57,6 @@ app
 
 		if (is.debug) {
 			await debugging.installExtensions();
-			resetStore(); // todo: remove
 		}
 
 		if (app.commandLine.hasSwitch('reset')) {
