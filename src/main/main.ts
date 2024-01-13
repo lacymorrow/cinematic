@@ -21,7 +21,6 @@ import ipc from './ipc';
 import logger from './logger';
 import protocol from './protocol';
 import { resetApp } from './reset';
-import sound from './sound';
 import SystemTray from './tray';
 import windows from './windows';
 
@@ -79,11 +78,6 @@ app
 		protocol.initialize();
 	})
 	.then(() => console.timeLog(app.name, $messages.started))
-	.then(() =>
-		setTimeout(() => {
-			sound.play('UPDATE');
-		}, 200),
-	)
 	.finally(() => {
 		// Idle
 		console.timeLog(app.name, $messages.idle);

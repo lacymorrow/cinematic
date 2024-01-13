@@ -26,6 +26,7 @@ export const $errors = {
 	prefix_main: 'Main> ',
 	main_window: '"mainWindow" is not defined',
 	blocked_navigation: 'Blocked navigation to: ',
+	invalid_channel: 'Invalid IPC channel',
 };
 
 export const $messages = {
@@ -35,8 +36,10 @@ export const $messages = {
 	started: 'Started',
 	idle: 'Idle',
 	reset_store: 'Reset App',
-	auto_update: 'Checking for updates...',
 	synchronize: 'Synchronizing state...',
+	auto_update: 'Checking for updates...',
+	update_available: 'Update Available',
+	update_available_body: 'Click to download',
 
 	// Network messages
 	online: 'Connected',

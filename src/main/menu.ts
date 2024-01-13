@@ -6,8 +6,8 @@ import {
 	shell,
 } from 'electron';
 import { bugs, homepage } from '../../package.json';
-import notification from './notification';
-import sound from './sound';
+import { notification } from './notifications';
+import sound from './sounds';
 import { getSetting, setSettings } from './store';
 import { is } from './util';
 
@@ -66,7 +66,7 @@ export const testNotificationMenuItem: any = {
 	click: () => {
 		notification({
 			title: 'Test Notification',
-			description: 'This is a test notification',
+			body: 'This is a test notification',
 		});
 	},
 };

@@ -44,10 +44,16 @@ export function GlobalContextProvider({
 			Logger.log($messages.synchronize);
 
 			// Get settings
-			setCurrentSettings(await window.electron.getSettings());
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_SETTINGS)
+				.then(setCurrentSettings)
+				.catch(Logger.error);
 
 			// Get app menu
-			window.electron.getAppMenu().then(setAppMenu).catch(Logger.error);
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_APP_MENU)
+				.then(setAppMenu)
+				.catch(Logger.error);
 		};
 
 		// Listen for messages from the main process
@@ -58,19 +64,22 @@ export function GlobalContextProvider({
 		// Create notifications using the renderer
 		window.electron.ipcRenderer.on(
 			ipcChannels.APP_NOTIFICATION,
-			({ title, description, action }: any) => {
+			({ title, body, action }: any) => {
 				toast(title, {
-					...(description ? { description } : {}),
+					...(body ? { description: body } : {}),
 					...(action ? { action } : {}),
 					// action: {
 					// 	label: 'Ok',
 					// 	onClick: () => {},
 					// },
 				});
+				new Notification(title, {
+					body,
+				});
 			},
 		);
 
-		window.electron.ipcRenderer.on(
+		window.electron.ipcRenderer.once(
 			ipcChannels.PRELOAD_SOUNDS,
 			(basepath: any) => preload(basepath),
 		);
@@ -83,14 +92,31 @@ export function GlobalContextProvider({
 		synchronizeAppState();
 
 		// Get app name
-		window.electron.getAppName().then(setAppName).catch(Logger.error);
+		window.electron.ipcRenderer
+			.invoke(ipcChannels.GET_APP_NAME)
+			.then(setAppName)
+			.catch(Logger.error);
 
 		// Get app menu
-		window.electron.getAppMenu().then(setAppMenu).catch(Logger.error);
+		window.electron.ipcRenderer
+			.invoke(ipcChannels.GET_APP_MENU)
+			.then(setAppMenu)
+			.catch(Logger.error);
+
+		Notification.requestPermission((result) => {
+			console.log(result);
+		});
+
+		// Let the main process know that the renderer is ready
+		window.electron.ipcRenderer.send(ipcChannels.RENDERER_READY);
 
 		return () => {
 			// Clean up listeners when the component unmounts
 			window.electron.ipcRenderer.removeAllListeners(ipcChannels.APP_UPDATED);
+			window.electron.ipcRenderer.removeAllListeners(ipcChannels.PLAY_SOUND);
+			window.electron.ipcRenderer.removeAllListeners(
+				ipcChannels.APP_NOTIFICATION,
+			);
 		};
 	}, []);
 

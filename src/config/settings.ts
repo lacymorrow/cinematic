@@ -5,9 +5,10 @@ export type ThemeType = 'system' | 'light' | 'dark';
 export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 
 export interface SettingsType {
-	allowNotifications: boolean;
 	allowSounds: boolean;
 	autoUpdate: boolean;
+	allowNotifications: boolean;
+	notifcationType: 'default' | 'system' | 'all';
 	showDockIcon: boolean;
 	startMinimized: boolean;
 	quitOnWindowClose: boolean;
@@ -35,9 +36,10 @@ export interface SettingsType {
 
 // These are the default settings, imported by the store
 export const DEFAULT_SETTINGS: SettingsType = {
-	allowNotifications: true,
 	allowSounds: true,
 	autoUpdate: true,
+	allowNotifications: true,
+	notifcationType: 'all',
 	showDockIcon: true,
 	startMinimized: false,
 	quitOnWindowClose: false,

@@ -1,4 +1,4 @@
-import sound from './sound';
+import sound from './sounds';
 import { resetStore } from './store';
 
 export const resetApp = () => {

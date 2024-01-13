@@ -9,7 +9,7 @@ const sounds: Record<string, { url: string; volume: number }> = {
 		url: 'hero_decorative-celebration-01.wav',
 		volume: VOLUME,
 	},
-	DONE: {
+	NOTIFICATION: {
 		url: 'notification_simple-02.wav',
 		volume: VOLUME,
 	},
@@ -17,12 +17,8 @@ const sounds: Record<string, { url: string; volume: number }> = {
 		url: 'alert_error-03.wav',
 		volume: VOLUME,
 	},
-	CENTER: {
-		url: 'navigation-cancel.wav',
-		volume: VOLUME,
-	},
 	UPDATE: {
-		url: 'notification_simple-01.wav',
+		url: 'alert_high-intensity.wav',
 		volume: VOLUME,
 	},
 	LOCK: {
@@ -33,11 +29,11 @@ const sounds: Record<string, { url: string; volume: number }> = {
 		url: 'ui_unlock.wav',
 		volume: VOLUME,
 	},
-	// STARTUP: {
-	// 	url: 'startup.wav',
-	// 	volume: VOLUME * 2
-	// },
-	RESET: {
+	STARTUP: {
+		url: 'notification_ambient.wav',
+		volume: VOLUME
+	},
+	DONE: {
 		url: 'navigation_selection-complete-celebration.wav',
 		volume: VOLUME,
 	},
@@ -64,6 +60,8 @@ export const preload = (basepath = '') => {
 };
 
 export const play = (name: string) => {
+	Logger.info(`Playing sound: ${name}`);
+
 	let audio: HTMLAudioElement | undefined = cache[name];
 	if (!audio) {
 		audio = preload();

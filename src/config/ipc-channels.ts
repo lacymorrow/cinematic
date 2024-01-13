@@ -10,6 +10,7 @@ const PRELOAD_SOUNDS = 'preload-sounds';
 const PLAY_SOUND = 'play-sound';
 
 // Renderer -> Main
+const RENDERER_READY = 'renderer-ready';
 const GET_APP_NAME = 'get-app-name';
 const GET_APP_MENU = 'get-app-menu';
 const GET_MESSAGES = 'get-messages';
@@ -28,6 +29,7 @@ export const ipcChannels = {
 	PLAY_SOUND,
 
 	// renderer -> main
+	RENDERER_READY,
 	GET_APP_NAME,
 	GET_APP_MENU,
 	GET_MESSAGES,

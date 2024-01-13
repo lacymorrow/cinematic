@@ -1,3 +1,4 @@
+// Mappings for sounds in src/renderer/lib/sounds.ts
 import path from 'path';
 import { ipcChannels } from '../config/ipc-channels';
 

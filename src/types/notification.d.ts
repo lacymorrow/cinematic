@@ -1,4 +1,13 @@
 export interface NotificationOptions {
 	title: string;
-	description?: string;
+	body?: string;
+}
+
+export interface RendererNotificationOptions {
+	title: string;
+	body?: string;
+	action?: {
+		label: string;
+		onClick: () => void;
+	};
 }

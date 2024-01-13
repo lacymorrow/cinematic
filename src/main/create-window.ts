@@ -12,7 +12,7 @@ import { $errors } from '../config/strings';
 import { AutoUpdate } from './auto-update';
 import MenuBuilder from './menu';
 import { __resources } from './paths';
-import sound from './sound';
+import sound from './sounds';
 import { getSetting } from './store';
 import { is, resolveHtmlPath } from './util';
 

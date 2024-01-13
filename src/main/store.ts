@@ -23,14 +23,18 @@ const schema: Store.Schema<StoreType> = {
 	settings: {
 		type: 'object',
 		properties: {
-			allowNotifications: {
-				type: 'boolean',
-			},
 			allowSounds: {
 				type: 'boolean',
 			},
 			autoUpdate: {
 				type: 'boolean',
+			},
+			allowNotifications: {
+				type: 'boolean',
+			},
+			notifcationType: {
+				type: 'string',
+				enum: ['system', 'default', 'all'],
 			},
 			showDockIcon: {
 				type: 'boolean',

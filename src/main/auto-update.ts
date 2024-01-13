@@ -5,8 +5,8 @@ import Logger from 'electron-log';
 import { $messages } from '../config/strings';
 import dialog from './dialog';
 import dock from './dock';
-import notification from './notification';
-import sound from './sound';
+import { notification } from './notifications';
+import sound from './sounds';
 import { getSetting } from './store';
 import { is } from './util';
 import windows from './windows';
@@ -43,6 +43,12 @@ const onDownloadProgress = (progressObject: ProgressInfo) => {
 
 const onUpdateAvailable = () => {
 	try {
+		// Notify user of update
+		notification({
+			title: $messages.update_available,
+			body: $messages.update_available_body,
+		});
+
 		sound.play('UPDATE');
 
 		if (is.linux) {

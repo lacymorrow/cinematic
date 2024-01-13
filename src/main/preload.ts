@@ -1,3 +1,4 @@
+import { $errors } from '@/config/strings';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
@@ -6,9 +7,6 @@ const channels = Object.values(ipcChannels);
 
 const electronHandler = {
 	isMac: process.platform === 'darwin',
-	getAppName: () => ipcRenderer.invoke(ipcChannels.GET_APP_NAME),
-	getAppMenu: () => ipcRenderer.invoke(ipcChannels.GET_APP_MENU),
-	getSettings: () => ipcRenderer.invoke(ipcChannels.GET_SETTINGS),
 	getMessages: () => ipcRenderer.invoke(ipcChannels.GET_MESSAGES),
 	setSettings: (settings: Partial<SettingsType>) =>
 		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
@@ -18,9 +16,15 @@ const electronHandler = {
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {
 			if (!channels.includes(channel)) {
+				throw new Error(`${$errors.invalid_channel}: ${channel}`);
+			}
+			return ipcRenderer.invoke(channel, ...args);
+		},
+		send(channel: string, ...args: unknown[]) {
+			if (!channels.includes(channel)) {
 				return;
 			}
-			ipcRenderer.send(channel, ...args);
+			return ipcRenderer.send(channel, ...args);
 		},
 		on(channel: string, func: (...args: unknown[]) => void) {
 			if (!channels.includes(channel)) {
