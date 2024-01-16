@@ -79,17 +79,16 @@ export function GlobalContextProvider({
 			},
 		);
 
+		// Preload sounds
 		window.electron.ipcRenderer.once(
 			ipcChannels.PRELOAD_SOUNDS,
 			(basepath: any) => preload(basepath),
 		);
 
+		// Play sounds listener
 		window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
 			play(sound);
 		});
-
-		// Request initial data when the app loads
-		synchronizeAppState();
 
 		// Get app name
 		window.electron.ipcRenderer
@@ -97,15 +96,8 @@ export function GlobalContextProvider({
 			.then(setAppName)
 			.catch(Logger.error);
 
-		// Get app menu
-		window.electron.ipcRenderer
-			.invoke(ipcChannels.GET_APP_MENU)
-			.then(setAppMenu)
-			.catch(Logger.error);
-
-		Notification.requestPermission((result) => {
-			console.log(result);
-		});
+		// Request initial data when the app loads
+		synchronizeAppState();
 
 		// Let the main process know that the renderer is ready
 		window.electron.ipcRenderer.send(ipcChannels.RENDERER_READY);

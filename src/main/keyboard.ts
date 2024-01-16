@@ -5,7 +5,7 @@ interface ShortcutType extends Electron.GlobalShortcut {
 	init: () => void;
 }
 
-const shortcuts: ShortcutType = {
+const kb: ShortcutType = {
 	init: () => {
 		// globalShortcut.register('CommandOrControl+Shift+I', () => {
 		// ...
@@ -16,4 +16,4 @@ const shortcuts: ShortcutType = {
 	...globalShortcut,
 };
 
-export default shortcuts;
+export default kb;

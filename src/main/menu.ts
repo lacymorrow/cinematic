@@ -53,6 +53,8 @@ export const triggerMenuItemById = (menu: Menu | null, id: string) => {
 };
 
 // Menu items
+export const quitMenuItem: any = { role: 'quit' };
+
 export const aboutMenuItem: any = {
 	label: `About ${app.name}`,
 	selector: 'orderFrontStandardAboutPanel:',
@@ -87,12 +89,7 @@ export default class MenuBuilder {
 	}
 
 	buildMenu(): Menu {
-		if (
-			process.env.NODE_ENV === 'development' ||
-			process.env.DEBUG_PROD === 'true'
-		) {
-			this.setupDevelopmentEnvironment();
-		}
+		this.setupContextMenu();
 
 		const template = is.macos
 			? this.buildDarwinTemplate()
@@ -106,19 +103,24 @@ export default class MenuBuilder {
 
 	// Add the "Inspect Element" menu item to the context menu
 	// This is only available in development mode
-	setupDevelopmentEnvironment(): void {
-		this.mainWindow.webContents.on('context-menu', (_, props) => {
-			const { x, y } = props;
+	setupContextMenu(): void {
+		if (
+			process.env.NODE_ENV === 'development' ||
+			process.env.DEBUG_PROD === 'true'
+		) {
+			this.mainWindow.webContents.on('context-menu', (_, props) => {
+				const { x, y } = props;
 
-			Menu.buildFromTemplate([
-				{
-					label: 'Inspect element',
-					click: () => {
-						this.mainWindow.webContents.inspectElement(x, y);
+				Menu.buildFromTemplate([
+					{
+						label: 'Inspect element',
+						click: () => {
+							this.mainWindow.webContents.inspectElement(x, y);
+						},
 					},
-				},
-			]).popup({ window: this.mainWindow });
-		});
+				]).popup({ window: this.mainWindow });
+			});
+		}
 	}
 
 	subMenuDev: MenuItemConstructorOptions = {
@@ -210,11 +212,13 @@ export default class MenuBuilder {
 				},
 				{ type: 'separator' },
 				{
+					id: 'hide',
 					label: `Hide ${app.name}`,
 					accelerator: 'Command+H',
 					selector: 'hide:',
 				},
 				{
+					id: 'hideOthers',
 					label: 'Hide Others',
 					accelerator: 'Command+Shift+H',
 					selector: 'hideOtherApplications:',

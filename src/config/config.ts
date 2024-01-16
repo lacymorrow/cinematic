@@ -11,7 +11,7 @@ export const ALERT_URL =
 export const APP_ASPECT_RATIO = 16 / 10;
 export const APP_BACKGROUND_OPACITY = 0.6;
 
-export const PROTOCOL = 'electronapp'; // Custom app protocol handler for Electron, e.g. `app://`
+export const PROTOCOL = 'electron-hotplate'; // Custom app protocol handler for Electron, e.g. `app://`
 
 export const VOLUME = 0.15; // System volume in percent
 

@@ -16,6 +16,7 @@ import appListeners from './app-listeners';
 
 import { createMainWindow } from './create-window';
 import debugging from './debugging';
+import dock from './dock';
 import errorHandling from './error-handling';
 import ipc from './ipc';
 import logger from './logger';
@@ -70,6 +71,9 @@ app
 	.then(() => {
 		// Add remaining app listeners
 		appListeners.ready();
+
+		// Setup Dock Menu
+		dock.setupDockMenu();
 
 		// Setup Tray
 		windows.tray = new SystemTray();

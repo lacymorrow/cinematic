@@ -17,6 +17,16 @@ Based on the [Electron React Boilerplate](https://github.com/electron-react-boil
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Shadcn](https://ui.shadcn.com/)
 - [TypeScript](https://www.typescriptlang.org/)
+- 🌙 Dark Mode
+- 📦 Built-in Store
+- 📦 Built-in Updater
+- 📦 Built-in Logger
+- 📦 Built-in Error Handler
+- 📦 Context Menu
+- 📦 System Tray
+- 📦 Auto Updater
+- 📦 Auto Launcher
+
 
 ### Shadcn
 

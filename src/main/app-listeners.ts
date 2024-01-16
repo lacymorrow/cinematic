@@ -4,7 +4,7 @@ import Logger from 'electron-log';
 import EXIT_CODES from '../config/exit-codes';
 import { $errors } from '../config/strings';
 import { createMainWindow } from './create-window';
-import shortcuts from './shortcuts';
+import keyboard from './keyboard';
 import { getSetting } from './store';
 import { is } from './util';
 import windows from './windows';
@@ -16,7 +16,7 @@ const register = () => {
 
 	app.on('will-quit', () => {
 		// Unregister all shortcuts.
-		shortcuts.unregisterAll();
+		keyboard.unregisterAll();
 	});
 
 	// Sending a `SIGINT` (e.g: Ctrl-C) to an Electron app that registers
