@@ -11,7 +11,11 @@ export function Home(props: Props) {
 	return (
 		<div className="flex flex-col gap-4 items-center">
 			<h1>Hello World</h1>
-			<Link to={nav.settings.path} className={buttonVariants()}>
+			<Link
+				to={nav.settings.path}
+				className={buttonVariants()}
+				draggable={false}
+			>
 				{nav.settings.name}
 			</Link>
 		</div>

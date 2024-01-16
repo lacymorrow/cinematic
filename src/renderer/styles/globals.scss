@@ -69,6 +69,13 @@
 @layer base {
 	* {
 		@apply border-border;
+
+		/*
+			text selection can accidentally occur within draggable regions,
+			so it's recommended to also use the CSS property user-select: none on the element to
+			avoid accidental text selection.
+		*/
+		user-select: none;
 	}
 
 	/*

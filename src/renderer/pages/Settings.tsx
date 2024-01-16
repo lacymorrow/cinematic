@@ -18,7 +18,11 @@ export function Settings() {
 				<ModeToggle />
 			</div>
 			<pre>{JSON.stringify(settings, null, 2)}</pre>
-			<Link to={nav.home.path} className={cn(buttonVariants())}>
+			<Link
+				to={nav.home.path}
+				className={cn(buttonVariants())}
+				draggable={false}
+			>
 				{nav.home.name}
 			</Link>
 		</div>
