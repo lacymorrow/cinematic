@@ -115,8 +115,7 @@ export default class MenuBuilder {
 				type: 'checkbox',
 				id: 'showDockIcon',
 				checked: !!getSetting('showDockIcon'),
-				click: (e) => {
-					console.log('click', e);
+				click: () => {
 					dock.setVisible(!getSetting('showDockIcon'));
 					setSettings({ showDockIcon: !getSetting('showDockIcon') });
 				},
