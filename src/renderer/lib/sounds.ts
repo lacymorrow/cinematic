@@ -57,12 +57,18 @@ export const preload = (basepath = '') => {
 	return audio;
 };
 
-export const play = ({ name, path }: { name: string; path: string }) => {
-	Logger.info(`Playing sound: ${name}, path: ${path}`);
+export const play = ({
+	name,
+	basepath,
+}: {
+	name: string;
+	basepath: string;
+}) => {
+	Logger.info(`Playing sound: ${name}, basepath: ${basepath}`);
 
 	let audio: HTMLAudioElement | undefined = cache[name];
 	if (!audio) {
-		audio = preload(path);
+		audio = preload(basepath);
 	}
 
 	if (audio) {
