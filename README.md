@@ -57,6 +57,29 @@ Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
 * Awards
 * Runtime
 
+## Features
+
+- [Electron](https://electronjs.org/)
+- [React](https://reactjs.org/)
+- [React Router](https://reacttraining.com/react-router/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn](https://ui.shadcn.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- 🌙 Dark Mode
+- 📦 Built-in Store
+- 📦 Built-in Updater
+- 📦 Built-in Logger
+- 📦 Built-in Error Handler
+- 📦 Context Menu
+- 📦 System Tray
+- 📦 Auto Updater
+- 📦 Auto Launcher
+
+
+### Shadcn
+
+Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
+Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
 
 # Installation
 

@@ -9,7 +9,7 @@ const sounds: Record<string, { url: string; volume: number }> = {
 		url: 'hero_decorative-celebration-01.wav',
 		volume: VOLUME,
 	},
-	DONE: {
+	NOTIFICATION: {
 		url: 'notification_simple-02.wav',
 		volume: VOLUME,
 	},
@@ -17,12 +17,8 @@ const sounds: Record<string, { url: string; volume: number }> = {
 		url: 'alert_error-03.wav',
 		volume: VOLUME,
 	},
-	CENTER: {
-		url: 'navigation-cancel.wav',
-		volume: VOLUME,
-	},
 	UPDATE: {
-		url: 'notification_simple-01.wav',
+		url: 'alert_high-intensity.wav',
 		volume: VOLUME,
 	},
 	LOCK: {
@@ -33,20 +29,18 @@ const sounds: Record<string, { url: string; volume: number }> = {
 		url: 'ui_unlock.wav',
 		volume: VOLUME,
 	},
-	// STARTUP: {
-	// 	url: 'startup.wav',
-	// 	volume: VOLUME * 2
-	// },
-	RESET: {
+	STARTUP: {
+		url: 'notification_ambient.wav',
+		volume: VOLUME,
+	},
+	DONE: {
 		url: 'navigation_selection-complete-celebration.wav',
 		volume: VOLUME,
 	},
 };
 
 export const preload = (basepath = '') => {
-	if (!basepath) {
-		Logger.warn('Basepath not provided, sounds may not work properly.');
-	}
+	Logger.warn(`Preloading sounds from ${basepath}`);
 
 	let audio: HTMLAudioElement | undefined;
 	Object.keys(sounds).forEach((name) => {
@@ -63,10 +57,12 @@ export const preload = (basepath = '') => {
 	return audio;
 };
 
-export const play = (name: string) => {
+export const play = ({ name, path }: { name: string; path: string }) => {
+	Logger.info(`Playing sound: ${name}, path: ${path}`);
+
 	let audio: HTMLAudioElement | undefined = cache[name];
 	if (!audio) {
-		audio = preload();
+		audio = preload(path);
 	}
 
 	if (audio) {
@@ -76,3 +72,45 @@ export const play = (name: string) => {
 		});
 	}
 };
+
+export class Sounds {
+	private soundsPath: string;
+
+	constructor(path: string) {
+		this.soundsPath = path;
+	}
+
+	public preload() {
+		Logger.warn(`Preloading sounds from ${this.soundsPath}`);
+
+		let audio: HTMLAudioElement | undefined;
+		Object.keys(sounds).forEach((name) => {
+			if (!cache[name]) {
+				cache[name] = new window.Audio();
+
+				const sound = sounds[name];
+				audio = cache[name];
+				audio.volume = sound.volume;
+				audio.src = `file://${this.soundsPath}${sound.url}`; // this requires web security to be disabled
+			}
+		});
+
+		return audio;
+	}
+
+	public play(name: string) {
+		Logger.info(`Playing sound: ${name}`);
+
+		let audio: HTMLAudioElement | undefined = cache[name];
+		if (!audio) {
+			audio = this.preload();
+		}
+
+		if (audio) {
+			audio.currentTime = 0;
+			audio.play().catch((err) => {
+				Logger.error(err);
+			});
+		}
+	}
+}

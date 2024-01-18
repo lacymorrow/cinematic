@@ -64,17 +64,22 @@
 		--input: 217.2 32.6% 17.5%;
 		--ring: 212.7 26.8% 83.9%;
 	}
-}
 
-@layer base {
 	* {
 		@apply border-border;
+
+		/*
+			text selection can accidentally occur within draggable regions,
+			so it's recommended to also use the CSS property user-select: none on the element to
+			avoid accidental text selection.
+		*/
+		user-select: none;
 	}
 
 	/*
- * @NOTE: Prepend a `~` to css file paths that are in your node_modules
- *        See https://github.com/webpack-contrib/sass-loader#imports
- */
+	* @NOTE: Prepend a `~` to css file paths that are in your node_modules
+	*        See https://github.com/webpack-contrib/sass-loader#imports
+	*/
 	body {
 		@apply bg-background text-foreground;
 		position: relative;
@@ -99,5 +104,16 @@
 		overflow: auto;
 		white-space: normal;
 		word-break: break-word;
+	}
+}
+
+@layer utilities {
+	.drag {
+		-webkit-app-region: drag;
+		cursor: move;
+	}
+
+	.no-drag {
+		-webkit-app-region: no-drag;
 	}
 }

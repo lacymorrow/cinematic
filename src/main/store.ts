@@ -9,7 +9,7 @@ import { reconcileMovieMeta } from '../lib/reconcile-meta';
 import { MediaType } from '../types/file';
 import { CollectionItemType } from '../types/media';
 import { throttle } from '../utils/throttle';
-import win from './windows';
+import windows from './windows';
 
 type ThrottledFunctionsType = {
 	[key: string]: Function;
@@ -89,9 +89,6 @@ const schema: Store.Schema<StoreType> = {
 			paths: {
 				type: 'array',
 			},
-			allowNotifications: {
-				type: 'boolean',
-			},
 			allowSounds: {
 				type: 'boolean',
 			},
@@ -106,6 +103,13 @@ const schema: Store.Schema<StoreType> = {
 			},
 			showSidebar: {
 				type: 'boolean',
+			},
+			allowNotifications: {
+				type: 'boolean',
+			},
+			notifcationType: {
+				type: 'string',
+				enum: ['system', 'default', 'all'],
 			},
 			showDockIcon: {
 				type: 'boolean',
@@ -136,16 +140,16 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const synchronizeApp = () =>
-	win?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
+	windows?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
 
 const synchronizeSettings = () =>
-	win?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
+	windows?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
 
 // Throttle the app update
 const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
 
 const appMessageUpdated = () => {
-	win?.mainWindow?.webContents.send(
+	windows?.mainWindow?.webContents.send(
 		ipcChannels.APP_STATUS_MESSAGE,
 		store.get('appMessageLog'),
 	);

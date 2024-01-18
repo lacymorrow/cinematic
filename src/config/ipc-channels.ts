@@ -19,9 +19,12 @@ const GET_APP_NAME = 'get-app-name';
 const GET_LIBRARY = 'get-library';
 const GET_GENRES = 'get-genres';
 const GET_PLAYLISTS = 'get-playlists';
+const GET_APP_PATHS = 'get-app-paths';
+const GET_MESSAGES = 'get-messages';
 const GET_SETTINGS = 'get-settings';
 const SET_SETTINGS = 'set-settings';
-const GET_MESSAGES = 'get-messages';
+
+const RENDERER_READY = 'renderer-ready';
 
 const TRIGGER_APP_MENU_ITEM_BY_ID = 'trigger-app-menu-item-by-id';
 
@@ -45,11 +48,13 @@ export const ipcChannels = {
 	// renderer -> main
 	CLEAR_LIBRARY,
 
-	GET_APP_MENU,
-	GET_APP_NAME,
 	GET_GENRES,
 	GET_LIBRARY,
 	GET_PLAYLISTS,
+	RENDERER_READY,
+	GET_APP_NAME,
+	GET_APP_MENU,
+	GET_APP_PATHS,
 	GET_MESSAGES,
 	GET_SETTINGS,
 	SET_SETTINGS,

@@ -3,10 +3,10 @@ import { ProgressInfo, autoUpdater } from 'electron-updater';
 import { shell } from 'electron';
 import Logger from 'electron-log';
 import { $messages } from '../config/strings';
-import { openUpdateDialog } from './dialog';
+import dialog from './dialog';
 import dock from './dock';
 import notification from './notification';
-import sound from './sound';
+import sounds from './sounds';
 import { getSetting } from './store';
 import { is } from './util';
 import windows from './windows';
@@ -43,10 +43,16 @@ const onDownloadProgress = (progressObject: ProgressInfo) => {
 
 const onUpdateAvailable = () => {
 	try {
-		sound.play('UPDATE');
+		// Notify user of update
+		notification({
+			title: $messages.update_available,
+			body: $messages.update_available_body,
+		});
+
+		sounds.play('UPDATE');
 
 		if (is.linux) {
-			openUpdateDialog(() => {
+			dialog.openUpdateDialog(() => {
 				// AutoUpdater.downloadUpdate()
 				shell.openExternal(
 					'https://github.com/lacymorrow/crossover/releases/latest',

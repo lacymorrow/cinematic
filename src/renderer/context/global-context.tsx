@@ -1,6 +1,6 @@
 // DATA SHOULD ONLY FLOW DOWNWARDS
-// Do not use this context to update data, only to read it
-// Use IPC to update data
+// We pass data from the main process to the renderer process using IPC
+// We also use IPC to update data
 
 import { ipcChannels } from '@/config/ipc-channels';
 import { CollectionStoreType, LibraryStoreType } from '@/main/store';
@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 interface GlobalContextType {
 	appName: string;
 	appMenu: MenuItemConstructorOptions[];
+	appPaths: any;
 	genres: CollectionStoreType;
 	genresArray: CollectionType;
 	library: LibraryStoreType;
@@ -32,6 +33,7 @@ interface GlobalContextType {
 export const GlobalContext = React.createContext<GlobalContextType>({
 	appName: '',
 	appMenu: [],
+	appPaths: {},
 	genres: {},
 	genresArray: [],
 	library: {},
@@ -53,6 +55,8 @@ export function GlobalContextProvider({
 	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
 		[],
 	);
+	const [appPaths, setAppPaths] = React.useState<any>({});
+
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
@@ -72,10 +76,17 @@ export function GlobalContextProvider({
 
 		const synchronizeSettings = async () => {
 			Logger.log($messages.synchronize_settings);
-			setCurrentSettings(await window.electron.getSettings());
+			// Get settings
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_SETTINGS)
+				.then(setCurrentSettings)
+				.catch(Logger.error);
 
 			// Get app menu
-			window.electron.getAppMenu().then(setAppMenu).catch(Logger.error);
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_APP_MENU)
+				.then(setAppMenu)
+				.catch(Logger.error);
 		};
 
 		// Listen for messages from the main process
@@ -96,36 +107,53 @@ export function GlobalContextProvider({
 		// Create notifications using the renderer
 		window.electron.ipcRenderer.on(
 			ipcChannels.APP_NOTIFICATION,
-			({ title, description, action }: any) => {
+			({ title, body, action }: any) => {
 				toast(title, {
-					...(description ? { description } : {}),
+					...(body ? { description: body } : {}),
 					...(action ? { action } : {}),
 					// action: {
 					// 	label: 'Ok',
 					// 	onClick: () => {},
 					// },
 				});
+
+				// Renderer Web Notifications
+				// new Notification(title, {
+				// 	body,
+				// });
 			},
 		);
 
-		window.electron.ipcRenderer.on(
-			ipcChannels.PRELOAD_SOUNDS,
-			(basepath: any) => preload(basepath),
-		);
+		// SOUNDS
+		window.electron.ipcRenderer
+			.invoke(ipcChannels.GET_APP_PATHS)
+			.then((paths) => {
+				setAppPaths(paths);
+				return paths;
+			})
+			.then((paths) => {
+				// Preload sounds
+				preload(paths.sounds);
 
-		window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
-			play(sound);
-		});
+				// Setup listener to play sounds
+				window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
+					play({ name: sound, path: paths.sounds });
+				});
+			})
+			.catch(Logger.error);
+
+		// Get app name
+		window.electron.ipcRenderer
+			.invoke(ipcChannels.GET_APP_NAME)
+			.then(setAppName)
+			.catch(Logger.error);
 
 		// Request initial data when the app loads
 		synchronize();
 		synchronizeSettings();
 
-		// Get app name
-		window.electron.getAppName().then(setAppName).catch(Logger.error);
-
-		// Get app menu
-		window.electron.getAppMenu().then(setAppMenu).catch(Logger.error);
+		// Let the main process know that the renderer is ready
+		window.electron.ipcRenderer.send(ipcChannels.RENDERER_READY);
 
 		return () => {
 			// Clean up listeners when the component unmounts
@@ -134,6 +162,10 @@ export function GlobalContextProvider({
 			);
 			window.electron.ipcRenderer.removeAllListeners(
 				ipcChannels.SETTINGS_UPDATED,
+			);
+			window.electron.ipcRenderer.removeAllListeners(ipcChannels.PLAY_SOUND);
+			window.electron.ipcRenderer.removeAllListeners(
+				ipcChannels.APP_NOTIFICATION,
 			);
 		};
 	}, []);
@@ -160,6 +192,7 @@ export function GlobalContextProvider({
 		return {
 			appName,
 			appMenu,
+			appPaths,
 			genres,
 			genresArray,
 			library,
@@ -174,6 +207,7 @@ export function GlobalContextProvider({
 	}, [
 		appName,
 		appMenu,
+		appPaths,
 		genres,
 		genresArray,
 		library,

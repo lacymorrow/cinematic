@@ -1,6 +1,6 @@
 import { app, dialog as electronDialog } from 'electron';
 import Logger from 'electron-log';
-import path from 'path';
+import path from 'node:path';
 import { VALID_FILETYPES } from '../config/config';
 import { $dialog } from '../config/strings';
 import { scanMedia } from './file';
@@ -44,8 +44,39 @@ export const openMediaPathDialog = () => {
 			.catch(Logger.error)
 	);
 };
+// export const openMediaDialog = () => {
+// 	return electronDialog
+// 		.showOpenDialog({
+// 			title: $dialog.add.title,
+// 			buttonLabel: $dialog.add.buttonLabel,
+// 			// defaultPath: app.getPath('home'),
+// 			properties: [
+// 				// 'dontAddToRecent',
+// 				'openFile',
+// 				// 'openDirectory',
+// 				// 'multiSelections',
+// 			],
+// 			filters: [
+// 				{
+// 					name: 'Media',
+// 					extensions: VALID_FILETYPES,
+// 				},
+// 			],
+// 		})
+// 		.then((response) => {
+// 			if (!response.canceled) {
+// 				response.filePaths.forEach((filepath: string) => {
+// 					// do something with the file
+// 				});
+// 			}
+// 			return [];
+// 		})
+// 		.catch(Logger.error);
+// };
 
-export const showAboutWindow = (options: any = {}) => {
+const showAboutWindow = (options: any = {}) => {
+	// TODO: When https://github.com/electron/electron/issues/18918 is fixed,
+	// these defaults should not need to be set for Linux.
 	// TODO: The defaults are standardized here, instead of being set in
 	// Electron when https://github.com/electron/electron/issues/23851 is fixed.
 
@@ -79,7 +110,7 @@ export const showAboutWindow = (options: any = {}) => {
 	app.showAboutPanel();
 };
 
-export const openAboutDialog = () => {
+const openAboutDialog = () => {
 	showAboutWindow({
 		icon: path.join(__dirname, 'static', 'icons', 'icon.png'),
 		copyright: `🎯 CrossOver ${app.getVersion()} | Copyright © Lacy Morrow`,
@@ -89,7 +120,28 @@ export const openAboutDialog = () => {
 	});
 };
 
-export const openUpdateDialog = async (action: Function) => {
+// const openAlertDialog = async (message: string) => {
+// 	await electronDialog
+// 		.showMessageBox({
+// 			type: 'info',
+// 			title: 'CrossOver: Developer Update',
+// 			message,
+// 			buttons: ['Turn off alerts', 'Open in browser...', 'Dismiss'],
+// 		})
+// 		.then((result) => {
+// 			const buttonIndex = validButtonIndex(result);
+
+// 			if (buttonIndex === 0) {
+// 				setSettings({ showAppDeveloperMessages: false })
+// 			}
+
+// 			if (buttonIndex === 1) {
+// 				return shell.openExternal(HOMEPAGE_URL);
+// 			}
+// 		});
+// };
+
+const openUpdateDialog = async (action: Function) => {
 	await electronDialog
 		.showMessageBox({
 			type: 'info',
@@ -103,4 +155,10 @@ export const openUpdateDialog = async (action: Function) => {
 				action();
 			}
 		});
+};
+
+export default {
+	openMediaPathDialog,
+	openAboutDialog,
+	openUpdateDialog,
 };

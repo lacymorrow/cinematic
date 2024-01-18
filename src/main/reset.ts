@@ -1,8 +1,8 @@
-import sound from './sound';
+import sounds from './sounds';
 import { resetStore } from './store';
 
 export const resetApp = () => {
 	// Sonic announcement
-	sound.play('RESET');
+	sounds.play('RESET');
 	resetStore();
 };

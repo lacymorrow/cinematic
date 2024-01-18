@@ -7,16 +7,18 @@ import {
 	shell,
 } from 'electron';
 import Logger from 'electron-log';
-import path from 'path';
+import path from 'node:path';
+import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
 import { $errors } from '../config/strings';
-import { AutoUpdate } from './auto-update';
+import { setupContextMenu } from './context-menu';
 import MenuBuilder from './menu';
 import { __resources } from './paths';
-import sound from './sound';
 import { getSetting } from './store';
 import { is, resolveHtmlPath } from './util';
 
-export const createMainWindow = async (mainWindow: BrowserWindow | null) => {
+export const createMainWindow = async () => {
+	let mainWindow: BrowserWindow | null;
+	// Create the browser window.
 	const getAssetPath = (...paths: string[]): string => {
 		return path.join(__resources, ...paths);
 	};
@@ -28,11 +30,10 @@ export const createMainWindow = async (mainWindow: BrowserWindow | null) => {
 		// acceptFirstMouse: true, // macOS: Whether clicking an inactive window will also click through to the web contents. Default is false
 
 		// alwaysOnTop: true,
-		// backgroundColor: '#00FFFFFF',
-		closable: true,
-		// frame: false,
+		// closable: false,
+		frame: APP_FRAME,
 		// fullscreen: true,
-		fullscreenable: false,
+		// fullscreenable: false,
 		// simpleFullscreen: true, // Pre-lion fullscreen support (stays in same space)
 		// hasShadow: false,
 		// maximizable: false,
@@ -41,15 +42,18 @@ export const createMainWindow = async (mainWindow: BrowserWindow | null) => {
 		// resizable: false,
 		show: false,
 		// skipTaskbar: true, // Whether to show the window in taskbar. Default is false.
-		// titleBarStyle: 'hiddenInset',
+		titleBarStyle: 'hidden', // 'default', 'hidden', 'hiddenInset', 'customButtonsOnHover
 		// titleBarOverlay: true, // https://developer.mozilla.org/en-US/docs/Web/API/Window_Controls_Overlay_API
-		// transparent: true, // Makes the window transparent. Default is false. On Windows, does not work unless the window is frameless.
+		trafficLightPosition: { x: 10, y: 9 },
 
+		transparent: true, // Makes the window transparent. Default is false. On Windows, does not work unless the window is frameless.
+		// backgroundColor: '#00000000', // transparent hexadecimal or anything with transparency,
+		vibrancy: 'under-window', // appearance-based, titlebar, selection, menu, popover, sidebar, header, sheet, window, hud, fullscreen-ui, tooltip, content, under-window, or under-page.
 		useContentSize: true, // The width and height would be used as web page's size, which means the actual window's size will include window frame's size and be slightly larger. Default is false.
 
-		width: 1024,
+		width: APP_WIDTH,
 		minWidth: 550,
-		height: 728,
+		height: APP_HEIGHT,
 		minHeight: 420,
 		webPreferences: {
 			webSecurity: !is.development,
@@ -84,12 +88,12 @@ export const createMainWindow = async (mainWindow: BrowserWindow | null) => {
 	});
 
 	mainWindow.webContents.on('did-finish-load', () => {
-		sound.preload();
+		Logger.info('Window finished load');
 	});
 
 	mainWindow.on('ready-to-show', () => {
 		if (!mainWindow) {
-			throw new Error($errors.main_window);
+			throw new Error($errors.mainWindow);
 		}
 
 		// Setting: Start minimized
@@ -123,11 +127,8 @@ export const createMainWindow = async (mainWindow: BrowserWindow | null) => {
 	const menuBuilder = new MenuBuilder(mainWindow);
 	menuBuilder.buildMenu();
 
-	// Remove this if your app does not use auto updates
-	if (getSetting('autoUpdate')) {
-		// eslint-disable-next-line no-new
-		new AutoUpdate();
-	}
+	// Context menu
+	setupContextMenu(mainWindow);
 
 	return mainWindow;
 };

@@ -31,11 +31,6 @@ export const $dialog = {
 };
 
 export const $errors = {
-	prefix_main: 'Main> ',
-
-	main_window: '"mainWindow" is not defined',
-	blocked_navigation: 'Blocked navigation to: ',
-
 	noDefaultPath: 'Could not get default media path: ',
 	inaccessiblePath: 'Inaccessible path: ',
 	invalidPath: 'Invalid path',
@@ -49,6 +44,10 @@ export const $errors = {
 	trailers_api: 'No trailers for this media',
 
 	queue: 'Queue error',
+	main: 'Main> ',
+	mainWindow: '"mainWindow" is not defined',
+	blockedNavigation: 'Blocked navigation to: ',
+	invalidChannel: 'Invalid IPC channel',
 };
 
 export const $messages = {
@@ -61,6 +60,10 @@ export const $messages = {
 	auto_update: 'Checking for updates...',
 	synchronize_library: 'Synchronizing library',
 	synchronize_settings: 'Synchronizing settings',
+	mainIdle: 'Main process is now idle',
+	synchronize: 'Synchronizing state...',
+	update_available: 'Update Available',
+	update_available_body: 'Click to download',
 
 	// Network messages
 	online: 'Connected',

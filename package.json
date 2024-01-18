@@ -1,13 +1,13 @@
 {
-	"name": "cinematic",
-	"productName": "Cinematic",
-	"appId": "com.lacymorrow.cinematic",
+	"name": "hotplate",
+	"productName": "Hotplate",
+	"appId": "com.lacymorrow.hotplate",
 	"version": "3.0.0",
 	"description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
 	"license": "CC-BY-NC-SA-4.0",
 	"copyright": "Copyright © Lacy Morrow",
-	"repository": "lacymorrow/cinematic",
-	"homepage": "https://lacymorrow.github.io/cinematic",
+	"repository": "lacymorrow/hotplate",
+	"homepage": "https://lacymorrow.github.io/hotplate",
 	"keywords": [
 		"electron",
 		"boilerplate",
@@ -20,7 +20,7 @@
 		"reload"
 	],
 	"bugs": {
-		"url": "https://github.com/lacymorrow/cinematic/issues",
+		"url": "https://github.com/lacymorrow/hotplate/issues",
 		"email": "me@lacymorrow.com"
 	},
 	"author": {
@@ -232,7 +232,7 @@
 		"webpack-merge": "^5.10.0"
 	},
 	"build": {
-		"appId": "com.lacymorrow.cinematic",
+		"appId": "com.lacymorrow.hotplate",
 		"asar": true,
 		"asarUnpack": "**\\*.{node,dll}",
 		"files": [
@@ -332,7 +332,7 @@
 		"publish": {
 			"provider": "github",
 			"owner": "lacymorrow",
-			"repo": "cinematic"
+			"repo": "hotplate"
 		}
 	},
 	"devEngines": {

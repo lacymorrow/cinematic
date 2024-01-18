@@ -5,9 +5,10 @@ export type ThemeType = 'system' | 'light' | 'dark';
 export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 
 export interface SettingsType {
-	allowNotifications: boolean;
 	allowSounds: boolean;
 	autoUpdate: boolean;
+	allowNotifications: boolean;
+	notifcationType: 'default' | 'system' | 'all';
 	showDockIcon: boolean;
 	startMinimized: boolean;
 	quitOnWindowClose: boolean;
@@ -46,9 +47,10 @@ export interface SettingsType {
 export const DEFAULT_SETTINGS: SettingsType = {
 	paths: [],
 
-	allowNotifications: true,
-	allowSounds: true,
 	autoUpdate: true,
+	allowSounds: true,
+	allowNotifications: true,
+	notifcationType: 'all',
 	showDockIcon: true,
 	startMinimized: false,
 	quitOnWindowClose: false,
@@ -61,8 +63,8 @@ export const DEFAULT_SETTINGS: SettingsType = {
 
 	visibleSidebarElements: ['watch', 'liked', 'genres', 'playlists', 'history'],
 
-	theme: 'light',
 	thumbnailSize: 'large',
 
 	viewMode: 'grid',
+	theme: 'system',
 };

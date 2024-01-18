@@ -4,6 +4,9 @@ import { SettingsType } from '../config/settings';
 import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
 import { serializeMenu, triggerMenuItemById } from './menu';
+import { rendererPaths } from './paths';
+import sounds from './sounds';
+import { idle } from './startup';
 import {
 	HistoryActionType,
 	addToHistory,
@@ -21,6 +24,7 @@ import {
 
 export default {
 	initialize() {
+		// These send data back to the renderer process
 		ipcMain.handle(ipcChannels.GET_APP_NAME, () => app.getName());
 		ipcMain.handle(ipcChannels.GET_APP_MENU, () =>
 			serializeMenu(Menu.getApplicationMenu()),
@@ -28,6 +32,9 @@ export default {
 		ipcMain.handle(ipcChannels.GET_GENRES, getGenres);
 		ipcMain.handle(ipcChannels.GET_LIBRARY, getLibrary);
 		ipcMain.handle(ipcChannels.GET_PLAYLISTS, getPlaylists);
+		ipcMain.handle(ipcChannels.GET_APP_PATHS, () => {
+			return rendererPaths;
+		});
 		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
 		ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
 
@@ -51,6 +58,12 @@ export default {
 				addToPlaylist(id, playlist);
 			},
 		);
+
+		// These do not send data back to the renderer process
+		ipcMain.on(ipcChannels.RENDERER_READY, () => {
+			sounds.play('STARTUP');
+			idle();
+		});
 
 		// Trigger an app menu item by its id
 		ipcMain.on(

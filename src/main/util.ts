@@ -1,8 +1,8 @@
 /* eslint import/prefer-default-export: off */
 import { app } from 'electron';
 import Logger from 'electron-log';
+import path from 'node:path';
 import os from 'os';
-import path from 'path';
 import { URL } from 'url';
 import { FILE_IGNORE_PATTERN } from '../config/config';
 import { $errors } from '../config/strings';

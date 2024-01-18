@@ -1,8 +1,12 @@
-const { app } = require('electron');
-const { is } = require('./util');
+// MacOS only
+import { app } from 'electron';
+import { is } from './util';
 
-// MacOS only, dock badge
-const setBadge = (text: string) => app?.dock?.setBadge(String(text));
+// Sets the badge on the dock icon
+const setBadge = (text: string) => {
+	if (!is.macos) return;
+	app.dock.setBadge(String(text));
+};
 
 // Hides the app from the dock and CMD+Tab, necessary for staying on top macOS fullscreen windows
 const setVisible = (visible: boolean) => {
