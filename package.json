@@ -148,13 +148,8 @@
 		"react-hook-form": "^7.49.3",
 		"react-is-online-context": "^1.0.2",
 		"react-player": "^2.14.1",
-<<<<<<< HEAD
-		"react-resizable-panels": "^1.0.5",
-		"react-router-dom": "^6.21.1",
-=======
 		"react-resizable-panels": "^1.0.9",
 		"react-router-dom": "^6.21.3",
->>>>>>> upstream/main
 		"react-wrap-balancer": "^1.1.0",
 		"sonner": "^1.3.1",
 		"tailwind-merge": "^2.2.0",
@@ -174,26 +169,15 @@
 		"@testing-library/jest-dom": "^6.2.0",
 		"@testing-library/react": "^14.1.2",
 		"@types/jest": "^29.5.11",
-<<<<<<< HEAD
-		"@types/node": "20.10.5",
-		"@types/react": "^18.2.46",
-=======
 		"@types/node": "20.11.5",
 		"@types/react": "^18.2.48",
->>>>>>> upstream/main
 		"@types/react-dom": "^18.2.18",
 		"@types/react-test-renderer": "^18.0.7",
 		"@types/terser-webpack-plugin": "^5.0.4",
 		"@types/webpack-bundle-analyzer": "^4.6.3",
-<<<<<<< HEAD
-		"@typescript-eslint/eslint-plugin": "^6.16.0",
-		"@typescript-eslint/parser": "^6.16.0",
-		"autoprefixer": "^10.4.16",
-=======
 		"@typescript-eslint/eslint-plugin": "^6.19.0",
 		"@typescript-eslint/parser": "^6.19.0",
 		"autoprefixer": "^10.4.17",
->>>>>>> upstream/main
 		"browserslist-config-erb": "^0.0.3",
 		"chalk": "~4.1.2",
 		"concurrently": "^8.2.2",
@@ -213,11 +197,7 @@
 		"eslint-import-resolver-webpack": "^0.13.8",
 		"eslint-plugin-compat": "^4.2.0",
 		"eslint-plugin-import": "^2.29.1",
-<<<<<<< HEAD
-		"eslint-plugin-jest": "^27.6.0",
-=======
 		"eslint-plugin-jest": "^27.6.3",
->>>>>>> upstream/main
 		"eslint-plugin-jsx-a11y": "^6.8.0",
 		"eslint-plugin-promise": "^6.1.1",
 		"eslint-plugin-react": "^7.33.2",
