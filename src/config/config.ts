@@ -1,6 +1,5 @@
 import { MediaType } from '../types/file';
 
-export const APP_NAME = 'Cinematic';
 const DEFAULT_OMDB_KEY = 'e0341ca3';
 const DEFAULT_TMDB_KEY = '9d2bff12ed955c7f1f74b83187f188ae';
 
@@ -14,7 +13,7 @@ export const OMDB_KEY = process.env.OMDB_KEY
 // Constants
 export const APP_WIDTH = 1024;
 export const APP_HEIGHT = 720;
-export const APP_FRAME = true;
+export const APP_FRAME = false;
 export const PROTOCOL = 'electronapp'; // Custom app protocol handler for Electron, e.g. `app://`
 
 // Limit the file types that can be selected using the file input dialog
