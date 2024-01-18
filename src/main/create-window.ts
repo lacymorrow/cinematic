@@ -30,7 +30,6 @@ export const createMainWindow = async () => {
 		// acceptFirstMouse: true, // macOS: Whether clicking an inactive window will also click through to the web contents. Default is false
 
 		// alwaysOnTop: true,
-		// backgroundColor: '#00FFFFFF',
 		// closable: false,
 		frame: APP_FRAME,
 		// fullscreen: true,
@@ -43,12 +42,12 @@ export const createMainWindow = async () => {
 		// resizable: false,
 		show: false,
 		// skipTaskbar: true, // Whether to show the window in taskbar. Default is false.
-		titleBarStyle: 'hidden',
+		titleBarStyle: 'hidden', // 'default', 'hidden', 'hiddenInset', 'customButtonsOnHover
 		// titleBarOverlay: true, // https://developer.mozilla.org/en-US/docs/Web/API/Window_Controls_Overlay_API
 		trafficLightPosition: { x: 10, y: 9 },
 
 		transparent: true, // Makes the window transparent. Default is false. On Windows, does not work unless the window is frameless.
-		backgroundColor: '#00000000', // transparent hexadecimal or anything with transparency,
+		// backgroundColor: '#00000000', // transparent hexadecimal or anything with transparency,
 		vibrancy: 'under-window', // appearance-based, titlebar, selection, menu, popover, sidebar, header, sheet, window, hud, fullscreen-ui, tooltip, content, under-window, or under-page.
 		useContentSize: true, // The width and height would be used as web page's size, which means the actual window's size will include window frame's size and be slightly larger. Default is false.
 

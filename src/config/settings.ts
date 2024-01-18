@@ -36,13 +36,13 @@ export interface SettingsType {
 
 // These are the default settings, imported by the store
 export const DEFAULT_SETTINGS: SettingsType = {
-	allowSounds: true,
 	autoUpdate: true,
+	allowSounds: true,
 	allowNotifications: true,
 	notifcationType: 'all',
 	showDockIcon: true,
 	startMinimized: false,
 	quitOnWindowClose: false,
 
-	theme: 'light',
+	theme: 'system',
 };

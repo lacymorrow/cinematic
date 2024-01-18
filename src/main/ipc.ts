@@ -19,19 +19,18 @@ export default {
 		});
 		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
 		ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
+		ipcMain.handle(
+			ipcChannels.SET_SETTINGS,
+			(_event, settings: Partial<SettingsType>) => {
+				setSettings(settings);
+			},
+		);
 
 		// These do not send data back to the renderer process
 		ipcMain.on(ipcChannels.RENDERER_READY, () => {
 			sounds.play('STARTUP');
 			idle();
 		});
-
-		ipcMain.on(
-			ipcChannels.SET_SETTINGS,
-			(_event, settings: Partial<SettingsType>) => {
-				setSettings(settings);
-			},
-		);
 
 		// Trigger an app menu item by its id
 		ipcMain.on(
