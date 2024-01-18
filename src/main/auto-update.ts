@@ -5,7 +5,7 @@ import Logger from 'electron-log';
 import { $messages } from '../config/strings';
 import dialog from './dialog';
 import dock from './dock';
-import notification from './notification';
+import { notification } from './notifications';
 import sounds from './sounds';
 import { getSetting } from './store';
 import { is } from './util';

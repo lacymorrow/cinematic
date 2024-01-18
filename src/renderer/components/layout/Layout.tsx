@@ -1,4 +1,4 @@
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/sonner';
 import AppStatus from '@/renderer/components/footer/AppStatus';
 import { Footer } from '@/renderer/components/footer/Footer';
 import OnlineStatus from '@/renderer/components/footer/OnlineStatus';

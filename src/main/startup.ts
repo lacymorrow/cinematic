@@ -9,6 +9,7 @@ import errorHandling from './error-handling';
 import logger from './logger';
 import { setupDockMenu } from './menu';
 import protocol from './protocol';
+import { resetApp } from './reset';
 import { getSetting } from './store';
 import SystemTray from './tray';
 import { debugInfo, is } from './util';
@@ -40,7 +41,7 @@ export const ready = async () => {
 		await debugging.installExtensions();
 
 		// Reset the app and store to default settings
-		// resetApp();
+		resetApp();
 	}
 
 	// Add remaining app listeners
