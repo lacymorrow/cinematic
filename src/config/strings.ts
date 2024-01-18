@@ -23,10 +23,10 @@ export const $dialog = {
 };
 
 export const $errors = {
-	prefix_main: 'Main> ',
-	main_window: '"mainWindow" is not defined',
-	blocked_navigation: 'Blocked navigation to: ',
-	invalid_channel: 'Invalid IPC channel',
+	main: 'Main> ',
+	mainWindow: '"mainWindow" is not defined',
+	blockedNavigation: 'Blocked navigation to: ',
+	invalidChannel: 'Invalid IPC channel',
 };
 
 export const $messages = {
@@ -35,6 +35,7 @@ export const $messages = {
 	ready: 'App Ready',
 	started: 'Started',
 	idle: 'Idle',
+	mainIdle: 'Main process is now idle',
 	reset_store: 'Reset App',
 	synchronize: 'Synchronizing state...',
 	auto_update: 'Checking for updates...',

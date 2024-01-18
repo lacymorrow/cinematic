@@ -176,206 +176,28 @@ export function Menu({ className }: { className?: string }) {
 	return (
 		<Menubar
 			className={cn(
-				'rounded-none border-b border-none px-2 lg:px-4',
+				'drag', // Allow the titlebar to be draggable, to reposition the window. Useful when using frameless windows.
+				'rounded-none border-b border-none px-4',
+				window.electron.isMac && 'pl-20',
 				className,
 			)}
 		>
-			<MenubarMenu>
-				{Array.isArray(appMenu) &&
-					appMenu.map((item: any, index: number) => {
-						return (
-							<MenubarMenu key={crypto.randomUUID()}>
-								<MenubarTrigger
-									// Bold the first Menu Item (the App Name)
-									{...(window.electron.isMac && index === 0
-										? { className: 'font-bold' }
-										: {})}
-								>
-									{formatLabel(item.label)}
-								</MenubarTrigger>
-								<MenubarContent>{renderMenuItems(item.submenu)}</MenubarContent>
-							</MenubarMenu>
-						);
-					})}
-			</MenubarMenu>
+			{Array.isArray(appMenu) &&
+				appMenu.map((item: any, index: number) => {
+					return (
+						<MenubarMenu key={crypto.randomUUID()}>
+							<MenubarTrigger
+								className={cn(
+									'no-drag', // Draggable elements cannot be interacted with, undo the draggable class
+									window.electron.isMac && index === 0 && 'font-bold', // Bold the first Menu Item (the App Name) on Mac
+								)}
+							>
+								{formatLabel(item.label)}
+							</MenubarTrigger>
+							<MenubarContent>{renderMenuItems(item.submenu)}</MenubarContent>
+						</MenubarMenu>
+					);
+				})}
 		</Menubar>
 	);
 }
-
-// 				<MenubarTrigger className="font-bold">{appName}</MenubarTrigger>
-// 				<MenubarContent>
-// 					<MenubarItem onClick={handleClickAbout}>About {appName}</MenubarItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem onClick={handleClickPreferences}>
-// 						Preferences... <MenubarShortcut>⌘,</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem>
-// 						Hide {appName}... <MenubarShortcut>⌘H</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem>
-// 						Hide Others... <MenubarShortcut>⇧⌘H</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarShortcut />
-// 					<MenubarItem>
-// 						Quit {appName} <MenubarShortcut>⌘Q</MenubarShortcut>
-// 					</MenubarItem>
-// 				</MenubarContent>
-// 			</MenubarMenu>
-// 			<MenubarMenu>
-// 				<MenubarTrigger className="relative">File</MenubarTrigger>
-// 				<MenubarContent>
-// 					<MenubarItem>
-// 						Add Media... <MenubarShortcut>⌘O</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarSub>
-// 						<MenubarSubTrigger>New</MenubarSubTrigger>
-// 						<MenubarSubContent className="w-[230px]">
-// 							<MenubarItem>
-// 								Playlist <MenubarShortcut>⌘N</MenubarShortcut>
-// 							</MenubarItem>
-// 							{/* todo */}
-// 							{/* <MenubarItem disabled>
-//                 Playlist from Selection <MenubarShortcut>⇧⌘N</MenubarShortcut>
-//               </MenubarItem> */}
-// 							{/* <MenubarItem>Playlist Folder</MenubarItem> */}
-// 						</MenubarSubContent>
-// 					</MenubarSub>
-// 					{/* <MenubarItem>
-// 						Open Stream URL... <MenubarShortcut>⌘U</MenubarShortcut>
-// 					</MenubarItem> */}
-// 					<MenubarSeparator />
-// 					<MenubarItem disabled>
-// 						Play File <MenubarShortcut>⌘P</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem disabled>
-// 						Show in Finder <MenubarShortcut>⇧⌘R</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem onClick={handleClickClose}>
-// 						Close Window <MenubarShortcut>⌘W</MenubarShortcut>
-// 					</MenubarItem>
-// 					{/* <MenubarSeparator />
-// 					<MenubarSub>
-// 						<MenubarSubTrigger>Library</MenubarSubTrigger>
-// 						<MenubarSubContent>
-// 							<MenubarItem>Update Cloud Library</MenubarItem>
-// 							<MenubarItem>Update Genius</MenubarItem>
-// 							<MenubarSeparator />
-// 							<MenubarItem>Organize Library...</MenubarItem>
-// 							<MenubarItem>Export Library...</MenubarItem>
-// 							<MenubarSeparator />
-// 							<MenubarItem>Import Playlist...</MenubarItem>
-// 							<MenubarItem disabled>Export Playlist...</MenubarItem>
-// 							<MenubarItem>Show Duplicate Items</MenubarItem>
-// 							<MenubarSeparator />
-// 							<MenubarItem>Get Album Artwork</MenubarItem>
-// 							<MenubarItem disabled>Get Track Names</MenubarItem>
-// 						</MenubarSubContent>
-// 					</MenubarSub> */}
-// 				</MenubarContent>
-// 			</MenubarMenu>
-// 			{/* <MenubarMenu>
-// 				<MenubarTrigger>Edit</MenubarTrigger>
-// 				<MenubarContent>
-// 					<MenubarItem disabled>
-// 						Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem disabled>
-// 						Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem disabled>
-// 						Cut <MenubarShortcut>⌘X</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem disabled>
-// 						Copy <MenubarShortcut>⌘C</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem disabled>
-// 						Paste <MenubarShortcut>⌘V</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem>
-// 						Select All <MenubarShortcut>⌘A</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem disabled>
-// 						Deselect All <MenubarShortcut>⇧⌘A</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem>
-// 						Smart Dictation...{' '}
-// 						<MenubarShortcut>
-// 							<svg
-// 								xmlns="http://www.w3.org/2000/svg"
-// 								fill="none"
-// 								stroke="currentColor"
-// 								strokeLinecap="round"
-// 								strokeLinejoin="round"
-// 								strokeWidth="2"
-// 								className="h-4 w-4"
-// 								viewBox="0 0 24 24"
-// 							>
-// 								<path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12" />
-// 								<circle cx="17" cy="7" r="5" />
-// 							</svg>
-// 						</MenubarShortcut>
-// 					</MenubarItem>
-// 					<MenubarItem>
-// 						Emoji & Symbols{' '}
-// 						<MenubarShortcut>
-// 							<svg
-// 								xmlns="http://www.w3.org/2000/svg"
-// 								fill="none"
-// 								stroke="currentColor"
-// 								strokeLinecap="round"
-// 								strokeLinejoin="round"
-// 								strokeWidth="2"
-// 								className="h-4 w-4"
-// 								viewBox="0 0 24 24"
-// 							>
-// 								<circle cx="12" cy="12" r="10" />
-// 								<path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-// 							</svg>
-// 						</MenubarShortcut>
-// 					</MenubarItem>
-// 				</MenubarContent>
-// 			</MenubarMenu> */}
-// 			<MenubarMenu>
-// 				<MenubarTrigger>View</MenubarTrigger>
-// 				<MenubarContent>
-// 					<MenubarCheckboxItem checked disabled>
-// 						Show Watching Next
-// 					</MenubarCheckboxItem>
-// 					<MenubarCheckboxItem>Show Runtime</MenubarCheckboxItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem inset disabled>
-// 						Show Status Bar
-// 					</MenubarItem>
-// 					<MenubarSeparator />
-// 					<MenubarItem inset disabled>
-// 						Hide Sidebar
-// 					</MenubarItem>
-// 					<MenubarItem disabled>
-// 						<EnterFullScreenIcon className="mr-2" />
-// 						Enter Full Screen <MenubarShortcut>⌘F</MenubarShortcut>
-// 					</MenubarItem>
-// 				</MenubarContent>
-// 			</MenubarMenu>
-// 			{/* <MenubarMenu>
-//         <MenubarTrigger className="hidden md:block">Account</MenubarTrigger>
-//         <MenubarContent forceMount>
-//           <MenubarLabel inset>Switch Account</MenubarLabel>
-//           <MenubarSeparator />
-//           <MenubarRadioGroup value="benoit">
-//             <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
-//             <MenubarRadioItem value="benoit">Benoit</MenubarRadioItem>
-//             <MenubarRadioItem value="Luis">Luis</MenubarRadioItem>
-//           </MenubarRadioGroup>
-//           <MenubarSeparator />
-//           <MenubarItem inset>Manage Famliy...</MenubarItem>
-//           <MenubarSeparator />
-//           <MenubarItem inset>Add Account...</MenubarItem>
-//         </MenubarContent>
-//       </MenubarMenu> */}
-// 		</Menubar>
-// 	);
-// }

@@ -6,8 +6,14 @@ import {
 	shell,
 } from 'electron';
 import { bugs, homepage } from '../../package.json';
-import { notification } from './notifications';
-import sound from './sounds';
+
+import dock from './dock';
+import {
+	aboutMenuItem,
+	quitMenuItem,
+	testNotificationMenuItem,
+	testSoundMenuItem,
+} from './menu-items';
 import { getSetting, setSettings } from './store';
 import { is } from './util';
 
@@ -52,35 +58,6 @@ export const triggerMenuItemById = (menu: Menu | null, id: string) => {
 	menu.getMenuItemById(id)?.click();
 };
 
-// Menu items
-export const quitMenuItem: any = { role: 'quit' };
-
-export const aboutMenuItem: any = {
-	label: `About ${app.name}`,
-	selector: 'orderFrontStandardAboutPanel:',
-	id: 'about',
-	accelerator: 'CommandOrControl+Z',
-};
-
-export const testNotificationMenuItem: any = {
-	label: 'Test Notification',
-	id: 'testNotification',
-	click: () => {
-		notification({
-			title: 'Test Notification',
-			body: 'This is a test notification',
-		});
-	},
-};
-
-export const testSoundMenuItem: any = {
-	label: 'Test Sound',
-	id: 'testSound',
-	click: () => {
-		sound.play('UPDATE');
-	},
-};
-
 export default class MenuBuilder {
 	mainWindow: BrowserWindow;
 
@@ -89,8 +66,6 @@ export default class MenuBuilder {
 	}
 
 	buildMenu(): Menu {
-		this.setupContextMenu();
-
 		const template = is.macos
 			? this.buildDarwinTemplate()
 			: this.buildDefaultTemplate();
@@ -99,28 +74,6 @@ export default class MenuBuilder {
 		Menu.setApplicationMenu(menu);
 
 		return menu;
-	}
-
-	// Add the "Inspect Element" menu item to the context menu
-	// This is only available in development mode
-	setupContextMenu(): void {
-		if (
-			process.env.NODE_ENV === 'development' ||
-			process.env.DEBUG_PROD === 'true'
-		) {
-			this.mainWindow.webContents.on('context-menu', (_, props) => {
-				const { x, y } = props;
-
-				Menu.buildFromTemplate([
-					{
-						label: 'Inspect element',
-						click: () => {
-							this.mainWindow.webContents.inspectElement(x, y);
-						},
-					},
-				]).popup({ window: this.mainWindow });
-			});
-		}
 	}
 
 	subMenuDev: MenuItemConstructorOptions = {
@@ -163,6 +116,7 @@ export default class MenuBuilder {
 				id: 'showDockIcon',
 				checked: !!getSetting('showDockIcon'),
 				click: () => {
+					dock.setVisible(!getSetting('showDockIcon'));
 					setSettings({ showDockIcon: !getSetting('showDockIcon') });
 				},
 			},
@@ -426,3 +380,9 @@ export default class MenuBuilder {
 		return templateDefault;
 	}
 }
+
+export const setupDockMenu = () => {
+	if (!is.macos) return;
+	const dockMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
+	app.dock.setMenu(dockMenu);
+};

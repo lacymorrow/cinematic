@@ -3,6 +3,7 @@
 // Use IPC to update data
 
 import { ipcChannels } from '@/config/ipc-channels';
+import Logger from 'electron-log';
 import React, { useEffect, useMemo } from 'react';
 
 interface StatusMessageContextType {
@@ -26,7 +27,11 @@ export function StatusMessageContextProvider({
 	useEffect(() => {
 		// save messages to a log, and surface the last one
 		const synchronizeMessages = async () => {
-			setMessages(await window.electron.getMessages());
+			// setMessages(await window.electron.getMessages());
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_MESSAGES)
+				.then(setMessages)
+				.catch(Logger.error);
 		};
 
 		window.electron.ipcRenderer.on(

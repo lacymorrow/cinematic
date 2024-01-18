@@ -43,7 +43,7 @@ const register = () => {
 		// Security #13: Prevent navigation
 		// https://www.electronjs.org/docs/latest/tutorial/security#13-disable-or-limit-navigation
 		webContents.on('will-navigate', (event, _navigationUrl) => {
-			Logger.warn($errors.blocked_navigation, _navigationUrl);
+			Logger.warn($errors.blockedNavigation, _navigationUrl);
 			event.preventDefault();
 		});
 	});
@@ -57,7 +57,7 @@ const ready = () => {
 			// Because we're adding these listeners outside the main.ts file, the window object doesn't get set to null
 			// when the window is closed. So we check `windows.mainWindow?.isDestroyed()` and explicitly set it to null
 			windows.mainWindow = null;
-			windows.mainWindow = await createMainWindow(windows.mainWindow);
+			windows.mainWindow = await createMainWindow();
 		}
 	});
 

@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export: off */
 import { app } from 'electron';
+import path from 'node:path';
 import os from 'os';
-import path from 'path';
 import { URL } from 'url';
 
 export const electronVersion = process.versions.electron;

@@ -64,9 +64,7 @@
 		--input: 217.2 32.6% 17.5%;
 		--ring: 212.7 26.8% 83.9%;
 	}
-}
 
-@layer base {
 	* {
 		@apply border-border;
 
@@ -79,9 +77,9 @@
 	}
 
 	/*
- * @NOTE: Prepend a `~` to css file paths that are in your node_modules
- *        See https://github.com/webpack-contrib/sass-loader#imports
- */
+	* @NOTE: Prepend a `~` to css file paths that are in your node_modules
+	*        See https://github.com/webpack-contrib/sass-loader#imports
+	*/
 	body {
 		@apply bg-background text-foreground;
 		position: relative;
@@ -98,5 +96,16 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+}
+
+@layer utilities {
+	.drag {
+		-webkit-app-region: drag;
+		cursor: move;
+	}
+
+	.no-drag {
+		-webkit-app-region: no-drag;
 	}
 }

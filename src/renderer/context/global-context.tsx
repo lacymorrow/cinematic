@@ -1,6 +1,6 @@
 // DATA SHOULD ONLY FLOW DOWNWARDS
-// Do not use this context to update data, only to read it
-// Use IPC to update data
+// We pass data from the main process to the renderer process using IPC
+// We also use IPC to update data
 
 import { ipcChannels } from '@/config/ipc-channels';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
@@ -15,6 +15,7 @@ import { play, preload } from '../lib/sounds';
 interface GlobalContextType {
 	appName: string;
 	appMenu: MenuItemConstructorOptions[];
+	appPaths: any;
 	settings: SettingsType;
 	setSettings: (newSettings: Partial<SettingsType>) => void;
 }
@@ -22,6 +23,7 @@ interface GlobalContextType {
 export const GlobalContext = React.createContext<GlobalContextType>({
 	appName: '',
 	appMenu: [],
+	appPaths: {},
 	settings: DEFAULT_SETTINGS,
 	setSettings: () => {},
 });
@@ -35,6 +37,8 @@ export function GlobalContextProvider({
 	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
 		[],
 	);
+	const [appPaths, setAppPaths] = React.useState<any>({});
+
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
@@ -73,22 +77,31 @@ export function GlobalContextProvider({
 					// 	onClick: () => {},
 					// },
 				});
-				new Notification(title, {
-					body,
-				});
+
+				// Renderer Web Notifications
+				// new Notification(title, {
+				// 	body,
+				// });
 			},
 		);
 
-		// Preload sounds
-		window.electron.ipcRenderer.once(
-			ipcChannels.PRELOAD_SOUNDS,
-			(basepath: any) => preload(basepath),
-		);
+		// SOUNDS
+		window.electron.ipcRenderer
+			.invoke(ipcChannels.GET_APP_PATHS)
+			.then((paths) => {
+				setAppPaths(paths);
+				return paths;
+			})
+			.then((paths) => {
+				// Preload sounds
+				preload(paths.sounds);
 
-		// Play sounds listener
-		window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
-			play(sound);
-		});
+				// Setup listener to play sounds
+				window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
+					play({ name: sound, path: paths.sounds });
+				});
+			})
+			.catch(Logger.error);
 
 		// Get app name
 		window.electron.ipcRenderer
@@ -121,10 +134,11 @@ export function GlobalContextProvider({
 		return {
 			appName,
 			appMenu,
+			appPaths,
 			settings,
 			setSettings,
 		};
-	}, [appName, appMenu, settings, setSettings]);
+	}, [appName, appMenu, appPaths, settings, setSettings]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

@@ -7,7 +7,6 @@ const channels = Object.values(ipcChannels);
 
 const electronHandler = {
 	isMac: process.platform === 'darwin',
-	getMessages: () => ipcRenderer.invoke(ipcChannels.GET_MESSAGES),
 	setSettings: (settings: Partial<SettingsType>) =>
 		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
 	triggerAppMenuItemById: (id: string) =>
@@ -16,7 +15,7 @@ const electronHandler = {
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {
 			if (!channels.includes(channel)) {
-				throw new Error(`${$errors.invalid_channel}: ${channel}`);
+				throw new Error(`${$errors.invalidChannel}: ${channel}`);
 			}
 			return ipcRenderer.invoke(channel, ...args);
 		},

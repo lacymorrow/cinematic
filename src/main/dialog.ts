@@ -1,5 +1,5 @@
 import { app, dialog as electronDialog } from 'electron';
-import path from 'path';
+import path from 'node:path';
 import { debugInfo, is } from './util';
 
 const validButtonIndex = (result: any) =>

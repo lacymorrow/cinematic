@@ -10,12 +10,14 @@ const PRELOAD_SOUNDS = 'preload-sounds';
 const PLAY_SOUND = 'play-sound';
 
 // Renderer -> Main
-const RENDERER_READY = 'renderer-ready';
 const GET_APP_NAME = 'get-app-name';
 const GET_APP_MENU = 'get-app-menu';
+const GET_APP_PATHS = 'get-app-paths';
 const GET_MESSAGES = 'get-messages';
 const GET_SETTINGS = 'get-settings';
 const SET_SETTINGS = 'set-settings';
+
+const RENDERER_READY = 'renderer-ready';
 
 const TRIGGER_APP_MENU_ITEM_BY_ID = 'trigger-app-menu-item-by-id';
 const OPEN_URL = 'open-url';
@@ -32,6 +34,7 @@ export const ipcChannels = {
 	RENDERER_READY,
 	GET_APP_NAME,
 	GET_APP_MENU,
+	GET_APP_PATHS,
 	GET_MESSAGES,
 	GET_SETTINGS,
 

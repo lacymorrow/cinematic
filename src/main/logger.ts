@@ -1,6 +1,6 @@
 import { app, dialog } from 'electron';
 import Logger from 'electron-log';
-import path from 'path';
+import path from 'node:path';
 import { $dialog } from '../config/strings';
 import { addAppMessage } from './store';
 
