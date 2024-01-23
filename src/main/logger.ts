@@ -61,8 +61,8 @@ const catchErrors = () => {
 
 // Initialize logger and error handler
 const initialize = () => {
-	// Initialize logger
-	Logger.initialize();
+	// initialize  the logger for any renderer process
+	Logger.initialize({ preload: true });
 
 	// Add custom log level to display app status messages
 	Logger.addLevel('status', 0);

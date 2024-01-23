@@ -6,7 +6,12 @@ import { net, protocol } from 'electron';
 import { PROTOCOL } from '../config/config';
 import { notification } from './notifications';
 
-const initialize = () =>
+const initialize = () => {
+	if (!protocol?.handle) {
+		// Old versions of Electron don't have protocol.handle
+		return null;
+	}
+
 	protocol.handle(PROTOCOL, (request: any) => {
 		const file = `file://${request.url.slice(`${PROTOCOL}://`.length)}`;
 		notification({
@@ -15,5 +20,6 @@ const initialize = () =>
 		});
 		return net.fetch(file);
 	});
+};
 
 export default { initialize };
