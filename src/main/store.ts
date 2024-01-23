@@ -1,6 +1,6 @@
-import { APP_MESSAGES_MAX } from '@/config/config';
 import Logger from 'electron-log/main';
 import Store from 'electron-store';
+import { APP_MESSAGES_MAX } from '../config/config';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
