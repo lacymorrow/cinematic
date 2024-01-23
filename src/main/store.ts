@@ -1,4 +1,4 @@
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import Store from 'electron-store';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';

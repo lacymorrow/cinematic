@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 import {
-	BrowserWindow,
-	BrowserWindowConstructorOptions,
-	IpcMainEvent,
-	app,
-	shell,
+    BrowserWindow,
+    BrowserWindowConstructorOptions,
+    IpcMainEvent,
+    app,
+    shell,
 } from 'electron';
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import path from 'node:path';
 import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
 import { $errors } from '../config/strings';

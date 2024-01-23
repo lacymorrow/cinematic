@@ -1,5 +1,5 @@
 import { app, Tray as ElectronTray, Menu } from 'electron';
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import path from 'node:path';
 import { aboutMenuItem, quitMenuItem } from './menu-items';
 import { __static } from './paths';

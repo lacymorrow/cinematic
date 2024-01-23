@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import { is } from './util';
 
 const initialize = () => {
@@ -32,4 +32,4 @@ const installExtensions = async () => {
 export default {
 	initialize,
 	installExtensions,
-};;
+};

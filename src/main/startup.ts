@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import { $messages } from '../config/strings';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';

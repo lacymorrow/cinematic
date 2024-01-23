@@ -1,5 +1,4 @@
 import { VOLUME } from '@/config/config';
-import Logger from 'electron-log/renderer';
 
 /* Cache of Audio elements, for instant playback */
 const cache: Record<string, HTMLAudioElement> = {};
@@ -40,7 +39,7 @@ const sounds: Record<string, { url: string; volume: number }> = {
 };
 
 export const preload = (basepath = '') => {
-	Logger.warn(`Preloading sounds from ${basepath}`);
+	console.warn(`Preloading sounds from ${basepath}`);
 
 	let audio: HTMLAudioElement | undefined;
 	Object.keys(sounds).forEach((name) => {
@@ -58,7 +57,7 @@ export const preload = (basepath = '') => {
 };
 
 export const play = ({ name, path }: { name: string; path: string }) => {
-	Logger.info(`Playing sound: ${name}, path: ${path}`);
+	console.info(`Playing sound: ${name}, path: ${path}`);
 
 	let audio: HTMLAudioElement | undefined = cache[name];
 	if (!audio) {
@@ -68,7 +67,7 @@ export const play = ({ name, path }: { name: string; path: string }) => {
 	if (audio) {
 		audio.currentTime = 0;
 		audio.play().catch((err) => {
-			Logger.error(err);
+			console.error(err);
 		});
 	}
 };

@@ -18,6 +18,7 @@ import { KEYS } from '@/config/keys';
 import { cn } from '@/lib/utils';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MenuItemConstructorOptions } from 'electron/renderer';
+import { v4 as uuidv4 } from 'uuid';
 
 // if the label contains an ampersand followed by a character that is not an ampersand, underline the character
 // for example, &File becomes F̲ile and &&File becomes &File
@@ -75,7 +76,7 @@ function convertAcceleratorToElement(accelerator?: string | null) {
 	const modifierElements = modifierKeys.map((modifierKey) => {
 		const unicodeKey = unicodeModifiers[modifierKey] || modifierKey;
 
-		return <span key={crypto.randomUUID()}>{unicodeKey}</span>;
+		return <span key={uuidv4()}>{unicodeKey}</span>;
 	});
 
 	return (
@@ -95,7 +96,7 @@ export function Menu({ className }: { className?: string }) {
 				return null;
 			}
 
-			const key = item.id || crypto.randomUUID();
+			const key = item.id || uuidv4();
 			if (item.type === 'separator') {
 				return <MenubarSeparator key={key} />;
 			}
@@ -185,7 +186,7 @@ export function Menu({ className }: { className?: string }) {
 			{Array.isArray(appMenu) &&
 				appMenu.map((item: any, index: number) => {
 					return (
-						<MenubarMenu key={crypto.randomUUID()}>
+						<MenubarMenu key={uuidv4()}>
 							<MenubarTrigger
 								className={cn(
 									'no-drag', // Draggable elements cannot be interacted with, undo the draggable class

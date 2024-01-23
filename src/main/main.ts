@@ -1,7 +1,7 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
 import { app } from 'electron';
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import { $errors, $messages } from '../config/strings';
 
 import ipc from './ipc';
