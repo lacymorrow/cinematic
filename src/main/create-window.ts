@@ -14,6 +14,7 @@ import MenuBuilder from './menu';
 import { __resources } from './paths';
 import { getSetting } from './store';
 import { is, resolveHtmlPath } from './util';
+import windows from './windows';
 
 const getAssetPath = (...paths: string[]): string => {
 	return path.join(__resources, ...paths);
@@ -149,6 +150,7 @@ export const createChildWindow = async () => {
 
 	window.on('ready-to-show', () => {
 		window.show();
+		windows.mainWindow?.focus();
 	});
 
 	// Load the window
