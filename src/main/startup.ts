@@ -37,8 +37,6 @@ export const startup = () => {
 
 export const ready = async () => {
 	console.timeLog(app.name, $messages.ready);
-	// initialize  the logger for any renderer process
-	Logger.initialize({ preload: true });
 
 	// Log Node/Electron versions
 	Logger.info(debugInfo());
