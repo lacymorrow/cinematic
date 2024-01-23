@@ -1,3 +1,4 @@
+import { APP_MESSAGES_MAX } from '@/config/config';
 import Logger from 'electron-log/main';
 import Store from 'electron-store';
 import { ipcChannels } from '../config/ipc-channels';
@@ -88,7 +89,10 @@ export const setSettings = (settings: Partial<SettingsType>) => {
 };
 
 export const addAppMessage = (message: AppMessageType) => {
-	const appMessageLog = store.get('appMessageLog');
+	let appMessageLog = store.get('appMessageLog');
+	if (appMessageLog.length > APP_MESSAGES_MAX) {
+		appMessageLog = appMessageLog.slice(0, Math.ceil(APP_MESSAGES_MAX / 2));
+	}
 	appMessageLog.push(message);
 	store.set('appMessageLog', appMessageLog);
 
