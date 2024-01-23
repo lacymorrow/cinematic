@@ -1,4 +1,3 @@
-import { Toaster } from '@/components/ui/sonner';
 import AppStatus from '@/renderer/components/footer/AppStatus';
 import { Footer } from '@/renderer/components/footer/Footer';
 import OnlineStatus from '@/renderer/components/footer/OnlineStatus';
@@ -24,7 +23,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
 				<AppStatus />
 			</Footer>
-			<Toaster />
 		</div>
 	);
 }
