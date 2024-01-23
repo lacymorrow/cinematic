@@ -1,5 +1,5 @@
-import { MediaBrowser } from '../components/media/MediaBrowser';
-import { useGlobalContext } from '../context/global-context';
+import { MediaBrowser } from '@/renderer/components/media/MediaBrowser';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
 type Props = {};
 

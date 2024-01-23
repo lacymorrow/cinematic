@@ -1,7 +1,7 @@
 import { ProgressInfo, autoUpdater } from 'electron-updater';
 
 import { shell } from 'electron';
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import { $messages } from '../config/strings';
 import dialog from './dialog';
 import dock from './dock';

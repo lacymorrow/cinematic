@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/context-menu';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { DialogContentNewPlaylist } from '@/renderer/components/dialog/DialogContentNewPlaylist';
+import { MoviePlaceholder } from '@/renderer/components/images/Placeholder';
 import {
 	AddIcon,
 	DislikedIcon,
@@ -20,13 +22,11 @@ import {
 	PlayIcon,
 	PlaylistIcon,
 } from '@/renderer/components/layout/icons';
+import { ExternalLink } from '@/renderer/components/ui/ExternalLink';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { DialogContentNewPlaylist } from '../dialog/DialogContentNewPlaylist';
-import { MoviePlaceholder } from '../images/Placeholder';
-import { ExternalLink } from '../ui/ExternalLink';
 
 interface MediaArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
 	media: MediaType;

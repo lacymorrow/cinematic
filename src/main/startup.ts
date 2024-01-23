@@ -1,9 +1,9 @@
 import { app } from 'electron';
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import { $messages } from '../config/strings';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';
-import { createMainWindow } from './create-window';
+import { createChildWindow, createMainWindow } from './create-window';
 import debugging from './debugging';
 import errorHandling from './error-handling';
 import logger from './logger';
@@ -49,6 +49,7 @@ export const ready = async () => {
 
 	// Create the main browser window.
 	windows.mainWindow = await createMainWindow();
+	windows.childWindow = await createChildWindow();
 
 	// Setup Dock Menu
 	setupDockMenu();

@@ -45,7 +45,6 @@ export const $errors = {
 
 	queue: 'Queue error',
 	main: 'Main> ',
-	mainWindow: '"mainWindow" is not defined',
 	blockedNavigation: 'Blocked navigation to: ',
 	invalidChannel: 'Invalid IPC channel',
 };

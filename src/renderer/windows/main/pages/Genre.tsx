@@ -1,8 +1,8 @@
+import { MediaBrowser } from '@/renderer/components/media/MediaBrowser';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { MediaBrowser } from '../components/media/MediaBrowser';
-import { useGlobalContext } from '../context/global-context';
 
 type Props = {};
 

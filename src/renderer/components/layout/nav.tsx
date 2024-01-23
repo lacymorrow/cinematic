@@ -1,6 +1,6 @@
-import { Browse } from '@/renderer/pages/Browse';
-import { Library } from '@/renderer/pages/Library';
-import { Liked } from '@/renderer/pages/Liked';
+import { Browse } from '@/renderer/windows/main/pages/Browse';
+import { Library } from '@/renderer/windows/main/pages/Library';
+import { Liked } from '@/renderer/windows/main/pages/Liked';
 import { BookmarkIcon, TokensIcon, VideoIcon } from '@radix-ui/react-icons';
 
 export const nav = [

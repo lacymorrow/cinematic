@@ -155,6 +155,7 @@
 		"tailwind-merge": "^2.2.0",
 		"tailwindcss-animate": "^1.0.7",
 		"torrent-name-parser": "^0.6.5",
+		"uuid": "^9.0.1",
 		"uuid-by-string": "^4.0.0",
 		"vaul": "^0.8.0",
 		"zod": "^3.22.4"

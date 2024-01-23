@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { app } from 'electron';
-import path from 'node:path';
+import path from 'path';
 
 export const __app = app.getAppPath();
 export const __build = path.join(__app, 'build');

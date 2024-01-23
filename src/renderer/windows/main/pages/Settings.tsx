@@ -1,9 +1,9 @@
-import { Outlet, Route, Routes } from 'react-router-dom';
 import SettingsLayout, {
 	settingsNav,
-} from '../components/settings/SettingsLayout';
+} from '@/renderer/components/settings/SettingsLayout';
+import { Outlet, Route, Routes } from 'react-router-dom';
 
-export default function Settings() {
+export function Settings() {
 	return (
 		<SettingsLayout>
 			<Routes>

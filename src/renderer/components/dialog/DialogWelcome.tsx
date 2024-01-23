@@ -9,7 +9,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { ButtonAddMedia } from '../ui/ButtonAddMedia';
+import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
 
 export function DialogWelcome() {
 	return (

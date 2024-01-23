@@ -28,6 +28,8 @@ interface GlobalContextType {
 	randomLibraryArray: LibraryType;
 	settings: SettingsType;
 	setSettings: (newSettings: Partial<SettingsType>) => void;
+	message: string;
+	messages: string[];
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
@@ -44,6 +46,8 @@ export const GlobalContext = React.createContext<GlobalContextType>({
 	randomLibraryArray: [],
 	settings: DEFAULT_SETTINGS,
 	setSettings: () => {},
+	message: '',
+	messages: [],
 });
 
 export function GlobalContextProvider({
@@ -56,6 +60,7 @@ export function GlobalContextProvider({
 		[],
 	);
 	const [appPaths, setAppPaths] = React.useState<any>({});
+	const [messages, setMessages] = React.useState<string[]>([]);
 
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
@@ -76,17 +81,24 @@ export function GlobalContextProvider({
 
 		const synchronizeSettings = async () => {
 			Logger.log($messages.synchronize_settings);
-			// Get settings
-			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_SETTINGS)
-				.then(setCurrentSettings)
-				.catch(Logger.error);
 
 			// Get app menu
 			window.electron.ipcRenderer
 				.invoke(ipcChannels.GET_APP_MENU)
 				.then(setAppMenu)
-				.catch(Logger.error);
+				.catch(console.error);
+
+			// Get settings
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_SETTINGS)
+				.then(setCurrentSettings)
+				.catch(console.error);
+
+			// Get Status messages
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_MESSAGES)
+				.then(setMessages)
+				.catch(console.error);
 		};
 
 		// Listen for messages from the main process
@@ -140,7 +152,7 @@ export function GlobalContextProvider({
 					play({ name: sound, path: paths.sounds });
 				});
 			})
-			.catch(Logger.error);
+			.catch(console.error);
 
 		// Get app name
 		window.electron.ipcRenderer
@@ -203,6 +215,8 @@ export function GlobalContextProvider({
 			randomLibraryArray,
 			settings,
 			setSettings,
+			messages,
+			message: messages[messages.length - 1] ?? '',
 		};
 	}, [
 		appName,
@@ -218,6 +232,7 @@ export function GlobalContextProvider({
 		randomLibraryArray,
 		settings,
 		setSettings,
+		messages,
 	]);
 
 	return (

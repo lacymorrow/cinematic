@@ -1,6 +1,6 @@
 import { app, dialog as electronDialog } from 'electron';
 import Logger from 'electron-log';
-import path from 'node:path';
+import path from 'path';
 import { VALID_FILETYPES } from '../config/config';
 import { $dialog } from '../config/strings';
 import { scanMedia } from './file';

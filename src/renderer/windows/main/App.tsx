@@ -23,10 +23,10 @@ import {
 import { Layout } from '@/renderer/components/layout/Layout';
 import { nav } from '@/renderer/components/layout/nav';
 import { ResizableLayout } from '@/renderer/components/ui/ResizableLayout';
-import { GlobalContextProvider } from '@/renderer/context/global-context';
-import { Genre } from '@/renderer/pages/Genre';
-import { Media } from '@/renderer/pages/Media';
-import Settings from '@/renderer/pages/Settings';
+import { MainLayout } from '@/renderer/windows/main/Layout';
+import { Genre } from '@/renderer/windows/main/pages/Genre';
+import { Media } from '@/renderer/windows/main/pages/Media';
+import { Settings } from '@/renderer/windows/main/pages/Settings';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import { Playlist } from './pages/Playlist';
 
@@ -34,9 +34,9 @@ import '@/renderer/styles/globals.scss';
 
 export default function App() {
 	return (
-		<GlobalContextProvider>
+		<Layout>
 			<Router>
-				<Layout>
+				<MainLayout>
 					<Routes>
 						{nav.map((item) => {
 							return (
@@ -72,8 +72,8 @@ export default function App() {
 						</Route>
 						<Route path={`${pathSettings}/*`} element={<Settings />} />
 					</Routes>
-				</Layout>
+				</MainLayout>
 			</Router>
-		</GlobalContextProvider>
+		</Layout>
 	);
 }

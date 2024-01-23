@@ -1,6 +1,6 @@
 import { app, dialog } from 'electron';
-import Logger from 'electron-log';
-import path from 'node:path';
+import Logger from 'electron-log/main';
+import path from 'path';
 import { $dialog } from '../config/strings';
 import { addAppMessage } from './store';
 
@@ -61,6 +61,9 @@ const catchErrors = () => {
 
 // Initialize logger and error handler
 const initialize = () => {
+	// initialize  the logger for any renderer process
+	Logger.initialize({ preload: true });
+
 	// Add custom log level to display app status messages
 	Logger.addLevel('status', 0);
 

@@ -1,15 +1,15 @@
-import 'webpack-dev-server';
-import path from 'path';
-import fs from 'fs';
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import chalk from 'chalk';
-import { merge } from 'webpack-merge';
-import { execSync, spawn } from 'child_process';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import chalk from 'chalk';
+import { execSync, spawn } from 'child_process';
+import fs from 'fs';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import path from 'path';
+import webpack from 'webpack';
+import 'webpack-dev-server';
+import { merge } from 'webpack-merge';
+import checkNodeEnv from '../scripts/check-node-env';
 import baseConfig from './webpack.config.base';
 import webpackPaths from './webpack.paths';
-import checkNodeEnv from '../scripts/check-node-env';
 
 // When an ESLint server is running, we can't set the NODE_ENV so we'll check if it's
 // at the dev webpack config is not accidentally run in a production environment
@@ -45,16 +45,20 @@ const configuration: webpack.Configuration = {
 
 	target: ['web', 'electron-renderer'],
 
-	entry: [
-		`webpack-dev-server/client?http://localhost:${port}/dist`,
-		'webpack/hot/only-dev-server',
-		path.join(webpackPaths.srcRendererPath, 'index.tsx'),
-	],
-
+	entry: {
+		webpack1: `webpack-dev-server/client?http://localhost:${port}/dist`,
+		webpack2: 'webpack/hot/only-dev-server',
+		app: {
+			import: path.join(webpackPaths.srcRendererPath, 'index.tsx'),
+		},
+		child: {
+			import: path.join(webpackPaths.srcRendererPath, 'child.tsx'),
+		},
+	},
 	output: {
 		path: webpackPaths.distRendererPath,
 		publicPath: '/',
-		filename: 'renderer.dev.js',
+		filename: '[name].renderer.dev.js',
 		library: {
 			type: 'umd',
 		},
@@ -123,7 +127,7 @@ const configuration: webpack.Configuration = {
 						manifest: require(manifest),
 						sourceType: 'var',
 					}),
-			  ]),
+				]),
 
 		new webpack.NoEmitOnErrorsPlugin(),
 
@@ -150,7 +154,23 @@ const configuration: webpack.Configuration = {
 		new ReactRefreshWebpackPlugin(),
 
 		new HtmlWebpackPlugin({
+			chunks: ['app'],
 			filename: path.join('index.html'),
+			template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
+			minify: {
+				collapseWhitespace: true,
+				removeAttributeQuotes: true,
+				removeComments: true,
+			},
+			isBrowser: false,
+			env: process.env.NODE_ENV,
+			isDevelopment: process.env.NODE_ENV !== 'production',
+			nodeModules: webpackPaths.appNodeModulesPath,
+		}),
+
+		new HtmlWebpackPlugin({
+			chunks: ['child'],
+			filename: path.join('child.html'),
 			template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
 			minify: {
 				collapseWhitespace: true,

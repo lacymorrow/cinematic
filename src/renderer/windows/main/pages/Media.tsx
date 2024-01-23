@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
-import Logger from 'electron-log/renderer';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { PosterRotator } from '../components/media/PosterRotator';
-import { RatingIcon } from '../components/media/RatingIcon';
-import { InfoBlock } from '../components/ui/InfoBlock';
+import { PosterRotator } from '@/renderer/components/media/PosterRotator';
+import { RatingIcon } from '@/renderer/components/media/RatingIcon';
+import { InfoBlock } from '@/renderer/components/ui/InfoBlock';
 import {
 	PageHeader,
 	PageHeaderDescription,
 	PageHeaderHeading,
-} from '../components/ui/PageHeader';
-import { SectionHeader } from '../components/ui/SectionHeader';
-import { useGlobalContext } from '../context/global-context';
+} from '@/renderer/components/ui/PageHeader';
+import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
+import { useGlobalContext } from '@/renderer/context/global-context';
+import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
+import Logger from 'electron-log/renderer';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 type Props = {};
 

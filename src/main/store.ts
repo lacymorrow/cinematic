@@ -1,4 +1,4 @@
-import Logger from 'electron-log';
+import Logger from 'electron-log/main';
 import Store from 'electron-store';
 import getUuidByString from 'uuid-by-string';
 import { CACHE_TIMEOUT, THROTTLE_DELAY } from '../config/config';
@@ -9,7 +9,7 @@ import { reconcileMovieMeta } from '../lib/reconcile-meta';
 import { MediaType } from '../types/file';
 import { CollectionItemType } from '../types/media';
 import { throttle } from '../utils/throttle';
-import windows from './windows';
+import { forEachWindow } from './windows';
 
 type ThrottledFunctionsType = {
 	[key: string]: Function;
@@ -140,20 +140,17 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const synchronizeApp = () =>
-	windows?.mainWindow?.webContents.send(ipcChannels.LIBRARY_UPDATED);
+	forEachWindow((window) =>
+		window.webContents.send(ipcChannels.LIBRARY_UPDATED),
+	);
 
 const synchronizeSettings = () =>
-	windows?.mainWindow?.webContents.send(ipcChannels.SETTINGS_UPDATED);
+	forEachWindow((window) =>
+		window.webContents.send(ipcChannels.SETTINGS_UPDATED),
+	);
 
 // Throttle the app update
 const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
-
-const appMessageUpdated = () => {
-	windows?.mainWindow?.webContents.send(
-		ipcChannels.APP_STATUS_MESSAGE,
-		store.get('appMessageLog'),
-	);
-};
 
 export const resetStore = () => {
 	Logger.status($messages.reset_store);
@@ -218,7 +215,7 @@ export const addAppMessage = (message: AppMessageType) => {
 	store.set('appMessageLog', appMessageLog);
 
 	// Sync with renderer
-	appMessageUpdated();
+	synchronizeApp();
 };
 
 export const getAppMessages = () => {

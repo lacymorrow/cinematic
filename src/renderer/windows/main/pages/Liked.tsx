@@ -1,6 +1,6 @@
-import { LikedEmptyPlaceholder } from '../components/media/LikedEmptyPlaceholder';
-import { MediaBrowser } from '../components/media/MediaBrowser';
-import { useGlobalContext } from '../context/global-context';
+import { LikedEmptyPlaceholder } from '@/renderer/components/media/LikedEmptyPlaceholder';
+import { MediaBrowser } from '@/renderer/components/media/MediaBrowser';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
 type Props = {};
 
