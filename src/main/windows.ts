@@ -47,4 +47,10 @@ export class Windows {
 	}
 }
 
+export const forEachWindow = (callback: (window: BrowserWindow) => void) => {
+	BrowserWindow.getAllWindows().forEach((win) => {
+		callback(win);
+	});
+};
+
 export default windows;

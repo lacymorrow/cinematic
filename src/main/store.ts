@@ -1,9 +1,9 @@
 import Logger from 'electron-log/main';
 import Store from 'electron-store';
-import { BrowserWindow } from 'electron/main';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
+import { forEachWindow } from './windows';
 
 export type AppMessageType = string;
 
@@ -54,7 +54,7 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const synchronizeApp = () => {
-	BrowserWindow.getAllWindows().forEach((win) => {
+	forEachWindow((win) => {
 		win.webContents.send(ipcChannels.APP_UPDATED);
 	});
 };
