@@ -1,29 +1,18 @@
-export type ViewModeType = 'grid' | 'list';
-
 export type ThemeType = 'system' | 'light' | 'dark';
-
-export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 
 export interface SettingsType {
 	allowSounds: boolean;
 	autoUpdate: boolean;
 	allowNotifications: boolean;
 	notifcationType: 'default' | 'system' | 'all';
-	showDockIcon: boolean;
+	showDockIcon: boolean; // macOS only
+	showTrayIcon: boolean;
 	startMinimized: boolean;
 	quitOnWindowClose: boolean;
 
 	theme: ThemeType;
 
 	// vibrancy: 'none' | 'sidebar' | 'full';
-	// autoplayVideos: boolean;
-	// zoomFactor: number;
-	// menuBarMode: boolean;
-	// showTrayIcon: boolean;
-	// alwaysOnTop: boolean;
-	// showAlwaysOnTopPrompt: boolean;
-	// autoHideMenuBar: boolean;
-	// notificationsMuted: boolean;
 	// hardwareAcceleration: boolean;
 	// lastWindowState: {
 	// 	x: number;
@@ -41,6 +30,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
 	allowNotifications: true,
 	notifcationType: 'all',
 	showDockIcon: true,
+	showTrayIcon: true,
 	startMinimized: false,
 	quitOnWindowClose: false,
 

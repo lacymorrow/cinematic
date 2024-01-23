@@ -15,13 +15,15 @@ const FOUR_HOURS = 1000 * 60 * 60 * 4;
 
 export class AutoUpdate {
 	constructor() {
-		Logger.status($messages.auto_update);
+		if (getSetting('autoUpdate')) {
+			Logger.status($messages.auto_update);
 
-		// Configure log debugging to file
-		Logger.transports.file.level = 'silly';
-		autoUpdater.logger = Logger;
+			// Configure log debugging to file
+			Logger.transports.file.level = 'silly';
+			autoUpdater.logger = Logger;
 
-		autoUpdater.checkForUpdatesAndNotify();
+			autoUpdater.checkForUpdatesAndNotify();
+		}
 	}
 }
 

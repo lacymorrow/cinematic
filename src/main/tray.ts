@@ -1,9 +1,10 @@
 import { app, Tray as ElectronTray, Menu } from 'electron';
-import Logger from 'electron-log/main';
 import path from 'path';
 import { aboutMenuItem, quitMenuItem } from './menu-items';
 import { __static } from './paths';
+import { getSetting } from './store';
 import { is } from './util';
+import windows from './windows';
 
 // mac needs dark/light versions
 const systemIcon = () => {
@@ -23,24 +24,19 @@ const getIconPath = () => {
 	return path.join(__static, 'icons', systemIcon());
 };
 
-export default class SystemTray {
-	constructor() {
-		this.tray = new ElectronTray(getIconPath());
+const initialize = () => {
+	if (getSetting('showTrayIcon')) {
+		windows.tray = new ElectronTray(getIconPath());
 
 		const contextMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
-		this.tray.setToolTip(`${app.name}`);
-		this.tray.setContextMenu(contextMenu);
+		windows.tray.setToolTip(`${app.name}`);
+		windows.tray.setContextMenu(contextMenu);
+	} else {
+		windows.tray?.destroy();
+		windows.tray = null;
 	}
+};
 
-	getTray() {
-		return this.tray;
-	}
-
-	private tray: ElectronTray; // Add the 'tray' property
-
-	setIcon() {
-		const icon = getIconPath();
-		this.tray.setImage(icon);
-		Logger.info(`Setting tray icon: ${icon}`);
-	}
-}
+export default {
+	initialize,
+};

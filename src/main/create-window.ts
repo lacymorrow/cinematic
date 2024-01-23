@@ -132,11 +132,6 @@ export const createMainWindow = async () => {
 		} else {
 			window.show();
 		}
-
-		// Setting: Show dock icon
-		if (is.macos && !getSetting('showDockIcon')) {
-			app.dock.hide();
-		}
 	});
 
 	// Load the window

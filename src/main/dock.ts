@@ -1,5 +1,6 @@
 // MacOS only
 import { app } from 'electron';
+import { getSetting } from './store';
 import { is } from './util';
 
 // Sets the badge on the dock icon
@@ -19,7 +20,14 @@ const setVisible = (visible: boolean) => {
 	}
 };
 
+const initialize = () => {
+	if (is.macos) {
+		setVisible(!!getSetting('showDockIcon'));
+	}
+};
+
 export default {
+	initialize,
 	setBadge,
 	setVisible,
 };

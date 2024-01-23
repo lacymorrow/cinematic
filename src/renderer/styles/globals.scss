@@ -81,7 +81,7 @@
 	*        See https://github.com/webpack-contrib/sass-loader#imports
 	*/
 	body {
-		@apply bg-background text-foreground;
+		@apply text-foreground;
 		position: relative;
 		overflow-y: hidden;
 		display: flex;

@@ -40,6 +40,9 @@ const schema: Store.Schema<StoreType> = {
 			showDockIcon: {
 				type: 'boolean',
 			},
+			showTrayIcon: {
+				type: 'boolean',
+			},
 			quitOnWindowClose: {
 				type: 'boolean',
 			},

@@ -9,10 +9,8 @@ import errorHandling from './error-handling';
 import logger from './logger';
 import { setupDockMenu } from './menu';
 import protocol from './protocol';
-import { resetApp } from './reset';
 import sounds from './sounds';
-import { getSetting } from './store';
-import SystemTray from './tray';
+import tray from './tray';
 import { debugInfo, is } from './util';
 import windows from './windows';
 
@@ -25,7 +23,7 @@ export const startup = () => {
 
 	if (is.debug) {
 		// Reset the app and store to default settings
-		resetApp();
+		// resetApp();
 	}
 
 	// Enable electron debug and source map support
@@ -55,17 +53,14 @@ export const ready = async () => {
 	setupDockMenu();
 
 	// Setup Tray
-	windows.tray = new SystemTray();
+	tray.initialize();
 
 	// Register custom protocol like `app://`
 	protocol.initialize();
 
 	// Auto updates
-	// Remove this if your app does not use auto updates
-	if (getSetting('autoUpdate')) {
-		// eslint-disable-next-line no-new
-		new AutoUpdate();
-	}
+	// eslint-disable-next-line no-new
+	new AutoUpdate();
 
 	// Idle
 	Logger.status($messages.mainIdle);

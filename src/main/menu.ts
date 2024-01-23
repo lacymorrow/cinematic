@@ -10,11 +10,13 @@ import { bugs, homepage } from '../../package.json';
 import dock from './dock';
 import {
 	aboutMenuItem,
+	autoUpdateMenuItem,
 	quitMenuItem,
 	testNotificationMenuItem,
 	testSoundMenuItem,
 } from './menu-items';
 import { getSetting, setSettings } from './store';
+import tray from './tray';
 import { is } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -103,21 +105,25 @@ export default class MenuBuilder {
 	subMenuSettings: MenuItemConstructorOptions = {
 		label: 'Settings',
 		submenu: [
-			{
-				label: 'Auto Update',
-				type: 'checkbox',
-				id: 'autoUpdate',
-				enabled: false,
-				checked: !!getSetting('autoUpdate'),
-			},
+			autoUpdateMenuItem,
 			{
 				label: 'Show Dock Icon',
 				type: 'checkbox',
 				id: 'showDockIcon',
 				checked: !!getSetting('showDockIcon'),
 				click: () => {
-					dock.setVisible(!getSetting('showDockIcon'));
 					setSettings({ showDockIcon: !getSetting('showDockIcon') });
+					dock.initialize();
+				},
+			},
+			{
+				label: 'Show Tray Icon',
+				type: 'checkbox',
+				id: 'showTrayIcon',
+				checked: !!getSetting('showTrayIcon'),
+				click: () => {
+					setSettings({ showTrayIcon: !getSetting('showTrayIcon') });
+					tray.initialize();
 				},
 			},
 			{
@@ -385,4 +391,5 @@ export const setupDockMenu = () => {
 	if (!is.macos) return;
 	const dockMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
 	app.dock.setMenu(dockMenu);
+	dock.initialize();
 };
