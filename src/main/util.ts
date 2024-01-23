@@ -1,6 +1,6 @@
 /* eslint import/prefer-default-export: off */
 import { app } from 'electron';
-import path from 'node:path';
+import path from 'path';
 import os from 'os';
 import { URL } from 'url';
 
