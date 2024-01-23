@@ -3,7 +3,6 @@
 // Use IPC to update data
 
 import { ipcChannels } from '@/config/ipc-channels';
-import Logger from 'electron-log/renderer';
 import React, { useEffect, useMemo } from 'react';
 
 interface StatusMessageContextType {
@@ -31,7 +30,7 @@ export function StatusMessageContextProvider({
 			window.electron.ipcRenderer
 				.invoke(ipcChannels.GET_MESSAGES)
 				.then(setMessages)
-				.catch(Logger.error);
+				.catch(console.error);
 		};
 
 		window.electron.ipcRenderer.on(

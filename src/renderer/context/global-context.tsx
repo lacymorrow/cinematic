@@ -7,7 +7,6 @@ import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
 import { $messages } from '@/config/strings';
-import Logger from 'electron-log/renderer';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
 import { play, preload } from '../lib/sounds';
@@ -45,19 +44,19 @@ export function GlobalContextProvider({
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
 		const synchronizeAppState = async () => {
-			Logger.log($messages.synchronize);
+			console.log($messages.synchronize);
 
 			// Get settings
 			window.electron.ipcRenderer
 				.invoke(ipcChannels.GET_SETTINGS)
 				.then(setCurrentSettings)
-				.catch(Logger.error);
+				.catch(console.error);
 
 			// Get app menu
 			window.electron.ipcRenderer
 				.invoke(ipcChannels.GET_APP_MENU)
 				.then(setAppMenu)
-				.catch(Logger.error);
+				.catch(console.error);
 		};
 
 		// Listen for messages from the main process
@@ -101,13 +100,13 @@ export function GlobalContextProvider({
 					play({ name: sound, path: paths.sounds });
 				});
 			})
-			.catch(Logger.error);
+			.catch(console.error);
 
 		// Get app name
 		window.electron.ipcRenderer
 			.invoke(ipcChannels.GET_APP_NAME)
 			.then(setAppName)
-			.catch(Logger.error);
+			.catch(console.error);
 
 		// Request initial data when the app loads
 		synchronizeAppState();
