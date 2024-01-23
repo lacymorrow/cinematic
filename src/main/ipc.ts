@@ -5,7 +5,6 @@ import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
 import { serializeMenu, triggerMenuItemById } from './menu';
 import { rendererPaths } from './paths';
-import sounds from './sounds';
 import { idle } from './startup';
 import {
 	HistoryActionType,
@@ -24,6 +23,11 @@ import {
 
 export default {
 	initialize() {
+		// Activate the idle state when the renderer process is ready
+		ipcMain.once(ipcChannels.RENDERER_READY, () => {
+			idle();
+		});
+
 		// These send data back to the renderer process
 		ipcMain.handle(ipcChannels.GET_APP_NAME, () => app.getName());
 		ipcMain.handle(ipcChannels.GET_APP_MENU, () =>
@@ -60,11 +64,6 @@ export default {
 		);
 
 		// These do not send data back to the renderer process
-		ipcMain.on(ipcChannels.RENDERER_READY, () => {
-			sounds.play('STARTUP');
-			idle();
-		});
-
 		// Trigger an app menu item by its id
 		ipcMain.on(
 			ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID,
