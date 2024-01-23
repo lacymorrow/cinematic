@@ -1,4 +1,4 @@
-import App from '@/renderer/App';
+import App from '@/renderer/windows/main/App';
 import { createRoot } from 'react-dom/client';
 
 const container = document.getElementById('root') as HTMLElement;

@@ -38,6 +38,11 @@ Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
 See the Electron React Boilerplate [docs and guides here](https://electron-react-boilerplate.js.org/docs/installation)
 
 
+### Tutorials
+
+- Creating multiple windows: https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/623#issuecomment-1382717291
+
+
 ## License
 
 MIT © [Lacy Morrow](https://github.com/lacymorrow)

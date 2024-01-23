@@ -17,6 +17,8 @@ interface GlobalContextType {
 	appPaths: any;
 	settings: SettingsType;
 	setSettings: (newSettings: Partial<SettingsType>) => void;
+	message: string;
+	messages: string[];
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
@@ -25,6 +27,8 @@ export const GlobalContext = React.createContext<GlobalContextType>({
 	appPaths: {},
 	settings: DEFAULT_SETTINGS,
 	setSettings: () => {},
+	message: '',
+	messages: [],
 });
 
 export function GlobalContextProvider({
@@ -37,6 +41,7 @@ export function GlobalContextProvider({
 		[],
 	);
 	const [appPaths, setAppPaths] = React.useState<any>({});
+	const [messages, setMessages] = React.useState<string[]>([]);
 
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
@@ -46,16 +51,22 @@ export function GlobalContextProvider({
 		const synchronizeAppState = async () => {
 			console.log($messages.synchronize);
 
+			// Get app menu
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_APP_MENU)
+				.then(setAppMenu)
+				.catch(console.error);
+
 			// Get settings
 			window.electron.ipcRenderer
 				.invoke(ipcChannels.GET_SETTINGS)
 				.then(setCurrentSettings)
 				.catch(console.error);
 
-			// Get app menu
+			// Get Status messages
 			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_APP_MENU)
-				.then(setAppMenu)
+				.invoke(ipcChannels.GET_MESSAGES)
+				.then(setMessages)
 				.catch(console.error);
 		};
 
@@ -102,14 +113,14 @@ export function GlobalContextProvider({
 			})
 			.catch(console.error);
 
+		// Request initial data when the app loads
+		synchronizeAppState();
+
 		// Get app name
 		window.electron.ipcRenderer
 			.invoke(ipcChannels.GET_APP_NAME)
 			.then(setAppName)
 			.catch(console.error);
-
-		// Request initial data when the app loads
-		synchronizeAppState();
 
 		// Let the main process know that the renderer is ready
 		window.electron.ipcRenderer.send(ipcChannels.RENDERER_READY);
@@ -136,8 +147,10 @@ export function GlobalContextProvider({
 			appPaths,
 			settings,
 			setSettings,
+			messages,
+			message: messages[messages.length - 1] ?? '',
 		};
-	}, [appName, appMenu, appPaths, settings, setSettings]);
+	}, [appName, appMenu, appPaths, settings, setSettings, messages]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

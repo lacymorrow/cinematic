@@ -24,7 +24,6 @@ export const $dialog = {
 
 export const $errors = {
 	main: 'Main> ',
-	mainWindow: '"mainWindow" is not defined',
 	blockedNavigation: 'Blocked navigation to: ',
 	invalidChannel: 'Invalid IPC channel',
 };

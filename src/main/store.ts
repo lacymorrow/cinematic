@@ -1,9 +1,9 @@
 import Logger from 'electron-log/main';
 import Store from 'electron-store';
+import { BrowserWindow } from 'electron/main';
 import { ipcChannels } from '../config/ipc-channels';
 import { DEFAULT_SETTINGS, SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
-import windows from './windows';
 
 export type AppMessageType = string;
 
@@ -54,14 +54,9 @@ const schema: Store.Schema<StoreType> = {
 const store = new Store<StoreType>({ schema });
 
 const synchronizeApp = () => {
-	windows?.mainWindow?.webContents.send(ipcChannels.APP_UPDATED);
-};
-
-const appMessageUpdated = () => {
-	windows?.mainWindow?.webContents.send(
-		ipcChannels.APP_STATUS_MESSAGE,
-		store.get('appMessageLog'),
-	);
+	BrowserWindow.getAllWindows().forEach((win) => {
+		win.webContents.send(ipcChannels.APP_UPDATED);
+	});
 };
 
 export const resetStore = () => {
@@ -98,7 +93,7 @@ export const addAppMessage = (message: AppMessageType) => {
 	store.set('appMessageLog', appMessageLog);
 
 	// Sync with renderer
-	appMessageUpdated();
+	synchronizeApp();
 };
 
 export const getAppMessages = () => {

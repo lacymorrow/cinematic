@@ -1,8 +1,8 @@
-import { StatusMessageContext } from '@/renderer/context/status-message-context';
+import { GlobalContext } from '@/renderer/context/global-context';
 import { useContext } from 'react';
 
 function AppStatus() {
-	const { message } = useContext(StatusMessageContext);
+	const { message } = useContext(GlobalContext);
 
 	return <div>{message}</div>;
 }

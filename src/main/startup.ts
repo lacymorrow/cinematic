@@ -3,12 +3,13 @@ import Logger from 'electron-log/main';
 import { $messages } from '../config/strings';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';
-import { createMainWindow } from './create-window';
+import { createChildWindow, createMainWindow } from './create-window';
 import debugging from './debugging';
 import errorHandling from './error-handling';
 import logger from './logger';
 import { setupDockMenu } from './menu';
 import protocol from './protocol';
+import { resetApp } from './reset';
 import { getSetting } from './store';
 import SystemTray from './tray';
 import { debugInfo, is } from './util';
@@ -40,7 +41,7 @@ export const ready = async () => {
 		await debugging.installExtensions();
 
 		// Reset the app and store to default settings
-		// resetApp();
+		resetApp();
 	}
 
 	// Add remaining app listeners
@@ -48,6 +49,7 @@ export const ready = async () => {
 
 	// Create the main browser window.
 	windows.mainWindow = await createMainWindow();
+	windows.childWindow = await createChildWindow();
 
 	// Setup Dock Menu
 	setupDockMenu();
