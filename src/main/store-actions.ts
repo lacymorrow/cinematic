@@ -1,12 +1,33 @@
+import { app } from 'electron';
 import Logger from 'electron-log';
 import { APP_MESSAGES_MAX } from '../config/config';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
 import store, { AppMessageType } from './store';
+import tray from './tray';
 import { forEachWindow } from './windows';
 
-const synchronizeApp = () => {
+const synchronizeApp = (changedSettings?: Partial<SettingsType>) => {
+	// Sync with main
+
+	if (changedSettings) {
+		const keys = Object.keys(changedSettings);
+
+		if (keys.includes('showDockIcon')) {
+			app.dock[changedSettings.showDockIcon ? 'show' : 'hide']();
+		}
+
+		if (keys.includes('showTrayIcon')) {
+			if (changedSettings.showTrayIcon) {
+				tray.initialize();
+			} else {
+				tray.destroy();
+			}
+		}
+	}
+
+	// Sync with renderer
 	forEachWindow((win) => {
 		win.webContents.send(ipcChannels.APP_UPDATED);
 	});
@@ -37,7 +58,7 @@ export const setSettings = (settings: Partial<SettingsType>) => {
 	});
 
 	// Sync with renderer
-	synchronizeApp();
+	synchronizeApp(settings);
 };
 
 export const addAppMessage = (message: AppMessageType) => {

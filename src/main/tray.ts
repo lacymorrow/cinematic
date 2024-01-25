@@ -1,8 +1,6 @@
 import { app, Tray as ElectronTray, Menu } from 'electron';
 import path from 'path';
-import { aboutMenuItem, quitMenuItem } from './menu-items';
 import { __static } from './paths';
-import { getSetting } from './store-actions';
 import { is } from './util';
 import windows from './windows';
 
@@ -25,18 +23,22 @@ const getIconPath = () => {
 };
 
 const initialize = () => {
-	if (getSetting('showTrayIcon')) {
-		windows.tray = new ElectronTray(getIconPath());
+	windows.tray = new ElectronTray(getIconPath());
 
-		const contextMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
-		windows.tray.setToolTip(`${app.name}`);
-		windows.tray.setContextMenu(contextMenu);
-	} else {
-		windows.tray?.destroy();
-		windows.tray = null;
-	}
+	const contextMenu = Menu.buildFromTemplate([
+		{ role: 'about' },
+		{ role: 'quit' },
+	]);
+	windows.tray.setToolTip(`${app.name}`);
+	windows.tray.setContextMenu(contextMenu);
+};
+
+const destroy = () => {
+	windows.tray?.destroy();
+	windows.tray = null;
 };
 
 export default {
 	initialize,
+	destroy,
 };
