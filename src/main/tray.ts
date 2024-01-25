@@ -2,7 +2,7 @@ import { app, Tray as ElectronTray, Menu } from 'electron';
 import path from 'path';
 import { aboutMenuItem, quitMenuItem } from './menu-items';
 import { __static } from './paths';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import { is } from './util';
 import windows from './windows';
 

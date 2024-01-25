@@ -1,3 +1,5 @@
+import { CustomAcceleratorsType } from '@/types/keyboard';
+
 export type ThemeType = 'system' | 'light' | 'dark';
 
 export interface SettingsType {
@@ -35,4 +37,14 @@ export const DEFAULT_SETTINGS: SettingsType = {
 	quitOnWindowClose: false,
 
 	theme: 'system',
+};
+
+// see src/main/keyboard-shortcuts.ts
+// a shortcut must have an action, keybind, and fn
+const accelerator = 'Control+Shift+Alt';
+
+export const DEFAULT_KEYBINDS: CustomAcceleratorsType = {
+	quit: `${accelerator}+Q`,
+	reset: `${accelerator}+R`,
+	// reset: '', // empty string or undefined disables a shortcut
 };

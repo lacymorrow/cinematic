@@ -4,7 +4,7 @@ import { SettingsType } from '../config/settings';
 import { serializeMenu, triggerMenuItemById } from './menu';
 import { rendererPaths } from './paths';
 import { idle } from './startup';
-import { getAppMessages, getSettings, setSettings } from './store';
+import { getAppMessages, getSettings, setSettings } from './store-actions';
 
 export default {
 	initialize() {

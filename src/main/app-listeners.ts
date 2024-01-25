@@ -5,7 +5,7 @@ import EXIT_CODES from '../config/exit-codes';
 import { $errors } from '../config/strings';
 import { createMainWindow } from './create-window';
 import keyboard from './keyboard';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import { is } from './util';
 import windows from './windows';
 

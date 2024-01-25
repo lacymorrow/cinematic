@@ -12,7 +12,7 @@ import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
 import { setupContextMenu } from './context-menu';
 import MenuBuilder from './menu';
 import { __resources } from './paths';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import { is, resolveHtmlPath } from './util';
 import windows from './windows';
 
@@ -25,6 +25,7 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 		title: app.name,
 		tabbingIdentifier: app.name,
 		frame: APP_FRAME,
+		show: false,
 
 		// closable: false,
 		// fullscreen: true,

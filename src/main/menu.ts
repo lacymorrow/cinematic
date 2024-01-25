@@ -15,7 +15,7 @@ import {
 	testNotificationMenuItem,
 	testSoundMenuItem,
 } from './menu-items';
-import { getSetting, setSettings } from './store';
+import { getSetting, setSettings } from './store-actions';
 import tray from './tray';
 import { is } from './util';
 

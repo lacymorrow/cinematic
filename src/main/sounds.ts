@@ -1,7 +1,7 @@
 // Mappings for sounds in src/renderer/lib/sounds.ts
 import { ipcChannels } from '../config/ipc-channels';
 
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import windows from './windows';
 
 const play = (sound: string) => {

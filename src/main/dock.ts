@@ -1,6 +1,6 @@
 // MacOS only
 import { app } from 'electron';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import { is } from './util';
 
 // Sets the badge on the dock icon

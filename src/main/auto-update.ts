@@ -7,7 +7,7 @@ import dialog from './dialog';
 import dock from './dock';
 import { notification } from './notifications';
 import sound from './sounds';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import { is } from './util';
 import windows from './windows';
 

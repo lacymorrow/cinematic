@@ -2,7 +2,7 @@ import { app, dialog } from 'electron';
 import Logger from 'electron-log/main';
 import path from 'path';
 import { $dialog } from '../config/strings';
-import { addAppMessage } from './store';
+import { addAppMessage } from './store-actions';
 
 const { bugs } = require('../../package.json');
 

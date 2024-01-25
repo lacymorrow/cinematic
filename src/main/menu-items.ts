@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import { notification } from './notifications';
 import sounds from './sounds';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 
 // Menu items for the main process menu, dock menu, tray menu, and context menu
 export const quitMenuItem: any = { role: 'quit' };
