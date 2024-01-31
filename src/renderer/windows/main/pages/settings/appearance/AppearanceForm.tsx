@@ -14,12 +14,14 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { $settings } from '@/config/strings';
 
+import { buttonVariants } from '@/components/ui/button';
 import { ThemeType } from '@/config/settings';
+import { cn } from '@/lib/utils';
 import { useTheme } from '@/renderer/context/theme-context';
 import { toast } from 'sonner';
 
 const appearanceFormSchema = z.object({
-	theme: z.enum(['light', 'dark'], {
+	theme: z.enum(['light', 'dark', 'system'], {
 		required_error: 'Please select a theme.',
 	}),
 });
@@ -30,7 +32,7 @@ export function AppearanceForm() {
 	const { theme, setTheme } = useTheme();
 
 	const defaultValues: Partial<AppearanceFormValues> = {
-		theme: theme === 'system' ? 'light' : theme,
+		theme,
 	};
 
 	const form = useForm<AppearanceFormValues>({
@@ -128,14 +130,21 @@ export function AppearanceForm() {
 								<FormItem>
 									<FormLabel className="[&:has([data-state=checked])>div]:border-primary">
 										<FormControl>
-											<RadioGroupItem value="dark" className="sr-only" />
+											<RadioGroupItem value="system" className="sr-only" />
 										</FormControl>
-										<div className="items-center p-1 hover:bg-accent hover:text-accent-foreground">
-											Use the system theme
+										<div>
+											<span
+												className={cn(
+													'inline-block',
+													buttonVariants({
+														variant: 'link',
+													}),
+													theme === 'system' && 'underline',
+												)}
+											>
+												Use the system settings
+											</span>
 										</div>
-										<span className="block w-full p-2 text-center font-normal">
-											{$settings.appearance.system}
-										</span>
 									</FormLabel>
 								</FormItem>
 							</RadioGroup>
