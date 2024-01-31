@@ -2,11 +2,13 @@ import { CustomAcceleratorsType } from '@/types/keyboard';
 
 export type ThemeType = 'system' | 'light' | 'dark';
 
+export type NotificationType = 'system' | 'app' | 'all';
+
 export interface SettingsType {
 	allowSounds: boolean;
 	autoUpdate: boolean;
 	allowNotifications: boolean;
-	notifcationType: 'default' | 'system' | 'all';
+	notifcationType: NotificationType;
 	showDockIcon: boolean; // macOS only
 	showTrayIcon: boolean;
 	startMinimized: boolean;

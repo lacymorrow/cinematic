@@ -47,7 +47,7 @@ const schema: Store.Schema<StoreType> = {
 			},
 			notifcationType: {
 				type: 'string',
-				enum: ['system', 'default', 'all'],
+				enum: ['system', 'app', 'all'],
 			},
 			showDockIcon: {
 				type: 'boolean',

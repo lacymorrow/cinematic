@@ -1,22 +1,44 @@
-import { MainLayout } from '@/renderer/windows/main/Layout';
+import { MainLayout } from '@/renderer/components/layout/MainLayout';
 import { Home } from '@/renderer/windows/main/pages/Home';
-import { Settings } from '@/renderer/windows/main/pages/Settings';
-import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
+import {
+	Route,
+	RouterProvider,
+	createMemoryRouter,
+	createRoutesFromElements,
+} from 'react-router-dom';
 
-import { Layout } from '@/renderer/components/layout/Layout';
+import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
+import { settingsNavItems } from '@/renderer/config/nav';
 import '@/renderer/styles/globals.scss';
+import { Settings } from './pages/Settings';
 
 export default function App() {
+	const routes = (
+		<Route path="/" element={<MainLayout />}>
+			<Route path="settings" element={<SettingsLayout />}>
+				<Route index element={<Settings />} />
+				{settingsNavItems.map((item) => {
+					/* Dynamically add routes for settings */
+					return (
+						<Route
+							key={item.title}
+							path={item.href}
+							element={<>{item.element}</>}
+						/>
+					);
+				})}
+			</Route>
+
+			<Route index element={<Home />} />
+			<Route path="*" element={<Home />} />
+		</Route>
+	);
+
+	const router = createMemoryRouter(createRoutesFromElements(routes));
+
 	return (
-		<Layout>
-			<Router>
-				<MainLayout>
-					<Routes>
-						<Route path="/" element={<Home />} />
-						<Route path="/settings" element={<Settings />} />
-					</Routes>
-				</MainLayout>
-			</Router>
-		</Layout>
+		<>
+			<RouterProvider router={router} />;
+		</>
 	);
 }

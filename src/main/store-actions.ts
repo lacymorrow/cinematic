@@ -10,7 +10,6 @@ import { forEachWindow } from './windows';
 
 const synchronizeApp = (changedSettings?: Partial<SettingsType>) => {
 	// Sync with main
-
 	if (changedSettings) {
 		const keys = Object.keys(changedSettings);
 

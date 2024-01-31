@@ -26,12 +26,20 @@ Based on the [Electron React Boilerplate](https://github.com/electron-react-boil
 - 📦 System Tray
 - 📦 Auto Updater
 - 📦 Auto Launcher
+- Keyboard Shortcut Manager
 
 
 ### Shadcn
 
 Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
 Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
+
+_Current installation command (to update all ui components):_
+```sh
+npx shadcn-ui@latest add button checkbox dropdown-menu form input menubar radio-group scroll-area select separator sonner switch textarea
+```
+
+_To list components with updates: `npx shadcn-ui@latest diff`_
 
 ## Electron-React-Boilerplate Docs
 

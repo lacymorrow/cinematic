@@ -1,4 +1,16 @@
 export const $settings = {
+	title: 'Settings',
+	description: 'Manage your account settings and application preferences',
+	app: {
+		githubUrl: 'https://github.com/lacymorrow/electron-hotplate',
+	},
+	appearance: {
+		themeLabel: 'Theme',
+		themeDescription: 'Select the theme for the application',
+		light: 'Light',
+		dark: 'Dark',
+		system: 'System',
+	},
 	theme: {
 		themeLabel: 'Theme',
 		themeDescription: 'Select the theme for the application',

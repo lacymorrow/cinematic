@@ -7,10 +7,10 @@
 	"author": {
 		"name": "Lacy Morrow",
 		"email": "me@lacymorrow.com",
-		"url": "https://github.com/lacymorrow/hotplate"
+		"url": "https://github.com/lacymorrow/electron-hotplate"
 	},
 	"bugs": {
-		"url": "https://github.com/lacymorrow/hotplate/issues",
+		"url": "https://github.com/lacymorrow/electron-hotplate/issues",
 		"email": "me@lacymorrow.com"
 	},
 	"main": "./dist/main/main.js",
