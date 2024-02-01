@@ -80,5 +80,3 @@ export const getKeybinds = () => {
 	// Custom keybinds for actions in src/main/keyboard-shortcuts.ts
 	return store.get('keybinds');
 };
-
-export default store;
