@@ -49,7 +49,7 @@ export const ready = async () => {
 	appListeners.ready();
 
 	// Setup keyboard shortcuts
-	kb.initialize();
+	kb.registerKeyboardShortcuts();
 
 	// Create the main browser window.
 	windows.mainWindow = await createMainWindow();

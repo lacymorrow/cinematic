@@ -6,8 +6,8 @@ import store from './store';
 
 // eslint-disable-next-line no-undef
 interface ShortcutType extends Electron.GlobalShortcut {
-	initialize: () => void;
 	setKeybinds: (keybinds: Partial<CustomAcceleratorsType>) => void;
+	registerKeyboardShortcuts: () => void;
 }
 
 const registerKeyboardShortcuts = () => {
@@ -36,9 +36,7 @@ const registerKeyboardShortcuts = () => {
 };
 
 const kb: ShortcutType = {
-	initialize: () => {
-		registerKeyboardShortcuts();
-	},
+	registerKeyboardShortcuts,
 
 	setKeybinds: (keybinds: Partial<CustomAcceleratorsType>) => {
 		const currentKeybinds = store.get('keybinds');

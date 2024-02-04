@@ -75,8 +75,3 @@ export const addAppMessage = (message: AppMessageType) => {
 export const getAppMessages = () => {
 	return store.get('appMessageLog');
 };
-
-export const getKeybinds = () => {
-	// Custom keybinds for actions in src/main/keyboard-shortcuts.ts
-	return store.get('keybinds');
-};
