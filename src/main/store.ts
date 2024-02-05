@@ -36,6 +36,9 @@ const schema: Store.Schema<StoreType> = {
 	settings: {
 		type: 'object',
 		properties: {
+			allowAnalytics: {
+				type: 'boolean',
+			},
 			allowAutoUpdate: {
 				type: 'boolean',
 			},

@@ -1,7 +1,7 @@
 import { Separator } from '@/components/ui/separator';
 import { SettingsType } from '@/config/settings';
 import { useGlobalContext } from '@/renderer/context/global-context';
-import { SettingSwitch } from '../notifications/SettingSwitch';
+import { SettingSwitch } from '../../../../../components/input/SettingSwitch';
 
 export function SettingsApplication() {
 	const { settings } = useGlobalContext();
@@ -20,7 +20,14 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
-
+			<SettingSwitch
+				value={settings.allowAnalytics}
+				onChange={() => {
+					handleChangeSetting({ allowAnalytics: !settings.allowAnalytics });
+				}}
+				label="Analytics"
+				description="Help improve the app by sending anonymous usage data."
+			/>
 			<SettingSwitch
 				value={settings.allowAutoUpdate}
 				onChange={() => {

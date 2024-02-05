@@ -5,6 +5,7 @@ export type ThemeType = 'system' | 'light' | 'dark';
 export type NotificationType = 'system' | 'app' | 'all';
 
 export interface SettingsType {
+	allowAnalytics: boolean;
 	allowSounds: boolean;
 	allowAutoUpdate: boolean;
 	allowNotifications: boolean;
@@ -29,6 +30,7 @@ export interface SettingsType {
 
 // These are the default settings, imported by the store
 export const DEFAULT_SETTINGS: SettingsType = {
+	allowAnalytics: true,
 	allowAutoUpdate: true,
 	allowSounds: true,
 	allowNotifications: true,

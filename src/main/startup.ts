@@ -1,4 +1,3 @@
-import { trackEvent } from '@aptabase/electron/main';
 import { app } from 'electron';
 import Logger from 'electron-log/main';
 import { $messages } from '../config/strings';
@@ -23,8 +22,7 @@ export const startup = () => {
 	logger.initialize();
 
 	analytics.initialize();
-
-	trackEvent('app_started');
+	analytics.track('app_started');
 
 	// Initialize the error handler
 	errorHandling.initialize();
