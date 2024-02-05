@@ -14,7 +14,6 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { $settings } from '@/config/strings';
 
-import { buttonVariants } from '@/components/ui/button';
 import { ThemeType } from '@/config/settings';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/renderer/context/theme-context';
@@ -27,6 +26,61 @@ const appearanceFormSchema = z.object({
 });
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
+
+function LightModeIcon() {
+	return (
+		<>
+			<div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
+				<div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
+					<div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
+					<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+				</div>
+				<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+					<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+					<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+				</div>
+				<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
+					<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
+					<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+				</div>
+			</div>
+		</>
+	);
+}
+
+function DarkModeIcon() {
+	return (
+		<>
+			<div className="space-y-2 rounded-sm bg-slate-950 p-2">
+				<div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
+					<div className="h-2 w-[80px] rounded-lg bg-slate-400" />
+					<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+				</div>
+				<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
+					<div className="h-4 w-4 rounded-full bg-slate-400" />
+					<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+				</div>
+				<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
+					<div className="h-4 w-4 rounded-full bg-slate-400" />
+					<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+				</div>
+			</div>
+		</>
+	);
+}
+
+function SystemModeIcon() {
+	return (
+		<div className="relative overflow-hidden">
+			<div className="">
+				<LightModeIcon />
+			</div>
+			<div className="top-0 left-1/2 w-full absolute z-10">
+				<DarkModeIcon />
+			</div>
+		</div>
+	);
+}
 
 export function AppearanceForm() {
 	const { theme, setTheme } = useTheme();
@@ -73,29 +127,24 @@ export function AppearanceForm() {
 									field.onChange(e);
 								}}
 								defaultValue={field.value}
-								className="grid max-w-md grid-cols-2 gap-8 pt-2"
+								className="grid max-w-full grid-cols-3 gap-8 pt-2"
 							>
 								<FormItem>
 									<FormLabel className="[&:has([data-state=checked])>div]:border-primary">
 										<FormControl>
 											<RadioGroupItem value="light" className="sr-only" />
 										</FormControl>
-										<div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
-											<div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
-												<div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-													<div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-													<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-													<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-													<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
-												</div>
-											</div>
+
+										<div
+											className={cn(
+												'items-center rounded-md border-2 border-muted bg-popover p-1',
+												theme !== 'light' &&
+													'hover:bg-accent hover:text-accent-foreground',
+											)}
+										>
+											<LightModeIcon />
 										</div>
+
 										<span className="block w-full p-2 text-center font-normal">
 											{$settings.appearance.light}
 										</span>
@@ -106,21 +155,15 @@ export function AppearanceForm() {
 										<FormControl>
 											<RadioGroupItem value="dark" className="sr-only" />
 										</FormControl>
-										<div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground">
-											<div className="space-y-2 rounded-sm bg-slate-950 p-2">
-												<div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
-													<div className="h-2 w-[80px] rounded-lg bg-slate-400" />
-													<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-slate-400" />
-													<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-												</div>
-												<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
-													<div className="h-4 w-4 rounded-full bg-slate-400" />
-													<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
-												</div>
-											</div>
+
+										<div
+											className={cn(
+												'items-center rounded-md border-2 border-muted bg-popover p-1',
+												theme !== 'dark' &&
+													'hover:bg-accent hover:text-accent-foreground',
+											)}
+										>
+											<DarkModeIcon />
 										</div>
 										<span className="block w-full p-2 text-center font-normal">
 											{$settings.appearance.dark}
@@ -132,18 +175,15 @@ export function AppearanceForm() {
 										<FormControl>
 											<RadioGroupItem value="system" className="sr-only" />
 										</FormControl>
-										<div>
-											<span
-												className={cn(
-													'inline-block',
-													buttonVariants({
-														variant: 'link',
-													}),
-													theme === 'system' && 'underline',
-												)}
-											>
-												Use the system settings
-											</span>
+
+										<div
+											className={cn(
+												'items-center rounded-md border-2 border-muted bg-popover p-1',
+												theme !== 'system' &&
+													'hover:bg-accent hover:text-accent-foreground',
+											)}
+										>
+											<SystemModeIcon />
 										</div>
 									</FormLabel>
 								</FormItem>
