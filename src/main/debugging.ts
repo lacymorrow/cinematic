@@ -1,5 +1,4 @@
 /* eslint-disable global-require */
-import debug from 'electron-debug';
 import Logger from 'electron-log/main';
 import { is } from './util';
 
@@ -12,7 +11,7 @@ const initialize = () => {
 
 	// Enable debug utilities in development
 	if (is.debug) {
-		debug({
+		require('electron-debug')({
 			showDevTools: true,
 			devToolsMode: 'undocked',
 		});
