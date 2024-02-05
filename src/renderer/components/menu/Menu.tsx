@@ -1,4 +1,3 @@
-// Todo: Radio and Checkbox Menu items are not working
 import {
 	Menubar,
 	MenubarCheckboxItem,

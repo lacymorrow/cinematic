@@ -1,3 +1,4 @@
+// todo: menubar ellipsis on overflow
 import { MainLayout } from '@/renderer/components/layout/MainLayout';
 import { Home } from '@/renderer/windows/main/pages/Home';
 import {
