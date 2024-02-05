@@ -13,20 +13,16 @@ Based on the [Electron React Boilerplate](https://github.com/electron-react-boil
 
 ## Features
 
-- [Electron](https://electronjs.org/)
-- [React](https://reactjs.org/)
-- [React Router](https://reacttraining.com/react-router/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Shadcn](https://ui.shadcn.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-- 🌙 Dark Mode
-- 📦 Built-in Store
+- 💬 App and System-wide Notifications
 - 🏃‍♂️ Auto Updater
+- 📦 Built-in Store
 - 🖱️ Context Menu
+- 🌙 Dark Mode
 - ❌ Error Handler
 - ⌨️ Keyboard Shortcut Manager
-- 💬 App and System-wide Notifications
 - 📝 Logging
+- 🀱 Menu Bar for macOS, Windows, and Linux
+- 📂 Multi-Window
 - 🖥️ System Tray
 
 ## Getting Started
@@ -45,6 +41,15 @@ yarn
 # Run the app
 yarn start
 ```
+
+## BuiltWith
+
+- [Electron](https://electronjs.org/)
+- [React](https://reactjs.org/)
+- [React Router](https://reacttraining.com/react-router/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn](https://ui.shadcn.com/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 ### Shadcn
 
