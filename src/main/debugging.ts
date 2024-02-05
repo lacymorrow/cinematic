@@ -11,7 +11,10 @@ const initialize = () => {
 
 	// Enable debug utilities in development
 	if (is.debug) {
-		require('electron-debug')();
+		require('electron-debug')({
+			showDevTools: true,
+			devToolsMode: 'undocked',
+		});
 	}
 };
 

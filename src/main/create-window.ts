@@ -133,10 +133,6 @@ export const createMainWindow = async () => {
 		} else {
 			window.show();
 		}
-
-		if (is.debug) {
-			window.webContents.openDevTools();
-		}
 	});
 
 	// Load the window
