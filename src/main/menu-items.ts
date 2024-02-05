@@ -16,9 +16,9 @@ export const aboutMenuItem: any = {
 export const autoUpdateMenuItem: any = {
 	label: 'Auto Update',
 	type: 'checkbox',
-	id: 'autoUpdate',
+	id: 'allowAutoUpdate',
 	enabled: false,
-	checked: !!getSetting('autoUpdate'),
+	checked: !!getSetting('allowAutoUpdate'),
 };
 
 export const testNotificationMenuItem: any = {

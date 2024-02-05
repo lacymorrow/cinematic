@@ -36,10 +36,10 @@ const schema: Store.Schema<StoreType> = {
 	settings: {
 		type: 'object',
 		properties: {
-			allowSounds: {
+			allowAutoUpdate: {
 				type: 'boolean',
 			},
-			autoUpdate: {
+			allowSounds: {
 				type: 'boolean',
 			},
 			allowNotifications: {

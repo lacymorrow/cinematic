@@ -1,6 +1,6 @@
 // https://github.com/shadcn-ui/ui/tree/main/apps/www/app/examples/forms
 
-import { BellIcon } from '@radix-ui/react-icons';
+import { BellIcon, CardStackIcon, DesktopIcon } from '@radix-ui/react-icons';
 
 import {
 	Card,
@@ -12,7 +12,7 @@ import {
 import { NotificationType } from '@/config/settings';
 import { cn } from '@/lib/utils';
 import { useGlobalContext } from '@/renderer/context/global-context';
-import { AlarmClock, BellOffIcon, InfoIcon } from 'lucide-react';
+import { BellOffIcon } from 'lucide-react';
 
 export function CardNotifications() {
 	const { settings, setSettings } = useGlobalContext();
@@ -61,7 +61,7 @@ export function CardNotifications() {
 							'bg-accent hover:text-accent-foreground',
 					)}
 				>
-					<AlarmClock className="mt-px h-5 w-5" />
+					<DesktopIcon className="mt-px h-5 w-5" />
 					<div className="space-y-1">
 						<p className="text-sm font-medium leading-none text-left">
 							System notifications
@@ -81,7 +81,7 @@ export function CardNotifications() {
 							'bg-accent hover:text-accent-foreground',
 					)}
 				>
-					<InfoIcon className="mt-px h-5 w-5" />
+					<CardStackIcon className="mt-px h-5 w-5" />
 					<div className="space-y-1">
 						<p className="text-sm font-medium leading-none text-left">
 							App-only

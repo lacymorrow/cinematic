@@ -2,6 +2,7 @@ import { Separator } from '@/components/ui/separator';
 import { $settings } from '@/config/strings';
 import { SidebarNav } from '@/renderer/components/ui/SidebarNav';
 import { settingsNavItems } from '@/renderer/config/nav';
+import { ResetIcon } from '@radix-ui/react-icons';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -23,7 +24,10 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 				<div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
 					<aside className="-mx-4 lg:w-1/5">
 						<SidebarNav
-							items={[...settingsNavItems, { title: '↩ Back', href: '/' }]}
+							items={[
+								...settingsNavItems,
+								{ title: 'Back', href: '/', icon: ResetIcon },
+							]}
 						/>
 					</aside>
 					<div className="flex-1 lg:max-w-2xl">{children || <Outlet />}</div>

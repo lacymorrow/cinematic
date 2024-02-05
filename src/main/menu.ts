@@ -16,7 +16,6 @@ import {
 	testSoundMenuItem,
 } from './menu-items';
 import { getSetting, setSettings } from './store-actions';
-import tray from './tray';
 import { is } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -32,7 +31,7 @@ export const serializeMenu = (
 	menu: Menu | null,
 ): MenuItemConstructorOptions[] => {
 	if (!menu) return [];
-	return menu.items.map((item) => {
+	return menu.items.map((item: any) => {
 		// MenuItem properties that are passed to the renderer process
 		const serialized: MenuItemConstructorOptions = {
 			label: item.label,
@@ -43,7 +42,8 @@ export const serializeMenu = (
 			sublabel: item.sublabel,
 			enabled: item.enabled,
 			visible: item.visible,
-			checked: item.checked,
+			checked:
+				typeof item.checked === 'function' ? item.checked() : item.checked,
 		};
 
 		if (item.submenu) {
@@ -110,27 +110,25 @@ export default class MenuBuilder {
 				label: 'Show Dock Icon',
 				type: 'checkbox',
 				id: 'showDockIcon',
-				checked: !!getSetting('showDockIcon'),
+				checked: () => getSetting('showDockIcon'),
 				click: () => {
 					setSettings({ showDockIcon: !getSetting('showDockIcon') });
-					dock.initialize();
 				},
 			},
 			{
 				label: 'Show Tray Icon',
 				type: 'checkbox',
 				id: 'showTrayIcon',
-				checked: !!getSetting('showTrayIcon'),
+				checked: () => getSetting('showTrayIcon'),
 				click: () => {
 					setSettings({ showTrayIcon: !getSetting('showTrayIcon') });
-					tray.initialize();
 				},
 			},
 			{
 				label: 'Quit on Close',
 				type: 'checkbox',
 				id: 'quitOnWindowClose',
-				checked: !!getSetting('quitOnWindowClose'),
+				checked: getSetting('quitOnWindowClose'),
 				click: () => {
 					setSettings({
 						quitOnWindowClose: !getSetting('quitOnWindowClose'),

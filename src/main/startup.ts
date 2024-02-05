@@ -1,6 +1,8 @@
+import { trackEvent } from '@aptabase/electron/main';
 import { app } from 'electron';
 import Logger from 'electron-log/main';
 import { $messages } from '../config/strings';
+import analytics from './analytics';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';
 import { createChildWindow, createMainWindow } from './create-window';
@@ -19,6 +21,10 @@ import windows from './windows';
 export const startup = () => {
 	// Initialize logger
 	logger.initialize();
+
+	analytics.initialize();
+
+	trackEvent('app_started');
 
 	// Initialize the error handler
 	errorHandling.initialize();

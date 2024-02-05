@@ -10,13 +10,13 @@ import {
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
 import { settingsNavItems } from '@/renderer/config/nav';
 import '@/renderer/styles/globals.scss';
-import { Settings } from './pages/Settings';
+import { SettingsGeneral } from './pages/settings/general/SettingsGeneral';
 
 export default function App() {
 	const routes = (
 		<Route path="/" element={<MainLayout />}>
 			<Route path="settings" element={<SettingsLayout />}>
-				<Route index element={<Settings />} />
+				<Route index element={<SettingsGeneral />} />
 				{settingsNavItems.map((item) => {
 					/* Dynamically add routes for settings */
 					return (

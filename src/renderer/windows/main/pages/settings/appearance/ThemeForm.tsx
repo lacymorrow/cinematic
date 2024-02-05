@@ -17,7 +17,6 @@ import { $settings } from '@/config/strings';
 import { ThemeType } from '@/config/settings';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/renderer/context/theme-context';
-import { toast } from 'sonner';
 
 const appearanceFormSchema = z.object({
 	theme: z.enum(['light', 'dark', 'system'], {
@@ -82,7 +81,7 @@ function SystemModeIcon() {
 	);
 }
 
-export function AppearanceForm() {
+export function ThemeForm() {
 	const { theme, setTheme } = useTheme();
 
 	const defaultValues: Partial<AppearanceFormValues> = {
@@ -98,19 +97,9 @@ export function AppearanceForm() {
 		setTheme(e);
 	};
 
-	function onSubmit(data: AppearanceFormValues) {
-		toast('You submitted the following values:', {
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
-	}
-
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<form className="space-y-8">
 				<FormField
 					control={form.control}
 					name="theme"
@@ -123,11 +112,11 @@ export function AppearanceForm() {
 							<FormMessage />
 							<RadioGroup
 								onValueChange={(e: ThemeType) => {
-									onThemeChange(e);
 									field.onChange(e);
+									onThemeChange(e);
 								}}
 								defaultValue={field.value}
-								className="grid max-w-full grid-cols-3 gap-8 pt-2"
+								className="grid w-full grid-cols-3 gap-8 pt-2"
 							>
 								<FormItem>
 									<FormLabel className="[&:has([data-state=checked])>div]:border-primary">

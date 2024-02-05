@@ -6,7 +6,7 @@ export type NotificationType = 'system' | 'app' | 'all';
 
 export interface SettingsType {
 	allowSounds: boolean;
-	autoUpdate: boolean;
+	allowAutoUpdate: boolean;
 	allowNotifications: boolean;
 	notifcationType: NotificationType;
 	showDockIcon: boolean; // macOS only
@@ -29,7 +29,7 @@ export interface SettingsType {
 
 // These are the default settings, imported by the store
 export const DEFAULT_SETTINGS: SettingsType = {
-	autoUpdate: true,
+	allowAutoUpdate: true,
 	allowSounds: true,
 	allowNotifications: true,
 	notifcationType: 'all',

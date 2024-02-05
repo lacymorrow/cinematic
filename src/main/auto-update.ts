@@ -15,7 +15,7 @@ const FOUR_HOURS = 1000 * 60 * 60 * 4;
 
 export class AutoUpdate {
 	constructor() {
-		if (getSetting('autoUpdate')) {
+		if (getSetting('allowAutoUpdate')) {
 			Logger.status($messages.auto_update);
 
 			// Configure log debugging to file
@@ -86,7 +86,7 @@ const update = () => {
 
 	// We trycatch here because appx throws errors
 	try {
-		if (getSetting('autoUpdate')) {
+		if (getSetting('allowAutoUpdate')) {
 			Logger.info('Setting: Automatic Updates');
 
 			autoUpdater.logger = Logger;

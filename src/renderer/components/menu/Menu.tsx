@@ -178,12 +178,13 @@ export function Menu({ className }: { className?: string }) {
 		<Menubar
 			className={cn(
 				'drag', // Allow the titlebar to be draggable, to reposition the window. Useful when using frameless windows.
-				'rounded-none border-b border-none px-4',
+				'rounded-none border-b border-none px-4 w-full overflow-hidden text-ellipsis',
 				window.electron.isMac && 'pl-20',
 				className,
 			)}
 		>
-			{Array.isArray(appMenu) &&
+			{(!window.electron.isMac || window.electron.isDev) &&
+				Array.isArray(appMenu) &&
 				appMenu.map((item: any, index: number) => {
 					return (
 						<MenubarMenu key={uuidv4()}>
