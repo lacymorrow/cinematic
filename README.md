@@ -1,3 +1,5 @@
+# Electron Hotplate
+
 Based on the [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate), this boilerplate adds UI components from [Shadcn](https://ui.shadcn.com/), styling with [Tailwind CSS](https://tailwindcss.com/), persistance with [electron-store](https://github.com/sindresorhus/electron-store), and a structured [React](https://react.dev/) context that promotes a data flow from the top down: Main process -> Renderer process.
 
 <br>
@@ -19,15 +21,30 @@ Based on the [Electron React Boilerplate](https://github.com/electron-react-boil
 - [TypeScript](https://www.typescriptlang.org/)
 - 🌙 Dark Mode
 - 📦 Built-in Store
-- 📦 Built-in Updater
-- 📦 Built-in Logger
-- 📦 Built-in Error Handler
-- 📦 Context Menu
-- 📦 System Tray
-- 📦 Auto Updater
-- 📦 Auto Launcher
-- Keyboard Shortcut Manager
+- 🏃‍♂️ Auto Updater
+- 🖱️ Context Menu
+- ❌ Error Handler
+- ⌨️ Keyboard Shortcut Manager
+- 💬 App and System-wide Notifications
+- 📝 Logging
+- 🖥️ System Tray
 
+## Getting Started
+
+```bash
+
+# Clone this repository
+git clone https://github.com/lacymorrow/electron-hotplate.git
+
+# Go into the repository
+cd electron-hotplate
+
+# Install dependencies
+yarn
+
+# Run the app
+yarn start
+```
 
 ### Shadcn
 
