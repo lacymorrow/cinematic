@@ -63,7 +63,9 @@ export function InputSlider({
 							{label}
 						</label>
 					)}
-					{description && <p>{description}</p>}
+					{description && (
+						<p className="text-muted-foreground">{description}</p>
+					)}
 				</div>
 				{currentValue && (
 					<p className="text-muted-foreground">{currentValue}</p>
@@ -79,7 +81,7 @@ export function InputSlider({
 				{...props}
 			/>
 
-			{details && <p className="text-xs text-muted-foreground">{details}</p>}
+			{details && <p className="text-sm text-muted-foreground">{details}</p>}
 		</div>
 	);
 }

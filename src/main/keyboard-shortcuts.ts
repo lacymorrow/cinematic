@@ -19,5 +19,6 @@ export const keyboardShortcuts: KeyboardShortcut[] = [
 		fn() {
 			resetApp();
 		},
+		allowUnbind: true,
 	},
 ];

@@ -22,6 +22,7 @@ export const startup = () => {
 	// Initialize logger
 	logger.initialize();
 
+	// Initialize analytics
 	analytics.initialize();
 	analytics.track('app_started');
 
@@ -80,9 +81,9 @@ export const ready = async () => {
 };
 
 export const idle = async () => {
-	// ... do something with your app
-
 	Logger.status($messages.idle);
 	sounds.play('STARTUP');
 	windows.childWindow = await createChildWindow();
+
+	// ... do something with your app
 };

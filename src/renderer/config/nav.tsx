@@ -9,9 +9,10 @@ import {
 	ImageIcon,
 	KeyboardIcon,
 } from '@radix-ui/react-icons';
-import { SettingsGeneral } from '../windows/main/pages/settings/general/SettingsGeneral';
+
 import { SettingsNotifications } from '../windows/main/pages/settings/notifications/SettingsNotifications';
 import { SettingsKeyboard } from '../windows/main/pages/settings/keyboard/SettingsKeyboard';
+import { SettingsApplication } from '../windows/main/pages/settings/general/SettingsApplication';
 
 export const nav = {
 	home: {
@@ -28,7 +29,7 @@ export const settingsNavItems = [
 	{
 		title: 'General',
 		href: 'general',
-		element: <SettingsGeneral />,
+		element: <SettingsApplication />,
 		icon: GearIcon,
 	},
 	{

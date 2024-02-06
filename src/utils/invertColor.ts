@@ -6,7 +6,8 @@ function padZero(str: string, len?: number) {
 	return (zeros + str).slice(-len);
 }
 
-export const contrastColor = (hex: string, bw?: boolean) => {
+// Invert a hex color, or return black or white, depending on the contrast
+export const invertColor = (hex: string, bw?: boolean) => {
 	if (hex.indexOf('#') === 0) {
 		hex = hex.slice(1);
 	}

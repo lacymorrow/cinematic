@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { contrastColor } from '@/utils/contrastColor';
+import { invertColor } from '@/utils/invertColor';
 
 export function InputColor({
 	value,
@@ -21,6 +21,7 @@ export function InputColor({
 	label,
 	description,
 	details,
+	buttonText,
 
 	throttleDelay,
 	...props
@@ -30,13 +31,14 @@ export function InputColor({
 	label?: string;
 	description?: string;
 	details?: string;
+	buttonText?: string;
 	throttleDelay?: number;
 	props?: any;
 }) {
 	const [color, setColor] = useState(value || '#000000');
 
 	const uuid = useMemo(simpleUUID, []);
-	const invertedColor = useMemo(() => contrastColor(color, true), [color]);
+	const invertedColor = useMemo(() => invertColor(color, true), [color]);
 
 	const throttledOnChange = useMemo(() => {
 		if (throttleDelay && onChange) {
@@ -66,7 +68,9 @@ export function InputColor({
 									{label}
 								</label>
 							)}
-							{description && <p>{description}</p>}
+							{description && (
+								<p className="text-muted-foreground">{description}</p>
+							)}
 						</div>
 					</div>
 					<PopoverTrigger asChild>
@@ -76,13 +80,13 @@ export function InputColor({
 								color: invertedColor,
 							}}
 						>
-							Open
+							{buttonText || 'Select Color'}
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent>
+					<PopoverContent className="flex items-center justify-center">
 						<Chrome
 							color={color}
-							placement={GithubPlacement.TopRight}
+							placement={GithubPlacement.Top}
 							onChange={(result) => {
 								handleChange(result.hex);
 							}}
@@ -90,7 +94,7 @@ export function InputColor({
 					</PopoverContent>
 
 					{details && (
-						<p className="text-xs text-muted-foreground">{details}</p>
+						<p className="text-sm text-muted-foreground">{details}</p>
 					)}
 				</div>
 			</Popover>

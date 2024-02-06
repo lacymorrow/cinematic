@@ -1,6 +1,7 @@
 import { $errors } from '@/config/strings';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { getOS } from '@/utils/getOS';
+import { NotificationOptions } from '@/types/notification';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 
@@ -8,14 +9,15 @@ const channels = Object.values(ipcChannels);
 
 const electronHandler = {
 	os: getOS(),
-	isMac: getOS() === 'mac',
-	isDev: process.env.NODE_ENV === 'development',
 	setSettings: (settings: Partial<SettingsType>) =>
-		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
+		ipcRenderer.send(ipcChannels.SET_SETTINGS, settings),
 	setKeybind: (keybind: string, accelerator: string) =>
-		ipcRenderer.invoke(ipcChannels.SET_KEYBIND, keybind, accelerator),
+		ipcRenderer.send(ipcChannels.SET_KEYBIND, keybind, accelerator),
 	triggerAppMenuItemById: (id: string) =>
 		ipcRenderer.send(ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID, id),
+	notify: (options: NotificationOptions) =>
+		ipcRenderer.send(ipcChannels.APP_NOTIFICATION, options),
+	playSound: (sound: string) => ipcRenderer.send(ipcChannels.PLAY_SOUND, sound),
 	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {

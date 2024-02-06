@@ -122,7 +122,9 @@ export function InputMouseKeyboardBind({
 							{label}
 						</label>
 					)}
-					{description && <p>{description}</p>}
+					{description && (
+						<p className="text-muted-foreground">{description}</p>
+					)}
 				</div>
 			</div>
 			<div className="relative w-full">
@@ -150,7 +152,7 @@ export function InputMouseKeyboardBind({
 					</button>
 				)}
 			</div>
-			{details && <p className="text-xs text-muted-foreground">{details}</p>}
+			{details && <p className="text-sm text-muted-foreground">{details}</p>}
 		</div>
 	);
 }

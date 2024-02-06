@@ -27,8 +27,10 @@ export function CardNotifications() {
 	return (
 		<Card>
 			<CardHeader className="pb-3">
-				<CardTitle>Notifications</CardTitle>
-				<CardDescription>Choose how you receive notifications.</CardDescription>
+				<CardTitle>Notification Style</CardTitle>
+				<CardDescription>
+					Choose where you receive notifications.
+				</CardDescription>
 			</CardHeader>
 			<CardContent className="grid gap-1">
 				<button
@@ -67,7 +69,7 @@ export function CardNotifications() {
 							System notifications
 						</p>
 						<p className="text-sm text-muted-foreground">
-							Only notify me within the app.
+							Use the system default notifications.
 						</p>
 					</div>
 				</button>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { getOS } from '@/utils/getOS';
 import { simpleUUID } from '@/utils/getUUID';
 import keycodeToChar, {
@@ -22,6 +23,7 @@ export function InputKeyboardShortcut({
 	label,
 	description,
 	details,
+	placeholder = 'Unbound...',
 	allowOnlyModifier = false,
 	allowOnlyTab = false,
 	modifierRequired = false,
@@ -32,16 +34,15 @@ export function InputKeyboardShortcut({
 	label?: string;
 	description?: string;
 	details?: string;
+	placeholder?: string;
 	allowOnlyModifier?: boolean;
 	allowOnlyTab?: boolean;
 	modifierRequired?: boolean;
 	props?: any;
 }) {
+	const { app } = useGlobalContext();
 	// Generate a unique ID for the input
 	const uuid = useMemo(simpleUUID, []);
-	const os = useMemo(() => {
-		return window.electron.os;
-	}, []);
 
 	// Display the keys being pushed while trying to set accelerator
 	const [pressing, setPressing] = useState(false);
@@ -50,10 +51,10 @@ export function InputKeyboardShortcut({
 	// Assign modifier key names, different OS' use different key names
 	let altKeyName = 'Alt';
 	let metaKeyName = 'Meta';
-	if (os === 'mac') {
+	if (app.os === 'mac') {
 		altKeyName = 'Option';
 		metaKeyName = 'Command';
-	} else if (os === 'windows') {
+	} else if (app.os === 'windows') {
 		metaKeyName = 'Windows';
 	}
 
@@ -82,19 +83,18 @@ export function InputKeyboardShortcut({
 			return;
 		}
 
+		// Clear the value on backspace (8) or delete (46)
+		if (keys.length === 0 && (event.which === 8 || event.which === 46)) {
+			setPressing(false);
+			handleChange('');
+			return;
+		}
+
 		event.preventDefault();
 
 		// I've not tested every combo to verify it will work in electron, all the documentation they provide:
 		// https://www.electronjs.org/docs/api/accelerator#available-key-codes
 		if (!specialKeyCodes.has(event.which) && event.which in keycodeToChar) {
-			// Clear the value on backspace (8) or delete (46)
-			if (keys.length === 0 && (event.which === 8 || event.which === 46)) {
-				setPressing(false);
-				handleChange('');
-
-				return;
-			}
-
 			// We allow single-keys to be set, unless `modifierRequired` is passed
 			if (modifierRequired && keys.length === 0) {
 				return;
@@ -131,7 +131,9 @@ export function InputKeyboardShortcut({
 							{label}
 						</label>
 					)}
-					{description && <p>{description}</p>}
+					{description && (
+						<p className="text-muted-foreground">{description}</p>
+					)}
 				</div>
 			</div>
 
@@ -141,10 +143,11 @@ export function InputKeyboardShortcut({
 				onKeyUp={handleKeyUp}
 				onChange={() => {}}
 				value={pressing ? accelerator : value}
+				placeholder={placeholder}
 				{...props}
 			/>
 
-			{details && <p className="text-xs text-muted-foreground">{details}</p>}
+			{details && <p className="text-sm text-muted-foreground">{details}</p>}
 		</div>
 	);
 }

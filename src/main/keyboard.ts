@@ -3,7 +3,7 @@ import { globalShortcut } from 'electron';
 import Logger from 'electron-log';
 import { keyboardShortcuts } from './keyboard-shortcuts';
 import store from './store';
-import { forEachWindow } from './windows';
+import windows, { forEachWindow } from './windows';
 
 // eslint-disable-next-line no-undef
 interface ShortcutType extends Electron.GlobalShortcut {
@@ -46,7 +46,15 @@ const kb: ShortcutType = {
 	setKeybind: (keybind: keyof CustomAcceleratorsType, accelerator: string) => {
 		const keybinds = store.get('keybinds');
 
-		if (!(keybind in keybinds) || !accelerator) {
+		// Invalid keybind
+		if (!(keybind in keybinds)) {
+			return;
+		}
+
+		const shortcut = keyboardShortcuts.find((s) => s.action === keybind);
+
+		// No accelerator, remove keybind if allowed
+		if (!accelerator && !shortcut?.allowUnbind) {
 			return;
 		}
 
@@ -54,9 +62,7 @@ const kb: ShortcutType = {
 		store.set('keybinds', keybinds);
 		registerKeyboardShortcuts();
 		// Sync with renderer
-		forEachWindow((win) => {
-			win.webContents.send('app-updated'); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
-		});
+		windows.mainWindow?.webContents.send('app-updated'); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
 	},
 
 	setKeybinds: (keybinds: Partial<CustomAcceleratorsType>) => {
@@ -66,6 +72,9 @@ const kb: ShortcutType = {
 			...keybinds,
 		});
 		registerKeyboardShortcuts();
+
+		// Sync with renderer
+		windows.mainWindow?.webContents.send('app-updated'); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
 	},
 
 	// Inherit all methods from Electron's globalShortcut

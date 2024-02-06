@@ -2,6 +2,8 @@
 // We pass data from the main process to the renderer process using IPC
 // We also use IPC to update data
 
+// todo: add os here
+
 import { ipcChannels } from '@/config/ipc-channels';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
@@ -14,12 +16,12 @@ import { $messages } from '@/config/strings';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
 import { CustomAcceleratorsType } from '@/types/keyboard';
+import { AppInfoType } from '@/types/app';
 import { play, preload } from '../lib/sounds';
 
 interface GlobalContextType {
-	appName: string;
+	app: Partial<AppInfoType>;
 	appMenu: MenuItemConstructorOptions[];
-	appPaths: any;
 	keybinds: CustomAcceleratorsType;
 	message: string;
 	messages: string[];
@@ -28,9 +30,8 @@ interface GlobalContextType {
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
-	appName: '',
+	app: {},
 	appMenu: [],
-	appPaths: {},
 	keybinds: DEFAULT_KEYBINDS,
 	message: '',
 	messages: [],
@@ -43,11 +44,10 @@ export function GlobalContextProvider({
 }: {
 	children?: React.ReactNode;
 }) {
-	const [appName, setAppName] = React.useState<string>('');
+	const [appInfo, setAppInfo] = React.useState<Partial<AppInfoType>>({});
 	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
 		[],
 	);
-	const [appPaths, setAppPaths] = React.useState<any>({});
 	const [messages, setMessages] = React.useState<string[]>([]);
 
 	const [settings, setCurrentSettings] =
@@ -111,15 +111,16 @@ export function GlobalContextProvider({
 			},
 		);
 
-		// SOUNDS
+		// Get app info: name, version, paths, os - DOES NOT CHANGE
 		window.electron.ipcRenderer
-			.invoke(ipcChannels.GET_APP_PATHS)
-			.then((paths) => {
-				setAppPaths(paths);
-				return paths;
+			.invoke(ipcChannels.GET_APP_INFO)
+			.then((info) => {
+				setAppInfo(info);
+				console.dir(info);
+				return info;
 			})
-			.then((paths) => {
-				// Preload sounds
+			.then(({ paths }) => {
+				// SOUNDS
 				preload(paths.sounds);
 
 				// Setup listener to play sounds
@@ -131,12 +132,6 @@ export function GlobalContextProvider({
 
 		// Request initial data when the app loads
 		synchronizeAppState();
-
-		// Get app name
-		window.electron.ipcRenderer
-			.invoke(ipcChannels.GET_APP_NAME)
-			.then(setAppName)
-			.catch(console.error);
 
 		// Let the main process know that the renderer is ready
 		window.electron.ipcRenderer.send(ipcChannels.RENDERER_READY);
@@ -158,16 +153,15 @@ export function GlobalContextProvider({
 
 	const value = useMemo(() => {
 		return {
-			appName,
+			app: appInfo,
 			appMenu,
-			appPaths,
 			keybinds,
 			settings,
 			setSettings,
 			messages,
 			message: messages[messages.length - 1] ?? '',
 		};
-	}, [appName, appMenu, appPaths, keybinds, settings, setSettings, messages]);
+	}, [appInfo, appMenu, keybinds, settings, setSettings, messages]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
