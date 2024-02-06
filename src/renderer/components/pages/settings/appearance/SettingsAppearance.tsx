@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { InputColor } from '@/renderer/components/input/InputColor';
-import { ThemeForm } from './ThemeForm';
+import { ThemeForm } from '@/renderer/components/pages/settings/appearance/ThemeForm';
 
 export function SettingsAppearance() {
 	return (
@@ -18,7 +18,7 @@ export function SettingsAppearance() {
 				label="Accent Color"
 				details="Change the colors used to decorate the app."
 				onChange={(value) => {
-					console.log('value', value);
+					console.log('Color', value);
 				}}
 			/>
 			<ThemeForm />

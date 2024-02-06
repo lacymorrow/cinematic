@@ -3,7 +3,7 @@ import { InputSwitch } from '@/renderer/components/input/InputSwitch';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { SettingsType } from '@/config/settings';
 import { Button } from '@/components/ui/button';
-import { CardNotifications } from './CardNotifications';
+import { CardNotifications } from '@/renderer/components/pages/settings/notifications/CardNotifications';
 
 export function SettingsNotifications() {
 	const { settings } = useGlobalContext();

@@ -62,6 +62,7 @@ export default {
 			},
 		);
 
+		// Show a notification
 		ipcMain.on(ipcChannels.APP_NOTIFICATION, (_event, options: any) => {
 			notification(options);
 		});

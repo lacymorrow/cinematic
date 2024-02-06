@@ -1,6 +1,6 @@
 // todo: menubar ellipsis on overflow
 import { MainLayout } from '@/renderer/components/layout/MainLayout';
-import { Home } from '@/renderer/windows/main/pages/Home';
+import { Home } from '@/renderer/components/pages/Home';
 import {
 	Route,
 	RouterProvider,
@@ -11,7 +11,7 @@ import {
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
 import { settingsNavItems } from '@/renderer/config/nav';
 import '@/renderer/styles/globals.scss';
-import { SettingsApplication } from './pages/settings/general/SettingsApplication';
+import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
 
 export default function App() {
 	const routes = (

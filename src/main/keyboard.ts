@@ -1,9 +1,31 @@
-import { CustomAcceleratorsType } from '@/types/keyboard';
-import { globalShortcut } from 'electron';
+import { CustomAcceleratorsType, KeyboardShortcut } from '@/types/keyboard';
+import { globalShortcut, app } from 'electron';
 import Logger from 'electron-log';
-import { keyboardShortcuts } from './keyboard-shortcuts';
 import store from './store';
 import windows, { forEachWindow } from './windows';
+
+import { resetApp } from './reset';
+
+export const keyboardShortcuts: KeyboardShortcut[] = [
+	/* Default accelerators */
+
+	// Quit
+	{
+		action: 'quit',
+		fn() {
+			app.quit();
+		},
+	},
+
+	// Reset App
+	{
+		action: 'reset',
+		allowUnbind: true,
+		fn() {
+			resetApp();
+		},
+	},
+];
 
 // eslint-disable-next-line no-undef
 interface ShortcutType extends Electron.GlobalShortcut {

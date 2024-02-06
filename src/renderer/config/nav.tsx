@@ -1,6 +1,6 @@
-import { SettingsJson } from '@/renderer/windows/main/pages/settings/SettingsJson';
-import { SettingsAbout } from '@/renderer/windows/main/pages/settings/about/SettingsAbout';
-import { SettingsAppearance } from '@/renderer/windows/main/pages/settings/appearance/SettingsAppearance';
+import { SettingsJson } from '@/renderer/components/pages/settings/SettingsJson';
+import { SettingsAbout } from '@/renderer/components/pages/settings/about/SettingsAbout';
+import { SettingsAppearance } from '@/renderer/components/pages/settings/appearance/SettingsAppearance';
 import {
 	BellIcon,
 	BlendingModeIcon,
@@ -10,9 +10,9 @@ import {
 	KeyboardIcon,
 } from '@radix-ui/react-icons';
 
-import { SettingsNotifications } from '../windows/main/pages/settings/notifications/SettingsNotifications';
-import { SettingsKeyboard } from '../windows/main/pages/settings/keyboard/SettingsKeyboard';
-import { SettingsApplication } from '../windows/main/pages/settings/general/SettingsApplication';
+import { SettingsNotifications } from '@/renderer/components/pages/settings/notifications/SettingsNotifications';
+import { SettingsKeyboard } from '@/renderer/components/pages/settings/keyboard/SettingsKeyboard';
+import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
 
 export const nav = {
 	home: {

@@ -17,7 +17,7 @@ import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
 import { CustomAcceleratorsType } from '@/types/keyboard';
 import { AppInfoType } from '@/types/app';
-import { play, preload } from '../lib/sounds';
+import { play, preload } from '@/renderer/lib/sounds';
 
 interface GlobalContextType {
 	app: Partial<AppInfoType>;
