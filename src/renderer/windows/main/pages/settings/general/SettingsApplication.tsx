@@ -1,7 +1,9 @@
 import { Separator } from '@/components/ui/separator';
 import { SettingsType } from '@/config/settings';
 import { useGlobalContext } from '@/renderer/context/global-context';
-import { SettingSwitch } from '../../../../../components/input/SettingSwitch';
+import { InputSwitch } from '@/renderer/components/input/InputSwitch';
+import { InputSlider } from '@/renderer/components/input/InputSlider';
+import { InputMouseKeyboardBind } from '@/renderer/components/input/InputMouseKeyboardBind';
 
 export function SettingsApplication() {
 	const { settings } = useGlobalContext();
@@ -20,7 +22,22 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
-			<SettingSwitch
+			<InputMouseKeyboardBind
+				label="Keyboard Shortcut"
+				description="Set a keyboard shortcut to open the app."
+				onChange={(value) => {
+					console.log('value', value);
+				}}
+			/>
+			<InputSlider
+				label="Zoom Factor"
+				description="Adjust the zoom factor for the app."
+				min={0.5}
+				max={3}
+				step={0.1}
+				throttleDelay={500}
+			/>
+			<InputSwitch
 				value={settings.allowAnalytics}
 				onChange={() => {
 					handleChangeSetting({ allowAnalytics: !settings.allowAnalytics });
@@ -28,7 +45,7 @@ export function SettingsApplication() {
 				label="Analytics"
 				description="Help improve the app by sending anonymous usage data."
 			/>
-			<SettingSwitch
+			<InputSwitch
 				value={settings.allowAutoUpdate}
 				onChange={() => {
 					handleChangeSetting({ allowAutoUpdate: !settings.allowAutoUpdate });
@@ -36,7 +53,7 @@ export function SettingsApplication() {
 				label="Auto Update"
 				description="Automatically download and install updates."
 			/>
-			<SettingSwitch
+			<InputSwitch
 				value={settings.allowSounds}
 				onChange={() => {
 					handleChangeSetting({ allowSounds: !settings.allowSounds });
@@ -44,7 +61,7 @@ export function SettingsApplication() {
 				label="Sounds"
 				description="Play sounds for notifications and alerts."
 			/>
-			<SettingSwitch
+			<InputSwitch
 				value={settings.allowNotifications}
 				onChange={() => {
 					handleChangeSetting({
@@ -54,7 +71,7 @@ export function SettingsApplication() {
 				label="Notifications"
 				description="Show notifications for new messages and alerts."
 			/>
-			<SettingSwitch
+			<InputSwitch
 				value={settings.showDockIcon}
 				onChange={() => {
 					handleChangeSetting({ showDockIcon: !settings.showDockIcon });
@@ -62,7 +79,7 @@ export function SettingsApplication() {
 				label="Dock Icon"
 				description="Show the app icon in the dock."
 			/>
-			<SettingSwitch
+			<InputSwitch
 				value={settings.showTrayIcon}
 				onChange={() => {
 					handleChangeSetting({ showTrayIcon: !settings.showTrayIcon });
@@ -70,7 +87,7 @@ export function SettingsApplication() {
 				label="Tray Icon"
 				description="Show the app icon in the system tray."
 			/>
-			<SettingSwitch
+			<InputSwitch
 				value={settings.quitOnWindowClose}
 				onChange={() => {
 					handleChangeSetting({

@@ -16,6 +16,7 @@ import sounds from './sounds';
 import tray from './tray';
 import { debugInfo, is } from './util';
 import windows from './windows';
+import appFlags from './app-flags';
 
 export const startup = () => {
 	// Initialize logger
@@ -34,6 +35,9 @@ export const startup = () => {
 
 	// Enable electron debug and source map support
 	debugging.initialize();
+
+	// App CLI flags
+	appFlags.initialize();
 
 	// Register app listeners, e.g. `app.on()`
 	appListeners.register();
