@@ -9,7 +9,6 @@ export function SettingsNotifications() {
 	const { settings } = useGlobalContext();
 
 	const handleChangeSetting = (setting: Partial<SettingsType>) => {
-		console.log('setting', setting);
 		window.electron.setSettings(setting);
 	};
 	return (
