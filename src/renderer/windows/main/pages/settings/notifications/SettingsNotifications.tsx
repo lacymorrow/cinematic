@@ -7,7 +7,7 @@ export function SettingsNotifications() {
 			<div>
 				<h3 className="text-lg font-medium">Notifications</h3>
 				<p className="text-sm text-muted-foreground">
-					Configure how you receive notifications.
+					Configure your notification preferences.
 				</p>
 			</div>
 			<Separator />

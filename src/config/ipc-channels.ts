@@ -13,7 +13,10 @@ const GET_APP_NAME = 'get-app-name';
 const GET_APP_MENU = 'get-app-menu';
 const GET_APP_PATHS = 'get-app-paths';
 const GET_MESSAGES = 'get-messages';
+const GET_KEYBINDS = 'get-keybinds';
 const GET_SETTINGS = 'get-settings';
+
+const SET_KEYBIND = 'set-keybind';
 const SET_SETTINGS = 'set-settings';
 
 const RENDERER_READY = 'renderer-ready';
@@ -34,8 +37,10 @@ export const ipcChannels = {
 	GET_APP_MENU,
 	GET_APP_PATHS,
 	GET_MESSAGES,
+	GET_KEYBINDS,
 	GET_SETTINGS,
 
+	SET_KEYBIND,
 	SET_SETTINGS,
 
 	TRIGGER_APP_MENU_ITEM_BY_ID,

@@ -5,30 +5,37 @@
 import { ipcChannels } from '@/config/ipc-channels';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
+import {
+	DEFAULT_KEYBINDS,
+	DEFAULT_SETTINGS,
+	SettingsType,
+} from '@/config/settings';
 import { $messages } from '@/config/strings';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
+import { CustomAcceleratorsType } from '@/types/keyboard';
 import { play, preload } from '../lib/sounds';
 
 interface GlobalContextType {
 	appName: string;
 	appMenu: MenuItemConstructorOptions[];
 	appPaths: any;
-	settings: SettingsType;
-	setSettings: (newSettings: Partial<SettingsType>) => void;
+	keybinds: CustomAcceleratorsType;
 	message: string;
 	messages: string[];
+	settings: SettingsType;
+	setSettings: (newSettings: Partial<SettingsType>) => void;
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
 	appName: '',
 	appMenu: [],
 	appPaths: {},
-	settings: DEFAULT_SETTINGS,
-	setSettings: () => {},
+	keybinds: DEFAULT_KEYBINDS,
 	message: '',
 	messages: [],
+	settings: DEFAULT_SETTINGS,
+	setSettings: () => {},
 });
 
 export function GlobalContextProvider({
@@ -46,6 +53,9 @@ export function GlobalContextProvider({
 	const [settings, setCurrentSettings] =
 		React.useState<SettingsType>(DEFAULT_SETTINGS);
 
+	const [keybinds, setCurrentKeybinds] =
+		React.useState<CustomAcceleratorsType>(DEFAULT_KEYBINDS);
+
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
 		const synchronizeAppState = async () => {
@@ -61,6 +71,12 @@ export function GlobalContextProvider({
 			window.electron.ipcRenderer
 				.invoke(ipcChannels.GET_SETTINGS)
 				.then(setCurrentSettings)
+				.catch(console.error);
+
+			// Get keybinds
+			window.electron.ipcRenderer
+				.invoke(ipcChannels.GET_KEYBINDS)
+				.then(setCurrentKeybinds)
 				.catch(console.error);
 
 			// Get Status messages
@@ -145,12 +161,13 @@ export function GlobalContextProvider({
 			appName,
 			appMenu,
 			appPaths,
+			keybinds,
 			settings,
 			setSettings,
 			messages,
 			message: messages[messages.length - 1] ?? '',
 		};
-	}, [appName, appMenu, appPaths, settings, setSettings, messages]);
+	}, [appName, appMenu, appPaths, keybinds, settings, setSettings, messages]);
 
 	return (
 		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

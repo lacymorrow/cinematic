@@ -8,9 +8,12 @@ const channels = Object.values(ipcChannels);
 
 const electronHandler = {
 	os: getOS(),
+	isMac: getOS() === 'mac',
 	isDev: process.env.NODE_ENV === 'development',
 	setSettings: (settings: Partial<SettingsType>) =>
 		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
+	setKeybind: (keybind: string, accelerator: string) =>
+		ipcRenderer.invoke(ipcChannels.SET_KEYBIND, keybind, accelerator),
 	triggerAppMenuItemById: (id: string) =>
 		ipcRenderer.send(ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID, id),
 	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),

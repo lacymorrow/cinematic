@@ -139,6 +139,7 @@ export function InputKeyboardShortcut({
 				id={uuid}
 				onKeyDown={handleKeyDown}
 				onKeyUp={handleKeyUp}
+				onChange={() => {}}
 				value={pressing ? accelerator : value}
 				{...props}
 			/>

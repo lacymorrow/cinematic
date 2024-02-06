@@ -1,10 +1,17 @@
 import { Menu, app, ipcMain, shell } from 'electron';
+import { CustomAcceleratorsType } from '../types/keyboard';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 import { serializeMenu, triggerMenuItemById } from './menu';
 import { rendererPaths } from './paths';
 import { idle } from './startup';
-import { getAppMessages, getSettings, setSettings } from './store-actions';
+import {
+	getAppMessages,
+	getKeybinds,
+	getSettings,
+	setSettings,
+} from './store-actions';
+import kb from './keyboard';
 
 export default {
 	initialize() {
@@ -21,12 +28,20 @@ export default {
 		ipcMain.handle(ipcChannels.GET_APP_PATHS, () => {
 			return rendererPaths;
 		});
-		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
 		ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
+		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
 		ipcMain.handle(
 			ipcChannels.SET_SETTINGS,
 			(_event, settings: Partial<SettingsType>) => {
 				setSettings(settings);
+			},
+		);
+
+		ipcMain.handle(ipcChannels.GET_KEYBINDS, getKeybinds);
+		ipcMain.handle(
+			ipcChannels.SET_KEYBIND,
+			(_event, keybind: keyof CustomAcceleratorsType, accelerator: string) => {
+				kb.setKeybind(keybind, accelerator);
 			},
 		);
 
