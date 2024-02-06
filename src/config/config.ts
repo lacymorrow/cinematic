@@ -13,8 +13,8 @@ export const PROTOCOL = 'electron-hotplate'; // Custom app protocol handler for 
 
 export const VOLUME = 0.15; // System volume in percent
 
-// // Debounce delay in ms
-// export const DEBOUNCE_DELAY = 400;
+// Throttle delay in ms
+export const THROTTLE_DELAY = 100;
 
 // // Limit the file types that can be selected using the file input dialog
 // export const VALID_FILETYPES = [

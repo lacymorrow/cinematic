@@ -6,6 +6,7 @@ import { InputSlider } from '@/renderer/components/input/InputSlider';
 import { InputMouseKeyboardBind } from '@/renderer/components/input/InputMouseKeyboardBind';
 import { InputKeyboardShortcut } from '@/renderer/components/input/InputKeyboardShortcut';
 import { InputColor } from '@/renderer/components/input/InputColor';
+import { THROTTLE_DELAY } from '@/config/config';
 
 export function SettingsApplication() {
 	const { app, settings } = useGlobalContext();
@@ -24,6 +25,18 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
+			<InputSlider
+				value={2}
+				onChange={(value) => {
+					console.log('value', value);
+				}}
+				label="Zoom Factor"
+				description="Adjust the zoom level of the app."
+				min={0.5}
+				max={3}
+				step={0.1}
+				throttleDelay={THROTTLE_DELAY}
+			/>
 			<InputSwitch
 				value={settings.allowAutoUpdate}
 				onChange={() => {

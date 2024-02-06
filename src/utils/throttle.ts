@@ -3,7 +3,14 @@
 
 const now = () => new Date().getTime();
 
-export const throttle = (func: Function, wait: number, options?: any) => {
+export const throttle = (
+	func: Function,
+	wait: number,
+	options: { leading?: boolean; trailing?: boolean } = {
+		leading: false,
+		trailing: true,
+	},
+) => {
 	let timeout: any;
 	let context: any;
 	let args: any;
@@ -26,6 +33,7 @@ export const throttle = (func: Function, wait: number, options?: any) => {
 		if (!previous && opts.leading === false) previous = currentTime;
 		const remaining = wait - (currentTime - previous);
 		// @ts-ignore
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		context = this;
 		args = props;
 		if (remaining <= 0 || remaining > wait) {
@@ -45,8 +53,11 @@ export const throttle = (func: Function, wait: number, options?: any) => {
 		return result;
 	};
 
-	throttled.cancel = function () {
-		clearTimeout(timeout);
+	// eslint-disable-next-line func-names
+	throttled.cancel = function (): void {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
 		previous = 0;
 		timeout = null;
 		context = null;
