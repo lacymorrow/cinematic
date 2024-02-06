@@ -1,11 +1,13 @@
 import { $errors } from '@/config/strings';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { getOS } from '@/utils/getOS';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 
 const channels = Object.values(ipcChannels);
 
 const electronHandler = {
+	os: getOS(),
 	isDev: process.env.NODE_ENV === 'development',
 	setSettings: (settings: Partial<SettingsType>) =>
 		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),

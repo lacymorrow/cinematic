@@ -8,7 +8,7 @@ export const getOS = () => {
 	}
 
 	if (os.includes('darwin') || os.includes('mac')) {
-		return 'macos';
+		return 'mac';
 	}
 
 	return 'linux';

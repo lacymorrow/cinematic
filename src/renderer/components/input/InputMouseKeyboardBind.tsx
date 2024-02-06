@@ -3,11 +3,42 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { simpleUUID } from '@/utils/getUUID';
+import keycodeToChar from '@/utils/keycodeToChar';
 import { stopEvent } from '@/utils/stopEvent';
 import { throttle } from '@/utils/throttle';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+const mouseButtons = [
+	'Left',
+	'Middle',
+	'Right',
+	'Back',
+	'Forward',
+	'Extra 1',
+	'Extra 2',
+];
+
+export const prettyPrintBind = (bind: string | undefined) => {
+	if (!bind?.includes(':')) {
+		return bind;
+	}
+
+	const [type, value] = bind.split(':');
+	const button = parseInt(value, 10);
+
+	if (type === 'keyboard') {
+		return `⌨️ Keyboard ${
+			button in keycodeToChar ? keycodeToChar[button] : value
+		}`;
+	}
+
+	if (type === 'mouse') {
+		return `🖱️ Mouse ${value in mouseButtons ? mouseButtons[button] : value}`;
+	}
+
+	return bind;
+};
 export function InputMouseKeyboardBind({
 	value,
 	onChange,
@@ -103,8 +134,10 @@ export function InputMouseKeyboardBind({
 					disabled={listening}
 				>
 					{listening
-						? buttonText || 'Waiting for bind...'
-						: currentValue || placeholder || 'Set bind...'}
+						? buttonText || 'Waiting, press any button or key...'
+						: prettyPrintBind(currentValue) ||
+							placeholder ||
+							'Click to set bind...'}
 				</Button>
 				{currentValue && (
 					<button

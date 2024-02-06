@@ -4,6 +4,8 @@ import { useGlobalContext } from '@/renderer/context/global-context';
 import { InputSwitch } from '@/renderer/components/input/InputSwitch';
 import { InputSlider } from '@/renderer/components/input/InputSlider';
 import { InputMouseKeyboardBind } from '@/renderer/components/input/InputMouseKeyboardBind';
+import { InputKeyboardShortcut } from '@/renderer/components/input/InputKeyboardShortcut';
+import { InputColor } from '@/renderer/components/input/InputColor';
 
 export function SettingsApplication() {
 	const { settings } = useGlobalContext();
@@ -22,6 +24,22 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
+			<InputColor
+				value="#000000"
+				label="Accent Color"
+				description="Customize the accent color for the app."
+				onChange={(value) => {
+					console.log('value', value);
+				}}
+			/>
+			<InputKeyboardShortcut
+				value="asd"
+				label="Keyboard Shortcut"
+				description="Set a keyboard shortcut to open the app."
+				onChange={(value) => {
+					console.log('value', value);
+				}}
+			/>
 			<InputMouseKeyboardBind
 				label="Keyboard Shortcut"
 				description="Set a keyboard shortcut to open the app."

@@ -1,6 +1,18 @@
+/*
+		InputKeyboardShortcut
+
+		modifierRequired: By default any key can be used, if this is true, a modifier must be provided.
+	*/
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
+import { getOS } from '@/utils/getOS';
 import { simpleUUID } from '@/utils/getUUID';
+import keycodeToChar, {
+	modifierKeyCodes,
+	specialKeyCodes,
+} from '@/utils/keycodeToChar';
 import { throttle } from '@/utils/throttle';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -10,49 +22,105 @@ export function InputKeyboardShortcut({
 	label,
 	description,
 	details,
-
-	min,
-	max,
-	step,
-
-	throttleDelay,
+	allowOnlyModifier = false,
+	allowOnlyTab = false,
+	modifierRequired = false,
 	...props
 }: {
-	value?: number;
-	onChange?: (value: number) => void;
+	value: string;
+	onChange?: (value: string) => void;
 	label?: string;
 	description?: string;
 	details?: string;
-	throttleDelay?: number;
-	min?: number;
-	max?: number;
-	step?: number;
+	allowOnlyModifier?: boolean;
+	allowOnlyTab?: boolean;
+	modifierRequired?: boolean;
 	props?: any;
 }) {
-	const [currentValue, setCurrentValue] = useState(
-		typeof value === 'number' ? [value] : [0],
-	);
+	// Generate a unique ID for the input
 	const uuid = useMemo(simpleUUID, []);
+	const os = useMemo(() => {
+		return window.electron.os;
+	}, []);
 
-	const throttledOnChange = useMemo(() => {
-		if (throttleDelay && onChange) {
-			return throttle(onChange, throttleDelay);
+	// Display the keys being pushed while trying to set accelerator
+	const [pressing, setPressing] = useState(false);
+	const [accelerator, setAccelerator] = useState('');
+
+	// Assign modifier key names, different OS' use different key names
+	let altKeyName = 'Alt';
+	let metaKeyName = 'Meta';
+	if (os === 'mac') {
+		altKeyName = 'Option';
+		metaKeyName = 'Command';
+	} else if (os === 'windows') {
+		metaKeyName = 'Windows';
+	}
+
+	const handleChange = (result: string) => {
+		if (onChange) {
+			onChange(result);
 		}
-		return onChange;
-	}, [throttleDelay, onChange]);
+	};
 
-	const handleChange = useCallback(
-		(val: number[]) => {
-			const [result] = val;
+	const handleKeyDown = (event: any) => {
+		// Start key array with any modifiers
+		const keys = [
+			event.ctrlKey && 'Control',
+			event.metaKey && metaKeyName,
+			event.altKey && altKeyName,
+			event.shiftKey && 'Shift',
+		].filter(Boolean); // Remove false values
 
-			setCurrentValue([result]);
+		// Prevent tab by default, to maintain accessibility
+		if (
+			allowOnlyTab &&
+			event.which === 9 &&
+			(keys.length === 0 || event.shiftKey)
+		) {
+			setPressing(false);
+			return;
+		}
 
-			if (throttledOnChange) {
-				throttledOnChange(result);
+		event.preventDefault();
+
+		// I've not tested every combo to verify it will work in electron, all the documentation they provide:
+		// https://www.electronjs.org/docs/api/accelerator#available-key-codes
+		if (!specialKeyCodes.has(event.which) && event.which in keycodeToChar) {
+			// Clear the value on backspace (8) or delete (46)
+			if (keys.length === 0 && (event.which === 8 || event.which === 46)) {
+				setPressing(false);
+				handleChange('');
+
+				return;
 			}
-		},
-		[throttledOnChange],
-	);
+
+			// We allow single-keys to be set, unless `modifierRequired` is passed
+			if (modifierRequired && keys.length === 0) {
+				return;
+			}
+
+			// Save values
+			keys.push(keycodeToChar[event.which]);
+			handleChange(keys.join('+'));
+		} else if (
+			allowOnlyModifier &&
+			modifierKeyCodes.has(event.which) &&
+			keys.length === 1
+		) {
+			// `allowOnlyModifier`: we allow a single, modifier-only key to be set.
+			handleChange(keys[0]);
+			return;
+		}
+
+		// Display current keys pressed
+		setPressing(true);
+		setAccelerator(keys.join('+'));
+	};
+
+	const handleKeyUp = () => {
+		setPressing(false);
+	};
 
 	return (
 		<div className="flex flex-col justify-between gap-2">
@@ -65,10 +133,15 @@ export function InputKeyboardShortcut({
 					)}
 					{description && <p>{description}</p>}
 				</div>
-				{currentValue && (
-					<p className="text-muted-foreground">{currentValue}</p>
-				)}
 			</div>
+
+			<Input
+				id={uuid}
+				onKeyDown={handleKeyDown}
+				onKeyUp={handleKeyUp}
+				value={pressing ? accelerator : value}
+				{...props}
+			/>
 
 			{details && <p className="text-xs text-muted-foreground">{details}</p>}
 		</div>
