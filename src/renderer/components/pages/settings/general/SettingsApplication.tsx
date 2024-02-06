@@ -46,7 +46,7 @@ export function SettingsApplication() {
 				description="Automatically download and install new updates."
 				card
 			/>
-			{app.isMac && (
+			{(app.isMac || app.isDev) && (
 				<InputSwitch
 					value={settings.showDockIcon}
 					onChange={() => {
@@ -66,17 +66,19 @@ export function SettingsApplication() {
 				description="Show the app icon in the system tray."
 				card
 			/>
-			<InputSwitch
-				value={settings.quitOnWindowClose}
-				onChange={() => {
-					handleChangeSetting({
-						quitOnWindowClose: !settings.quitOnWindowClose,
-					});
-				}}
-				label="Quit when all windows Close"
-				description="Don't keep the app running when all windows are closed."
-				card
-			/>
+			{(app.isMac || app.isDev) && (
+				<InputSwitch
+					value={settings.quitOnWindowClose}
+					onChange={() => {
+						handleChangeSetting({
+							quitOnWindowClose: !settings.quitOnWindowClose,
+						});
+					}}
+					label="Quit when all windows Close"
+					description="Don't keep the app running when all windows are closed."
+					card
+				/>
+			)}
 			<Separator />
 			<InputSwitch
 				value={settings.allowAnalytics}
