@@ -18,7 +18,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 	return (
 		<nav
 			className={cn(
-				'flex flex-wrap gap-2 lg:flex-col items-start justify-stretch',
+				'flex flex-wrap gap-2 md:flex-col items-start justify-stretch',
 				className,
 			)}
 			{...props}
@@ -31,7 +31,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 						buttonVariants({
 							variant: pathname.endsWith(item.href) ? 'secondary' : 'ghost',
 						}),
-						'justify-start w-full flex gap-2',
+						'justify-start md:w-full flex gap-2',
 					)}
 				>
 					{item.icon && <item.icon />}
