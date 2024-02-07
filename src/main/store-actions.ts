@@ -1,6 +1,5 @@
 import { app } from 'electron';
 import Logger from 'electron-log';
-import { CustomAcceleratorsType } from '@/types/keyboard';
 import { APP_MESSAGES_MAX } from '../config/config';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';

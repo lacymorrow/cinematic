@@ -1,11 +1,8 @@
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { simpleUUID } from '@/utils/getUUID';
 import keycodeToChar from '@/utils/keycodeToChar';
 import { stopEvent } from '@/utils/stopEvent';
-import { throttle } from '@/utils/throttle';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -134,6 +131,7 @@ export function InputMouseKeyboardBind({
 					className={cn('w-full', className)}
 					variant="secondary"
 					disabled={listening}
+					{...props}
 				>
 					{listening
 						? buttonText || 'Waiting, press any button or key...'

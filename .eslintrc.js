@@ -1,6 +1,9 @@
 module.exports = {
 	extends: ['erb'],
-	plugins: ['@typescript-eslint'],
+	plugins: [
+		'@typescript-eslint',
+		// 'unused-imports'
+	],
 	ignorePatterns: ['**/components/ui/'],
 
 	rules: {
@@ -8,6 +11,7 @@ module.exports = {
 		'no-shadow': 'off',
 		'no-unused-vars': 'off',
 		'no-useless-return': 'warn',
+		// 'unused-imports/no-unused-imports-ts': 'error',
 		'promise/always-return': 'off',
 		'react/prop-types': 'off',
 		'react/react-in-jsx-scope': 'off',

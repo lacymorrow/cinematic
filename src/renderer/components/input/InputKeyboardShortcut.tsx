@@ -3,19 +3,14 @@
 
 		modifierRequired: By default any key can be used, if this is true, a modifier must be provided.
 	*/
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
 import { useGlobalContext } from '@/renderer/context/global-context';
-import { getOS } from '@/utils/getOS';
 import { simpleUUID } from '@/utils/getUUID';
 import keycodeToChar, {
 	modifierKeyCodes,
 	specialKeyCodes,
 } from '@/utils/keycodeToChar';
-import { throttle } from '@/utils/throttle';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export function InputKeyboardShortcut({
 	value,

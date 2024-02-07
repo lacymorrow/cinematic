@@ -1,14 +1,9 @@
 import { Separator } from '@/components/ui/separator';
 import { SettingsType } from '@/config/settings';
-import { useGlobalContext } from '@/renderer/context/global-context';
+import { InputComboboxForm } from '@/renderer/components/input/InputComboboxForm';
+import { InputSelectForm } from '@/renderer/components/input/InputSelectForm';
 import { InputSwitch } from '@/renderer/components/input/InputSwitch';
-import { InputSlider } from '@/renderer/components/input/InputSlider';
-import { InputMouseKeyboardBind } from '@/renderer/components/input/InputMouseKeyboardBind';
-import { InputKeyboardShortcut } from '@/renderer/components/input/InputKeyboardShortcut';
-import { InputColor } from '@/renderer/components/input/InputColor';
-import { THROTTLE_DELAY } from '@/config/config';
-import { InputRadioGroup } from '@/renderer/components/input/InputRadioGroup';
-import { InputCheckboxGroup } from '@/renderer/components/input/InputCheckboxGroup';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
 export function SettingsApplication() {
 	const { app, settings } = useGlobalContext();
@@ -26,12 +21,50 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
-			<InputCheckboxGroup
+			<InputComboboxForm
 				items={[
-					{ value: 'recents', label: 'Recents' },
-					{ value: 'home', label: 'Home' },
-					{ value: 'starred', label: 'Starred' },
+					{
+						value: 'light',
+						label: 'Light',
+					},
+					{
+						value: 'dark',
+						label: 'Dark',
+					},
+					{
+						value: 'system',
+						label: 'System',
+					},
 				]}
+				value={settings.theme}
+				onChange={(value) => {
+					handleChangeSetting({ theme: value });
+				}}
+				label="Theme"
+				description="Select your preferred theme."
+			/>
+
+			<InputSelectForm
+				items={[
+					{
+						value: 'light',
+						label: 'Light',
+					},
+					{
+						value: 'dark',
+						label: 'Dark',
+					},
+					{
+						value: 'system',
+						label: 'System',
+					},
+				]}
+				value={settings.theme}
+				onChange={(value) => {
+					handleChangeSetting({ theme: value });
+				}}
+				label="Theme"
+				description="Select your preferred theme."
 			/>
 			<InputSwitch
 				value={settings.allowAutoUpdate}

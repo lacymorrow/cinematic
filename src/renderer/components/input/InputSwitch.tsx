@@ -1,7 +1,7 @@
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { simpleUUID } from '@/utils/getUUID';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 export function InputSwitch({
 	value,

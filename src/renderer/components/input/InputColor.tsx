@@ -1,5 +1,3 @@
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
 import { simpleUUID } from '@/utils/getUUID';
 import { throttle } from '@/utils/throttle';
 import { useCallback, useMemo, useState } from 'react';
@@ -11,7 +9,6 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { invertColor } from '@/utils/invertColor';
 

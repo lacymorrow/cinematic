@@ -1,11 +1,6 @@
 import { Separator } from '@/components/ui/separator';
-import { SettingsType } from '@/config/settings';
 import { useGlobalContext } from '@/renderer/context/global-context';
-import { InputSwitch } from '@/renderer/components/input/InputSwitch';
-import { InputSlider } from '@/renderer/components/input/InputSlider';
-import { InputMouseKeyboardBind } from '@/renderer/components/input/InputMouseKeyboardBind';
 import { InputKeyboardShortcut } from '@/renderer/components/input/InputKeyboardShortcut';
-import { InputColor } from '@/renderer/components/input/InputColor';
 import { CustomAcceleratorsType } from '@/types/keyboard';
 
 export function SettingsKeyboard() {

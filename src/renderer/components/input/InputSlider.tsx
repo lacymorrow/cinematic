@@ -1,5 +1,4 @@
 import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
 import { simpleUUID } from '@/utils/getUUID';
 import { throttle } from '@/utils/throttle';
 import { useCallback, useMemo, useState } from 'react';
