@@ -23,15 +23,16 @@ export function SettingsKeyboard() {
 			<div>
 				<h3 className="text-lg font-medium">Keyboard Shortcuts</h3>
 				<p className="text-sm text-muted-foreground">
-					Customize keyboard shortcuts to control the application.
+					Customize keyboard shortcuts to control the application. Press
+					&quot;Backspace&quot; or &quot;Delete&quot; to clear the current
+					shortcut.
 				</p>
 			</div>
 			<Separator />
 			<InputKeyboardShortcut
-				value={keybinds.reset || ''}
+				value={keybinds.reset}
 				label="Reset Application Settings"
-				description="Set a keyboard shortcut to reset the app."
-				details='Press "Backspace" or "Delete" to clear the current shortcut.'
+				description="Clear all settings and restore the app to its default state."
 				onChange={(value) => {
 					handleChangeKeybind('reset', value);
 				}}

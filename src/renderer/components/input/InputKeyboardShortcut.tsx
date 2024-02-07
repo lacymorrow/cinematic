@@ -29,7 +29,7 @@ export function InputKeyboardShortcut({
 	modifierRequired = false,
 	...props
 }: {
-	value: string;
+	value: string | undefined;
 	onChange?: (value: string) => void;
 	label?: string;
 	description?: string;
