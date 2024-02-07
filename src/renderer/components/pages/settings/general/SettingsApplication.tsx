@@ -8,6 +8,7 @@ import { InputKeyboardShortcut } from '@/renderer/components/input/InputKeyboard
 import { InputColor } from '@/renderer/components/input/InputColor';
 import { THROTTLE_DELAY } from '@/config/config';
 import { InputRadioGroup } from '@/renderer/components/input/InputRadioGroup';
+import { InputCheckboxGroup } from '@/renderer/components/input/InputCheckboxGroup';
 
 export function SettingsApplication() {
 	const { app, settings } = useGlobalContext();
@@ -25,18 +26,12 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
-			<InputRadioGroup
-				options={[
-					{ value: 'light', label: 'Light' },
-					{ value: 'dark', label: 'Dark' },
-					{ value: 'system', label: 'System' },
+			<InputCheckboxGroup
+				items={[
+					{ value: 'recents', label: 'Recents' },
+					{ value: 'home', label: 'Home' },
+					{ value: 'starred', label: 'Starred' },
 				]}
-				value={settings.theme}
-				onChange={(value) => {
-					handleChangeSetting({ theme: value });
-				}}
-				label="Theme"
-				description="Select your preferred theme."
 			/>
 			<InputSwitch
 				value={settings.allowAutoUpdate}
