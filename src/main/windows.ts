@@ -7,10 +7,10 @@ interface WindowsType {
 }
 
 // Prevent windows from being garbage collected
-const w: WindowsType = {
+const windows: WindowsType = {
 	mainWindow: null,
 	childWindow: null,
 	tray: null,
 };
 
-export default w;
+export default windows;

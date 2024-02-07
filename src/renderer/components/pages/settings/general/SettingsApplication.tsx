@@ -7,6 +7,7 @@ import { InputMouseKeyboardBind } from '@/renderer/components/input/InputMouseKe
 import { InputKeyboardShortcut } from '@/renderer/components/input/InputKeyboardShortcut';
 import { InputColor } from '@/renderer/components/input/InputColor';
 import { THROTTLE_DELAY } from '@/config/config';
+import { InputRadioGroup } from '@/renderer/components/input/InputRadioGroup';
 
 export function SettingsApplication() {
 	const { app, settings } = useGlobalContext();
@@ -24,6 +25,19 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
+			<InputRadioGroup
+				options={[
+					{ value: 'light', label: 'Light' },
+					{ value: 'dark', label: 'Dark' },
+					{ value: 'system', label: 'System' },
+				]}
+				value={settings.theme}
+				onChange={(value) => {
+					handleChangeSetting({ theme: value });
+				}}
+				label="Theme"
+				description="Select your preferred theme."
+			/>
 			<InputSwitch
 				value={settings.allowAutoUpdate}
 				onChange={() => {
