@@ -2,7 +2,7 @@ import { CustomAcceleratorsType, KeyboardShortcut } from '@/types/keyboard';
 import { globalShortcut, app } from 'electron';
 import Logger from 'electron-log';
 import store from './store';
-import windows, { forEachWindow } from './windows';
+import windows from './windows';
 
 import { resetApp } from './reset';
 

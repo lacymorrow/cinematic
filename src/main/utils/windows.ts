@@ -124,3 +124,9 @@ export const centerWindow = (options?: CenterWindowOptions) => {
 	const bounds = getWindowBoundsCentered(opts);
 	window.setBounds(bounds, opts.animated);
 };
+
+export const forEachWindow = (callback: (window: BrowserWindow) => void) => {
+	BrowserWindow.getAllWindows().forEach((win) => {
+		callback(win);
+	});
+};

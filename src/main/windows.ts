@@ -7,50 +7,10 @@ interface WindowsType {
 }
 
 // Prevent windows from being garbage collected
-const windows: WindowsType = {
+const w: WindowsType = {
 	mainWindow: null,
 	childWindow: null,
 	tray: null,
 };
 
-export class Windows {
-	main: BrowserWindow | null;
-
-	child: BrowserWindow | null;
-
-	tray: any;
-
-	constructor() {
-		this.main = null;
-		this.child = null;
-		this.tray = null;
-	}
-
-	get mainWindow() {
-		return this.main;
-	}
-
-	set mainWindow(window: BrowserWindow | null) {
-		this.main = window;
-	}
-
-	get childWindow() {
-		return this.child;
-	}
-
-	set childWindow(window: BrowserWindow | null) {
-		this.child = window;
-	}
-
-	get t(): any {
-		return this.tray;
-	}
-}
-
-export const forEachWindow = (callback: (window: BrowserWindow) => void) => {
-	BrowserWindow.getAllWindows().forEach((win) => {
-		callback(win);
-	});
-};
-
-export default windows;
+export default w;
