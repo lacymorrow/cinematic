@@ -7,7 +7,7 @@ import { SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
 import store, { AppMessageType } from './store';
 import tray from './tray';
-import { forEachWindow } from './utils/windows';
+import { forEachWindow } from './utils/window-utils';
 
 const synchronizeApp = (changedSettings?: Partial<SettingsType>) => {
 	// Sync with main
