@@ -4,7 +4,7 @@ import { simpleUUID } from '@/utils/getUUID';
 import keycodeToChar from '@/utils/keycodeToChar';
 import { stopEvent } from '@/utils/stopEvent';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { CrossButton } from './CrossButton';
+import { ClearButton } from './ClearButton';
 
 const mouseButtons = [
 	'Left',
@@ -139,7 +139,7 @@ export function InputMouseKeyboardBind({
 							placeholder ||
 							'Click to set bind...'}
 				</Button>
-				{currentValue && <CrossButton onClick={handleClear} />}
+				{currentValue && <ClearButton onClick={handleClear} />}
 			</div>
 			{details && <p className="text-sm text-muted-foreground">{details}</p>}
 		</div>

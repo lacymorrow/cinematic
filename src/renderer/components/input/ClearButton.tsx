@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
-import { CrossCircledIcon } from '@radix-ui/react-icons';
+import { ResetIcon } from '@radix-ui/react-icons';
 import React from 'react';
 
-export function CrossButton({
+export function ClearButton({
 	onClick,
 	className,
 	...props
@@ -22,7 +22,7 @@ export function CrossButton({
 			)}
 			{...props}
 		>
-			<CrossCircledIcon className="w-4 h-4" />
+			<ResetIcon className="w-4 h-4" />
 			<span className="sr-only">Clear value...</span>
 		</button>
 	);

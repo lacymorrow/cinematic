@@ -10,7 +10,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { invertColor } from '@/utils/invertColor';
-import { CrossButton } from './CrossButton';
+import { ClearButton } from './ClearButton';
 
 export function InputColor({
 	value,
@@ -88,10 +88,11 @@ export function InputColor({
 								backgroundColor,
 								color: foregroundColor,
 							}}
+							{...props}
 						>
 							{buttonText || 'Select Color'}
 							{color && (
-								<CrossButton
+								<ClearButton
 									onClick={handleClear}
 									style={{ color: foregroundColor }}
 								/>
@@ -100,7 +101,7 @@ export function InputColor({
 					</PopoverTrigger>
 					<PopoverContent className="flex items-center justify-center">
 						<Chrome
-							color={color}
+							color={color || undefined}
 							// @ts-ignore
 							placement={false}
 							onChange={(result) => {
