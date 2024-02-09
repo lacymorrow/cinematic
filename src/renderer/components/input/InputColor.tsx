@@ -1,16 +1,16 @@
 import { simpleUUID } from '@/utils/getUUID';
 import { throttle } from '@/utils/throttle';
-import { useCallback, useMemo, useState } from 'react';
 import Chrome from '@uiw/react-color-chrome';
-import { GithubPlacement } from '@uiw/react-color-github';
+import { useCallback, useMemo, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
 import { invertColor } from '@/utils/invertColor';
+import { CrossButton } from './CrossButton';
 
 export function InputColor({
 	value,
@@ -35,7 +35,16 @@ export function InputColor({
 	const [color, setColor] = useState(value || '#000000');
 
 	const uuid = useMemo(simpleUUID, []);
-	const invertedColor = useMemo(() => invertColor(color, true), [color]);
+
+	const backgroundColor = useMemo(() => color.slice(0, 7), [color]);
+
+	const foregroundColor = useMemo(() => {
+		try {
+			return invertColor(backgroundColor, true);
+		} catch (error) {
+			return '';
+		}
+	}, [backgroundColor]);
 
 	const throttledOnChange = useMemo(() => {
 		if (throttleDelay && onChange) {
@@ -54,6 +63,9 @@ export function InputColor({
 		[throttledOnChange],
 	);
 
+	const handleClear = useCallback(() => {
+		handleChange('');
+	}, [handleChange]);
 	return (
 		<>
 			<Popover>
@@ -70,22 +82,29 @@ export function InputColor({
 							)}
 						</div>
 					</div>
-					<PopoverTrigger asChild>
+					<PopoverTrigger className="relative" asChild>
 						<Button
 							style={{
-								backgroundColor: color,
-								color: invertedColor,
+								backgroundColor,
+								color: foregroundColor,
 							}}
 						>
 							{buttonText || 'Select Color'}
+							{color && (
+								<CrossButton
+									onClick={handleClear}
+									style={{ color: foregroundColor }}
+								/>
+							)}
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex items-center justify-center">
 						<Chrome
 							color={color}
-							placement={GithubPlacement.Top}
+							// @ts-ignore
+							placement={false}
 							onChange={(result) => {
-								handleChange(result.hex);
+								handleChange(result.hexa);
 							}}
 						/>
 					</PopoverContent>

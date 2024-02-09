@@ -3,8 +3,8 @@ import { cn } from '@/lib/utils';
 import { simpleUUID } from '@/utils/getUUID';
 import keycodeToChar from '@/utils/keycodeToChar';
 import { stopEvent } from '@/utils/stopEvent';
-import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CrossButton } from './CrossButton';
 
 const mouseButtons = [
 	'Left',
@@ -139,16 +139,7 @@ export function InputMouseKeyboardBind({
 							placeholder ||
 							'Click to set bind...'}
 				</Button>
-				{currentValue && (
-					<button
-						type="button"
-						onClick={handleClear}
-						className="text-primary hover:text-muted-foreground absolute z-10 top-0 bottom-0 right-0 px-4 py-2 grid place-content-center"
-					>
-						<CrossCircledIcon className="w-4 h-4" />
-						<span className="sr-only">Clear bind...</span>
-					</button>
-				)}
+				{currentValue && <CrossButton onClick={handleClear} />}
 			</div>
 			{details && <p className="text-sm text-muted-foreground">{details}</p>}
 		</div>
