@@ -45,7 +45,6 @@ export function InputSwitchForm({
 	});
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
-		console.log(data);
 		onChange?.(data.items);
 	}
 

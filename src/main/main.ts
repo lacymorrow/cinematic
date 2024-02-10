@@ -1,5 +1,11 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
+/*
+Todo:
+- Inputs should reset to default value when the settings are reset
+- Debounce Slider
+*/
+
 import { app } from 'electron';
 import Logger from 'electron-log/main';
 import { $errors, $messages } from '../config/strings';
