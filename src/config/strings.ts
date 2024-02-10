@@ -42,14 +42,16 @@ export const $errors = {
 
 export const $messages = {
 	resetStore: 'Reset App',
-	synchronize: 'Synchronizing state...',
-	autoUpdate: 'Checking for updates...',
-	updateAvailable: 'Update Available',
-	updateAvailableBody: 'Click to download',
 
 	// Network messages
 	online: 'Connected',
 	offline: 'Disconnected - Cannot fetch metadata',
+};
+
+export const $autoUpdate = {
+	autoUpdate: 'Checking for updates...',
+	updateAvailable: 'Update Available',
+	updateAvailableBody: 'Click to download',
 };
 
 export const $init = {

@@ -12,12 +12,11 @@ import {
 	DEFAULT_SETTINGS,
 	SettingsType,
 } from '@/config/settings';
-import { $messages } from '@/config/strings';
+import { play, preload } from '@/renderer/lib/sounds';
+import { AppInfoType } from '@/types/app';
+import { CustomAcceleratorsType } from '@/types/keyboard';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
-import { CustomAcceleratorsType } from '@/types/keyboard';
-import { AppInfoType } from '@/types/app';
-import { play, preload } from '@/renderer/lib/sounds';
 
 interface GlobalContextType {
 	app: Partial<AppInfoType>;
@@ -59,7 +58,7 @@ export function GlobalContextProvider({
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
 		const synchronizeAppState = async () => {
-			console.log($messages.synchronize);
+			console.log(ipcChannels.APP_UPDATED);
 
 			// Get app menu
 			window.electron.ipcRenderer

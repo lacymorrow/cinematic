@@ -2,7 +2,7 @@ import { ProgressInfo, autoUpdater } from 'electron-updater';
 
 import { shell } from 'electron';
 import Logger from 'electron-log/main';
-import { $messages } from '../config/strings';
+import { $autoUpdate } from '../config/strings';
 import dialog from './dialog';
 import dock from './dock';
 import { notification } from './notifications';
@@ -16,7 +16,7 @@ const FOUR_HOURS = 1000 * 60 * 60 * 4;
 export class AutoUpdate {
 	constructor() {
 		if (getSetting('allowAutoUpdate')) {
-			Logger.status($messages.autoUpdate);
+			Logger.status($autoUpdate.autoUpdate);
 
 			// Configure log debugging to file
 			Logger.transports.file.level = 'silly';
@@ -47,8 +47,8 @@ const onUpdateAvailable = () => {
 	try {
 		// Notify user of update
 		notification({
-			title: $messages.updateAvailable,
-			body: $messages.updateAvailableBody,
+			title: $autoUpdate.updateAvailable,
+			body: $autoUpdate.updateAvailableBody,
 		});
 
 		sound.play('UPDATE');
