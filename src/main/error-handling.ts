@@ -20,7 +20,7 @@ const reportBody = (error: any) => `
 	${debugInfo()}`;
 
 const initialize = async () => {
-	Logger.status($init.logger);
+	Logger.status($init.errorHandling);
 
 	// unhandledRejection : This will catch any thrown errors, or non fatal errors you have successfully handled via throw.
 	// uncaughtException : This only catches fatal errors or errors that would crash your node instance

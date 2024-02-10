@@ -10,7 +10,7 @@ import { is } from './util';
 import windows from './windows';
 
 const register = () => {
-	Logger.status($init.logger);
+	Logger.status($init.appListeners);
 
 	/**
 	 * Add app event listeners...

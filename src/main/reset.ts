@@ -10,7 +10,7 @@ export const restartApp = () => {
 };
 
 export const resetSettings = () => {
-	Logger.status($init.logger);
+	Logger.status($init.refreshSettings);
 	// Sonic announcement
 	sounds.play('RESET');
 	resetStoreSettings();

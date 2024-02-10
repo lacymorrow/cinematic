@@ -18,7 +18,7 @@ const initialize = () => {
 		});
 	}
 
-	Logger.status($init.logger);
+	Logger.status($init.debugging);
 };
 
 // Add debugging extensions like `react-devtools` and `redux-devtools`
