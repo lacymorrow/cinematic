@@ -15,6 +15,7 @@ export const VOLUME = 0.15; // System volume in percent
 
 // Throttle delay in ms
 export const THROTTLE_DELAY = 100;
+export const DEBOUNCE_DELAY = 800;
 
 // // Limit the file types that can be selected using the file input dialog
 // export const VALID_FILETYPES = [

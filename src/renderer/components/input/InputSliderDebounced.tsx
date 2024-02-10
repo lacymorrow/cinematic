@@ -1,8 +1,11 @@
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { DEBOUNCE_DELAY } from '@/config/config';
 import { cn } from '@/lib/utils';
+import { debounce } from '@/utils/debounce';
 import { simpleUUID } from '@/utils/getUUID';
-import React, { useCallback, useMemo } from 'react';
+import { throttle } from '@/utils/throttle';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ClearButton } from './ClearButton';
 
 export function InputSlider({
@@ -19,6 +22,7 @@ export function InputSlider({
 	max,
 	step,
 
+	throttleDelay = 50,
 	...props
 }: {
 	value?: number;
@@ -28,53 +32,81 @@ export function InputSlider({
 	description?: string;
 	details?: string;
 	content?: React.ReactNode;
+	throttleDelay?: number;
 	input?: boolean; // show input field
 	min?: number;
 	max?: number;
 	step?: number;
 	props?: any;
 }) {
+	const [currentValue, setCurrentValue] = useState(
+		typeof value === 'number' ? [value] : [0],
+	);
 	const uuid = useMemo(simpleUUID, []);
+
+	// When the value changes externally, update the state
+	const debouncedSetCurrentValue = useMemo(() => {
+		return debounce((val: number) => {
+			setCurrentValue([val]);
+		}, DEBOUNCE_DELAY);
+	}, []);
+
+	const throttledOnChange = useMemo(() => {
+		if (throttleDelay && onChange) {
+			return throttle(onChange, throttleDelay);
+		}
+		return onChange;
+	}, [throttleDelay, onChange]);
+
+	useEffect(() => {
+		if (typeof value === 'number') {
+			debouncedSetCurrentValue([value]);
+		}
+	}, [debouncedSetCurrentValue, value]);
 
 	const handleInputChange = useCallback(
 		(v: number) => {
-			const val = v;
-			// // check valid range
-			// if (typeof min !== 'undefined' && val < min) return;
-			// if (typeof max !== 'undefined' && val > max) return;
+			let val = v;
+			// check valid range
+			if (typeof min !== 'undefined' && val < min) return;
+			if (typeof max !== 'undefined' && val > max) return;
 
-			// // check valid step size, including floating point
-			// if (typeof step !== 'undefined') {
-			// 	const remainder = val % step;
-			// 	if (remainder !== 0) {
-			// 		// round to nearest step
-			// 		val = Math.round(val / step) * step;
-			// 	}
-			// }
+			// check valid step size, including floating point
+			if (typeof step !== 'undefined') {
+				const remainder = val % step;
+				if (remainder !== 0) {
+					// round to nearest step
+					val = Math.round(val / step) * step;
+				}
+			}
 
-			if (onChange) {
-				onChange(val);
+			setCurrentValue([val]);
+			if (throttledOnChange) {
+				throttledOnChange(val);
 			}
 		},
-		[onChange],
+		[throttledOnChange, min, max, step],
 	);
 
 	const handleChange = useCallback(
 		(val: number[]) => {
 			const [result] = val;
 
-			if (onChange) {
-				onChange(result);
+			setCurrentValue([result]);
+
+			if (throttledOnChange) {
+				throttledOnChange(result);
 			}
 		},
-		[onChange],
+		[throttledOnChange],
 	);
 
 	const handleClear = useCallback(() => {
-		if (onChange) {
-			onChange(defaultValue || 0);
+		setCurrentValue([defaultValue || 0]);
+		if (throttledOnChange) {
+			throttledOnChange(defaultValue || 0);
 		}
-	}, [defaultValue, onChange]);
+	}, [defaultValue, throttledOnChange]);
 
 	return (
 		<div className="flex flex-col justify-between gap-2">
@@ -89,11 +121,11 @@ export function InputSlider({
 						<p className="text-muted-foreground">{description}</p>
 					)}
 				</div>
-				{value && (
+				{currentValue && (
 					<>
 						{input ? (
 							<Input
-								value={String(value)}
+								value={String(currentValue)}
 								onChange={(e) => {
 									const val = parseFloat(e.target.value);
 									if (!Number.isNaN(val)) {
@@ -109,10 +141,11 @@ export function InputSlider({
 							/>
 						) : (
 							<p className={cn('text-muted-foreground flex')}>
-								{value}
-								{typeof defaultValue === 'number' && value !== defaultValue && (
-									<ClearButton onClick={handleClear} className="static" />
-								)}
+								{currentValue}
+								{typeof defaultValue === 'number' &&
+									currentValue[0] !== defaultValue && (
+										<ClearButton onClick={handleClear} className="static" />
+									)}
 							</p>
 						)}
 					</>
@@ -121,7 +154,7 @@ export function InputSlider({
 			<Slider
 				id={uuid}
 				onValueChange={handleChange}
-				value={[value ?? defaultValue ?? 0]}
+				value={currentValue}
 				min={min}
 				max={max}
 				step={step}
