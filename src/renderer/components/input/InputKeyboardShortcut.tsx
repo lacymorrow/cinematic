@@ -4,12 +4,9 @@
 		modifierRequired: By default any key can be used, if this is true, a modifier must be provided.
 	*/
 import { Input } from '@/components/ui/input';
+import { keycodeToKey, modifierKeyCodes, specialKeyCodes } from '@/config/keys';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { simpleUUID } from '@/utils/getUUID';
-import keycodeToChar, {
-	modifierKeyCodes,
-	specialKeyCodes,
-} from '@/utils/keycodeToChar';
 import { useMemo, useState } from 'react';
 
 export function InputKeyboardShortcut({
@@ -89,14 +86,14 @@ export function InputKeyboardShortcut({
 
 		// I've not tested every combo to verify it will work in electron, all the documentation they provide:
 		// https://www.electronjs.org/docs/api/accelerator#available-key-codes
-		if (!specialKeyCodes.has(event.which) && event.which in keycodeToChar) {
+		if (!specialKeyCodes.has(event.which) && event.which in keycodeToKey) {
 			// We allow single-keys to be set, unless `modifierRequired` is passed
 			if (modifierRequired && keys.length === 0) {
 				return;
 			}
 
 			// Save values
-			keys.push(keycodeToChar[event.which]);
+			keys.push(keycodeToKey[event.which]);
 			handleChange(keys.join('+'));
 		} else if (
 			allowOnlyModifier &&

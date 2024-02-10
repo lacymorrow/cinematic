@@ -8,7 +8,7 @@ import { throttle } from '@/utils/throttle';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ClearButton } from './ClearButton';
 
-export function InputSlider({
+export function InputSliderThrottled({
 	value,
 	defaultValue,
 	onChange,

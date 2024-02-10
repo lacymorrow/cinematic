@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -46,6 +46,10 @@ export function InputCheckbox({
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		onChange?.(data.checkboxValue ?? false);
 	}
+
+	useEffect(() => {
+		form.setValue('checkboxValue', value);
+	}, [form, value]);
 
 	return (
 		<Form {...form}>

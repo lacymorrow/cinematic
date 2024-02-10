@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
+import { keycodeToKey } from '@/config/keys';
 import { cn } from '@/lib/utils';
 import { simpleUUID } from '@/utils/getUUID';
-import keycodeToChar from '@/utils/keycodeToChar';
 import { stopEvent } from '@/utils/stopEvent';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ClearButton } from './ClearButton';
@@ -26,7 +26,7 @@ export const prettyPrintBind = (bind: string | undefined) => {
 
 	if (type === 'keyboard') {
 		return `⌨️ Keyboard ${
-			button in keycodeToChar ? keycodeToChar[button] : value
+			button in keycodeToKey ? keycodeToKey[button] : value
 		}`;
 	}
 
@@ -57,13 +57,11 @@ export function InputMouseKeyboardBind({
 	className?: string;
 	props?: any;
 }) {
-	const [currentValue, setCurrentValue] = useState(value);
 	const [listening, setListening] = useState(false);
 
 	const handleChange = useCallback(
 		(result: string) => {
 			onChange?.(result);
-			setCurrentValue(result);
 		},
 		[onChange],
 	);
@@ -108,8 +106,8 @@ export function InputMouseKeyboardBind({
 	}, []);
 
 	const handleClear = useCallback(() => {
-		setCurrentValue('');
-	}, []);
+		handleChange('');
+	}, [handleChange]);
 	return (
 		<div className="flex flex-col justify-between gap-2">
 			<div className="flex flex-row items-center justify-between">
@@ -135,11 +133,9 @@ export function InputMouseKeyboardBind({
 				>
 					{listening
 						? buttonText || 'Waiting, press any button or key...'
-						: prettyPrintBind(currentValue) ||
-							placeholder ||
-							'Click to set bind...'}
+						: prettyPrintBind(value) || placeholder || 'Click to set bind...'}
 				</Button>
-				{currentValue && <ClearButton onClick={handleClear} />}
+				{value && <ClearButton onClick={handleClear} />}
 			</div>
 			{details && <p className="text-sm text-muted-foreground">{details}</p>}
 		</div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -35,9 +35,9 @@ export function InputCheckboxGroup({
 	items: { value: string; label: string }[];
 	value?: string[];
 	onChange?: (value: string[]) => void;
-	label?: string;
-	description?: string;
-	details?: string;
+	label?: React.ReactNode;
+	description?: React.ReactNode;
+	details?: React.ReactNode;
 	content?: React.ReactNode;
 	card?: boolean;
 }) {
@@ -51,6 +51,14 @@ export function InputCheckboxGroup({
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		onChange?.(data.items);
 	}
+
+	useEffect(() => {
+		if (!value) {
+			return;
+		}
+
+		form.setValue('items', value);
+	}, [form, value]);
 
 	return (
 		<Form {...form}>
