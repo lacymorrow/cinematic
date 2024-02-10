@@ -2,7 +2,7 @@
 import { app } from 'electron';
 import Logger from 'electron-log/main';
 import EXIT_CODES from '../config/exit-codes';
-import { $errors } from '../config/strings';
+import { $errors, $init } from '../config/strings';
 import { createMainWindow } from './create-window';
 import keyboard from './keyboard';
 import { getSetting } from './store-actions';
@@ -10,6 +10,8 @@ import { is } from './util';
 import windows from './windows';
 
 const register = () => {
+	Logger.status($init.logger);
+
 	/**
 	 * Add app event listeners...
 	 */

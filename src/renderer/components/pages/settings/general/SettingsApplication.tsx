@@ -38,6 +38,10 @@ export function SettingsApplication() {
 				]}
 				value={settings.theme}
 				onChange={(value) => {
+					if (value !== 'system' && value !== 'light' && value !== 'dark') {
+						return;
+					}
+
 					handleChangeSetting({ theme: value });
 				}}
 				label="Theme"

@@ -16,7 +16,7 @@ const FOUR_HOURS = 1000 * 60 * 60 * 4;
 export class AutoUpdate {
 	constructor() {
 		if (getSetting('allowAutoUpdate')) {
-			Logger.status($messages.auto_update);
+			Logger.status($messages.autoUpdate);
 
 			// Configure log debugging to file
 			Logger.transports.file.level = 'silly';
@@ -47,8 +47,8 @@ const onUpdateAvailable = () => {
 	try {
 		// Notify user of update
 		notification({
-			title: $messages.update_available,
-			body: $messages.update_available_body,
+			title: $messages.updateAvailable,
+			body: $messages.updateAvailableBody,
 		});
 
 		sound.play('UPDATE');

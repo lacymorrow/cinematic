@@ -1,5 +1,6 @@
 /* eslint-disable global-require */
 import Logger from 'electron-log/main';
+import { $init } from '../config/strings';
 import { is } from './util';
 
 const initialize = () => {
@@ -16,6 +17,8 @@ const initialize = () => {
 			devToolsMode: 'undocked',
 		});
 	}
+
+	Logger.status($init.logger);
 };
 
 // Add debugging extensions like `react-devtools` and `redux-devtools`

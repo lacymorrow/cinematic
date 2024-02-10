@@ -1,4 +1,6 @@
 import { app } from 'electron';
+import Logger from 'electron-log';
+import { $init } from '../config/strings';
 import sounds from './sounds';
 import { resetStore, resetStoreSettings } from './store-actions';
 
@@ -8,6 +10,7 @@ export const restartApp = () => {
 };
 
 export const resetSettings = () => {
+	Logger.status($init.logger);
 	// Sonic announcement
 	sounds.play('RESET');
 	resetStoreSettings();

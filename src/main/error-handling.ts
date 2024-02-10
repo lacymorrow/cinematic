@@ -1,3 +1,5 @@
+import Logger from 'electron-log';
+import { $init } from '../config/strings';
 import logger from './logger';
 import { debugInfo } from './util';
 
@@ -18,6 +20,8 @@ const reportBody = (error: any) => `
 	${debugInfo()}`;
 
 const initialize = async () => {
+	Logger.status($init.logger);
+
 	// unhandledRejection : This will catch any thrown errors, or non fatal errors you have successfully handled via throw.
 	// uncaughtException : This only catches fatal errors or errors that would crash your node instance
 

@@ -1,7 +1,8 @@
 import { app } from 'electron';
 import Logger from 'electron-log/main';
-import { $messages } from '../config/strings';
+import { $init } from '../config/strings';
 import analytics from './analytics';
+import appFlags from './app-flags';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';
 import { createChildWindow, createMainWindow } from './create-window';
@@ -16,9 +17,11 @@ import sounds from './sounds';
 import tray from './tray';
 import { debugInfo, is } from './util';
 import windows from './windows';
-import appFlags from './app-flags';
 
 export const startup = () => {
+	Logger.status($init.startup);
+	console.timeLog(app.name, $init.startup);
+
 	// Initialize logger
 	logger.initialize();
 
@@ -42,10 +45,14 @@ export const startup = () => {
 
 	// Register app listeners, e.g. `app.on()`
 	appListeners.register();
+
+	Logger.status($init.started);
+	console.timeLog(app.name, $init.started);
 };
 
 export const ready = async () => {
-	console.timeLog(app.name, $messages.ready);
+	Logger.status($init.started);
+	console.timeLog(app.name, $init.ready);
 
 	// Log Node/Electron versions
 	Logger.info(debugInfo());
@@ -77,13 +84,16 @@ export const ready = async () => {
 	new AutoUpdate();
 
 	// Idle
-	Logger.status($messages.mainIdle);
+	Logger.status($init.mainIdle);
+	console.timeLog(app.name, $init.mainIdle);
 };
 
 export const idle = async () => {
-	Logger.status($messages.idle);
 	sounds.play('STARTUP');
 	windows.childWindow = await createChildWindow();
 
 	// ... do something with your app
+
+	Logger.status($init.idle);
+	console.timeLog(app.name, $init.idle);
 };
