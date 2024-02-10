@@ -1,3 +1,4 @@
+// todo: clear button cannot be inside button
 import { simpleUUID } from '@/utils/getUUID';
 import { throttle } from '@/utils/throttle';
 import Chrome from '@uiw/react-color-chrome';

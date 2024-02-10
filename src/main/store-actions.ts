@@ -32,6 +32,14 @@ const synchronizeApp = (changedSettings?: Partial<SettingsType>) => {
 	});
 };
 
+export const resetStoreSettings = () => {
+	Logger.status($messages.reset_store);
+	store.delete('settings');
+	store.delete('keybinds');
+
+	synchronizeApp();
+};
+
 export const resetStore = () => {
 	Logger.status($messages.reset_store);
 	store.clear();
