@@ -10,11 +10,7 @@ const PLAY_SOUND = 'play-sound';
 
 // Renderer -> Main
 const GET_APP_INFO = 'get-app-info';
-const GET_APP_MENU = 'get-app-menu';
 const GET_APP_PATHS = 'get-app-paths';
-const GET_MESSAGES = 'get-messages';
-const GET_KEYBINDS = 'get-keybinds';
-const GET_SETTINGS = 'get-settings';
 const GET_RENDERER_SYNC = 'get-renderer-sync';
 
 const SET_KEYBIND = 'set-keybind';
@@ -36,11 +32,7 @@ export const ipcChannels = {
 	RENDERER_READY,
 	GET_RENDERER_SYNC,
 	GET_APP_INFO,
-	GET_APP_MENU,
 	GET_APP_PATHS,
-	GET_MESSAGES,
-	GET_KEYBINDS,
-	GET_SETTINGS,
 
 	SET_KEYBIND,
 	SET_SETTINGS,
