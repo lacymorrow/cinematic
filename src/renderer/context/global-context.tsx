@@ -60,28 +60,15 @@ export function GlobalContextProvider({
 		const synchronizeAppState = async () => {
 			console.log(ipcChannels.APP_UPDATED);
 
-			// Get app menu
 			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_APP_MENU)
-				.then(setAppMenu)
-				.catch(console.error);
-
-			// Get settings
-			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_SETTINGS)
-				.then(setCurrentSettings)
-				.catch(console.error);
-
-			// Get keybinds
-			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_KEYBINDS)
-				.then(setCurrentKeybinds)
-				.catch(console.error);
-
-			// Get Status messages
-			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_MESSAGES)
-				.then(setMessages)
+				.invoke(ipcChannels.GET_RENDERER_SYNC)
+				.then((res) => {
+					const { settings: s, keybinds: k, messages: m, appMenu: menu } = res;
+					setCurrentSettings(s);
+					setCurrentKeybinds(k);
+					setMessages(m);
+					setAppMenu(menu);
+				})
 				.catch(console.error);
 		};
 

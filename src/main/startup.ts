@@ -19,7 +19,6 @@ import { debugInfo, is } from './util';
 import windows from './windows';
 
 export const startup = () => {
-	Logger.status($init.startup);
 	console.timeLog(app.name, $init.startup);
 
 	// Initialize logger

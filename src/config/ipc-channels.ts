@@ -15,6 +15,7 @@ const GET_APP_PATHS = 'get-app-paths';
 const GET_MESSAGES = 'get-messages';
 const GET_KEYBINDS = 'get-keybinds';
 const GET_SETTINGS = 'get-settings';
+const GET_RENDERER_SYNC = 'get-renderer-sync';
 
 const SET_KEYBIND = 'set-keybind';
 const SET_SETTINGS = 'set-settings';
@@ -33,6 +34,7 @@ export const ipcChannels = {
 
 	// renderer -> main
 	RENDERER_READY,
+	GET_RENDERER_SYNC,
 	GET_APP_INFO,
 	GET_APP_MENU,
 	GET_APP_PATHS,

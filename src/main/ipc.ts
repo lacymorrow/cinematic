@@ -1,10 +1,13 @@
 import { Menu, app, ipcMain, shell } from 'electron';
-import { getOS } from '../utils/getOS';
-import { CustomAcceleratorsType } from '../types/keyboard';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
+import { CustomAcceleratorsType } from '../types/keyboard';
+import { getOS } from '../utils/getOS';
+import kb from './keyboard';
 import { serializeMenu, triggerMenuItemById } from './menu';
+import { notification } from './notifications';
 import { rendererPaths } from './paths';
+import sounds from './sounds';
 import { idle } from './startup';
 import {
 	getAppMessages,
@@ -12,9 +15,6 @@ import {
 	getSettings,
 	setSettings,
 } from './store-actions';
-import kb from './keyboard';
-import { notification } from './notifications';
-import sounds from './sounds';
 import { is } from './util';
 
 export default {
@@ -40,12 +40,14 @@ export default {
 		});
 
 		// These send data back to the renderer process
-		ipcMain.handle(ipcChannels.GET_APP_MENU, () =>
-			serializeMenu(Menu.getApplicationMenu()),
-		);
-		ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
-		ipcMain.handle(ipcChannels.GET_KEYBINDS, getKeybinds);
-		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
+		ipcMain.handle(ipcChannels.GET_RENDERER_SYNC, () => {
+			return {
+				settings: getSettings(),
+				keybinds: getKeybinds(),
+				messages: getAppMessages(),
+				appMenu: serializeMenu(Menu.getApplicationMenu()),
+			};
+		});
 
 		// These do not send data back to the renderer process
 		ipcMain.on(
