@@ -107,7 +107,7 @@ export function InputComboboxForm({
 												placeholder={searchMessage || 'Search...'}
 											/>
 											<CommandEmpty>
-												{noValueMessage || 'No language found.'}
+												{noValueMessage || 'No results found.'}
 											</CommandEmpty>
 											<CommandGroup>
 												{items.map((item) => (

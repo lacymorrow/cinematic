@@ -236,7 +236,8 @@
 			"public",
 			"dist",
 			"node_modules",
-			"package.json"
+			"package.json",
+			"assets"
 		],
 		"afterSign": ".erb/scripts/notarize.js",
 		"mac": {

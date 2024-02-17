@@ -1,10 +1,12 @@
 import { CustomAcceleratorsType, KeyboardShortcut } from '@/types/keyboard';
-import { globalShortcut, app } from 'electron';
+import { app, globalShortcut } from 'electron';
 import Logger from 'electron-log';
 import store from './store';
 import windows from './windows';
 
 import { resetApp } from './reset';
+
+const APP_UPDATED = 'app-updated';
 
 export const keyboardShortcuts: KeyboardShortcut[] = [
 	/* Default accelerators */
@@ -84,7 +86,7 @@ const kb: ShortcutType = {
 		store.set('keybinds', keybinds);
 		registerKeyboardShortcuts();
 		// Sync with renderer
-		windows.mainWindow?.webContents.send('app-updated'); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
+		windows.mainWindow?.webContents.send(APP_UPDATED); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
 	},
 
 	setKeybinds: (keybinds: Partial<CustomAcceleratorsType>) => {
@@ -96,7 +98,7 @@ const kb: ShortcutType = {
 		registerKeyboardShortcuts();
 
 		// Sync with renderer
-		windows.mainWindow?.webContents.send('app-updated'); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
+		windows.mainWindow?.webContents.send(APP_UPDATED); // TODO: ipcChannels.APP_UPDATED, we hard-coded this to prevent circular imports
 	},
 
 	// Inherit all methods from Electron's globalShortcut

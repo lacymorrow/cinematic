@@ -1,3 +1,4 @@
+// todo: color value is reset when pure black
 // todo: clear button cannot be inside button
 import { simpleUUID } from '@/utils/getUUID';
 import Chrome from '@uiw/react-color-chrome';

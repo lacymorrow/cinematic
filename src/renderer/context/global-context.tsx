@@ -73,7 +73,9 @@ export function GlobalContextProvider({
 		};
 
 		// Listen for messages from the main process
-		window.electron.ipcRenderer.on(ipcChannels.APP_UPDATED, async (_event) => {
+		window.electron.ipcRenderer.on(ipcChannels.APP_UPDATED, async (data) => {
+			console.log('APP_UPDATED', data);
+
 			await synchronizeAppState();
 		});
 
@@ -102,7 +104,6 @@ export function GlobalContextProvider({
 			.invoke(ipcChannels.GET_APP_INFO)
 			.then((info) => {
 				setAppInfo(info);
-				console.dir(info);
 				return info;
 			})
 			.then(({ paths }) => {

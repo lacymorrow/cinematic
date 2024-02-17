@@ -85,5 +85,9 @@ export const addAppMessage = (message: AppMessageType) => {
 };
 
 export const getAppMessages = () => {
-	return store.get('appMessageLog');
+	const messages = store.get('appMessageLog');
+
+	// Reverse the messages so that the most recent is at the top
+	const reversed = messages.slice().reverse();
+	return reversed;
 };

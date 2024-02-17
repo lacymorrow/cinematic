@@ -4,7 +4,6 @@ import { SettingsType } from '../config/settings';
 import { CustomAcceleratorsType } from '../types/keyboard';
 import { getOS } from '../utils/getOS';
 import kb from './keyboard';
-import { serializeMenu, triggerMenuItemById } from './menu';
 import { notification } from './notifications';
 import { rendererPaths } from './paths';
 import sounds from './sounds';
@@ -16,6 +15,7 @@ import {
 	setSettings,
 } from './store-actions';
 import { is } from './util';
+import { serializeMenu, triggerMenuItemById } from './utils/menu-utils';
 
 export default {
 	initialize() {
@@ -40,7 +40,7 @@ export default {
 		});
 
 		// These send data back to the renderer process
-		ipcMain.handle(ipcChannels.GET_RENDERER_SYNC, () => {
+		ipcMain.handle(ipcChannels.GET_RENDERER_SYNC, (id) => {
 			return {
 				settings: getSettings(),
 				keybinds: getKeybinds(),
