@@ -18,27 +18,31 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 	return (
 		<nav
 			className={cn(
-				'flex flex-wrap gap-2 md:flex-col items-start justify-stretch',
+				'flex flex-wrap flex-col gap-2 items-start justify-stretch',
 				className,
 			)}
 			{...props}
 		>
-			{items.map((item) => (
-				<Link
-					draggable={false}
-					key={item.href}
-					to={item.href}
-					className={cn(
-						buttonVariants({
-							variant: pathname.endsWith(item.href) ? 'secondary' : 'ghost',
-						}),
-						'justify-start md:w-full flex gap-2',
-					)}
-				>
-					{item.icon && <item.icon />}
-					{item.title}
-				</Link>
-			))}
+			{items.map((item) => {
+				const isCurrentPage = pathname.endsWith(item.href);
+				return (
+					<Link
+						draggable={false}
+						key={item.href}
+						to={item.href}
+						className={cn(
+							buttonVariants({
+								variant: isCurrentPage ? 'default' : 'ghost',
+							}),
+							isCurrentPage ? 'font-bold' : 'font-normal',
+							'justify-start w-full flex gap-2 rounded-none',
+						)}
+					>
+						{item.icon && <item.icon />}
+						{item.title}
+					</Link>
+				);
+			})}
 		</nav>
 	);
 }

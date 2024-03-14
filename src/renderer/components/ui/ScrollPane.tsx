@@ -2,6 +2,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { Outlet } from 'react-router-dom';
 
 const ScrollArea = React.forwardRef<
 	React.ElementRef<typeof ScrollAreaPrimitive.Root>,
@@ -38,9 +39,20 @@ const ScrollBar = React.forwardRef<
 		)}
 		{...props}
 	>
-		<ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-muted-foreground" />
+		<ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-gray-500 opacity-90" />
 	</ScrollAreaPrimitive.ScrollAreaScrollbar>
 ));
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
-export { ScrollArea, ScrollBar };
+const ScrollPane = React.forwardRef<
+	React.ElementRef<typeof ScrollAreaPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+	<div className="h-full child:h-full">
+		<ScrollArea ref={ref} className="w-full h-full child:h-full">
+			{children || <Outlet />}
+		</ScrollArea>
+	</div>
+));
+
+export { ScrollArea, ScrollBar, ScrollPane };

@@ -9,9 +9,9 @@ import {
 } from 'react-router-dom';
 
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
+import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
 import { settingsNavItems } from '@/renderer/config/nav';
 import '@/renderer/styles/globals.scss';
-import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
 
 export default function App() {
 	const routes = (

@@ -42,7 +42,7 @@ export default class MenuBuilder {
 	}
 
 	subMenuDev: MenuItemConstructorOptions = {
-		label: 'Development',
+		label: 'Dev',
 		submenu: [
 			{
 				label: 'Reload',

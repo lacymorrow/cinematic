@@ -31,16 +31,16 @@ function LightModeIcon() {
 		<>
 			<div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
 				<div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
-					<div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
-					<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+					<div className="h-2 sm:w-[80px] rounded-lg bg-[#ecedef]" />
+					<div className="h-2 sm:w-[100px] rounded-lg bg-[#ecedef]" />
 				</div>
 				<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
 					<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-					<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+					<div className="h-2 sm:w-[100px] rounded-lg bg-[#ecedef]" />
 				</div>
 				<div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm">
 					<div className="h-4 w-4 rounded-full bg-[#ecedef]" />
-					<div className="h-2 w-[100px] rounded-lg bg-[#ecedef]" />
+					<div className="h-2 sm:w-[100px] rounded-lg bg-[#ecedef]" />
 				</div>
 			</div>
 		</>
@@ -52,16 +52,16 @@ function DarkModeIcon() {
 		<>
 			<div className="space-y-2 rounded-sm bg-slate-950 p-2">
 				<div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
-					<div className="h-2 w-[80px] rounded-lg bg-slate-400" />
-					<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+					<div className="h-2 sm:w-[80px] rounded-lg bg-slate-400" />
+					<div className="h-2 sm:w-[100px] rounded-lg bg-slate-400" />
 				</div>
 				<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
 					<div className="h-4 w-4 rounded-full bg-slate-400" />
-					<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+					<div className="h-2 sm:w-[100px] rounded-lg bg-slate-400" />
 				</div>
 				<div className="flex items-center space-x-2 rounded-md bg-slate-800 p-2 shadow-sm">
 					<div className="h-4 w-4 rounded-full bg-slate-400" />
-					<div className="h-2 w-[100px] rounded-lg bg-slate-400" />
+					<div className="h-2 sm:w-[100px] rounded-lg bg-slate-400" />
 				</div>
 			</div>
 		</>
@@ -74,7 +74,7 @@ function SystemModeIcon() {
 			<div className="">
 				<LightModeIcon />
 			</div>
-			<div className="top-0 left-1/2 w-full absolute z-10">
+			<div className="top-0 left-1/2 sm:w-full absolute z-10">
 				<DarkModeIcon />
 			</div>
 		</div>

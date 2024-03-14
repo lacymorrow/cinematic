@@ -1,5 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { $settings } from '@/config/strings';
+import { ScrollArea } from '@/renderer/components/ui/ScrollPane';
 import { SidebarNav } from '@/renderer/components/ui/SidebarNav';
 import { settingsNavItems } from '@/renderer/config/nav';
 import { ResetIcon } from '@radix-ui/react-icons';
@@ -13,24 +14,30 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
 	return (
 		<>
-			<div className="space-y-6 p-10 pb-16">
-				<div className="space-y-0.5">
-					<h2 className="text-2xl font-bold tracking-tight">
+			<div className="h-full flex flex-col justify-stretch">
+				<div className="space-y-0.5 p-4">
+					<h2 className="text-xl font-bold tracking-tight">
 						{$settings.title}
 					</h2>
-					<p className="text-muted-foreground">{$settings.description}</p>
+					<p className="text-sm text-muted-foreground">
+						{$settings.description}
+					</p>
 				</div>
-				<Separator className="my-6" />
-				<div className="flex flex-col space-y-8 md:flex-row md:space-x-12 md:space-y-0">
-					<aside className="-mx-4 md:w-1/5">
+				<Separator />
+				<div className="flex h-full min-h-0">
+					<ScrollArea className="bg-secondary min-w-20 md:w-1/5">
 						<SidebarNav
 							items={[
 								...settingsNavItems,
 								{ title: 'Back', href: '/', icon: ResetIcon },
 							]}
+							className="py-2"
 						/>
-					</aside>
-					<div className="flex-1 md:max-w-2xl">{children || <Outlet />}</div>
+					</ScrollArea>
+					<Separator className="shadow" orientation="vertical" />
+					<ScrollArea className="flex-1 px-4">
+						<div className="py-4 pb-10">{children || <Outlet />}</div>
+					</ScrollArea>
 				</div>
 			</div>
 		</>

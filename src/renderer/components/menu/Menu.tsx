@@ -192,7 +192,7 @@ export function Menu({ className }: { className?: string }) {
 						<MenubarMenu key={uuidv4()}>
 							<MenubarTrigger
 								className={cn(
-									'no-drag', // Draggable elements cannot be interacted with, undo the draggable class
+									'no-drag px-2 sm:px-3', // Draggable elements cannot be interacted with, undo the draggable class
 									app.isMac && index === 0 && 'font-bold', // Bold the first Menu Item (the App Name) on Mac
 								)}
 							>
