@@ -1,4 +1,4 @@
-import { DragHandleVerticalIcon } from '@radix-ui/react-icons';
+import { DragHandleDots1Icon } from '@radix-ui/react-icons';
 import React from 'react';
 
 type HTMLProps = React.HTMLProps<HTMLDivElement>;
@@ -9,7 +9,8 @@ export const DragHandle: React.FC<HTMLProps> = (props) => {
 			className="drag cursor-move flex items-center justify-center"
 			{...props}
 		>
-			<DragHandleVerticalIcon />
+			{/* <DragHandleVerticalIcon /> */}
+			<DragHandleDots1Icon />
 		</div>
 	);
 };

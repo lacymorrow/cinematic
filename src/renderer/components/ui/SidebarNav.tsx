@@ -18,7 +18,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 	return (
 		<nav
 			className={cn(
-				'flex flex-wrap flex-col gap-2 items-start justify-stretch',
+				'flex flex-wrap flex-col items-start justify-stretch',
 				className,
 			)}
 			{...props}
@@ -35,7 +35,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 								variant: isCurrentPage ? 'default' : 'ghost',
 							}),
 							isCurrentPage ? 'font-bold' : 'font-normal',
-							'justify-start w-full flex gap-2 rounded-none',
+							'justify-start w-full flex gap-2 rounded-none py-6',
 						)}
 					>
 						{item.icon && <item.icon />}

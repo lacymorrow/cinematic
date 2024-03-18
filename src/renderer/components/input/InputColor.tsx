@@ -54,14 +54,9 @@ export function InputColor({
 		[onChange],
 	);
 
-	const handleClear = useCallback(
-		(e: MouseEvent) => {
-			// e.preventDefault();
-			// e.stopPropagation();
-			handleChange('');
-		},
-		[handleChange],
-	);
+	const handleClear = useCallback(() => {
+		handleChange('');
+	}, [handleChange]);
 
 	return (
 		<>

@@ -74,7 +74,7 @@ function SystemModeIcon() {
 			<div className="">
 				<LightModeIcon />
 			</div>
-			<div className="top-0 left-1/2 sm:w-full absolute z-10">
+			<div className="top-0 right-0 left-1/2 sm:w-full absolute z-10">
 				<DarkModeIcon />
 			</div>
 		</div>
@@ -116,7 +116,7 @@ export function ThemeForm() {
 									onThemeChange(e);
 								}}
 								defaultValue={field.value}
-								className="grid w-full grid-cols-3 gap-8 pt-2"
+								className="w-full pt-4 px-2 sm:pt-2 sm:px-0 grid grid-cols-1 sm:grid-cols-3 gap-8"
 							>
 								<FormItem>
 									<FormLabel className="[&:has([data-state=checked])>div]:border-primary">
@@ -126,7 +126,7 @@ export function ThemeForm() {
 
 										<div
 											className={cn(
-												'items-center rounded-md border-2 border-muted bg-popover p-1',
+												'items-center rounded-md border-2 border-muted bg-popover p-1 max-w-60 mx-auto',
 												theme !== 'light' &&
 													'hover:bg-accent hover:text-accent-foreground',
 											)}
@@ -147,7 +147,7 @@ export function ThemeForm() {
 
 										<div
 											className={cn(
-												'items-center rounded-md border-2 border-muted bg-popover p-1',
+												'items-center rounded-md border-2 border-muted bg-popover p-1 max-w-60 mx-auto',
 												theme !== 'dark' &&
 													'hover:bg-accent hover:text-accent-foreground',
 											)}
@@ -167,7 +167,7 @@ export function ThemeForm() {
 
 										<div
 											className={cn(
-												'items-center rounded-md border-2 border-muted bg-popover p-1',
+												'items-center rounded-md border-2 border-muted bg-popover p-1 max-w-60 mx-auto',
 												theme !== 'system' &&
 													'hover:bg-accent hover:text-accent-foreground',
 											)}

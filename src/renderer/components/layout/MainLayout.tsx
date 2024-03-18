@@ -9,13 +9,7 @@ import { IsOnlineContextProvider } from 'react-is-online-context';
 import { Outlet } from 'react-router-dom';
 
 // We can't use the ScrollArea here or the scroll will persist between navigations
-export function MainLayout({
-	children,
-	scroll = true,
-}: {
-	children?: React.ReactNode;
-	scroll?: boolean;
-}) {
+export function MainLayout({ children }: { children?: React.ReactNode }) {
 	return (
 		<div className="w-full h-full flex flex-col">
 			<Menu className="shrink-0" />

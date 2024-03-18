@@ -69,10 +69,12 @@ module.exports = {
 		},
 	},
 	plugins: [
+		// Add support for targeting children with child:
 		({ addVariant }) => {
 			addVariant('child', '& > *');
 			addVariant('child-hover', '& > *:hover');
 		},
 		require('tailwindcss-animate'),
+		require('@tailwindcss/container-queries'),
 	],
 };

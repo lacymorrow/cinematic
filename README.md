@@ -51,12 +51,27 @@ yarn start
 - [Shadcn](https://ui.shadcn.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
+
+## Development
+
+### Tailwind CSS
+
+We use Tailwind CSS for styling. See the [Tailwind CSS docs](https://tailwindcss.com/docs) for more information.
+
+Some Tailwind plugins have been added for convenience:
+
+- [Tailwind Animate](https://github.com/jamiebuilds/tailwindcss-animate) - `tailwindcss-animate`
+- [Tailwind Container Queries](https://github.com/tailwindlabs/tailwindcss-container-queries) - `@tailwindcss/container-queries`
+- Child selectors to target immediate children like `child:w-xl`
+- Don't forget group selectors too: `group` (Parent) `group-hover:bg-gray-100` (Child)
+
 ### Shadcn
 
 Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
 Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
 
 _Current installation command (to update all ui components):_
+
 ```sh
 npx shadcn-ui@latest add button checkbox dropdown-menu form input menubar radio-group scroll-area select separator sonner switch textarea
 ```

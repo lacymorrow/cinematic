@@ -78,7 +78,7 @@ export function InputSlider({
 
 	return (
 		<div className="flex flex-col justify-between gap-2">
-			<div className="flex flex-row items-center justify-between">
+			<div className="flex flex-row items-start justify-between">
 				<div className="space-y-0.5">
 					{label && (
 						<label htmlFor={uuid} className="font-medium text-base">
@@ -108,12 +108,12 @@ export function InputSlider({
 								{...props}
 							/>
 						) : (
-							<p className={cn('text-muted-foreground flex')}>
-								{value}
+							<div className="flex flex-col items-end">
+								<p className={cn('text-muted-foreground flex')}>{value}</p>
 								{typeof defaultValue === 'number' && value !== defaultValue && (
 									<ClearButton onClick={handleClear} className="static" />
 								)}
-							</p>
+							</div>
 						)}
 					</>
 				)}
