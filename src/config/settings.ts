@@ -9,7 +9,7 @@ export interface SettingsType {
 	allowSounds: boolean;
 	allowAutoUpdate: boolean;
 	allowNotifications: boolean;
-	notifcationType: NotificationType;
+	notificationType: NotificationType;
 	showDockIcon: boolean; // macOS only
 	showTrayIcon: boolean;
 	startMinimized: boolean;
@@ -34,7 +34,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
 	allowAutoUpdate: true,
 	allowSounds: true,
 	allowNotifications: true,
-	notifcationType: 'all',
+	notificationType: 'all',
 	showDockIcon: true,
 	showTrayIcon: true,
 	startMinimized: false,
