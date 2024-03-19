@@ -1,15 +1,17 @@
-export type ViewModeType = 'grid' | 'list';
+import { CustomAcceleratorsType } from '@/types/keyboard';
 
 export type ThemeType = 'system' | 'light' | 'dark';
 
-export type ThumbnailSizeType = 'small' | 'medium' | 'large';
+export type NotificationType = 'system' | 'app' | 'all';
 
 export interface SettingsType {
+	allowAnalytics: boolean;
 	allowSounds: boolean;
-	autoUpdate: boolean;
+	allowAutoUpdate: boolean;
 	allowNotifications: boolean;
-	notifcationType: 'default' | 'system' | 'all';
-	showDockIcon: boolean;
+	notifcationType: NotificationType;
+	showDockIcon: boolean; // macOS only
+	showTrayIcon: boolean;
 	startMinimized: boolean;
 	quitOnWindowClose: boolean;
 
@@ -26,7 +28,6 @@ export interface SettingsType {
 	sidebarLayout: number[];
 
 	showSidebar: boolean;
-	showTrayIcon: boolean;
 	visibleSidebarElements: string[];
 	// alwaysOnTop: boolean;
 	// showAlwaysOnTopPrompt: boolean;
@@ -47,11 +48,13 @@ export interface SettingsType {
 export const DEFAULT_SETTINGS: SettingsType = {
 	paths: [],
 
-	autoUpdate: true,
+	allowAnalytics: true,
+	allowAutoUpdate: true,
 	allowSounds: true,
 	allowNotifications: true,
 	notifcationType: 'all',
 	showDockIcon: true,
+	showTrayIcon: true,
 	startMinimized: false,
 	quitOnWindowClose: false,
 
@@ -59,7 +62,6 @@ export const DEFAULT_SETTINGS: SettingsType = {
 	sidebarLayout: [20, 80],
 
 	showSidebar: true,
-	showTrayIcon: true,
 
 	visibleSidebarElements: ['watch', 'liked', 'genres', 'playlists', 'history'],
 
@@ -67,4 +69,14 @@ export const DEFAULT_SETTINGS: SettingsType = {
 
 	viewMode: 'grid',
 	theme: 'system',
+};
+
+// see src/main/keyboard-shortcuts.ts
+// a shortcut must have an action, keybind, and fn
+const accelerator = 'Control+Shift+Alt';
+
+export const DEFAULT_KEYBINDS: CustomAcceleratorsType = {
+	quit: `${accelerator}+Q`,
+	reset: `${accelerator}+R`,
+	// reset: '', // empty string or undefined disables a shortcut
 };

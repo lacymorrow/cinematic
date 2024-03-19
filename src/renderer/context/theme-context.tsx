@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo } from 'react';
-import { useGlobalContext } from './global-context';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
 type Theme = 'dark' | 'light' | 'system';
 

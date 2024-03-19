@@ -1,5 +1,6 @@
 /* eslint-disable global-require */
 import Logger from 'electron-log/main';
+import { $init } from '../config/strings';
 import { is } from './util';
 
 const initialize = () => {
@@ -11,8 +12,13 @@ const initialize = () => {
 
 	// Enable debug utilities in development
 	if (is.debug) {
-		require('electron-debug')();
+		require('electron-debug')({
+			showDevTools: true,
+			devToolsMode: 'undocked',
+		});
 	}
+
+	Logger.status($init.debugging);
 };
 
 // Add debugging extensions like `react-devtools` and `redux-devtools`

@@ -20,60 +20,94 @@ import {
 	pathPlaylists,
 	pathSettings,
 } from '@/config/nav';
-import { Layout } from '@/renderer/components/layout/Layout';
 import { nav } from '@/renderer/components/layout/nav';
 import { ResizableLayout } from '@/renderer/components/ui/ResizableLayout';
-import { MainLayout } from '@/renderer/windows/main/Layout';
 import { Genre } from '@/renderer/windows/main/pages/Genre';
 import { Media } from '@/renderer/windows/main/pages/Media';
 import { Settings } from '@/renderer/windows/main/pages/Settings';
-import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
+import {
+	Route,
+	RouterProvider,
+	createHashRouter,
+	createRoutesFromElements,
+} from 'react-router-dom';
+
+// todo: menubar ellipsis on overflow
+import { Home } from '@/renderer/components/pages/Home';
+
+import { Layout } from '@/renderer/components/layout/Layout';
+import { MainLayout } from '@/renderer/components/layout/MainLayout';
+import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
+import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
+import { settingsNavItems } from '@/renderer/config/nav';
+import '@/renderer/styles/globals.scss';
 import { Playlist } from './pages/Playlist';
 
-import '@/renderer/styles/globals.scss';
-
 export default function App() {
+	const routes = (
+		<Route path="/" element={<MainLayout />}>
+			<Route path="settings" element={<SettingsLayout />}>
+				<Route index element={<SettingsApplication />} />
+				{settingsNavItems.map((item) => {
+					/* Dynamically add routes for settings */
+					return (
+						<Route
+							key={item.title}
+							path={item.href}
+							element={<>{item.element}</>}
+						/>
+					);
+				})}
+			</Route>
+
+			<Route index element={<Home />} />
+			<Route path="*" element={<Home />} />
+		</Route>
+	);
+
+	const cinematicRoutes = (
+		<>
+			{nav.map((item) => {
+				return (
+					<Route
+						key={item.name}
+						path={item.path}
+						element={<ResizableLayout>{item.element}</ResizableLayout>}
+					/>
+				);
+			})}
+			<Route path={pathGenres}>
+				<Route
+					path=":id"
+					element={
+						<ResizableLayout>
+							<Genre />
+						</ResizableLayout>
+					}
+				/>
+			</Route>
+			<Route path={pathPlaylists}>
+				<Route
+					path=":id"
+					element={
+						<ResizableLayout>
+							<Playlist />
+						</ResizableLayout>
+					}
+				/>
+			</Route>
+			<Route path={pathMedia}>
+				<Route path=":id" element={<Media />} />
+			</Route>
+			<Route path={`${pathSettings}/*`} element={<Settings />} />
+		</>
+	);
+
+	const router = createHashRouter(createRoutesFromElements(cinematicRoutes));
+
 	return (
 		<Layout>
-			<Router>
-				<MainLayout>
-					<Routes>
-						{nav.map((item) => {
-							return (
-								<Route
-									key={item.name}
-									path={item.path}
-									element={<ResizableLayout>{item.element}</ResizableLayout>}
-								/>
-							);
-						})}
-						<Route path={pathGenres}>
-							<Route
-								path=":id"
-								element={
-									<ResizableLayout>
-										<Genre />
-									</ResizableLayout>
-								}
-							/>
-						</Route>
-						<Route path={pathPlaylists}>
-							<Route
-								path=":id"
-								element={
-									<ResizableLayout>
-										<Playlist />
-									</ResizableLayout>
-								}
-							/>
-						</Route>
-						<Route path={pathMedia}>
-							<Route path=":id" element={<Media />} />
-						</Route>
-						<Route path={`${pathSettings}/*`} element={<Settings />} />
-					</Routes>
-				</MainLayout>
-			</Router>
+			<RouterProvider router={router} />
 		</Layout>
 	);
 }

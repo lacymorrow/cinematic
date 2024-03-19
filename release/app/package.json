@@ -1,7 +1,7 @@
 {
 	"name": "cinematic",
 	"version": "3.0.0",
-	"description": "A desktop browser for your media library.",
+	"description": "A batteries-included Electron boilerplate.",
 	"license": "CC-BY-NC-SA-4.0",
 	"homepage": "https://lacymorrow.github.io/cinematic",
 	"author": {
@@ -19,5 +19,7 @@
 		"postinstall": "npm run rebuild && npm run link-modules",
 		"link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"@aptabase/electron": "^0.3.1"
+	}
 }

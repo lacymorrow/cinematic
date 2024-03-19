@@ -1,25 +1,32 @@
 import { Menu, app, ipcMain, shell } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
+import { CustomAcceleratorsType } from '../types/keyboard';
+import { getOS } from '../utils/getOS';
 import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
-import { serializeMenu, triggerMenuItemById } from './menu';
+import kb from './keyboard';
+import { notification } from './notifications';
 import { rendererPaths } from './paths';
+import sounds from './sounds';
 import { idle } from './startup';
+import { HistoryActionType } from './store';
 import {
-	HistoryActionType,
 	addToHistory,
 	addToPlaylist,
 	clearLibrary,
 	deletePlaylist,
 	getAppMessages,
 	getGenres,
+	getKeybinds,
 	getLibrary,
 	getPlaylists,
 	getSettings,
 	setMediaLike,
 	setSettings,
-} from './store';
+} from './store-actions';
+import { is } from './util';
+import { serializeMenu, triggerMenuItemById } from './utils/menu-utils';
 
 export default {
 	initialize() {
@@ -28,11 +35,6 @@ export default {
 			idle();
 		});
 
-		// These send data back to the renderer process
-		ipcMain.handle(ipcChannels.GET_APP_NAME, () => app.getName());
-		ipcMain.handle(ipcChannels.GET_APP_MENU, () =>
-			serializeMenu(Menu.getApplicationMenu()),
-		);
 		ipcMain.handle(ipcChannels.GET_GENRES, getGenres);
 		ipcMain.handle(ipcChannels.GET_LIBRARY, getLibrary);
 		ipcMain.handle(ipcChannels.GET_PLAYLISTS, getPlaylists);
@@ -42,7 +44,40 @@ export default {
 		ipcMain.handle(ipcChannels.GET_SETTINGS, getSettings);
 		ipcMain.handle(ipcChannels.GET_MESSAGES, getAppMessages);
 
-		ipcMain.handle(
+		// This is called ONCE, don't use it for anything that changes
+		ipcMain.handle(ipcChannels.GET_APP_INFO, () => {
+			const os = getOS();
+			return {
+				name: app.getName(),
+				version: app.getVersion(),
+				os,
+				isMac: os === 'mac',
+				isWindows: os === 'windows',
+				isLinux: os === 'linux',
+				isDev: is.debug,
+				paths: rendererPaths,
+			};
+		});
+
+		// These send data back to the renderer process
+		ipcMain.handle(ipcChannels.GET_RENDERER_SYNC, (id) => {
+			return {
+				settings: getSettings(),
+				keybinds: getKeybinds(),
+				messages: getAppMessages(),
+				appMenu: serializeMenu(Menu.getApplicationMenu()),
+			};
+		});
+
+		// These do not send data back to the renderer process
+		ipcMain.on(
+			ipcChannels.SET_KEYBIND,
+			(_event, keybind: keyof CustomAcceleratorsType, accelerator: string) => {
+				kb.setKeybind(keybind, accelerator);
+			},
+		);
+
+		ipcMain.on(
 			ipcChannels.SET_SETTINGS,
 			(_event, settings: Partial<SettingsType>) => {
 				setSettings(settings);
@@ -64,6 +99,16 @@ export default {
 		);
 
 		// These do not send data back to the renderer process
+		// Show a notification
+		ipcMain.on(ipcChannels.APP_NOTIFICATION, (_event, options: any) => {
+			notification(options);
+		});
+
+		// Play a sound
+		ipcMain.on(ipcChannels.PLAY_SOUND, (_event: any, sound: string) => {
+			sounds.play(sound);
+		});
+
 		// Trigger an app menu item by its id
 		ipcMain.on(
 			ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID,

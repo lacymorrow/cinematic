@@ -2,12 +2,12 @@ import { ProgressInfo, autoUpdater } from 'electron-updater';
 
 import { shell } from 'electron';
 import Logger from 'electron-log/main';
-import { $messages } from '../config/strings';
+import { $autoUpdate } from '../config/strings';
 import dialog from './dialog';
 import dock from './dock';
 import { notification } from './notifications';
 import sounds from './sounds';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import { is } from './util';
 import windows from './windows';
 
@@ -15,13 +15,15 @@ const FOUR_HOURS = 1000 * 60 * 60 * 4;
 
 export class AutoUpdate {
 	constructor() {
-		Logger.status($messages.auto_update);
+		if (getSetting('allowAutoUpdate')) {
+			Logger.status($autoUpdate.autoUpdate);
 
-		// Configure log debugging to file
-		Logger.transports.file.level = 'silly';
-		autoUpdater.logger = Logger;
+			// Configure log debugging to file
+			Logger.transports.file.level = 'silly';
+			autoUpdater.logger = Logger;
 
-		autoUpdater.checkForUpdatesAndNotify();
+			autoUpdater.checkForUpdatesAndNotify();
+		}
 	}
 }
 
@@ -45,8 +47,8 @@ const onUpdateAvailable = () => {
 	try {
 		// Notify user of update
 		notification({
-			title: $messages.update_available,
-			body: $messages.update_available_body,
+			title: $autoUpdate.updateAvailable,
+			body: $autoUpdate.updateAvailableBody,
 		});
 
 		sounds.play('UPDATE');
@@ -84,7 +86,7 @@ const update = () => {
 
 	// We trycatch here because appx throws errors
 	try {
-		if (getSetting('autoUpdate')) {
+		if (getSetting('allowAutoUpdate')) {
 			Logger.info('Setting: Automatic Updates');
 
 			autoUpdater.logger = Logger;

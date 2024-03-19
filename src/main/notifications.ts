@@ -2,7 +2,7 @@ import { Notification } from 'electron';
 import Logger from 'electron-log/main';
 import { ipcChannels } from '../config/ipc-channels';
 import { NotificationOptions } from '../types/notification';
-import { getSetting } from './store';
+import { getSetting } from './store-actions';
 import windows from './windows';
 
 const mainNotification = (options: NotificationOptions) => {
