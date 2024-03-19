@@ -6387,6 +6387,13 @@ fastest-levenshtein@^1.0.12:
   resolved "https://registry.npmjs.org/fastest-levenshtein/-/fastest-levenshtein-1.0.16.tgz"
   integrity sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==
 
+fastq@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.17.1.tgz#2a523f07a4e7b1e81a42b91b8bf2254107753b47"
+  integrity sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==
+  dependencies:
+    reusify "^1.0.4"
+
 fastq@^1.6.0:
   version "1.17.1"
   resolved "https://registry.npmjs.org/fastq/-/fastq-1.17.1.tgz"
@@ -8828,14 +8835,6 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-movie-art@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/movie-art/-/movie-art-3.0.1.tgz#a95a9a8cbdf3fe9be473e7c85f558bc29df75505"
-  integrity sha512-dsoz4oBmr+wGVsjKIlplxdnXc1EdsMpJhuYJ6OYO32yLakmyrnwa3/yt5QWSXzcjC4hLm8ROLRzbh3IIOc1NWg==
-  dependencies:
-    isomorphic-fetch "^3.0.0"
-    meow "^4.0.0"
-
 movie-info@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/movie-info/-/movie-info-3.0.2.tgz#8987faaf2a6888ae49ac8d720be739e7db527550"
@@ -9378,9 +9377,9 @@ parse-json@^5.2.0:
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
 
-"parse-torrent-filename@https://github.com/lacymorrow/parse-torrent-filename":
+"parse-torrent-filename@https://github.com/lacymorrow/parse-torrent-filename.git":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/lacymorrow/parse-torrent-filename.git#9b3b7fdb934741390ab8ae2263dd040c75836903"
+  resolved "https://github.com/lacymorrow/parse-torrent-filename.git#9b3b7fdb934741390ab8ae2263dd040c75836903"
 
 parse5-htmlparser2-tree-adapter@^6.0.1:
   version "6.0.1"

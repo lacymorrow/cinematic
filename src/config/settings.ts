@@ -1,6 +1,8 @@
 import { CustomAcceleratorsType } from '@/types/keyboard';
 
 export type ThemeType = 'system' | 'light' | 'dark';
+export type ThumbnailSizeType = 'small' | 'medium' | 'large';
+export type ViewModeType = 'grid' | 'list';
 
 export type NotificationType = 'system' | 'app' | 'all';
 
