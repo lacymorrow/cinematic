@@ -13,7 +13,6 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
 	const { pathname: location } = useLocation(); // We use this to reset the scroll position when the location changes
-
 	return (
 		<>
 			<div className="h-full flex flex-col justify-stretch">

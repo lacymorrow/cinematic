@@ -3,28 +3,26 @@
 // bug: we check for missing metadata every launch, even if they will always error (ex: GoPRO.mp4)
 
 // todo: sort/filter media
-// todo: search media  (?filer)
+// todo: search media  (?filter)
 // todo: allow choosing movie poster size
 // todo: improve list view of media
 // todo: show all trailers in a slider
-// todo: app history
 // todo: select multiple media
 // todo: ratings
 // todo: show/hide sidebar
 // todo: show progress
-// todo: scrollarea for genre/playlist
 
+import { ResizableLayout } from '@/renderer/components/layout/ResizableLayout';
 import {
+	nav,
 	pathGenres,
 	pathMedia,
 	pathPlaylists,
 	pathSettings,
-} from '@/config/nav';
-import { nav } from '@/renderer/components/layout/nav';
-import { ResizableLayout } from '@/renderer/components/ui/ResizableLayout';
+	settingsNavItems,
+} from '@/renderer/config/nav';
 import { Genre } from '@/renderer/windows/main/pages/Genre';
 import { Media } from '@/renderer/windows/main/pages/Media';
-import { Settings } from '@/renderer/windows/main/pages/Settings';
 import {
 	Route,
 	RouterProvider,
@@ -32,14 +30,12 @@ import {
 	createRoutesFromElements,
 } from 'react-router-dom';
 
-// todo: menubar ellipsis on overflow
 import { Home } from '@/renderer/components/pages/Home';
 
 import { Layout } from '@/renderer/components/layout/Layout';
 import { MainLayout } from '@/renderer/components/layout/MainLayout';
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
 import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
-import { settingsNavItems } from '@/renderer/config/nav';
 import '@/renderer/styles/globals.scss';
 import { Playlist } from './pages/Playlist';
 
@@ -69,12 +65,15 @@ export default function App() {
 		<Route path="/" element={<MainLayout />}>
 			{nav.map((item) => {
 				return (
-					<Route
-						key={item.name}
-						path={item.path}
-						element={<ResizableLayout>{item.element}</ResizableLayout>}
-						{...(item.index ? { index: true } : {})}
-					/>
+					<>
+						<Route
+							key={item.name}
+							path={item.path}
+							element={<ResizableLayout>{item.element}</ResizableLayout>}
+							{...(item.index ? { index: true } : {})}
+						/>
+						{item.index && <Route path="*" element={<>{item.element}</>} />}
+					</>
 				);
 			})}
 			<Route path={pathGenres}>
@@ -100,7 +99,22 @@ export default function App() {
 			<Route path={pathMedia}>
 				<Route path=":id" element={<Media />} />
 			</Route>
-			<Route path={`${pathSettings}/*`} element={<Settings />} />
+			<Route path={`${pathSettings}/*`} element={<SettingsLayout />}>
+				{settingsNavItems.map((item) => {
+					/* Dynamically add routes for settings */
+					return (
+						<>
+							<Route
+								key={item.title}
+								path={item.href}
+								element={<>{item.element}</>}
+								{...(item.index ? { index: true } : {})}
+							/>
+							{item.index && <Route path="*" element={<>{item.element}</>} />}
+						</>
+					);
+				})}
+			</Route>
 		</Route>
 	);
 

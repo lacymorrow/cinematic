@@ -20,16 +20,16 @@ import { TokensIcon, VideoIcon } from '@radix-ui/react-icons';
 import React, { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { pathSettings } from '@/config/nav';
 import { $ui } from '@/config/strings';
 import { DialogDeletePlaylist } from '@/renderer/components/dialog/DialogDeletePlaylist';
 import { DEBOUNCE_DELAY } from '@/renderer/config/config';
+import { pathSettings } from '@/renderer/config/nav';
 import styles from '@/renderer/styles/Sidebar.module.scss';
 import { debounce } from '@/utils/debounce';
 
-const Header = ({ text }: { text: string }) => (
-	<h2 className="p-2 text-lg font-semibold tracking-tight">{text}</h2>
-);
+function Header({ text }: { text: string }) {
+	return <h2 className="p-2 text-lg font-semibold tracking-tight">{text}</h2>;
+}
 
 interface Props {
 	children: React.ReactNode;
@@ -58,15 +58,18 @@ export function ResizableLayout({
 				sidebarLayout: layout,
 			});
 		}, DEBOUNCE_DELAY),
-		[],
+		[setSettings],
 	);
 
-	const handleCollapseExpand = useCallback((collapsed: boolean) => {
-		setIsCollapsed(collapsed);
-		setSettings({
-			sidebarCollapsed: collapsed,
-		});
-	}, []);
+	const handleCollapseExpand = useCallback(
+		(collapsed: boolean) => {
+			setIsCollapsed(collapsed);
+			setSettings({
+				sidebarCollapsed: collapsed,
+			});
+		},
+		[setSettings],
+	);
 
 	const nav: NavLinkProps[] = [
 		{
@@ -110,8 +113,8 @@ export function ResizableLayout({
 					onExpand={() => handleCollapseExpand(false)}
 					className={cn(
 						isCollapsed &&
-							'min-w-[50px] transition-all duration-300 ease-in-out',
-						'flex flex-col max-w-xs @container',
+							'min-w-[50px] transition-all duration-300 ease-in-out !overflow-auto',
+						'flex flex-col max-w-xs @container z-10',
 					)}
 				>
 					{/* todo: fade out the sidebar */}
@@ -183,7 +186,7 @@ export function ResizableLayout({
 								{
 									title: 'Settings',
 									icon: SettingsIcon,
-									href: pathSettings,
+									href: `${pathSettings}/general`,
 									...(pathname === pathSettings ? { variant: 'default' } : {}),
 								},
 							]}

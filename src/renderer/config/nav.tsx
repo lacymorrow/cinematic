@@ -4,26 +4,52 @@ import { SettingsAppearance } from '@/renderer/components/pages/settings/appeara
 import {
 	BellIcon,
 	BlendingModeIcon,
+	BookmarkIcon,
 	GearIcon,
 	IdCardIcon,
 	ImageIcon,
 	KeyboardIcon,
+	TokensIcon,
+	VideoIcon,
 } from '@radix-ui/react-icons';
 
-import { SettingsNotifications } from '@/renderer/components/pages/settings/notifications/SettingsNotifications';
-import { SettingsKeyboard } from '@/renderer/components/pages/settings/keyboard/SettingsKeyboard';
 import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
+import { SettingsKeyboard } from '@/renderer/components/pages/settings/keyboard/SettingsKeyboard';
+import { SettingsNotifications } from '@/renderer/components/pages/settings/notifications/SettingsNotifications';
 
-export const nav = {
-	home: {
-		title: 'Home',
-		href: '/',
+import { Browse } from '@/renderer/windows/main/pages/Browse';
+import { Library } from '@/renderer/windows/main/pages/Library';
+import { Liked } from '@/renderer/windows/main/pages/Liked';
+
+export const pathMedia = '/media';
+export const pathPlaylists = '/playlists';
+export const pathGenres = '/genres';
+export const pathSettings = '/settings';
+
+export const nav = [
+	{
+		id: 'watch',
+		name: 'Watch Now',
+		path: '/',
+		icon: <VideoIcon className="mr-2" />,
+		element: <Library />,
+		index: true,
 	},
-	settings: {
-		title: 'Settings',
-		href: '/settings',
+	{
+		id: 'browse',
+		name: 'Browse',
+		path: 'browse',
+		icon: <TokensIcon className="mr-2" />,
+		element: <Browse />,
 	},
-};
+	{
+		id: 'liked',
+		name: 'Liked',
+		path: 'liked',
+		icon: <BookmarkIcon className="mr-2" />,
+		element: <Liked />,
+	},
+];
 
 export const settingsNavItems = [
 	{
@@ -31,6 +57,7 @@ export const settingsNavItems = [
 		href: 'general',
 		element: <SettingsApplication />,
 		icon: GearIcon,
+		index: true,
 	},
 	{
 		title: 'Appearance',
