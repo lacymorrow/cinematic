@@ -20,6 +20,7 @@ import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { GridIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
+
 import { BookmarkIcon } from '@radix-ui/react-icons';
 import React from 'react';
 

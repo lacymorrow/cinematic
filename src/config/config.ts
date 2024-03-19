@@ -36,7 +36,6 @@ export const PLOT_LENGTH: PlotLengthType = 'full'; // Plot Summary length: "shor
 // App messages are user-facing messages that are displayed in the app; i.e. a public console log()
 export const APP_MESSAGES_MAX = 100;
 
-
 /* URLs */
 // export const TMDB_ENDPOINT = 'https://image.tmdb.org/t/p/';
 // export const GENRE_ENDPOINT = 'http://api.themoviedb.org/3/genre/movie/list';

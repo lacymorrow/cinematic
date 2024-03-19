@@ -1,3 +1,4 @@
+import { FileType, MediaType } from '@/types/file';
 import Logger from 'electron-log';
 import ptf from 'parse-torrent-filename';
 import getUuidByString from 'uuid-by-string';

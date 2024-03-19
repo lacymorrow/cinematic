@@ -1,3 +1,4 @@
+import { MediaType } from '@/types/file';
 import { app } from 'electron';
 import Logger from 'electron-log';
 import getUuidByString from 'uuid-by-string';

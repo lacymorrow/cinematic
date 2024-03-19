@@ -24,6 +24,7 @@ import {
 	PlaylistIcon,
 } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
+import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 

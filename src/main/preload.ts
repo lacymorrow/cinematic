@@ -24,7 +24,6 @@ const electronHandler = {
 	openMediaPath: () => ipcRenderer.send(ipcChannels.OPEN_MEDIA_PATH),
 	openPath: (path: string) => ipcRenderer.send(ipcChannels.OPEN_PATH, path),
 
-
 	os: getOS(),
 	setSettings: (settings: Partial<SettingsType>) =>
 		ipcRenderer.send(ipcChannels.SET_SETTINGS, settings),

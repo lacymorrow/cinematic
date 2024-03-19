@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import { CloseIcon } from '@/renderer/config/icons';
+import { CollectionItemType } from '@/types/media';
 
 export function DialogDeletePlaylist({
 	className,

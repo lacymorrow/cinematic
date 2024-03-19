@@ -1,4 +1,5 @@
 // // Node file utilities
+import { FileType } from '@/types/file';
 import Logger from 'electron-log';
 import fs from 'fs/promises';
 import path from 'path';

@@ -1,4 +1,6 @@
+import { MediaType } from '@/types/file';
 import { CustomAcceleratorsType } from '@/types/keyboard';
+import { CollectionItemType } from '@/types/media';
 import Store from 'electron-store';
 import {
 	DEFAULT_KEYBINDS,

@@ -10,6 +10,7 @@ export const nav = [
 		path: '/',
 		icon: <VideoIcon className="mr-2" />,
 		element: <Library />,
+		index: true,
 	},
 	{
 		id: 'browse',

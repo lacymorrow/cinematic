@@ -1,17 +1,17 @@
 // We import queue, so file shouldn't be named queue.ts
+import { MediaType, SearchMetaType } from '@/types/file';
 import Logger from 'electron-log';
 import type { queueAsPromised } from 'fastq';
 import fastq from 'fastq';
 import { $errors, $messages } from '../config/strings';
 import { fetchOMDB, fetchTMDB, fetchTrailer } from '../lib/fetch-meta';
-import { MediaType, SearchMetaType } from '../types/file';
 import { OmdbType, TmdbType, TrailersType } from '../types/meta';
 import {
 	addGenre,
 	getCachedObject,
 	setCachedObject,
 	upsertMediaLibrary,
-} from './store';
+} from './store-actions';
 
 const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
