@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator';
-import { CloseIcon } from '@/renderer/components/layout/icons';
+import { CloseIcon } from '@/renderer/config/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { SettingsSidebar } from './SettingsSidebar';

@@ -10,8 +10,7 @@ import {
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
-import { CloseIcon } from '@/renderer/components/layout/icons';
-import { CollectionItemType } from '@/types/media';
+import { CloseIcon } from '@/renderer/config/icons';
 
 export function DialogDeletePlaylist({
 	className,

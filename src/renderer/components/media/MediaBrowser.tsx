@@ -12,12 +12,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ViewModeType } from '@/config/settings';
 import { $media, $ui } from '@/config/strings';
-import { GridIcon, ListIcon } from '@/renderer/components/layout/icons';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
 import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
 import { ScrollContainer } from '@/renderer/components/ui/ScrollContainer';
 import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
+import { GridIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 import { BookmarkIcon } from '@radix-ui/react-icons';

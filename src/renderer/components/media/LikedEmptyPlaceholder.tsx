@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { $placeholders } from '@/config/strings';
-import { BackIcon, DislikedIcon } from '@/renderer/components/layout/icons';
+import { BackIcon, DislikedIcon } from '@/renderer/config/icons';
 import { useNavigate } from 'react-router-dom';
 
 export function LikedEmptyPlaceholder() {

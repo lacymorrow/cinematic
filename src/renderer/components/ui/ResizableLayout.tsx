@@ -7,14 +7,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Nav, NavLinkProps } from '@/renderer/components/ui/Nav';
 import {
 	DislikedIcon,
 	GenresIcon,
 	LikedIcon,
 	PlaylistIcon,
 	SettingsIcon,
-} from '@/renderer/components/layout/icons';
-import { Nav, NavLinkProps } from '@/renderer/components/ui/Nav';
+} from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { TokensIcon, VideoIcon } from '@radix-ui/react-icons';
 import React, { useCallback } from 'react';

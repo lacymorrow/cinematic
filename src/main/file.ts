@@ -9,9 +9,8 @@ import {
 	VALID_FILETYPES,
 } from '../config/config';
 import { $errors, $messages } from '../config/strings';
-import { FileType } from '../types/file';
 import { addMediaToLibrary } from './media';
-import { addPath } from './store';
+import { addPath } from './store-actions';
 import { ignorePattern } from './util';
 
 // scan a file and add it to the movies state

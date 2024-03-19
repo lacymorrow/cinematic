@@ -9,6 +9,7 @@ import {
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 import { $messages } from '../config/strings';
+import { reconcileMovieMeta } from '../lib/reconcile-meta';
 import { throttle } from '../utils/throttle';
 import store, { AppMessageType, HistoryActionType } from './store';
 import tray from './tray';

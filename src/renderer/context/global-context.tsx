@@ -25,7 +25,6 @@ import { toast } from 'sonner';
 interface GlobalContextType {
 	app: Partial<AppInfoType>;
 	appMenu: MenuItemConstructorOptions[];
-	appPaths: any;
 	genres: CollectionStoreType;
 	genresArray: CollectionType;
 	library: LibraryStoreType;
@@ -44,7 +43,6 @@ interface GlobalContextType {
 export const GlobalContext = React.createContext<GlobalContextType>({
 	app: {},
 	appMenu: [],
-	appPaths: {},
 	genres: {},
 	genresArray: [],
 	library: {},
@@ -158,12 +156,6 @@ export function GlobalContextProvider({
 			})
 			.catch(console.error);
 
-		// Get app name
-		window.electron.ipcRenderer
-			.invoke(ipcChannels.GET_APP_NAME)
-			.then(setAppName)
-			.catch(Logger.error);
-
 		// Request initial data when the app loads
 		synchronize();
 		synchronizeSettings();
@@ -208,7 +200,6 @@ export function GlobalContextProvider({
 		return {
 			app: appInfo,
 			appMenu,
-			appPaths,
 			genres,
 			genresArray,
 			library,
@@ -225,9 +216,7 @@ export function GlobalContextProvider({
 		};
 	}, [
 		appInfo,
-		appName,
 		appMenu,
-		appPaths,
 		genres,
 		genresArray,
 		library,
