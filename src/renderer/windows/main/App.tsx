@@ -13,6 +13,9 @@ import { settingsNavItems } from '@/renderer/config/nav';
 import '@/renderer/styles/globals.scss';
 
 export default function App() {
+	const index =
+		settingsNavItems.find((item) => item.index) || settingsNavItems[0];
+
 	const routes = (
 		<Route path="/" element={<MainLayout />}>
 			<Route path="settings" element={<SettingsLayout />}>
@@ -23,10 +26,15 @@ export default function App() {
 							key={item.title}
 							path={item.href}
 							element={<>{item.element}</>}
-							{...(item.index ? { index: true } : {})}
 						/>
 					);
 				})}
+
+				{index && (
+					<>
+						<Route index path="*" element={<>{index.element}</>} />
+					</>
+				)}
 			</Route>
 
 			<Route index element={<Home />} />
