@@ -1,6 +1,6 @@
 // bug: files are added with zero metadata (allow this?)
-
 // bug: we check for missing metadata every launch, even if they will always error (ex: GoPRO.mp4)
+// bug: resizable layout doesn't save state
 
 // todo: sort/filter media
 // todo: search media  (?filter)
@@ -65,15 +65,12 @@ export default function App() {
 		<Route path="/" element={<MainLayout />}>
 			{nav.map((item) => {
 				return (
-					<>
-						<Route
-							key={item.name}
-							path={item.path}
-							element={<ResizableLayout>{item.element}</ResizableLayout>}
-							{...(item.index ? { index: true } : {})}
-						/>
-						{item.index && <Route path="*" element={<>{item.element}</>} />}
-					</>
+					<Route
+						key={item.name}
+						path={item.path}
+						element={<ResizableLayout>{item.element}</ResizableLayout>}
+						{...(item.index ? { index: true } : {})}
+					/>
 				);
 			})}
 			<Route path={pathGenres}>
@@ -99,19 +96,16 @@ export default function App() {
 			<Route path={pathMedia}>
 				<Route path=":id" element={<Media />} />
 			</Route>
-			<Route path={`${pathSettings}/*`} element={<SettingsLayout />}>
+			<Route path={`${pathSettings}`} element={<SettingsLayout />}>
 				{settingsNavItems.map((item) => {
 					/* Dynamically add routes for settings */
 					return (
-						<>
-							<Route
-								key={item.title}
-								path={item.href}
-								element={<>{item.element}</>}
-								{...(item.index ? { index: true } : {})}
-							/>
-							{item.index && <Route path="*" element={<>{item.element}</>} />}
-						</>
+						<Route
+							key={item.title}
+							path={item.href}
+							element={<>{item.element}</>}
+							{...(item.index ? { index: true } : {})}
+						/>
 					);
 				})}
 			</Route>

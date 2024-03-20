@@ -26,6 +26,7 @@ export const pathPlaylists = '/playlists';
 export const pathGenres = '/genres';
 export const pathSettings = '/settings';
 
+// This must match the links used in src/renderer/components/layout/ResizableLayout.tsx
 export const nav = [
 	{
 		id: 'watch',

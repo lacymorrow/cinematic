@@ -12,7 +12,6 @@ import kb from './keyboard';
 import logger from './logger';
 import { setupDockMenu } from './menu';
 import protocol from './protocol';
-import { resetApp } from './reset';
 import sounds from './sounds';
 import tray from './tray';
 import { debugInfo, is } from './util';
@@ -33,7 +32,7 @@ export const startup = () => {
 
 	if (is.debug) {
 		// Reset the app and store to default settings
-		resetApp();
+		// resetApp();
 	}
 
 	// Enable electron debug and source map support

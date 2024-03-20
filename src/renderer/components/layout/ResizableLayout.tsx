@@ -26,6 +26,7 @@ import { DEBOUNCE_DELAY } from '@/renderer/config/config';
 import { pathSettings } from '@/renderer/config/nav';
 import styles from '@/renderer/styles/Sidebar.module.scss';
 import { debounce } from '@/utils/debounce';
+import Logger from 'electron-log/renderer';
 
 function Header({ text }: { text: string }) {
 	return <h2 className="p-2 text-lg font-semibold tracking-tight">{text}</h2>;
@@ -34,14 +35,12 @@ function Header({ text }: { text: string }) {
 interface Props {
 	children: React.ReactNode;
 	defaultLayout?: number[] | undefined;
-	defaultCollapsed?: boolean;
 	navCollapsedSize?: number;
 }
 
 export function ResizableLayout({
 	children,
 	defaultLayout = [20, 80],
-	defaultCollapsed = false,
 	navCollapsedSize = 4,
 }: Props) {
 	const { pathname } = useLocation();
@@ -52,14 +51,12 @@ export function ResizableLayout({
 		settings.sidebarCollapsed,
 	);
 
-	const handleLayoutChange = useCallback(
-		debounce((layout: number[]) => {
-			setSettings({
-				sidebarLayout: layout,
-			});
-		}, DEBOUNCE_DELAY),
-		[setSettings],
-	);
+	const handleLayoutChange = debounce((layout: number[]) => {
+		Logger.status('Save layout', layout);
+		setSettings({
+			sidebarLayout: [40, 60],
+		});
+	}, DEBOUNCE_DELAY);
 
 	const handleCollapseExpand = useCallback(
 		(collapsed: boolean) => {

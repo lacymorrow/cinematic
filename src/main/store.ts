@@ -104,6 +104,9 @@ const schema: Store.Schema<StoreType> = {
 			sidebarLayout: {
 				type: 'array',
 			},
+			sidebarCollapsed: {
+				type: 'boolean',
+			},
 			showSidebar: {
 				type: 'boolean',
 			},
