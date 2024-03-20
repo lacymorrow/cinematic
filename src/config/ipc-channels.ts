@@ -14,15 +14,17 @@ const PLAY_SOUND = 'play-sound';
 // Renderer -> Main
 const CLEAR_LIBRARY = 'clear-library';
 
-const GET_APP_MENU = 'get-app-menu';
-const GET_APP_NAME = 'get-app-name';
 const GET_LIBRARY = 'get-library';
 const GET_GENRES = 'get-genres';
 const GET_PLAYLISTS = 'get-playlists';
+const GET_APP_INFO = 'get-app-info';
 const GET_APP_PATHS = 'get-app-paths';
-const GET_MESSAGES = 'get-messages';
-const GET_SETTINGS = 'get-settings';
+const GET_RENDERER_SYNC = 'get-renderer-sync';
+
+const SET_KEYBIND = 'set-keybind';
 const SET_SETTINGS = 'set-settings';
+const GET_SETTINGS = 'get-settings';
+const GET_MESSAGES = 'get-messages';
 
 const RENDERER_READY = 'renderer-ready';
 
@@ -52,11 +54,13 @@ export const ipcChannels = {
 	GET_LIBRARY,
 	GET_PLAYLISTS,
 	RENDERER_READY,
-	GET_APP_NAME,
-	GET_APP_MENU,
+	GET_RENDERER_SYNC,
+	GET_APP_INFO,
 	GET_APP_PATHS,
 	GET_MESSAGES,
 	GET_SETTINGS,
+
+	SET_KEYBIND,
 	SET_SETTINGS,
 
 	TRIGGER_APP_MENU_ITEM_BY_ID,

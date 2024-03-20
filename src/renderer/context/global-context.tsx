@@ -2,22 +2,29 @@
 // We pass data from the main process to the renderer process using IPC
 // We also use IPC to update data
 
+// todo: add os here
+
 import { ipcChannels } from '@/config/ipc-channels';
 import { CollectionStoreType, LibraryStoreType } from '@/main/store';
-import { CollectionType, LibraryType } from '@/types/media';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { DEFAULT_SETTINGS, SettingsType } from '@/config/settings';
+import {
+	DEFAULT_KEYBINDS,
+	DEFAULT_SETTINGS,
+	SettingsType,
+} from '@/config/settings';
 import { $messages } from '@/config/strings';
 import { play, preload } from '@/renderer/lib/sounds';
+import { AppInfoType } from '@/types/app';
+import { CustomAcceleratorsType } from '@/types/keyboard';
+import { CollectionType, LibraryType } from '@/types/media';
 import Logger from 'electron-log';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
 
 interface GlobalContextType {
-	appName: string;
+	app: Partial<AppInfoType>;
 	appMenu: MenuItemConstructorOptions[];
-	appPaths: any;
 	genres: CollectionStoreType;
 	genresArray: CollectionType;
 	library: LibraryStoreType;
@@ -26,16 +33,16 @@ interface GlobalContextType {
 	playlists: CollectionStoreType;
 	playlistsArray: CollectionType;
 	randomLibraryArray: LibraryType;
-	settings: SettingsType;
-	setSettings: (newSettings: Partial<SettingsType>) => void;
+	keybinds: CustomAcceleratorsType;
 	message: string;
 	messages: string[];
+	settings: SettingsType;
+	setSettings: (newSettings: Partial<SettingsType>) => void;
 }
 
 export const GlobalContext = React.createContext<GlobalContextType>({
-	appName: '',
+	app: {},
 	appMenu: [],
-	appPaths: {},
 	genres: {},
 	genresArray: [],
 	library: {},
@@ -44,10 +51,11 @@ export const GlobalContext = React.createContext<GlobalContextType>({
 	playlists: {},
 	playlistsArray: [],
 	randomLibraryArray: [],
-	settings: DEFAULT_SETTINGS,
-	setSettings: () => {},
+	keybinds: DEFAULT_KEYBINDS,
 	message: '',
 	messages: [],
+	settings: DEFAULT_SETTINGS,
+	setSettings: () => {},
 });
 
 export function GlobalContextProvider({
@@ -55,11 +63,10 @@ export function GlobalContextProvider({
 }: {
 	children?: React.ReactNode;
 }) {
-	const [appName, setAppName] = React.useState<string>('');
+	const [appInfo, setAppInfo] = React.useState<Partial<AppInfoType>>({});
 	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
 		[],
 	);
-	const [appPaths, setAppPaths] = React.useState<any>({});
 	const [messages, setMessages] = React.useState<string[]>([]);
 
 	const [settings, setCurrentSettings] =
@@ -68,6 +75,8 @@ export function GlobalContextProvider({
 	const [genres, setGenres] = React.useState<CollectionStoreType>({});
 	const [library, setLibrary] = React.useState<LibraryStoreType>({});
 	const [playlists, setPlaylists] = React.useState<CollectionStoreType>({});
+	const [keybinds, setCurrentKeybinds] =
+		React.useState<CustomAcceleratorsType>(DEFAULT_KEYBINDS);
 
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
@@ -82,22 +91,15 @@ export function GlobalContextProvider({
 		const synchronizeSettings = async () => {
 			Logger.log($messages.synchronize_settings);
 
-			// Get app menu
 			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_APP_MENU)
-				.then(setAppMenu)
-				.catch(console.error);
-
-			// Get settings
-			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_SETTINGS)
-				.then(setCurrentSettings)
-				.catch(console.error);
-
-			// Get Status messages
-			window.electron.ipcRenderer
-				.invoke(ipcChannels.GET_MESSAGES)
-				.then(setMessages)
+				.invoke(ipcChannels.GET_RENDERER_SYNC)
+				.then((res) => {
+					const { settings: s, keybinds: k, messages: m, appMenu: menu } = res;
+					setCurrentSettings(s);
+					setCurrentKeybinds(k);
+					setMessages(m);
+					setAppMenu(menu);
+				})
 				.catch(console.error);
 		};
 
@@ -136,15 +138,15 @@ export function GlobalContextProvider({
 			},
 		);
 
-		// SOUNDS
+		// Get app info: name, version, paths, os - DOES NOT CHANGE
 		window.electron.ipcRenderer
-			.invoke(ipcChannels.GET_APP_PATHS)
-			.then((paths) => {
-				setAppPaths(paths);
-				return paths;
+			.invoke(ipcChannels.GET_APP_INFO)
+			.then((info) => {
+				setAppInfo(info);
+				return info;
 			})
-			.then((paths) => {
-				// Preload sounds
+			.then(({ paths }) => {
+				// SOUNDS
 				preload(paths.sounds);
 
 				// Setup listener to play sounds
@@ -153,12 +155,6 @@ export function GlobalContextProvider({
 				});
 			})
 			.catch(console.error);
-
-		// Get app name
-		window.electron.ipcRenderer
-			.invoke(ipcChannels.GET_APP_NAME)
-			.then(setAppName)
-			.catch(Logger.error);
 
 		// Request initial data when the app loads
 		synchronize();
@@ -202,9 +198,8 @@ export function GlobalContextProvider({
 
 	const value = useMemo(() => {
 		return {
-			appName,
+			app: appInfo,
 			appMenu,
-			appPaths,
 			genres,
 			genresArray,
 			library,
@@ -213,15 +208,15 @@ export function GlobalContextProvider({
 			playlists,
 			playlistsArray,
 			randomLibraryArray,
+			keybinds,
 			settings,
 			setSettings,
 			messages,
 			message: messages[messages.length - 1] ?? '',
 		};
 	}, [
-		appName,
+		appInfo,
 		appMenu,
-		appPaths,
 		genres,
 		genresArray,
 		library,
@@ -230,6 +225,7 @@ export function GlobalContextProvider({
 		playlists,
 		playlistsArray,
 		randomLibraryArray,
+		keybinds,
 		settings,
 		setSettings,
 		messages,

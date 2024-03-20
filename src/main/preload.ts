@@ -1,4 +1,6 @@
 import { $errors } from '@/config/strings';
+import { NotificationOptions } from '@/types/notification';
+import { getOS } from '@/utils/getOS';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
@@ -10,8 +12,6 @@ const electronHandler = {
 	getGenres: () => ipcRenderer.invoke(ipcChannels.GET_GENRES),
 	getLibrary: () => ipcRenderer.invoke(ipcChannels.GET_LIBRARY),
 	getPlaylists: () => ipcRenderer.invoke(ipcChannels.GET_PLAYLISTS),
-	setSettings: (settings: Partial<SettingsType>) =>
-		ipcRenderer.invoke(ipcChannels.SET_SETTINGS, settings),
 	setMediaLike: (id: string, liked: boolean) =>
 		ipcRenderer.invoke(ipcChannels.SET_MEDIA_LIKE, id, liked),
 	addToPlaylist: (id: string, playlist: string) =>
@@ -23,10 +23,18 @@ const electronHandler = {
 		ipcRenderer.send(ipcChannels.ADD_TO_HISTORY, 'view', id),
 	openMediaPath: () => ipcRenderer.send(ipcChannels.OPEN_MEDIA_PATH),
 	openPath: (path: string) => ipcRenderer.send(ipcChannels.OPEN_PATH, path),
-	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),
+
+	os: getOS(),
+	setSettings: (settings: Partial<SettingsType>) =>
+		ipcRenderer.send(ipcChannels.SET_SETTINGS, settings),
+	setKeybind: (keybind: string, accelerator: string) =>
+		ipcRenderer.send(ipcChannels.SET_KEYBIND, keybind, accelerator),
 	triggerAppMenuItemById: (id: string) =>
 		ipcRenderer.send(ipcChannels.TRIGGER_APP_MENU_ITEM_BY_ID, id),
-
+	notify: (options: NotificationOptions) =>
+		ipcRenderer.send(ipcChannels.APP_NOTIFICATION, options),
+	playSound: (sound: string) => ipcRenderer.send(ipcChannels.PLAY_SOUND, sound),
+	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {
 			if (!channels.includes(channel)) {

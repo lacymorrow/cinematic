@@ -1,9 +1,8 @@
 import { app, Tray as ElectronTray, Menu } from 'electron';
-import Logger from 'electron-log/main';
 import path from 'path';
-import { aboutMenuItem, quitMenuItem } from './menu-items';
-import { __static } from './paths';
+import { __resources } from './paths';
 import { is } from './util';
+import windows from './windows';
 
 // mac needs dark/light versions
 const systemIcon = () => {
@@ -20,27 +19,26 @@ const systemIcon = () => {
 };
 
 const getIconPath = () => {
-	return path.join(__static, 'icons', systemIcon());
+	return path.join(__resources, 'icons', systemIcon());
 };
 
-export default class SystemTray {
-	constructor() {
-		this.tray = new ElectronTray(getIconPath());
+const initialize = () => {
+	windows.tray = new ElectronTray(getIconPath());
 
-		const contextMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
-		this.tray.setToolTip(`${app.name}`);
-		this.tray.setContextMenu(contextMenu);
-	}
+	const contextMenu = Menu.buildFromTemplate([
+		{ role: 'about' },
+		{ role: 'quit' },
+	]);
+	windows.tray.setToolTip(`${app.name}`);
+	windows.tray.setContextMenu(contextMenu);
+};
 
-	getTray() {
-		return this.tray;
-	}
+const destroy = () => {
+	windows.tray?.destroy();
+	windows.tray = null;
+};
 
-	private tray: ElectronTray; // Add the 'tray' property
-
-	setIcon() {
-		const icon = getIconPath();
-		this.tray.setImage(icon);
-		Logger.info(`Setting tray icon: ${icon}`);
-	}
-}
+export default {
+	initialize,
+	destroy,
+};

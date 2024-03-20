@@ -1,4 +1,3 @@
-// Todo: Radio and Checkbox Menu items are not working
 import {
 	Menubar,
 	MenubarCheckboxItem,
@@ -19,76 +18,77 @@ import { cn } from '@/lib/utils';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { v4 as uuidv4 } from 'uuid';
+import { DragHandle } from '../ui/DragHandle';
 
-// if the label contains an ampersand followed by a character that is not an ampersand, underline the character
-// for example, &File becomes F̲ile and &&File becomes &File
-// (see https://www.electronjs.org/docs/latest/api/menu#menusetapplicationmenumenu)
-function formatLabel(label: string | undefined | null) {
-	if (!label) {
-		return null;
-	}
+export function Menu({ className }: { className?: string }) {
+	const { app, appMenu } = useGlobalContext();
 
-	if (window.electron.isMac) {
+	// if the label contains an ampersand followed by a character that is not an ampersand, underline the character
+	// for example, &File becomes F̲ile and &&File becomes &File
+	// (see https://www.electronjs.org/docs/latest/api/menu#menusetapplicationmenumenu)
+	function formatLabel(label: string | undefined | null) {
+		if (!label) {
+			return null;
+		}
+
+		if (app.isMac) {
+			return label.replace(/&&/g, '&');
+		}
+
+		if (/^[^&]*&([^&])/g.test(label)) {
+			const index = label.indexOf('&');
+			const firstPart = label.slice(0, index);
+			const secondPart = label.slice(index + 1);
+
+			return (
+				<span>
+					{firstPart}
+					<u>{secondPart[0]}</u>
+					{secondPart.slice(1).replace(/&&/g, '&')}
+				</span>
+			);
+		}
+
 		return label.replace(/&&/g, '&');
 	}
 
-	if (/^[^&]*&([^&])/g.test(label)) {
-		const index = label.indexOf('&');
-		const firstPart = label.slice(0, index);
-		const secondPart = label.slice(index + 1);
+	function convertAcceleratorToElement(accelerator?: string | null) {
+		if (!accelerator) {
+			return null;
+		}
+
+		const keys = accelerator.split('+');
+		const modifierKeys = keys.slice(0, -1);
+		const key = keys[keys.length - 1];
+
+		const CommandOrControl = app.isMac ? KEYS.COMMAND : KEYS.CONTROL;
+		const unicodeModifiers: { [key: string]: string } = {
+			CommandOrControl,
+			CmdOrCtrl: CommandOrControl,
+			Command: KEYS.COMMAND,
+			Cmd: KEYS.COMMAND,
+			Control: KEYS.CONTROL,
+			Ctrl: KEYS.CONTROL,
+			Shift: KEYS.SHIFT,
+			Alt: KEYS.OPTION,
+			Option: KEYS.OPTION,
+			Super: KEYS.COMMAND,
+			Plus: KEYS.PLUS,
+		};
+
+		const modifierElements = modifierKeys.map((modifierKey) => {
+			const unicodeKey = unicodeModifiers[modifierKey] || modifierKey;
+
+			return <span key={uuidv4()}>{unicodeKey}</span>;
+		});
 
 		return (
-			<span>
-				{firstPart}
-				<u>{secondPart[0]}</u>
-				{secondPart.slice(1).replace(/&&/g, '&')}
-			</span>
+			<MenubarShortcut>
+				{modifierElements}
+				{key}
+			</MenubarShortcut>
 		);
 	}
-
-	return label.replace(/&&/g, '&');
-}
-
-function convertAcceleratorToElement(accelerator?: string | null) {
-	if (!accelerator) {
-		return null;
-	}
-
-	const keys = accelerator.split('+');
-	const modifierKeys = keys.slice(0, -1);
-	const key = keys[keys.length - 1];
-
-	const CommandOrControl = window.electron.isMac ? KEYS.COMMAND : KEYS.CONTROL;
-	const unicodeModifiers: { [key: string]: string } = {
-		CommandOrControl,
-		CmdOrCtrl: CommandOrControl,
-		Command: KEYS.COMMAND,
-		Cmd: KEYS.COMMAND,
-		Control: KEYS.CONTROL,
-		Ctrl: KEYS.CONTROL,
-		Shift: KEYS.SHIFT,
-		Alt: KEYS.OPTION,
-		Option: KEYS.OPTION,
-		Super: KEYS.COMMAND,
-		Plus: KEYS.PLUS,
-	};
-
-	const modifierElements = modifierKeys.map((modifierKey) => {
-		const unicodeKey = unicodeModifiers[modifierKey] || modifierKey;
-
-		return <span key={uuidv4()}>{unicodeKey}</span>;
-	});
-
-	return (
-		<MenubarShortcut>
-			{modifierElements}
-			{key}
-		</MenubarShortcut>
-	);
-}
-
-export function Menu({ className }: { className?: string }) {
-	const { appMenu } = useGlobalContext();
 
 	const renderMenuItems = (menuItems: MenuItemConstructorOptions[]) => {
 		return menuItems.map((item) => {
@@ -178,19 +178,22 @@ export function Menu({ className }: { className?: string }) {
 		<Menubar
 			className={cn(
 				'drag', // Allow the titlebar to be draggable, to reposition the window. Useful when using frameless windows.
-				'rounded-none border-b border-none px-4',
-				window.electron.isMac && 'pl-20',
+				'rounded-none border-b border-none px-4 w-full overflow-hidden text-ellipsis items-stretch',
+				app.isMac && 'pl-20',
 				className,
 			)}
 		>
-			{Array.isArray(appMenu) &&
+			<DragHandle />
+			{/* Hide the Menu Bar on Mac, as it is redundant */}
+			{(!app.isMac || app.isDev) &&
+				Array.isArray(appMenu) &&
 				appMenu.map((item: any, index: number) => {
 					return (
 						<MenubarMenu key={uuidv4()}>
 							<MenubarTrigger
 								className={cn(
-									'no-drag', // Draggable elements cannot be interacted with, undo the draggable class
-									window.electron.isMac && index === 0 && 'font-bold', // Bold the first Menu Item (the App Name) on Mac
+									'no-drag px-2 sm:px-3', // Draggable elements cannot be interacted with, undo the draggable class
+									app.isMac && index === 0 && 'font-bold', // Bold the first Menu Item (the App Name) on Mac
 								)}
 							>
 								{formatLabel(item.label)}

@@ -10,53 +10,18 @@ import { bugs, homepage } from '../../package.json';
 import dock from './dock';
 import {
 	aboutMenuItem,
+	autoUpdateMenuItem,
 	quitMenuItem,
 	testNotificationMenuItem,
 	testSoundMenuItem,
 } from './menu-items';
-import { getSetting, setSettings } from './store';
+import { getSetting, setSettings } from './store-actions';
 import { is } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 	selector?: string;
 	submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
-
-// MAGIC!
-// Create a menu for the renderer process, based on the main process menu
-// This creates a serializable version of the menu so that we can render an HTML version of it
-// This is necessary because Electron's Menu class is not serializable
-export const serializeMenu = (
-	menu: Menu | null,
-): MenuItemConstructorOptions[] => {
-	if (!menu) return [];
-	return menu.items.map((item) => {
-		// MenuItem properties that are passed to the renderer process
-		const serialized: MenuItemConstructorOptions = {
-			label: item.label,
-			id: item.id,
-			type: item.type,
-			accelerator: item.accelerator,
-			// icon: item.icon,
-			sublabel: item.sublabel,
-			enabled: item.enabled,
-			visible: item.visible,
-			checked: item.checked,
-		};
-
-		if (item.submenu) {
-			serialized.submenu = serializeMenu(item.submenu);
-		}
-
-		return serialized;
-	});
-};
-
-// Allow the renderer process to trigger a menu item by ID, so that the click events are triggered
-export const triggerMenuItemById = (menu: Menu | null, id: string) => {
-	if (!menu) return;
-	menu.getMenuItemById(id)?.click();
-};
 
 export default class MenuBuilder {
 	mainWindow: BrowserWindow;
@@ -77,7 +42,7 @@ export default class MenuBuilder {
 	}
 
 	subMenuDev: MenuItemConstructorOptions = {
-		label: 'Development',
+		label: 'Dev',
 		submenu: [
 			{
 				label: 'Reload',
@@ -103,28 +68,30 @@ export default class MenuBuilder {
 	subMenuSettings: MenuItemConstructorOptions = {
 		label: 'Settings',
 		submenu: [
-			{
-				label: 'Auto Update',
-				type: 'checkbox',
-				id: 'autoUpdate',
-				enabled: false,
-				checked: !!getSetting('autoUpdate'),
-			},
+			autoUpdateMenuItem,
 			{
 				label: 'Show Dock Icon',
 				type: 'checkbox',
 				id: 'showDockIcon',
-				checked: !!getSetting('showDockIcon'),
+				checked: () => getSetting('showDockIcon'),
 				click: () => {
-					dock.setVisible(!getSetting('showDockIcon'));
 					setSettings({ showDockIcon: !getSetting('showDockIcon') });
+				},
+			},
+			{
+				label: 'Show Tray Icon',
+				type: 'checkbox',
+				id: 'showTrayIcon',
+				checked: () => getSetting('showTrayIcon'),
+				click: () => {
+					setSettings({ showTrayIcon: !getSetting('showTrayIcon') });
 				},
 			},
 			{
 				label: 'Quit on Close',
 				type: 'checkbox',
 				id: 'quitOnWindowClose',
-				checked: !!getSetting('quitOnWindowClose'),
+				checked: getSetting('quitOnWindowClose'),
 				click: () => {
 					setSettings({
 						quitOnWindowClose: !getSetting('quitOnWindowClose'),
@@ -385,4 +352,5 @@ export const setupDockMenu = () => {
 	if (!is.macos) return;
 	const dockMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
 	app.dock.setMenu(dockMenu);
+	dock.initialize();
 };
