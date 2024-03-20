@@ -10,9 +10,9 @@ import {
 	KeyboardIcon,
 } from '@radix-ui/react-icons';
 
-import { SettingsNotifications } from '@/renderer/components/pages/settings/notifications/SettingsNotifications';
-import { SettingsKeyboard } from '@/renderer/components/pages/settings/keyboard/SettingsKeyboard';
 import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
+import { SettingsKeyboard } from '@/renderer/components/pages/settings/keyboard/SettingsKeyboard';
+import { SettingsNotifications } from '@/renderer/components/pages/settings/notifications/SettingsNotifications';
 
 export const nav = {
 	home: {
@@ -31,6 +31,7 @@ export const settingsNavItems = [
 		href: 'general',
 		element: <SettingsApplication />,
 		icon: GearIcon,
+		index: true,
 	},
 	{
 		title: 'Appearance',
