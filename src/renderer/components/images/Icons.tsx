@@ -33,21 +33,23 @@ const closeIcon = ({ className }: { className?: string }) => (
 	</svg>
 );
 
-const playIcon = ({ className }: { className?: string }) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		className={className}
-	>
-		<circle cx="12" cy="12" r="10" />
-		<polygon points="10 8 16 12 10 16 10 8" />
-	</svg>
-);
+function PlayIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 1200 1200"
+			enableBackground="new 0 0 1200 1200"
+			// stroke="currentColor"
+			fill="currentColor"
+		>
+			<path
+				d="M600,0C268.65,0,0,268.65,0,600c0,331.35,268.65,600,600,600
+	c331.35,0,600-268.65,600-600C1200,268.65,931.35,0,600,0z M600,139.16c254.499,0,460.84,206.341,460.84,460.84
+	S854.499,1060.84,600,1060.84S139.16,854.499,139.16,600S345.501,139.16,600,139.16z M450,300.439V899.56L900,600L450,300.439z"
+			/>
+		</svg>
+	);
+}
 
 const podcastIcon = ({ className }: { className?: string }) => (
 	<svg
@@ -87,7 +89,7 @@ const stacksIcon = ({ className }: { className?: string }) => (
 export default {
 	browseIcon,
 	closeIcon,
-	playIcon,
+	PlayIcon,
 	podcastIcon,
 	stacksIcon,
 };

@@ -47,7 +47,7 @@ export const APP_MESSAGES_MAX = 100;
 export const FILE_SCAN_DEPTH = 1; // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
 // export const RETRY_DELAY = 4000; // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 export const DIRECTORY_IGNORE_PATTERN = ['private']; // A lowercase list of movie titles to ignore; ex: sample.avi
-export const FILE_IGNORE_PATTERN = ['sample', 'etrg']; // A lowercase list of movie titles to ignore; ex: sample.avi
+export const FILE_IGNORE_PATTERN = ['sample', 'etrg', 'gopro']; // A lowercase list of movie titles to ignore; ex: sample.avi
 export const DEFAULT_FILE_META: Partial<MediaType> = {};
 // Throttle delay in ms
 export const THROTTLE_DELAY = 1000; // Todo
