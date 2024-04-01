@@ -235,6 +235,10 @@
 		"webpack-dev-server": "^4.15.1",
 		"webpack-merge": "^5.10.0"
 	},
+	"np": {
+		"publish": false,
+		"releaseDraft": true
+	},
 	"build": {
 		"appId": "com.lacymorrow.cinematic",
 		"asar": true,
