@@ -66,13 +66,23 @@ module.exports = {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
+			dropShadow: {
+				glow: [
+					'0 0px 0.5rem rgba(255,255, 255, 0.5)',
+					'0 0px 1rem rgba(255,255, 255, 0.4)',
+					'0 0px 2rem rgba(255, 255,255, 0.3)',
+					'0 0px 4rem rgba(255, 255,255, 0.2)',
+				],
+			},
 		},
 	},
 	plugins: [
+		// Add support for targeting children with child:
 		({ addVariant }) => {
 			addVariant('child', '& > *');
 			addVariant('child-hover', '& > *:hover');
 		},
 		require('tailwindcss-animate'),
+		require('@tailwindcss/container-queries'),
 	],
 };

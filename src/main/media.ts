@@ -1,10 +1,10 @@
+import { FileType, MediaType } from '@/types/file';
 import Logger from 'electron-log';
 import ptf from 'parse-torrent-filename';
 import getUuidByString from 'uuid-by-string';
 import { PARSE_METHOD } from '../config/config';
-import { FileType, MediaType } from '../types/file';
 import queue from './q';
-import { getCachedObject, upsertMediaLibrary } from './store';
+import { getCachedObject, upsertMediaLibrary } from './store-actions';
 import { fileNameRegex, isDigit } from './util';
 
 export const prettyFileName = (name: string) => {

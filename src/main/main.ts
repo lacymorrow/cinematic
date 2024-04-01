@@ -1,15 +1,17 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-// todo: user alerts
-
-// todo: boot:
-// app.setLoginItemSettings( {
-// 	openAtLogin: false, // or true
-// } )
+/*
+Todo:
+- Allow disabling of the inputs
+- Debounce Slider/color picker input
+- sass
+- Homepage
+- Documentation
+*/
 
 import { app } from 'electron';
 import Logger from 'electron-log/main';
-import { $errors, $messages } from '../config/strings';
+import { $errors, $init } from '../config/strings';
 
 import ipc from './ipc';
 
@@ -17,7 +19,7 @@ import { ready, startup } from './startup';
 
 // Initialize the timer
 console.time(app.name);
-console.timeLog(app.name, $messages.init);
+console.timeLog(app.name, $init.app);
 
 // Register ipcMain listeners
 ipc.initialize();
@@ -27,7 +29,7 @@ app
 	.whenReady()
 	.then(ready) // <-- this is where the app is initialized
 	.catch((error: Error) => {
-		Logger.error($errors.main, error);
+		Logger.error($errors.prefix, error);
 	});
 
 // LAUNCH THE APP

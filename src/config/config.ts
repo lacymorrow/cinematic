@@ -33,6 +33,8 @@ export const CACHE_TIMEOUT = 3600; // Seconds; 604800 = 7 days; 0 === no caching
 
 type PlotLengthType = 'short' | 'full';
 export const PLOT_LENGTH: PlotLengthType = 'full'; // Plot Summary length: "short", "full" - from omdb
+// App messages are user-facing messages that are displayed in the app; i.e. a public console log()
+export const APP_MESSAGES_MAX = 100;
 
 /* URLs */
 // export const TMDB_ENDPOINT = 'https://image.tmdb.org/t/p/';
@@ -43,11 +45,13 @@ export const PLOT_LENGTH: PlotLengthType = 'full'; // Plot Summary length: "shor
 /* app-specific */
 // -- affects how app is run and may affect performance
 export const FILE_SCAN_DEPTH = 1; // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-export const THROTTLE_DELAY = 1000; // Milli-seconds delay; todo
 // export const RETRY_DELAY = 4000; // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 export const DIRECTORY_IGNORE_PATTERN = ['private']; // A lowercase list of movie titles to ignore; ex: sample.avi
-export const FILE_IGNORE_PATTERN = ['sample', 'etrg']; // A lowercase list of movie titles to ignore; ex: sample.avi
+export const FILE_IGNORE_PATTERN = ['sample', 'etrg', 'gopro']; // A lowercase list of movie titles to ignore; ex: sample.avi
 export const DEFAULT_FILE_META: Partial<MediaType> = {};
+// Throttle delay in ms
+export const THROTTLE_DELAY = 1000; // Todo
+export const DEBOUNCE_DELAY = 800;
 
 type ParseMethodType = 'regex' | 'parse';
 export const PARSE_METHOD: ParseMethodType = 'parse'; // Filename parsing options: "regex", "parse"; regex is best for well-organized files lile This[2004].avi

@@ -2,10 +2,10 @@
  * Base webpack config used across other specific configs
  */
 
-import webpack from 'webpack';
 import TsconfigPathsPlugins from 'tsconfig-paths-webpack-plugin';
-import webpackPaths from './webpack.paths';
+import webpack from 'webpack';
 import { dependencies as externals } from '../../release/app/package.json';
+import webpackPaths from './webpack.paths';
 
 const configuration: webpack.Configuration = {
 	externals: [...Object.keys(externals || {})],

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { PosterRotator } from '@/renderer/components/media/PosterRotator';
 import { RatingIcon } from '@/renderer/components/media/RatingIcon';
@@ -9,12 +8,18 @@ import {
 	PageHeaderDescription,
 	PageHeaderHeading,
 } from '@/renderer/components/ui/PageHeader';
-import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { useGlobalContext } from '@/renderer/context/global-context';
-import { Link2Icon, PlayIcon } from '@radix-ui/react-icons';
+import { Link2Icon, VideoIcon } from '@radix-ui/react-icons';
 import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import styles from '@/renderer/styles/effects.module.scss';
+import { truncate } from '@/utils/truncate';
+import { ChevronLeftCircleIcon } from 'lucide-react';
 
 type Props = {};
 
@@ -85,6 +90,7 @@ export function Media(_props: Props) {
 		dateUpdated,
 		dateViewed,
 		dateWatched,
+		plot,
 		ratings,
 		trailer,
 
@@ -92,7 +98,9 @@ export function Media(_props: Props) {
 		...rest
 	} = currentMedia;
 
-	console.log('currentMedia', tmdb, omdb);
+	const description = omdb?.plot || tmdb?.overview || '';
+
+	console.log('currentMedia', currentMedia, tmdb, omdb);
 
 	const trailerUrl = `https://www.youtube.com/watch?v=${trailer}`;
 
@@ -101,79 +109,133 @@ export function Media(_props: Props) {
 		...(omdb?.poster ? [omdb.poster] : []),
 	];
 
+	const backgroundImage = <img src={backdrop} alt={title} className="w-full" />;
+
 	return (
 		<>
-			<div className="h-full w-full overflow-y-auto">
+			<div className="h-full w-full overflow-y-auto relative">
+				<button
+					type="button"
+					className="absolute z-10 p-6"
+					onClick={handleBack}
+				>
+					<ChevronLeftCircleIcon className={cn('w-10 h-10', styles.glow)} />
+					<span className="sr-only">Back</span>
+				</button>
 				{backdrop && (
-					<div className="w-full relative">
-						<div>
-							<img src={backdrop} alt={title} className="w-full" />
+					<div className="w-full relative flex flex-col items-center">
+						<div className={styles.vignette}>{backgroundImage}</div>
+						<PageHeader
+							className={cn(backdrop && 'md:absolute', 'top-24 p-3 gap-4')}
+						>
+							{/* Play button */}
+							<button
+								type="button"
+								onClick={handlePlay}
+								className="text-foreground self-center"
+							>
+								<VideoIcon className={cn('w-24 h-24', styles.glow)} />
+								<span className="sr-only">Play file</span>
+							</button>
+
+							<div className="text-xs text-muted-foreground flex flex-wrap items-center gap-2">
+								<p>{year}</p>
+								<span>•</span>
+								<p>{runtime}</p>
+							</div>
+							<PageHeaderHeading>{title}</PageHeaderHeading>
+
+							<PageHeaderDescription>
+								{truncate(description, 200)}
+								{description.length > 200 && <>&hellip;</>}
+							</PageHeaderDescription>
+
+							<div className="flex flex-wrap items-center gap-2">
+								{/* {liked && <Badge className="rounded-full">Liked</Badge>}
+								{dateAdded && (
+									<Badge className="rounded-full">Added: {dateAdded}</Badge>
+								)}
+								{dateUpdated && (
+									<Badge className="rounded-full">Updated: {dateUpdated}</Badge>
+								)}
+								{dateViewed && (
+									<Badge className="rounded-full">Viewed: {dateViewed}</Badge>
+								)}
+								{dateWatched && (
+									<Badge className="rounded-full">Watched: {dateWatched}</Badge>
+								)} */}
+								{omdb?.genre &&
+									Object.values(omdb.genre).map((g) => (
+										<Badge className="rounded-full">{g}</Badge>
+									))}
+							</div>
+
+							<div className="flex flex-wrap items-center gap-2">
+								{omdb?.imdbid && (
+									<Badge
+										className="rounded-full gap-2 cursor-pointer"
+										variant="secondary"
+										onClick={() => {
+											if (!omdb?.imdbid) return;
+											handleUrl(`https://www.imdb.com/title/${omdb.imdbid}/`);
+										}}
+									>
+										<Link2Icon />
+										IMDB
+									</Badge>
+								)}
+
+								{tmdb?.id && (
+									<Badge
+										className="rounded-full gap-2 cursor-pointer"
+										variant="secondary"
+										onClick={() => {
+											if (!tmdb?.id) return;
+											handleUrl(`https://www.themoviedb.org/movie/${tmdb.id}`);
+										}}
+									>
+										<Link2Icon />
+										TMDB
+									</Badge>
+								)}
+								{omdb?.tomatourl && (
+									<Badge
+										className="rounded-full gap-2 cursor-pointer"
+										variant="secondary"
+										onClick={() => {
+											handleUrl(omdb?.tomatourl);
+										}}
+									>
+										<Link2Icon />
+										Tomatoes
+									</Badge>
+								)}
+							</div>
+						</PageHeader>
+
+						{/* Rating */}
+						{omdb?.rated && (
+							<div className="absolute top-0 right-0 p-6 xl:p-12">
+								<RatingIcon rated={omdb.rated} />
+							</div>
+						)}
+
+						{/* Upside down image reflection */}
+						<div
+							className={cn(
+								'top-full -scale-y-100  -z-10',
+								styles.vignette,
+								styles.fade,
+							)}
+						>
+							{backgroundImage}
 						</div>
-						<div className="absolute" />
-						{/* <div className="top-full -scale-y-100 absolute -z-10">
-              <img src={backdrop} alt={title} />
-            </div> */}
 					</div>
 				)}
 
-				<div className="">
-					<PosterRotator images={posters} />
-				</div>
+				<div className="p-6">
+					{filepath && <pre className="italic text-xs">{filepath}</pre>}
 
-				{/* <iframe
-          src="https://www.youtube-nocookie.com/embed/skK9CGLrpWY?rel=0&controls=0"
-          width="560"
-          height="315"
-          title="YTTV TrueView NewUsers NFL 23 V1 DR None US EN 10s MP4 VIDEO"
-          frameBorder="0"
-          allowFullScreen
-        /> */}
-
-				<PageHeader>
-					<PageHeaderHeading>
-						{title} <span className="lighter">({year})</span>
-					</PageHeaderHeading>
-					<PageHeaderDescription />
-				</PageHeader>
-
-				{trailerUrl}
-				{rest.trailers && (
-					<div className="grid grid-cols-2 gap-4">
-						{rest.trailers.join(', ')}
-					</div>
-				)}
-				<RatingIcon rated="R" />
-
-				<div className="m-6">
-					<Button onClick={handleBack}>BACK</Button>
-					<Button onClick={handlePlay}>
-						Play <PlayIcon className="ml-2" />
-					</Button>
-					{omdb?.imdbid && (
-						<Button
-							onClick={() => {
-								if (!omdb?.imdbid) return;
-								handleUrl(`https://www.imdb.com/title/${omdb.imdbid}/`);
-							}}
-						>
-							IMDB <Link2Icon className="ml-2" />
-						</Button>
-					)}
-					{omdb?.tomatourl && (
-						<Button
-							onClick={() => {
-								handleUrl(omdb?.tomatourl);
-							}}
-						>
-							Tomatoes <Link2Icon className="ml-2" />
-						</Button>
-					)}
-					<SectionHeader
-						title={title}
-						tagline={`${year}${
-							omdb?.genre && ` • ${Object.values(omdb.genre).join(', ')}`
-						}${omdb?.runtime && ` • ${omdb.runtime}`}`}
-					/>
 					{/* {ratings?.length && (
             <div className="space-y-4">
               <h2 className="text-lg font-semibold tracking-tight">Ratings</h2>
@@ -188,108 +250,113 @@ export function Media(_props: Props) {
               </div>
             </div>
           )} */}
-					<div className="flex flex-wrap gap-4">
-						{omdb?.actors && (
-							<InfoBlock
-								title="Actors"
-								value={Object.values(omdb.actors).join(', ')}
-							/>
-						)}
-						{omdb?.runtime && (
-							<InfoBlock title="Runtime" value={omdb?.runtime} />
-						)}
-
-						{omdb?.rated && <InfoBlock title="Rated" value={omdb?.rated} />}
-
-						{omdb?.released && (
-							<InfoBlock title="Released" value={omdb?.released} />
-						)}
-
-						{omdb?.country && (
-							<InfoBlock title="Country" value={omdb?.country} />
-						)}
-
-						{omdb?.language && (
-							<InfoBlock title="Language" value={omdb?.language} />
-						)}
-
-						{omdb?.awards && <InfoBlock title="Awards" value={omdb?.awards} />}
-
-						{omdb?.boxoffice && (
-							<InfoBlock title="Box Office" value={omdb?.boxoffice} />
-						)}
-
-						{omdb?.dvd && <InfoBlock title="DVD Release" value={omdb?.dvd} />}
-
-						{omdb?.production && (
-							<InfoBlock title="Production" value={omdb?.production} />
-						)}
-
-						{omdb?.website && (
-							<InfoBlock title="Website" value={omdb?.website} />
-						)}
-
-						{omdb?.imdbid && <InfoBlock title="IMDB ID" value={omdb?.imdbid} />}
-
-						{omdb?.imdbvotes && (
-							<InfoBlock title="IMDB Votes" value={omdb?.imdbvotes} />
-						)}
-
-						{omdb?.imdbrating && (
-							<InfoBlock title="IMDB Rating" value={omdb?.imdbrating} />
-						)}
-
-						{omdb?.metascore && (
-							<InfoBlock title="Metascore" value={omdb?.metascore} />
-						)}
-
-						{omdb?.director && (
-							<InfoBlock
-								title="Director"
-								value={Object.values(omdb.director).join(', ')}
-							/>
-						)}
-
-						{omdb?.writer && (
-							<InfoBlock
-								title="Writer"
-								value={Object.values(omdb.writer).join(', ')}
-							/>
-						)}
-
-						{tmdb?.popularity && (
-							<InfoBlock title="Popularity" value={tmdb?.popularity} />
-						)}
-
-						{tmdb?.vote_count && (
-							<InfoBlock title="TMDB Vote Count" value={tmdb.vote_count} />
-						)}
-
-						{tmdb?.vote_average && (
-							<InfoBlock title="TMDB Vote Average" value={tmdb.vote_average} />
-						)}
-
-						{tmdb?.id && <InfoBlock title="TMDB ID" value={tmdb.id} />}
-
-						{filepath && <InfoBlock title="File" value={filepath} />}
-
-						{currentMedia.ext && (
-							<InfoBlock
-								title="Extension"
-								value={currentMedia.ext.replaceAll('.', '')}
-							/>
-						)}
-
-						{tmdb?.overview && (
-							<InfoBlock title="Overview" value={tmdb?.overview} />
-						)}
-
-						{currentMedia?.plot && (
-							<InfoBlock title="Plot" value={currentMedia?.plot} />
-						)}
+					<div className="">
+						<PosterRotator images={posters} />
 					</div>
-					{/* <ReactPlayer url={trailerUrl} /> */}
-					{/* <Table className="max-w-full break-all">
+
+					<iframe
+						src="https://www.youtube-nocookie.com/embed/skK9CGLrpWY?rel=0&controls=0"
+						width="560"
+						height="315"
+						title="YTTV TrueView NewUsers NFL 23 V1 DR None US EN 10s MP4 VIDEO"
+						frameBorder="0"
+						allowFullScreen
+					/>
+
+					{trailerUrl}
+					{rest.trailers && (
+						<div className="grid grid-cols-2 gap-4">
+							{rest.trailers.join(', ')}
+						</div>
+					)}
+					<div className="flex flex-col gap-4">
+						<div className="flex flex-wrap gap-4">
+							{omdb?.director && (
+								<InfoBlock
+									title="Director"
+									value={Object.values(omdb.director).join(', ')}
+								/>
+							)}
+							{omdb?.actors && (
+								<InfoBlock
+									title="Actors"
+									value={Object.values(omdb.actors).join(', ')}
+								/>
+							)}
+
+							{omdb?.writer && (
+								<InfoBlock
+									title="Writer"
+									value={Object.values(omdb.writer).join(', ')}
+								/>
+							)}
+						</div>
+						<div className="flex flex-wrap gap-4">
+							{omdb?.awards && (
+								<InfoBlock title="Awards" value={omdb?.awards} />
+							)}
+
+							{omdb?.boxoffice && (
+								<InfoBlock title="Box Office" value={omdb?.boxoffice} />
+							)}
+						</div>
+						{tmdb?.overview && plot && <InfoBlock title="Plot" value={plot} />}
+
+						<Separator />
+						<div className="flex flex-wrap gap-4">
+							{omdb?.language && (
+								<InfoBlock title="Language" value={omdb?.language} />
+							)}
+
+							{omdb?.country && (
+								<InfoBlock title="Country" value={omdb?.country} />
+							)}
+						</div>
+						<div className="flex flex-wrap gap-4">
+							{omdb?.released && (
+								<InfoBlock title="Released" value={omdb?.released} />
+							)}
+
+							{omdb?.dvd && <InfoBlock title="DVD Release" value={omdb?.dvd} />}
+						</div>
+						<div className="flex flex-wrap gap-4">
+							{omdb?.production && (
+								<InfoBlock title="Production" value={omdb?.production} />
+							)}
+
+							{omdb?.website && (
+								<InfoBlock title="Website" value={omdb?.website} />
+							)}
+
+							{omdb?.imdbvotes && (
+								<InfoBlock title="IMDB Votes" value={omdb?.imdbvotes} />
+							)}
+
+							{omdb?.imdbrating && (
+								<InfoBlock title="IMDB Rating" value={omdb?.imdbrating} />
+							)}
+
+							{omdb?.metascore && (
+								<InfoBlock title="Metascore" value={omdb?.metascore} />
+							)}
+
+							{tmdb?.popularity && (
+								<InfoBlock title="Popularity" value={tmdb?.popularity} />
+							)}
+
+							{tmdb?.vote_count && (
+								<InfoBlock title="TMDB Vote Count" value={tmdb.vote_count} />
+							)}
+
+							{tmdb?.vote_average && (
+								<InfoBlock
+									title="TMDB Vote Average"
+									value={tmdb.vote_average}
+								/>
+							)}
+						</div>
+						{/* <ReactPlayer url={trailerUrl} /> */}
+						{/* <Table className="max-w-full break-all">
 						<TableBody>
 							<TableRow>
 								<TableCell className="px-0 min-w-[100px]">File</TableCell>
@@ -300,6 +367,7 @@ export function Media(_props: Props) {
 							{MediaTable(omdb)}
 						</TableBody>
 					</Table> */}
+					</div>
 				</div>
 			</div>
 		</>
