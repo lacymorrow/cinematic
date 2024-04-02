@@ -1,5 +1,5 @@
 import { Layout } from '@/renderer/components/layout/Layout';
-import App from '@/renderer/windows/main/App';
+import App from '@/renderer/components/windows/main/App';
 import { createRoot } from 'react-dom/client';
 
 const container = document.getElementById('root') as HTMLElement;
