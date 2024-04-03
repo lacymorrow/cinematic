@@ -14,6 +14,7 @@ export const keyboardShortcuts: KeyboardShortcut[] = [
 	// Quit
 	{
 		action: 'quit',
+		allowUnbind: true,
 		fn() {
 			app.quit();
 		},

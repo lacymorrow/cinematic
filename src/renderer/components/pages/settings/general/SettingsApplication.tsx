@@ -1,7 +1,5 @@
 import { Separator } from '@/components/ui/separator';
 import { SettingsType } from '@/config/settings';
-import { InputComboboxForm } from '@/renderer/components/input/InputComboboxForm';
-import { InputSelectForm } from '@/renderer/components/input/InputSelectForm';
 import { InputSwitch } from '@/renderer/components/input/InputSwitch';
 import { useGlobalContext } from '@/renderer/context/global-context';
 
@@ -21,55 +19,7 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
-			<InputComboboxForm
-				items={[
-					{
-						value: 'light',
-						label: 'Light',
-					},
-					{
-						value: 'dark',
-						label: 'Dark',
-					},
-					{
-						value: 'system',
-						label: 'System',
-					},
-				]}
-				value={settings.theme}
-				onChange={(value) => {
-					if (value !== 'system' && value !== 'light' && value !== 'dark') {
-						return;
-					}
 
-					handleChangeSetting({ theme: value });
-				}}
-				label="Theme"
-				description="Select your preferred theme."
-			/>
-
-			<InputSelectForm
-				items={[
-					{
-						value: 'light',
-						label: 'Light',
-					},
-					{
-						value: 'dark',
-						label: 'Dark',
-					},
-					{
-						value: 'system',
-						label: 'System',
-					},
-				]}
-				value={settings.theme}
-				onChange={(value) => {
-					handleChangeSetting({ theme: value });
-				}}
-				label="Theme"
-				description="Select your preferred theme."
-			/>
 			<InputSwitch
 				value={settings.allowAutoUpdate}
 				onChange={() => {
