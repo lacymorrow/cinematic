@@ -3,6 +3,8 @@ export const $settings = {
 	description: 'Manage your account settings and application preferences',
 	app: {
 		githubUrl: 'https://github.com/lacymorrow/electron-hotplate',
+		repo: 'lacymorrow/electron-hotplate',
+		description: 'A boilerplate for Electron applications',
 	},
 	appearance: {
 		themeLabel: 'Theme',
@@ -38,6 +40,7 @@ export const $errors = {
 	prefix: 'Main> ',
 	blockedNavigation: 'Blocked navigation to: ',
 	invalidChannel: 'Invalid IPC channel',
+	github: 'Failed to fetch GitHub data',
 };
 
 export const $messages = {
