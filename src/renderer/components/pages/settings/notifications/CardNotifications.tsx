@@ -20,7 +20,7 @@ export function CardNotifications() {
 	const handleChange = (e: NotificationType | 'none') => {
 		setSettings({
 			allowNotifications: e !== 'none',
-			...(e !== 'none' ? { notifcationType: e } : {}),
+			...(e !== 'none' ? { notificationType: e } : {}),
 		});
 	};
 
@@ -39,7 +39,7 @@ export function CardNotifications() {
 					className={cn(
 						'-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all',
 						settings.allowNotifications &&
-							settings.notifcationType === 'all' &&
+							settings.notificationType === 'all' &&
 							'bg-accent hover:text-accent-foreground',
 					)}
 				>
@@ -59,7 +59,7 @@ export function CardNotifications() {
 					className={cn(
 						'-mx-2 flex items-start space-x-4 rounded-md p-2 text-accent-foreground transition-all',
 						settings.allowNotifications &&
-							settings.notifcationType === 'system' &&
+							settings.notificationType === 'system' &&
 							'bg-accent hover:text-accent-foreground',
 					)}
 				>
@@ -79,7 +79,7 @@ export function CardNotifications() {
 					className={cn(
 						'-mx-2 flex items-start space-x-4 rounded-md p-2 text-accent-foreground transition-all',
 						settings.allowNotifications &&
-							settings.notifcationType === 'app' &&
+							settings.notificationType === 'app' &&
 							'bg-accent hover:text-accent-foreground',
 					)}
 				>

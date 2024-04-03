@@ -14,6 +14,8 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 	const { pathname } = useLocation();
+	const currentPage =
+		items.find((item) => pathname.endsWith(item.href)) || items[0];
 
 	return (
 		<nav
@@ -24,7 +26,6 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 			{...props}
 		>
 			{items.map((item) => {
-				const isCurrentPage = pathname.endsWith(item.href);
 				return (
 					<Link
 						draggable={false}
@@ -32,9 +33,9 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
 						to={item.href}
 						className={cn(
 							buttonVariants({
-								variant: isCurrentPage ? 'default' : 'ghost',
+								variant: currentPage.href === item.href ? 'default' : 'ghost',
 							}),
-							isCurrentPage ? 'font-bold' : 'font-normal',
+							currentPage.href === item.href ? 'font-bold' : 'font-normal',
 							'justify-start w-full flex gap-2 rounded-none py-6',
 						)}
 					>

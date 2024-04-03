@@ -17,63 +17,6 @@ Organize your movies by genre and sort by popularity, release date, runtime, or 
 
 Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
 
-## Features
-
-- 💬 App and System-wide Notifications
-- 🏃‍♂️ Auto Updater
-- 📦 Built-in Store
-- 🖱️ Context Menu
-- 🌙 Dark Mode
-- ❌ Error Handler
-- ⌨️ Keyboard Shortcut Manager
-- 📝 Logging
-- 🀱 Menu Bar for macOS, Windows, and Linux
-- 📂 Multi-Window
-- 🖥️ System Tray
-
-## Getting Started
-
-```bash
-
-# Clone this repository
-git clone https://github.com/lacymorrow/electron-hotplate.git
-
-# Go into the repository
-cd electron-hotplate
-
-# Install dependencies
-yarn
-
-# Run the app
-yarn start
-```
-
-## BuiltWith
-
-- [Electron](https://electronjs.org/)
-- [React](https://reactjs.org/)
-- [React Router](https://reacttraining.com/react-router/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Shadcn](https://ui.shadcn.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-
-## Development
-
-### Tailwind CSS
-
-We use Tailwind CSS for styling. See the [Tailwind CSS docs](https://tailwindcss.com/docs) for more information.
-
-Some Tailwind plugins have been added for convenience:
-
-- [Tailwind Animate](https://github.com/jamiebuilds/tailwindcss-animate) - `tailwindcss-animate`
-- [Tailwind Container Queries](https://github.com/tailwindlabs/tailwindcss-container-queries) - `@tailwindcss/container-queries`
-- Child selectors to target immediate children like `child:w-xl`
-- Don't forget group selectors too: `group` (Parent) `group-hover:bg-gray-100` (Child)
-
-### Shadcn
-
-Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
-Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
 
 ### Features
 

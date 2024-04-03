@@ -35,15 +35,17 @@ import { Home } from '@/renderer/components/pages/Home';
 import { Layout } from '@/renderer/components/layout/Layout';
 import { MainLayout } from '@/renderer/components/layout/MainLayout';
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
-import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
+import ErrorPage from '@/renderer/components/pages/ErrorPage';
 import '@/renderer/styles/globals.scss';
-import { Playlist } from './pages/Playlist';
+import { Playlist } from '@/renderer/windows/main/pages/Playlist';
 
 export default function App() {
+	const index =
+		settingsNavItems.find((item) => item.index) || settingsNavItems[0];
+
 	const routes = (
-		<Route path="/" element={<MainLayout />}>
+		<Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
 			<Route path="settings" element={<SettingsLayout />}>
-				<Route index element={<SettingsApplication />} />
 				{settingsNavItems.map((item) => {
 					/* Dynamically add routes for settings */
 					return (
@@ -54,6 +56,12 @@ export default function App() {
 						/>
 					);
 				})}
+
+				{index && (
+					<>
+						<Route index path="*" element={<>{index.element}</>} />
+					</>
+				)}
 			</Route>
 
 			<Route index element={<Home />} />

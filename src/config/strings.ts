@@ -6,7 +6,9 @@ export const $settings = {
 	title: 'Settings',
 	description: 'Manage your account settings and application preferences',
 	app: {
-		githubUrl: 'https://github.com/lacymorrow/electron-hotplate',
+		githubUrl: 'https://github.com/lacymorrow/cinematic',
+		repo: 'lacymorrow/cinematic',
+		description: 'A boilerplate for Electron applications',
 	},
 	appearance: {
 		themeLabel: 'Theme',
@@ -59,6 +61,7 @@ export const $errors = {
 	prefix: 'Main> ',
 	blockedNavigation: 'Blocked navigation to: ',
 	invalidChannel: 'Invalid IPC channel',
+	github: 'Failed to fetch GitHub data',
 };
 
 export const $messages = {

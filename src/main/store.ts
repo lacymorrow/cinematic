@@ -3,9 +3,9 @@ import { CustomAcceleratorsType } from '@/types/keyboard';
 import { CollectionItemType } from '@/types/media';
 import Store from 'electron-store';
 import {
-	DEFAULT_KEYBINDS,
-	DEFAULT_SETTINGS,
-	SettingsType,
+    DEFAULT_KEYBINDS,
+    DEFAULT_SETTINGS,
+    SettingsType,
 } from '../config/settings';
 
 export interface CollectionStoreType {
@@ -113,7 +113,7 @@ const schema: Store.Schema<StoreType> = {
 			allowNotifications: {
 				type: 'boolean',
 			},
-			notifcationType: {
+			notificationType: {
 				type: 'string',
 				enum: ['system', 'app', 'all'],
 			},
