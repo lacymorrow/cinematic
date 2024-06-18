@@ -1,7 +1,7 @@
 // todo: color value is reset when pure black
 // todo: clear button cannot be inside button
 import { simpleUUID } from '@/utils/getUUID';
-import Chrome from '@uiw/react-color-chrome';
+import Colorful from '@uiw/react-color-colorful';
 import { useCallback, useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import { invertColor } from '@/utils/invertColor';
 import { ClearButton } from './ClearButton';
 
 export function InputColor({
+	variant = 'chrome',
 	value,
 	onChange,
 	label,
@@ -23,6 +24,7 @@ export function InputColor({
 
 	...props
 }: {
+	variant?: 'chrome' | 'colorful';
 	value?: string;
 	onChange?: (value: string) => void;
 	label?: string;
@@ -92,7 +94,8 @@ export function InputColor({
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex items-center justify-center">
-						<Chrome
+						<Colorful
+							disableAlpha={true}
 							color={color || undefined}
 							// @ts-ignore
 							placement={false}

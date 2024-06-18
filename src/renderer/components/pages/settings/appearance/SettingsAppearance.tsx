@@ -1,8 +1,17 @@
 import { Separator } from '@/components/ui/separator';
 import { InputColor } from '@/renderer/components/input/InputColor';
 import { ThemeForm } from '@/renderer/components/pages/settings/appearance/ThemeForm';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
 export function SettingsAppearance() {
+	const { settings, setSettings } = useGlobalContext();
+
+	const handleChange = (e: string) => {
+		setSettings({
+			accentColor: e.substring(0, 7),
+		});
+	};
+
 	return (
 		<div className="space-y-6">
 			<div>
@@ -14,12 +23,11 @@ export function SettingsAppearance() {
 			</div>
 			<Separator />
 			<InputColor
-				value="#b453ff"
+				variant="colorful"
+				value={settings.accentColor}
 				label="Accent Color"
 				details="Change the colors used to decorate the app."
-				onChange={(value) => {
-					console.log('Color', value);
-				}}
+				onChange={handleChange}
 			/>
 			<ThemeForm />
 		</div>

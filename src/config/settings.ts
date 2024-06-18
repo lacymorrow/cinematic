@@ -5,6 +5,7 @@ export type ThemeType = 'system' | 'light' | 'dark';
 export type NotificationType = 'system' | 'app' | 'all';
 
 export interface SettingsType {
+	accentColor: string;
 	allowAnalytics: boolean;
 	allowSounds: boolean;
 	allowAutoUpdate: boolean;
@@ -30,6 +31,7 @@ export interface SettingsType {
 
 // These are the default settings, imported by the store
 export const DEFAULT_SETTINGS: SettingsType = {
+	accentColor: '#b453ff',
 	allowAnalytics: true,
 	allowAutoUpdate: true,
 	allowSounds: true,
