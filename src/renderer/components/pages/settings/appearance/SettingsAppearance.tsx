@@ -23,7 +23,6 @@ export function SettingsAppearance() {
 			</div>
 			<Separator />
 			<InputColor
-				variant="colorful"
 				value={settings.accentColor}
 				label="Accent Color"
 				details="Change the colors used to decorate the app."

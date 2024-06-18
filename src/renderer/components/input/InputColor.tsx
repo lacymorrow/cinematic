@@ -79,21 +79,25 @@ export function InputColor({
 						</div>
 					</div>
 					<PopoverTrigger className="relative" asChild>
-						<Button
-							style={{
-								backgroundColor,
-								color: foregroundColor,
-							}}
-							{...props}
-						>
-							{buttonText || 'Select Color'}
+						<div className="relative w-full">
+							<Button
+								style={{
+									backgroundColor,
+									color: foregroundColor,
+								}}
+								className="w-full"
+								{...props}
+							>
+								{buttonText || 'Select Color'}
+							</Button>
 							{color && (
 								<ClearButton
+									className="absolute right-0 top-0"
 									onClick={handleClear}
 									style={{ color: foregroundColor }}
 								/>
 							)}
-						</Button>
+						</div>
 					</PopoverTrigger>
 					<PopoverContent className="flex items-center justify-center">
 						<Component
