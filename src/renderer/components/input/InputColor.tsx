@@ -11,6 +11,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { invertColor } from '@/utils/invertColor';
+import Chrome from '@uiw/react-color-chrome';
 import { ClearButton } from './ClearButton';
 
 export function InputColor({
@@ -33,6 +34,7 @@ export function InputColor({
 	buttonText?: string;
 	props?: any;
 }) {
+	const Component = variant === 'chrome' ? Chrome : Colorful;
 	const color = useMemo(() => value || '', [value]);
 
 	const uuid = useMemo(simpleUUID, []);
@@ -94,7 +96,7 @@ export function InputColor({
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex items-center justify-center">
-						<Colorful
+						<Component
 							disableAlpha={true}
 							color={color || undefined}
 							// @ts-ignore
