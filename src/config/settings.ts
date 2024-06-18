@@ -7,6 +7,7 @@ export type ViewModeType = 'grid' | 'list';
 export type NotificationType = 'system' | 'app' | 'all';
 
 export interface SettingsType {
+	accentColor: string;
 	allowAnalytics: boolean;
 	allowSounds: boolean;
 	allowAutoUpdate: boolean;
@@ -50,6 +51,7 @@ export interface SettingsType {
 export const DEFAULT_SETTINGS: SettingsType = {
 	paths: [],
 
+	accentColor: '#b453ff',
 	allowAnalytics: true,
 	allowAutoUpdate: true,
 	allowSounds: true,
