@@ -58,7 +58,9 @@
 		"analyze": "ANALYZE=true npm run build",
 		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package"
 	},
-	"browserslist": [],
+	"browserslist": [
+		"extends browserslist-config-erb"
+	],
 	"prettier": {
 		"singleQuote": true,
 		"overrides": [
