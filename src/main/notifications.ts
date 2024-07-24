@@ -34,5 +34,3 @@ export const notification = (options: NotificationOptions) => {
 		Logger.info(`Notification not sent: ${options.title} - ${options.body}`);
 	}
 };
-
-export default { renderer: rendererNotification, main: mainNotification };

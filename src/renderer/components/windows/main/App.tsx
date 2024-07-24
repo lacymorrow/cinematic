@@ -32,7 +32,6 @@ import {
 
 import { Home } from '@/renderer/components/pages/Home';
 
-import { Layout } from '@/renderer/components/layout/Layout';
 import { MainLayout } from '@/renderer/components/layout/MainLayout';
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
 import ErrorPage from '@/renderer/components/pages/ErrorPage';
@@ -123,8 +122,8 @@ export default function App() {
 	const router = createHashRouter(createRoutesFromElements(cinematicRoutes));
 
 	return (
-		<Layout>
+
 			<RouterProvider router={router} />
-		</Layout>
+
 	);
 }

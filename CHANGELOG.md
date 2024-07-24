@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.2 - 2024-07-24
+
+- Fixed the tooltip not displaying with collapsed menu
+- Fixed the double-layout issue
+- Added notifications when resetting the app
+
 ## 3.0.1
 
 - Fixes to the library context
