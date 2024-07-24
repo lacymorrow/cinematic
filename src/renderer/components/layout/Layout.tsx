@@ -1,4 +1,5 @@
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { GlobalContextProvider } from '@/renderer/context/global-context';
 import { ThemeProvider } from '@/renderer/context/theme-context';
 
@@ -9,7 +10,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 		<React.StrictMode>
 			<GlobalContextProvider>
 				<ThemeProvider>
-					{children}
+					<TooltipProvider delayDuration={0}>
+						{children}
+					</TooltipProvider>
 					<Toaster />
 				</ThemeProvider>
 			</GlobalContextProvider>

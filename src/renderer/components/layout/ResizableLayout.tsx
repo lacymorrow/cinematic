@@ -5,7 +5,6 @@ import {
 } from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Nav, NavLinkProps } from '@/renderer/components/ui/Nav';
 import {
@@ -95,7 +94,6 @@ export function ResizableLayout({
 	}
 
 	return (
-		<TooltipProvider delayDuration={0}>
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={handleLayoutChange}
@@ -204,6 +202,5 @@ export function ResizableLayout({
 					</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>
-		</TooltipProvider>
 	);
 }

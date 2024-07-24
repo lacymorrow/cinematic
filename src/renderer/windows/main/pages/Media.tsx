@@ -166,7 +166,9 @@ export function Media(_props: Props) {
 								)} */}
 								{omdb?.genre &&
 									Object.values(omdb.genre).map((g) => (
-										<Badge className="rounded-full">{g}</Badge>
+										<Badge className="rounded-full" key={g}>
+											{g}
+										</Badge>
 									))}
 							</div>
 
