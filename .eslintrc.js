@@ -1,6 +1,8 @@
 module.exports = {
   extends: 'erb',
   plugins: ['@typescript-eslint'],
+  // Ignore shadcn/ui components
+  ignorePatterns: ['**/components/ui/'],
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
@@ -12,7 +14,21 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
+	
+	// Added in Electron-Hotplate
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
+    'react/prop-types': 'off',
+    'react/require-default-props': 'off',
+    'react/jsx-no-useless-fragment': 'off',
+    'import/prefer-default-export': 'off',
   },
   parserOptions: {
     ecmaVersion: 2022,
