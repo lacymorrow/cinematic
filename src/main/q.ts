@@ -26,6 +26,7 @@ const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 		const result = await fetchOMDB(meta);
 		setCachedObject(cacheKey, result);
 
+		console.log('result', result);
 		return result;
 	},
 	1,

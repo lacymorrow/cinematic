@@ -1,10 +1,10 @@
 import { MediaBrowser } from '@/renderer/components/media/MediaBrowser';
-import { useGlobalContext } from '@/renderer/context/global-context';
+import { useLibraryContext } from '@/renderer/context/library-context';
 
 type Props = {};
 
 export function Browse(_props: Props) {
-	const { libraryArray } = useGlobalContext();
+	const { libraryArray } = useLibraryContext();
 
 	return (
 		<MediaBrowser

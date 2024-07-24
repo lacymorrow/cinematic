@@ -24,6 +24,7 @@ import { $ui } from '@/config/strings';
 import { DialogDeletePlaylist } from '@/renderer/components/dialog/DialogDeletePlaylist';
 import { DEBOUNCE_DELAY } from '@/renderer/config/config';
 import { pathSettings } from '@/renderer/config/nav';
+import { useLibraryContext } from '@/renderer/context/library-context';
 import styles from '@/renderer/styles/Sidebar.module.scss';
 import { debounce } from '@/utils/debounce';
 import Logger from 'electron-log/renderer';
@@ -44,8 +45,8 @@ export function ResizableLayout({
 	navCollapsedSize = 4,
 }: Props) {
 	const { pathname } = useLocation();
-	const { genresArray, liked, playlistsArray, settings, setSettings } =
-		useGlobalContext();
+	const { settings, setSettings } = useGlobalContext();
+	const { genresArray, liked, playlistsArray } = useLibraryContext();
 
 	const [isCollapsed, setIsCollapsed] = React.useState(
 		settings.sidebarCollapsed,

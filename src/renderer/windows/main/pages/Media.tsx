@@ -8,7 +8,6 @@ import {
 	PageHeaderDescription,
 	PageHeaderHeading,
 } from '@/renderer/components/ui/PageHeader';
-import { useGlobalContext } from '@/renderer/context/global-context';
 import { Link2Icon, VideoIcon } from '@radix-ui/react-icons';
 import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
@@ -17,6 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { useLibraryContext } from '@/renderer/context/library-context';
 import styles from '@/renderer/styles/effects.module.scss';
 import { truncate } from '@/utils/truncate';
 import { ChevronLeftCircleIcon } from 'lucide-react';
@@ -42,7 +42,7 @@ export function MediaTable(data: any) {
 
 export function Media(_props: Props) {
 	const { id } = useParams();
-	const { library } = useGlobalContext();
+	const { library } = useLibraryContext();
 	const navigate = useNavigate();
 
 	useEffect(() => {

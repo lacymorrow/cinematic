@@ -1,5 +1,5 @@
 import { MediaBrowser } from '@/renderer/components/media/MediaBrowser';
-import { useGlobalContext } from '@/renderer/context/global-context';
+import { useLibraryContext } from '@/renderer/context/library-context';
 import { MediaType } from '@/types/file';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ type Props = {};
 
 export function Genre(_props: Props) {
 	const { id }: { id?: string } = useParams();
-	const { genres, libraryArray } = useGlobalContext();
+	const { genres, libraryArray } = useLibraryContext();
 
 	const [mediaArray, title] = useMemo(() => {
 		// todo: something else

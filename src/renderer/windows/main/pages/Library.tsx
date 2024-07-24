@@ -4,13 +4,13 @@ import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPla
 import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
 import { ScrollContainer } from '@/renderer/components/ui/ScrollContainer';
 import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
-import { useGlobalContext } from '@/renderer/context/global-context';
+import { useLibraryContext } from '@/renderer/context/library-context';
 import { MediaType } from '@/types/file';
 
 type Props = {};
 
 export function Library(_props: Props) {
-	const { libraryArray, randomLibraryArray } = useGlobalContext();
+	const { libraryArray, randomLibraryArray } = useLibraryContext();
 
 	const mostRecent = libraryArray.filter((media) => media.dateUpdated);
 	return (
@@ -29,7 +29,7 @@ export function Library(_props: Props) {
 					<div className="relative mb-4 select-none">
 						<ScrollArea>
 							<div className="flex space-x-4 pb-4">
-								{randomLibraryArray.map((media: MediaType) => (
+								{libraryArray.map((media: MediaType) => (
 									<MediaArtwork
 										key={crypto.randomUUID()}
 										media={media}

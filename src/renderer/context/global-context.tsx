@@ -5,8 +5,13 @@
 // todo: add os here
 
 import { ipcChannels } from '@/config/ipc-channels';
-import { CollectionStoreType, LibraryStoreType } from '@/main/store';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, {
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react';
 
 import {
 	DEFAULT_KEYBINDS,
@@ -17,22 +22,14 @@ import { $messages } from '@/config/strings';
 import { play, preload } from '@/renderer/lib/sounds';
 import { AppInfoType } from '@/types/app';
 import { CustomAcceleratorsType } from '@/types/keyboard';
-import { CollectionType, LibraryType } from '@/types/media';
 import Logger from 'electron-log';
 import { MenuItemConstructorOptions } from 'electron/renderer';
 import { toast } from 'sonner';
+import { LibraryContextProvider } from './library-context';
 
 interface GlobalContextType {
 	app: Partial<AppInfoType>;
 	appMenu: MenuItemConstructorOptions[];
-	genres: CollectionStoreType;
-	genresArray: CollectionType;
-	library: LibraryStoreType;
-	libraryArray: LibraryType;
-	liked: LibraryType;
-	playlists: CollectionStoreType;
-	playlistsArray: CollectionType;
-	randomLibraryArray: LibraryType;
 	keybinds: CustomAcceleratorsType;
 	message: string;
 	messages: string[];
@@ -43,14 +40,6 @@ interface GlobalContextType {
 export const GlobalContext = React.createContext<GlobalContextType>({
 	app: {},
 	appMenu: [],
-	genres: {},
-	genresArray: [],
-	library: {},
-	libraryArray: [],
-	liked: [],
-	playlists: {},
-	playlistsArray: [],
-	randomLibraryArray: [],
 	keybinds: DEFAULT_KEYBINDS,
 	message: '',
 	messages: [],
@@ -63,31 +52,16 @@ export function GlobalContextProvider({
 }: {
 	children?: React.ReactNode;
 }) {
-	const [appInfo, setAppInfo] = React.useState<Partial<AppInfoType>>({});
-	const [appMenu, setAppMenu] = React.useState<MenuItemConstructorOptions[]>(
-		[],
-	);
-	const [messages, setMessages] = React.useState<string[]>([]);
-
+	const [appInfo, setAppInfo] = useState<Partial<AppInfoType>>({});
+	const [appMenu, setAppMenu] = useState<MenuItemConstructorOptions[]>([]);
+	const [messages, setMessages] = useState<string[]>([]);
 	const [settings, setCurrentSettings] =
-		React.useState<SettingsType>(DEFAULT_SETTINGS);
-
-	const [genres, setGenres] = React.useState<CollectionStoreType>({});
-	const [library, setLibrary] = React.useState<LibraryStoreType>({});
-	const [playlists, setPlaylists] = React.useState<CollectionStoreType>({});
+		useState<SettingsType>(DEFAULT_SETTINGS);
 	const [keybinds, setCurrentKeybinds] =
-		React.useState<CustomAcceleratorsType>(DEFAULT_KEYBINDS);
+		useState<CustomAcceleratorsType>(DEFAULT_KEYBINDS);
 
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
-		const synchronize = async () => {
-			Logger.log($messages.synchronize_library);
-
-			setLibrary(await window.electron.getLibrary());
-			setGenres(await window.electron.getGenres());
-			setPlaylists(await window.electron.getPlaylists());
-		};
-
 		const synchronizeSettings = async () => {
 			Logger.log($messages.synchronize_settings);
 
@@ -105,13 +79,6 @@ export function GlobalContextProvider({
 
 		// Listen for messages from the main process
 		window.electron.ipcRenderer.on(
-			ipcChannels.LIBRARY_UPDATED,
-			async (_event) => {
-				await synchronize();
-			},
-		);
-
-		window.electron.ipcRenderer.on(
 			ipcChannels.SETTINGS_UPDATED,
 			async (_event) => {
 				await synchronizeSettings();
@@ -125,16 +92,7 @@ export function GlobalContextProvider({
 				toast(title, {
 					...(body ? { description: body } : {}),
 					...(action ? { action } : {}),
-					// action: {
-					// 	label: 'Ok',
-					// 	onClick: () => {},
-					// },
 				});
-
-				// Renderer Web Notifications
-				// new Notification(title, {
-				// 	body,
-				// });
 			},
 		);
 
@@ -157,7 +115,6 @@ export function GlobalContextProvider({
 			.catch(console.error);
 
 		// Request initial data when the app loads
-		synchronize();
 		synchronizeSettings();
 
 		// Let the main process know that the renderer is ready
@@ -183,56 +140,22 @@ export function GlobalContextProvider({
 		window.electron.setSettings(newSettings);
 	}, []);
 
-	const libraryArray = useMemo(() => Object.values(library), [library]);
-	const playlistsArray = useMemo(() => Object.values(playlists), [playlists]);
-	const genresArray = useMemo(() => Object.values(genres), [genres]);
-	const liked = useMemo(
-		() => libraryArray.filter((media) => media.liked),
-		[libraryArray],
-	);
-
-	const randomLibraryArray = useMemo(() => {
-		const shuffled = [...libraryArray];
-		return shuffled.sort(() => 0.5 - Math.random());
-	}, [libraryArray]);
-
 	const value = useMemo(() => {
 		return {
 			app: appInfo,
 			appMenu,
-			genres,
-			genresArray,
-			library,
-			libraryArray,
-			liked,
-			playlists,
-			playlistsArray,
-			randomLibraryArray,
 			keybinds,
 			settings,
 			setSettings,
 			messages,
 			message: messages[messages.length - 1] ?? '',
 		};
-	}, [
-		appInfo,
-		appMenu,
-		genres,
-		genresArray,
-		library,
-		libraryArray,
-		liked,
-		playlists,
-		playlistsArray,
-		randomLibraryArray,
-		keybinds,
-		settings,
-		setSettings,
-		messages,
-	]);
+	}, [appInfo, appMenu, keybinds, settings, setSettings, messages]);
 
 	return (
-		<GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
+		<GlobalContext.Provider value={value}>
+			<LibraryContextProvider>{children}</LibraryContextProvider>
+		</GlobalContext.Provider>
 	);
 }
 
