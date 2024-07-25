@@ -12,17 +12,26 @@ export const restartApp = () => {
 
 export const resetSettings = () => {
 	Logger.status($init.refreshSettings);
+
 	// Sonic announcement
 	sounds.play('RESET');
+
+	// Notification
+	notification({
+		title: $init.refreshSettings,
+	});
+
 	resetStoreSettings();
 };
 
 export const resetApp = () => {
 	// Sonic announcement
 	sounds.play('RESET');
+	
+	// Notification
 	notification({
-		title: 'Resetting...',
-		body: 'All app settings have been reset.',
+		title: $init.resetApp,
 	});
+
 	resetStore();
 };

@@ -8,7 +8,7 @@ import { InputSlider } from '../input/InputSlider';
 
 type Props = {};
 
-export function Home(props: Props) {
+export function Home(_props: Props) {
 	const [val, setVal] = React.useState(50);
 	return (
 		<div className="flex flex-col gap-4 items-center">

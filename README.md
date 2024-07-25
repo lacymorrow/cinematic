@@ -79,6 +79,70 @@ Please post any questions or issues you come across to our [issues page](https:/
 ```bash
 # Run dev app
 yarn start
+```
+
+## Production
+
+### Auto Update
+
+After publishing your first version, you can enable auto-update by uncommenting the `update` function contents in `src/main/auto-update.ts`.
+
+## BuiltWith
+
+- [Electron](https://electronjs.org/)
+- [React](https://reactjs.org/)
+- [React Router](https://reacttraining.com/react-router/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn](https://ui.shadcn.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+
+
+## Development
+
+### Tailwind CSS
+
+We use Tailwind CSS for styling. See the [Tailwind CSS docs](https://tailwindcss.com/docs) for more information.
+
+Some Tailwind plugins have been added for convenience:
+
+- [Tailwind Animate](https://github.com/jamiebuilds/tailwindcss-animate) - `tailwindcss-animate`
+- [Tailwind Container Queries](https://github.com/tailwindlabs/tailwindcss-container-queries) - `@tailwindcss/container-queries`
+- Child selectors to target immediate children like `child:w-xl`
+- Don't forget group selectors too: `group` (Parent) `group-hover:bg-gray-100` (Child)
+
+### Shadcn
+
+Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
+Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
+
+_Current installation command (to update all ui components):_
+
+```sh
+npx shadcn-ui@latest add button checkbox dropdown-menu form input menubar radio-group scroll-area select separator sonner switch textarea
+```
+
+_To list components with updates: `npx shadcn-ui@latest diff`_
+
+## Electron-React-Boilerplate Docs
+
+See the Electron React Boilerplate [docs and guides here](https://electron-react-boilerplate.js.org/docs/installation)
+
+
+### Tutorials
+
+- Creating multiple windows: https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/623#issuecomment-1382717291
+
+
+## License
+
+MIT © [Lacy Morrow](https://github.com/lacymorrow)
+
+[github-actions-status]: https://github.com/lacymorrow/electron-shadcn-boilerplate/workflows/Build/badge.svg
+[github-actions-url]: https://github.com/lacymorrow/electron-shadcn-boilerplate/actions
+[github-tag-image]: https://img.shields.io/github/tag/electron-react-boilerplate/electron-react-boilerplate.svg?label=version
+[github-tag-url]: https://github.com/lacymorrow/electron-shadcn-boilerplate/releases/latest
+[stackoverflow-img]: https://img.shields.io/badge/stackoverflow-electron_react_boilerplate-blue.svg
+[stackoverflow-url]: https://stackoverflow.com/questions/tagged/electron-react-boilerplate
 
 # Build app for production
 yarn package

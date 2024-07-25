@@ -1,18 +1,24 @@
-import { Notification } from 'electron';
+import { app, Notification } from 'electron';
 import Logger from 'electron-log/main';
 import { ipcChannels } from '../config/ipc-channels';
 import { NotificationOptions } from '../types/notification';
 import { getSetting } from './store-actions';
 import windows from './windows';
 
-const mainNotification = (options: NotificationOptions) => {
+export const mainNotification = (options: NotificationOptions) => {
 	Logger.info(
 		`Sending notification to main process: ${options.title} - ${options.body}`,
 	);
+
+	if (!app.isReady()) {
+		Logger.warn('App is not ready, skipping notification');
+		return;
+	}
+
 	new Notification(options).show();
 };
 
-const rendererNotification = (options: NotificationOptions) => {
+export const rendererNotification = (options: NotificationOptions) => {
 	Logger.info(
 		`Sending notification to renderer process: ${options.title} - ${options.body}`,
 	);

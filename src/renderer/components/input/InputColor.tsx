@@ -101,7 +101,7 @@ export function InputColor({
 					</PopoverTrigger>
 					<PopoverContent className="flex items-center justify-center">
 						<Component
-							disableAlpha={true}
+							disableAlpha
 							color={color || undefined}
 							// @ts-ignore
 							placement={false}

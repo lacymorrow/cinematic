@@ -32,10 +32,6 @@ export const $actions = {
 };
 
 export const $dialog = {
-	add: {
-		title: 'Add Media',
-		buttonLabel: 'Add',
-	},
 	error: {
 		title: 'An error occurred',
 		ignore: 'Ignore',
@@ -161,6 +157,7 @@ export const $init = {
 	debugging: 'Initializing debugging...',
 	commandLineFlags: 'Initializing command line flags...',
 	refreshSettings: 'Refreshing settings...',
+	resetApp: 'Resetting app...',
 	appFlags: 'Registering app flags...',
 	appListeners: 'Registering app listeners...',
 	mainIdle: 'Main process is now idle',
