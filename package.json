@@ -322,7 +322,7 @@
 				"pacman",
 				"rpm"
 			],
-			"category": "Development;Building"
+			"category": "Video"
 		},
 		"snap": {
 			"summary": "A simple, powerful media library manager.",
