@@ -50,7 +50,6 @@ const catchErrors = () => {
 					if (result.response === 2) {
 						app.quit();
 					}
-					return null;
 				})
 				.catch((err: Error) => {
 					Logger.error(err);

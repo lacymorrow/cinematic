@@ -81,31 +81,33 @@ const onUpdateDownloaded = () => {
 };
 
 const update = () => {
+	// We trycatch here because appx throws errors
+	try {
+
 	// Comment this before publishing your first version.
 	// It's commented out as it throws an error if there are no published versions.
 
-	// We trycatch here because appx throws errors
-	try {
-		if (getSetting('allowAutoUpdate')) {
-			Logger.info('Setting: Automatic Updates');
+	// 	if (getSetting('allowAutoUpdate')) {
+	// 		Logger.info('Setting: Automatic Updates');
 
-			autoUpdater.logger = Logger;
-			autoUpdater.on('update-available', onUpdateAvailable);
+	// 		autoUpdater.logger = Logger;
+	// 		autoUpdater.on('update-available', onUpdateAvailable);
 
-			if (is.linux) {
-				return;
-			}
+	// 		if (is.linux) {
+	// 			return;
+	// 		}
 
-			autoUpdater.on('download-progress', onDownloadProgress);
+	// 		autoUpdater.on('download-progress', onDownloadProgress);
 
-			autoUpdater.on('update-downloaded', onUpdateDownloaded);
+	// 		autoUpdater.on('update-downloaded', onUpdateDownloaded);
 
-			setInterval(() => {
-				autoUpdater.checkForUpdates();
-			}, FOUR_HOURS);
+	// 		setInterval(() => {
+	// 			autoUpdater.checkForUpdates();
+	// 		}, FOUR_HOURS);
 
-			autoUpdater.checkForUpdatesAndNotify();
-		}
+	// 		autoUpdater.checkForUpdatesAndNotify();
+	// 	}
+	
 	} catch (error) {
 		Logger.error(error);
 	}

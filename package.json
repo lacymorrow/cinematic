@@ -58,7 +58,9 @@
 		"analyze": "ANALYZE=true npm run build",
 		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package"
 	},
-	"browserslist": [],
+	"browserslist": [
+		"extends browserslist-config-erb"
+	],
 	"prettier": {
 		"singleQuote": true,
 		"overrides": [
@@ -108,6 +110,7 @@
 	},
 	"dependencies": {
 		"@aptabase/electron": "^0.3.1",
+		"@electron/notarize": "^2.3.2",
 		"@mapbox/react-colorpickr": "^10.3.0",
 		"@radix-ui/react-accordion": "^1.1.2",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
@@ -163,7 +166,6 @@
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
-		"@electron/notarize": "^2.2.0",
 		"@electron/rebuild": "^3.5.0",
 		"@hookform/resolvers": "^3.3.4",
 		"@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
@@ -242,6 +244,7 @@
 	},
 	"build": {
 		"appId": "com.lacymorrow.cinematic",
+		"productName": "Cinematic",
 		"asar": true,
 		"asarUnpack": "**\\*.{node,dll}",
 		"files": [
@@ -255,6 +258,8 @@
 			"target": {
 				"target": "default",
 				"arch": [
+					"arm64",
+					"x64",
 					"universal"
 				]
 			},
@@ -295,7 +300,8 @@
 		},
 		"nsis": {
 			"unicode": false,
-			"artifactName": "${productName}-${version}.${ext}"
+			"artifactName": "${productName}-${version}.${ext}",
+			"uninstallDisplayName": "Electron Hotplate"
 		},
 		"appx": {
 			"publisherDisplayName": "Fly5",
@@ -316,7 +322,7 @@
 				"pacman",
 				"rpm"
 			],
-			"category": "Game;Shooter"
+			"category": "Development;Building"
 		},
 		"snap": {
 			"summary": "A simple, powerful media library manager.",
@@ -343,6 +349,9 @@
 			"owner": "lacymorrow",
 			"repo": "cinematic"
 		}
+	},
+	"collective": {
+		"url": "https://opencollective.com/electron-react-boilerplate-594"
 	},
 	"devEngines": {
 		"node": ">=14.x",
