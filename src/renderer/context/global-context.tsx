@@ -146,7 +146,7 @@ export function GlobalContextProvider({
 			settings,
 			setSettings,
 			messages,
-			message: messages[messages.length - 1] ?? '',
+			message: messages[0] ?? '',
 		};
 	}, [appInfo, appMenu, keybinds, settings, setSettings, messages]);
 

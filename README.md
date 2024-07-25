@@ -42,6 +42,12 @@ yarn
 yarn start
 ```
 
+## Production
+
+### Auto Update
+
+After publishing your first version, you can enable auto-update by uncommenting the `update` function contents in `src/main/auto-update.ts`.
+
 ## BuiltWith
 
 - [Electron](https://electronjs.org/)

@@ -24,10 +24,6 @@ export const $settings = {
 };
 
 export const $dialog = {
-	add: {
-		title: 'Add Media',
-		buttonLabel: 'Add',
-	},
 	error: {
 		title: 'An error occurred',
 		ignore: 'Ignore',
@@ -48,7 +44,7 @@ export const $messages = {
 
 	// Network messages
 	online: 'Connected',
-	offline: 'Disconnected - Cannot fetch metadata',
+	offline: 'Disconnected - No internet connection',
 };
 
 export const $autoUpdate = {

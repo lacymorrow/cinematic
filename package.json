@@ -1,8 +1,8 @@
 {
-	"name": "hotplate",
-	"productName": "Hotplate",
+	"name": "electron-hotplate",
+	"productName": "Electron Hotplate",
 	"appId": "com.lacymorrow.hotplate",
-	"version": "3.0.0",
+	"version": "4.6.0",
 	"description": "A batteries-included Electron boilerplate.",
 	"license": "CC-BY-NC-SA-4.0",
 	"copyright": "Copyright © Lacy Morrow",
@@ -232,6 +232,7 @@
 		"webpack-merge": "^5.10.0"
 	},
 	"build": {
+		"productName": "Electron Hotplate",
 		"appId": "com.lacymorrow.hotplate",
 		"asar": true,
 		"asarUnpack": "**\\*.{node,dll}",
@@ -248,7 +249,8 @@
 				"target": "default",
 				"arch": [
 					"arm64",
-					"x64"
+					"x64",
+					"universal"
 				]
 			},
 			"type": "distribution",
@@ -288,14 +290,15 @@
 		},
 		"nsis": {
 			"unicode": false,
-			"artifactName": "${productName}-${version}.${ext}"
+			"artifactName": "${productName}-${version}.${ext}",
+			"uninstallDisplayName": "Electron Hotplate"
 		},
 		"appx": {
-			"applicationId": "HotplateElectron",
+			"applicationId": "ElectronHotplate",
 			"artifactName": "${productName}.${ext}",
 			"backgroundColor": "#5500ff",
-			"displayName": "Hotplate",
-			"identityName": "2886Fly5.HotplateElectron",
+			"displayName": "Electron Hotplate",
+			"identityName": "2886Fly5.ElectronHotplate",
 			"publisher": "CN=C53C0091-1EEB-40B4-8537-082E06A4D328",
 			"publisherDisplayName": "Fly5",
 			"showNameOnTiles": true
@@ -334,7 +337,7 @@
 		"publish": {
 			"provider": "github",
 			"owner": "lacymorrow",
-			"repo": "hotplate"
+			"repo": "electron-hotplate"
 		}
 	},
 	"collective": {

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -31,7 +32,9 @@ function AppStatus() {
 					<DialogDescription key={simpleUUID()}>{m}</DialogDescription>
 				))}
 				<DialogFooter>
-					<Button type="button">Close</Button>
+					<DialogClose asChild>
+						<Button type="button">Close</Button>
+					</DialogClose>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

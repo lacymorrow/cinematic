@@ -7,36 +7,6 @@ const validButtonIndex = (result: any) =>
 		? result.response
 		: result;
 
-// export const openMediaDialog = () => {
-// 	return electronDialog
-// 		.showOpenDialog({
-// 			title: $dialog.add.title,
-// 			buttonLabel: $dialog.add.buttonLabel,
-// 			// defaultPath: app.getPath('home'),
-// 			properties: [
-// 				// 'dontAddToRecent',
-// 				'openFile',
-// 				// 'openDirectory',
-// 				// 'multiSelections',
-// 			],
-// 			filters: [
-// 				{
-// 					name: 'Media',
-// 					extensions: VALID_FILETYPES,
-// 				},
-// 			],
-// 		})
-// 		.then((response) => {
-// 			if (!response.canceled) {
-// 				response.filePaths.forEach((filepath: string) => {
-// 					// do something with the file
-// 				});
-// 			}
-// 			return [];
-// 		})
-// 		.catch(Logger.error);
-// };
-
 const showAboutWindow = (options: any = {}) => {
 	// TODO: When https://github.com/electron/electron/issues/18918 is fixed,
 	// these defaults should not need to be set for Linux.
