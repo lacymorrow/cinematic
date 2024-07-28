@@ -7,11 +7,29 @@ import { $messages } from '../config/strings';
 import store, { AppMessageType } from './store';
 import tray from './tray';
 import { forEachWindow } from './utils/window-utils';
+import windows from './windows';
+import { get } from 'http';
 
 const synchronizeApp = (changedSettings?: Partial<SettingsType>) => {
 	// Sync with main
 	if (changedSettings) {
 		const keys = Object.keys(changedSettings);
+
+		if (keys.includes('accentColor')) {
+			windows.mainWindow?.setTitleBarOverlay(
+				{
+					symbolColor: changedSettings.accentColor,
+				}
+			)
+		}
+
+		if (keys.includes('theme')) {
+			windows.mainWindow?.setTitleBarOverlay(
+				{
+					color: changedSettings.theme === 'dark' ? '#020817' : '#ffffff',
+				}
+			)
+		}
 
 		if (keys.includes('showDockIcon')) {
 			app.dock[changedSettings.showDockIcon ? 'show' : 'hide']();

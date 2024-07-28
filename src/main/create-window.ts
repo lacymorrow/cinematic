@@ -124,6 +124,14 @@ export const createMainWindow = async () => {
 		minHeight: 420,
 	};
 
+	if(is.windows){
+		options.titleBarOverlay = {
+			color: getSetting('theme') === 'dark' ? '#000000' : '#ffffff',
+			symbolColor: String(getSetting('accentColor')) || '#000000',
+			height: 34
+		  }
+	}
+
 	const window = createWindow(options);
 
 	window.on('ready-to-show', () => {
