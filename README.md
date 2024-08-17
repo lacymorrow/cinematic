@@ -8,7 +8,7 @@ Cinematic
 Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching.
 
 <p align="center">
-  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.gif">
+  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo1.gif">
 </p>
 
 ### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
