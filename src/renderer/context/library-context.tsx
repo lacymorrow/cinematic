@@ -2,7 +2,6 @@ import { ipcChannels } from '@/config/ipc-channels';
 import { CollectionStoreType, LibraryStoreType } from '@/main/store';
 import { RANDOM_LIBRARY_DELAY } from '@/renderer/config/config';
 import { CollectionType, LibraryType } from '@/types/media';
-import { debounce } from '@/utils/debounce';
 import React, {
 	createContext,
 	useCallback,
@@ -43,6 +42,7 @@ export function LibraryContextProvider({
 	const [genres, setGenres] = useState<CollectionStoreType>({});
 	const [playlists, setPlaylists] = useState<CollectionStoreType>({});
 	const [randomLibraryArray, setRandomLibraryArray] = useState<LibraryType>([]);
+	const [shouldShuffle, setShouldShuffle] = useState(false);
 
 	const libraryArray = useMemo(() => Object.values(library), [library]);
 	const playlistsArray = useMemo(() => Object.values(playlists), [playlists]);
@@ -74,34 +74,53 @@ export function LibraryContextProvider({
 		};
 	}, []);
 
-	const shuffleLibraryArray = () => {
+	const shuffleLibraryArray = useCallback(() => {
+		console.log('shuffling');
 		const shuffled = [...libraryArray];
 		setRandomLibraryArray(shuffled.sort(() => 0.5 - Math.random()));
-	};
-
-	const debouncedShuffleLibraryArray = useCallback(
-		debounce(shuffleLibraryArray, RANDOM_LIBRARY_DELAY),
-		[libraryArray],
-	);
+	}, [libraryArray]);
 
 	useEffect(() => {
-		debouncedShuffleLibraryArray();
-	}, [libraryArray, debouncedShuffleLibraryArray]);
+		setShouldShuffle(true);
+	}, [libraryArray]);
+
+	useEffect(() => {
+		if (shouldShuffle) {
+			const timer = setTimeout(() => {
+				shuffleLibraryArray();
+				setShouldShuffle(false);
+			}, RANDOM_LIBRARY_DELAY);
+
+			return () => clearTimeout(timer);
+		}
+	}, [shouldShuffle, shuffleLibraryArray]);
+
+	const contextValue = useMemo(
+		() => ({
+			library,
+			libraryArray,
+			randomLibraryArray:
+				randomLibraryArray.length > 0 ? randomLibraryArray : libraryArray,
+			genres,
+			genresArray,
+			playlists,
+			playlistsArray,
+			liked,
+		}),
+		[
+			library,
+			libraryArray,
+			randomLibraryArray,
+			genres,
+			genresArray,
+			playlists,
+			playlistsArray,
+			liked,
+		],
+	);
 
 	return (
-		<LibraryContext.Provider
-			value={{
-				library,
-				libraryArray,
-				randomLibraryArray:
-					randomLibraryArray.length > 0 ? randomLibraryArray : libraryArray,
-				genres,
-				genresArray,
-				playlists,
-				playlistsArray,
-				liked,
-			}}
-		>
+		<LibraryContext.Provider value={contextValue}>
 			{children}
 		</LibraryContext.Provider>
 	);

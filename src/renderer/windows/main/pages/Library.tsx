@@ -30,7 +30,7 @@ export function Library(_props: Props) {
 					<div className="relative mb-4 select-none">
 						<ScrollArea>
 							<div className="flex space-x-4 pb-4">
-								{libraryArray.map((media: MediaType) => (
+								{randomLibraryArray.map((media: MediaType) => (
 									<MediaArtwork
 										key={getUUID()}
 										media={media}

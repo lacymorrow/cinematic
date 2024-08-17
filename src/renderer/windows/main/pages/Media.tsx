@@ -8,12 +8,18 @@ import {
 	PageHeaderDescription,
 	PageHeaderHeading,
 } from '@/renderer/components/ui/PageHeader';
-import { Link2Icon, VideoIcon } from '@radix-ui/react-icons';
+import {
+	ArrowLeftIcon,
+	Link2Icon,
+	StarIcon,
+	VideoIcon,
+} from '@radix-ui/react-icons';
 import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useLibraryContext } from '@/renderer/context/library-context';
@@ -100,8 +106,6 @@ export function Media(_props: Props) {
 
 	const description = omdb?.plot || tmdb?.overview || '';
 
-	console.log('currentMedia', currentMedia, tmdb, omdb);
-
 	const trailerUrl = `https://www.youtube.com/watch?v=${trailer}`;
 
 	const posters = [
@@ -114,6 +118,87 @@ export function Media(_props: Props) {
 	return (
 		<>
 			<div className="h-full w-full overflow-y-auto relative">
+				<div className="relative">
+					<section className="w-full absolute -z-10">
+						<div className={cn(styles.vignette)}>
+							<img
+								src={backdrop}
+								alt={`${title} Hero`}
+								width={1920}
+								height={1080}
+								className={cn('w-full h-full object-cover')}
+								style={{ aspectRatio: '1920/1080', objectFit: 'cover' }}
+							/>
+						</div>
+						<div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+						<div className="absolute top-4 left-4 md:top-6 md:left-6">
+							<Button onClick={handleBack}>
+								<ArrowLeftIcon className="mr-2 h-4 w-4" /> Back
+							</Button>
+						</div>
+					</section>
+					<div className="container mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-6 lg:px-8">
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16">
+							<div className="col-span-1 md:col-span-1">
+								<img
+									src={poster}
+									alt={`${title} Poster`}
+									width={300}
+									height={450}
+									className="w-full h-auto rounded-lg shadow-lg"
+									style={{ aspectRatio: '300/450', objectFit: 'cover' }}
+								/>
+							</div>
+							<div className="col-span-1 md:col-span-2">
+								<h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">
+									{title}
+								</h1>
+								<p className="text-muted-foreground text-lg mb-4">{year}</p>
+								<p className="text-muted-foreground mb-6">{description}</p>
+								{ratings && ratings.length > 0 && (
+									<div className="flex items-center gap-4 mb-6">
+										<div className="flex items-center gap-1">
+											{[...Array(5)].map((_, index) => (
+												<StarIcon
+													key={index}
+													className={`w-5 h-5 ${index < Math.round(parseFloat(ratings[0].Value) / 2) ? 'fill-primary' : 'fill-muted stroke-muted-foreground'}`}
+												/>
+											))}
+										</div>
+										<span className="text-muted-foreground">
+											{ratings[0].Value}/10
+										</span>
+									</div>
+								)}
+								<div className="grid grid-cols-2 gap-4 mb-6">
+									{omdb?.director && (
+										<div>
+											<h3 className="text-lg font-medium mb-2">Director</h3>
+											<p className="text-muted-foreground">{omdb.director}</p>
+										</div>
+									)}
+									{omdb?.actors && (
+										<div>
+											<h3 className="text-lg font-medium mb-2">Cast</h3>
+											<p className="text-muted-foreground">{omdb.actors}</p>
+										</div>
+									)}
+								</div>
+								<div className="flex flex-col gap-4">
+									{trailer && (
+										<Button size="lg" onClick={() => handleUrl(trailerUrl)}>
+											Watch Trailer
+										</Button>
+									)}
+									<Button size="lg" variant="outline" onClick={handlePlay}>
+										Play Movie
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<button
 					type="button"
 					className="absolute z-10 p-6"
@@ -265,10 +350,12 @@ export function Media(_props: Props) {
 						allowFullScreen
 					/>
 
-					{trailerUrl}
+					{trailerUrl && <p>{trailerUrl}</p>}
 					{rest.trailers && (
 						<div className="grid grid-cols-2 gap-4">
-							{rest.trailers.join(', ')}
+							{Array.isArray(rest.trailers)
+								? rest.trailers.join(', ')
+								: JSON.stringify(rest.trailers)}
 						</div>
 					)}
 					<div className="flex flex-col gap-4">

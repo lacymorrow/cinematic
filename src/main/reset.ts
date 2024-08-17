@@ -27,7 +27,7 @@ export const resetSettings = () => {
 export const resetApp = () => {
 	// Sonic announcement
 	sounds.play('RESET');
-	
+
 	// Notification
 	notification({
 		title: $init.resetApp,
