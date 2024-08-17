@@ -2,7 +2,7 @@
 	"name": "cinematic",
 	"productName": "Cinematic",
 	"appId": "com.lacymorrow.cinematic",
-	"version": "3.0.1",
+	"version": "3.0.3",
 	"description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
 	"license": "CC-BY-NC-SA-4.0",
 	"copyright": "Copyright © Lacy Morrow",
@@ -56,7 +56,8 @@
 		"start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
 		"test": "jest",
 		"analyze": "ANALYZE=true npm run build",
-		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package"
+		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package",
+		"version-bump": "node .erb/scripts/version-bump.js"
 	},
 	"browserslist": [
 		"extends browserslist-config-erb"
