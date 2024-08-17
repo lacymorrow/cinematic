@@ -56,7 +56,11 @@
 		"start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
 		"test": "jest",
 		"analyze": "ANALYZE=true npm run build",
-		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package"
+		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package",
+		"version-bump": "node .erb/scripts/version-bump.js",
+		"version-bump:minor": "npx cross-env VERSION_BUMP=minor npm run version-bump",
+		"version-bump:major": "npx cross-env VERSION_BUMP=major npm run version-bump",
+		"version-bump:patch": "npx cross-env VERSION_BUMP=patch npm run version-bump"
 	},
 	"browserslist": [
 		"extends browserslist-config-erb"
