@@ -7,9 +7,7 @@ Cinematic
 
 Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching.
 
-<p align="center">
-  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/cinematic.gif">
-</p>
+[![Cinematic Light UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.png)](https://github.com/lacymorrow/cinematic/releases)
 
 ### [Download for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
@@ -17,6 +15,10 @@ Point Cinematic to the movie folder on your computer to scan and retrieve movie 
 Organize your movies by genre and sort by popularity, release date, runtime, or randomize things.
 
 Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
+
+<p align="center">
+  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/cinematic.gif">
+</p>
 
 ### Features
 
@@ -43,7 +45,6 @@ Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily 
 * Actors, Director, Writer
 * Awards
 * Runtime
-[![Cinematic Light UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.png)](https://github.com/lacymorrow/cinematic/releases)
 
 ## Installation
 
