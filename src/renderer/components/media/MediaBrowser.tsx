@@ -20,6 +20,7 @@ import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { GridIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
+import { getUUID } from '@/utils/getUUID';
 
 import { BookmarkIcon } from '@radix-ui/react-icons';
 import React from 'react';
@@ -48,12 +49,12 @@ export function MediaBrowser({
 	};
 	return (
 		<ScrollContainer>
-			{items.length === 0 ? (
+			{items?.length === 0 ? (
 				<>
 					<SectionHeader
 						title={title}
 						tagline={tagline}
-						className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4"
+						className="flex items-start flex-col-reverse md:flex-row md:items-start justify-between gap-4"
 					>
 						{addMediaButton && <ButtonAddMedia />}
 					</SectionHeader>
@@ -65,7 +66,7 @@ export function MediaBrowser({
 					className="space-y-6 h-full min-h-0 flex flex-col"
 					onValueChange={handleViewChange}
 				>
-					<div className="flex items-start flex-col-reverse md:flex-row md:items-center justify-between gap-4 select-none">
+					<div className="flex items-start flex-col-reverse md:flex-row md:items-start justify-between gap-4 select-none">
 						<TabsList className="grow-0">
 							<TabsTrigger value="grid" className="relative flex gap-2">
 								<GridIcon /> {$ui.view.grid}
@@ -83,9 +84,9 @@ export function MediaBrowser({
 
 					<TabsContent value="grid" className="border-none p-0 outline-none">
 						<div className="flex gap-6 pb-6 flex-wrap">
-							{items.map((media: MediaType) => (
+							{items?.map((media: MediaType) => (
 								<MediaArtwork
-									key={crypto.randomUUID()}
+									key={getUUID()}
 									media={media}
 									className="w-[250px]"
 									aspectRatio="portrait"
@@ -112,7 +113,7 @@ export function MediaBrowser({
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{items.map((media: MediaType) => (
+								{items?.map((media: MediaType) => (
 									<TableRow key={media.id}>
 										<TableCell className="font-medium">{media.title}</TableCell>
 										<TableCell>{media.year}</TableCell>

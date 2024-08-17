@@ -6,6 +6,7 @@ import { ScrollContainer } from '@/renderer/components/ui/ScrollContainer';
 import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { useLibraryContext } from '@/renderer/context/library-context';
 import { MediaType } from '@/types/file';
+import { getUUID } from '@/utils/getUUID';
 
 type Props = {};
 
@@ -31,7 +32,7 @@ export function Library(_props: Props) {
 							<div className="flex space-x-4 pb-4">
 								{libraryArray.map((media: MediaType) => (
 									<MediaArtwork
-										key={crypto.randomUUID()}
+										key={getUUID()}
 										media={media}
 										className="w-[250px]"
 										aspectRatio="portrait"

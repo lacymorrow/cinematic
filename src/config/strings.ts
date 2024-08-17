@@ -32,6 +32,10 @@ export const $actions = {
 };
 
 export const $dialog = {
+	add: {
+		title: 'Add Media',
+		buttonLabel: 'Add',
+	},
 	error: {
 		title: 'An error occurred',
 		ignore: 'Ignore',

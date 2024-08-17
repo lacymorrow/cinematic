@@ -40,7 +40,6 @@ const parseFileMeta = ({ filename, ext }: MediaType) => {
 
 		case 'parse':
 		default: {
-			// const parsed = ptf(filename, { extra: /.+/ }, { extra: 'boolean' });
 			const parsed = ptf(filename + ext);
 
 			const extWithoutDot = ext.replace('.', '');
@@ -48,6 +47,7 @@ const parseFileMeta = ({ filename, ext }: MediaType) => {
 			if (String(parsed.title).endsWith(extWithoutDot)) {
 				parsed.title = parsed.title.replace(extWithoutDot, '');
 			}
+
 			meta = {
 				...meta,
 				...parsed,
