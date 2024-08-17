@@ -50,12 +50,16 @@ Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily 
 
 ## Design
 
+[![Cinematic Light UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.png)](https://github.com/lacymorrow/cinematic/releases)
+
 UI design by [ShadCN](https://ui.shadcn.com)
 
 > Original interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/) (No longer used).
 
 * Built with [Electron](https://electronjs.org/)
 * APIs provided by TMDB and OMDB
+
+[![Cinematic Dark UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo-dark.png)](https://github.com/lacymorrow/cinematic/releases)
 
 ## Road map
 
