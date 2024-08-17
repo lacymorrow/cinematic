@@ -43,14 +43,15 @@ Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily 
 * Actors, Director, Writer
 * Awards
 * Runtime
+[![Cinematic Light UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.png)](https://github.com/lacymorrow/cinematic/releases)
 
 ## Installation
 
 ### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
 
-## Design
+[![Cinematic Dark UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo-dark.png)](https://github.com/lacymorrow/cinematic/releases)
 
-[![Cinematic Light UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.png)](https://github.com/lacymorrow/cinematic/releases)
+## Design
 
 UI design by [ShadCN](https://ui.shadcn.com)
 
@@ -58,8 +59,6 @@ UI design by [ShadCN](https://ui.shadcn.com)
 
 * Built with [Electron](https://electronjs.org/)
 * APIs provided by TMDB and OMDB
-
-[![Cinematic Dark UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo-dark.png)](https://github.com/lacymorrow/cinematic/releases)
 
 ## Road map
 
