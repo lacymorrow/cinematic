@@ -10,9 +10,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 		<React.StrictMode>
 			<GlobalContextProvider>
 				<ThemeProvider>
-					<TooltipProvider delayDuration={0}>
-						{children}
-					</TooltipProvider>
+					<TooltipProvider delayDuration={0}>{children}</TooltipProvider>
 					<Toaster />
 				</ThemeProvider>
 			</GlobalContextProvider>

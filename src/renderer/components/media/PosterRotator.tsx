@@ -28,8 +28,9 @@ export function PosterRotator({
 				src={images[index]}
 				alt=""
 				className={cn(
-					'h-auto w-auto object-cover transition-all group-hover:scale-105',
+					'h-auto w-auto object-cover rounded-lg shadow-lg transition-all group-hover:scale-105',
 				)}
+				style={{ aspectRatio: '300/450', objectFit: 'cover' }}
 			/>
 			<span className="sr-only">{$actions.rotatePoster}</span>
 		</button>

@@ -1,11 +1,11 @@
 import { LikedEmptyPlaceholder } from '@/renderer/components/media/LikedEmptyPlaceholder';
 import { MediaBrowser } from '@/renderer/components/media/MediaBrowser';
-import { useGlobalContext } from '@/renderer/context/global-context';
+import { useLibraryContext } from '@/renderer/context/library-context';
 
 type Props = {};
 
 export function Liked(_props: Props) {
-	const { liked } = useGlobalContext();
+	const { liked } = useLibraryContext();
 
 	return (
 		<MediaBrowser

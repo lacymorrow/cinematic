@@ -76,9 +76,7 @@ export function MediaBrowser({
 								{$ui.view.list}
 							</TabsTrigger>
 						</TabsList>
-						<div className="group">
-							<ButtonAddMedia />
-						</div>
+						{addMediaButton && <ButtonAddMedia />}
 					</div>
 					<SectionHeader title={title} tagline={tagline} />
 

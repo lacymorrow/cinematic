@@ -75,7 +75,6 @@ export function LibraryContextProvider({
 	}, []);
 
 	const shuffleLibraryArray = useCallback(() => {
-		console.log('shuffling');
 		const shuffled = [...libraryArray];
 		setRandomLibraryArray(shuffled.sort(() => 0.5 - Math.random()));
 	}, [libraryArray]);
