@@ -17,7 +17,7 @@ Organize your movies by genre and sort by popularity, release date, runtime, or 
 Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily parse torrent-style `Movies.That.Look.Like.This.2015.HDRip.XviD.XXX-XXX.AVI`.
 
 <p align="center">
-  <img width="720" height="450" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/cinematic.gif">
+  <img width="815" height="578" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/cinematic.gif">
 </p>
 
 ### Features
