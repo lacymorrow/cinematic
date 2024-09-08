@@ -19,7 +19,6 @@ export function SettingsApplication() {
 				</p>
 			</div>
 			<Separator />
-
 			<InputSwitch
 				value={settings.allowAutoUpdate}
 				onChange={() => {

@@ -33,6 +33,11 @@
 			"name": "Lacy Morrow",
 			"email": "me@lacymorrow.com",
 			"url": "https://github.com/lacymorrow"
+		},
+		{
+			"name": "Amila Welihinda",
+			"email": "amilajack@gmail.com",
+			"url": "https://github.com/amilajack"
 		}
 	],
 	"main": "./src/main/main.ts",
@@ -57,7 +62,10 @@
 		"test": "jest",
 		"analyze": "ANALYZE=true npm run build",
 		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package",
-		"version-bump": "node .erb/scripts/version-bump.js"
+		"version-bump": "node .erb/scripts/version-bump.js",
+		"version-bump:minor": "npx cross-env VERSION_BUMP=minor npm run version-bump",
+		"version-bump:major": "npx cross-env VERSION_BUMP=major npm run version-bump",
+		"version-bump:patch": "npx cross-env VERSION_BUMP=patch npm run version-bump"
 	},
 	"browserslist": [
 		"extends browserslist-config-erb"
@@ -140,7 +148,7 @@
 		"clsx": "^2.1.0",
 		"cmdk": "^0.2.1",
 		"electron-debug": "^3.2.0",
-		"electron-log": "^5.0.3",
+		"electron-log": "^5.2.0",
 		"electron-store": "^8.1.0",
 		"electron-unhandled": "^4.0.1",
 		"electron-updater": "^6.1.7",
@@ -157,7 +165,7 @@
 		"react-hook-form": "^7.49.3",
 		"react-is-online-context": "^1.0.2",
 		"react-resizable-panels": "^1.0.9",
-		"react-router-dom": "^6.21.3",
+		"react-router-dom": "^6.26.1",
 		"react-wrap-balancer": "^1.1.0",
 		"sonner": "^1.4.0",
 		"tailwind-merge": "^2.2.0",
@@ -351,9 +359,6 @@
 			"repo": "cinematic"
 		}
 	},
-	"collective": {
-		"url": "https://opencollective.com/electron-react-boilerplate-594"
-	},
 	"devEngines": {
 		"node": ">=14.x",
 		"npm": ">=7.x"
@@ -361,7 +366,8 @@
 	"electronmon": {
 		"patterns": [
 			"!**/**",
-			"src/main/**"
+			"src/main/**",
+			".erb/dll/**"
 		],
 		"logLevel": "quiet"
 	},
