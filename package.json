@@ -33,6 +33,11 @@
 			"name": "Lacy Morrow",
 			"email": "me@lacymorrow.com",
 			"url": "https://github.com/lacymorrow"
+		},
+		{
+			"name": "Amila Welihinda",
+			"email": "amilajack@gmail.com",
+			"url": "https://github.com/amilajack"
 		}
 	],
 	"main": "./src/main/main.ts",
@@ -344,9 +349,6 @@
 			"repo": "electron-hotplate"
 		}
 	},
-	"collective": {
-		"url": "https://opencollective.com/electron-react-boilerplate-594"
-	},
 	"devEngines": {
 		"node": ">=14.x",
 		"npm": ">=7.x"
@@ -354,7 +356,8 @@
 	"electronmon": {
 		"patterns": [
 			"!**/**",
-			"src/main/**"
+			"src/main/**",
+			".erb/dll/**"
 		],
 		"logLevel": "quiet"
 	},
