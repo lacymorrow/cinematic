@@ -1,73 +1,46 @@
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { nav } from '@/renderer/config/nav';
-import React from 'react';
+import { useGlobalContext } from '@/renderer/context/global-context';
 import { Link } from 'react-router-dom';
 import { InputComboboxForm } from '../input/InputComboboxForm';
-import { InputSelectForm } from '../input/InputSelectForm';
-import { InputSlider } from '../input/InputSlider';
 
-type Props = {};
+export function Home() {
+	const { settings, setSettings } = useGlobalContext();
 
-export function Home(_props: Props) {
-	const [val, setVal] = React.useState(50);
+	const handleThemeChange = (value: string) => {
+		setSettings({ theme: value as 'light' | 'dark' | 'system' });
+	};
+
 	return (
-		<div className="flex flex-col gap-4 items-center">
-			<h1>Hello World</h1>
-			<InputComboboxForm
-				items={[
-					{
-						value: 'allowSounds',
-						label: 'Allow sounds',
-					},
-					{
-						value: 'allowNotifications',
-						label: 'Allow notifications',
-					},
-				]}
-				value="allowSounds"
-				label="General"
-				description="Select your general preferences."
-				onChange={(value) => {
-					console.log(value);
-				}}
-			/>
-			<InputSelectForm
-				items={[
-					{
-						value: 'allowSounds',
-						label: 'Allow sounds',
-					},
-					{
-						value: 'allowNotifications',
-						label: 'Allow notifications',
-					},
-				]}
-				value="allowSounds"
-				label="General"
-				description="Select your general preferences."
-				onChange={(value) => {
-					console.log(value);
-				}}
-			/>
-			<InputSlider
-				value={val}
-				onChange={(value) => {
-					setVal(value);
-				}}
-				label="Volume"
-				description="Adjust the volumevolumevolumevolumevolumevolumevolume of the application."
-				min={0}
-				max={100}
-				step={1}
-				defaultValue={50}
-			/>
-			<Link
-				to={nav.settings.href}
-				className={buttonVariants()}
-				draggable={false}
-			>
-				{nav.settings.title}
-			</Link>
+		<div className="container mx-auto p-6 space-y-6">
+			<h1 className="text-3xl font-bold">Welcome to Electron Hotplate</h1>
+			<p className="text-muted-foreground">
+				A professional boilerplate for building cross-platform Electron
+				applications.
+			</p>
+
+			<Card className="w-full max-w-md mx-auto">
+				<CardHeader>
+					<CardTitle>Quick Settings</CardTitle>
+				</CardHeader>
+				<CardContent className="space-y-4">
+					<InputComboboxForm
+						items={[
+							{ value: 'light', label: 'Light' },
+							{ value: 'dark', label: 'Dark' },
+							{ value: 'system', label: 'System' },
+						]}
+						value={settings.theme}
+						onChange={handleThemeChange}
+						label="Theme"
+						description="Select your preferred application theme."
+					/>
+					<Link to={nav.settings.href} className="block">
+						<Button className="w-full">Go to Settings</Button>
+					</Link>
+				</CardContent>
+			</Card>
 		</div>
 	);
 }
