@@ -302,7 +302,7 @@
 		"nsis": {
 			"unicode": false,
 			"artifactName": "${productName}-${version}.${ext}",
-			"uninstallDisplayName": "Electron Hotplate"
+			"uninstallDisplayName": "Cinematic"
 		},
 		"appx": {
 			"publisherDisplayName": "Fly5",
