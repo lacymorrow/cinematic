@@ -44,21 +44,25 @@ Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily 
 ## 🚀 Getting Started
 
 1. Clone this repository
+
    ```bash
    git clone https://github.com/lacymorrow/cinematic.git
    ```
 
 2. Go into the repository
+
    ```bash
    cd cinematic
    ```
 
 3. Install dependencies
+
    ```bash
    yarn
    ```
 
 4. Start the development server
+
    ```bash
    yarn start
    ```
@@ -110,7 +114,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the CC-BY-NC-SA 4.0 License.
 
 [github-actions-status]: https://github.com/lacymorrow/cinematic/workflows/Build/badge.svg
 [github-actions-url]: https://github.com/lacymorrow/cinematic/actions
