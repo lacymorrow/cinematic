@@ -1,18 +1,18 @@
-import { SettingsJson } from '@/renderer/components/pages/settings/SettingsJson';
-import { SettingsAbout } from '@/renderer/components/pages/settings/about/SettingsAbout';
-import { SettingsAppearance } from '@/renderer/components/pages/settings/appearance/SettingsAppearance';
+import { SettingsJson } from '@/renderer/components/views/settings/SettingsJson';
+import { SettingsAbout } from '@/renderer/components/views/settings/about/SettingsAbout';
+import { SettingsAppearance } from '@/renderer/components/views/settings/appearance/SettingsAppearance';
 import {
-	BellIcon,
-	BlendingModeIcon,
-	GearIcon,
-	IdCardIcon,
-	ImageIcon,
-	KeyboardIcon,
+    BellIcon,
+    BlendingModeIcon,
+    GearIcon,
+    IdCardIcon,
+    ImageIcon,
+    KeyboardIcon,
 } from '@radix-ui/react-icons';
 
-import { SettingsApplication } from '@/renderer/components/pages/settings/general/SettingsApplication';
-import { SettingsKeyboard } from '@/renderer/components/pages/settings/keyboard/SettingsKeyboard';
-import { SettingsNotifications } from '@/renderer/components/pages/settings/notifications/SettingsNotifications';
+import { SettingsApplication } from '@/renderer/components/views/settings/general/SettingsApplication';
+import { SettingsKeyboard } from '@/renderer/components/views/settings/keyboard/SettingsKeyboard';
+import { SettingsNotifications } from '@/renderer/components/views/settings/notifications/SettingsNotifications';
 
 export const nav = {
 	home: {

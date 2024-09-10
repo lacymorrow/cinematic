@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { InputColor } from '@/renderer/components/input/InputColor';
-import { ThemeForm } from '@/renderer/components/pages/settings/appearance/ThemeForm';
+import { ThemeForm } from '@/renderer/components/views/settings/appearance/ThemeForm';
 import { useGlobalContext } from '@/renderer/context/global-context';
 
 export function SettingsAppearance() {

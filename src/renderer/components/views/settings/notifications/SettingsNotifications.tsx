@@ -1,9 +1,9 @@
-import { Separator } from '@/components/ui/separator';
-import { InputSwitch } from '@/renderer/components/input/InputSwitch';
-import { useGlobalContext } from '@/renderer/context/global-context';
-import { SettingsType } from '@/config/settings';
 import { Button } from '@/components/ui/button';
-import { CardNotifications } from '@/renderer/components/pages/settings/notifications/CardNotifications';
+import { Separator } from '@/components/ui/separator';
+import { SettingsType } from '@/config/settings';
+import { InputSwitch } from '@/renderer/components/input/InputSwitch';
+import { CardNotifications } from '@/renderer/components/views/settings/notifications/CardNotifications';
+import { useGlobalContext } from '@/renderer/context/global-context';
 
 export function SettingsNotifications() {
 	const { settings } = useGlobalContext();
