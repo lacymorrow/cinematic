@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SettingsType } from '@/config/settings';
 import { InputSwitch } from '@/renderer/components/input/InputSwitch';
-import { CardNotifications } from '@/renderer/components/pages/settings/notifications/CardNotifications';
+import { CardNotifications } from '@/renderer/components/views/settings/notifications/CardNotifications';
 import { useGlobalContext } from '@/renderer/context/global-context';
 
 export function SettingsNotifications() {

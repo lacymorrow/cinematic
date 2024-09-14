@@ -1,4 +1,6 @@
+// todo: menubar ellipsis on overflow
 import { ResizableLayout } from '@/renderer/components/layout/ResizableLayout';
+import { Home } from '@/renderer/components/views/Home';
 import {
 	nav,
 	pathGenres,
@@ -16,11 +18,9 @@ import {
 	createRoutesFromElements,
 } from 'react-router-dom';
 
-import { Home } from '@/renderer/components/pages/Home';
-
 import { MainLayout } from '@/renderer/components/layout/MainLayout';
 import SettingsLayout from '@/renderer/components/layout/SettingsLayout';
-import ErrorPage from '@/renderer/components/pages/ErrorPage';
+import ErrorPage from '@/renderer/components/views/ErrorPage';
 import '@/renderer/styles/globals.scss';
 import { Playlist } from '@/renderer/windows/main/pages/Playlist';
 
