@@ -6,8 +6,7 @@ import {
 	ArrowLeftIcon,
 	CalendarIcon,
 	ClockIcon,
-	IdCardIcon,
-	StarIcon,
+	IdCardIcon
 } from '@radix-ui/react-icons';
 import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
@@ -16,9 +15,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import RatingsRotator from '@/renderer/components/media/RatingsRotator';
+import TrailerRotator from '@/renderer/components/media/TrailerRotator';
 import { useLibraryContext } from '@/renderer/context/library-context';
 import styles from '@/renderer/styles/effects.module.scss';
-import { getUUID } from '@/utils/getUUID';
 
 type Props = {};
 
@@ -107,6 +107,31 @@ export function Media(_props: Props) {
 	];
 
 	const backgroundImage = <img src={backdrop} alt={title} className="w-full" />;
+	const starRatings: Rating[] = [
+		{
+			name: 'IMDB',
+			score: omdb?.imdbrating,
+			votes: omdb?.imdbvotes,
+		},
+		{
+			name: 'Metascore',
+			score: omdb?.metascore,
+		},
+		{
+			name: 'TMDB',
+			score: tmdb?.vote_average,
+			votes: tmdb?.vote_count,
+		},
+	]
+
+	// Extract trailer video IDs from rest.trailers
+	const trailerVideoIds: string[] = Array.isArray(rest.trailers)
+		? rest.trailers
+		: rest.trailers
+			? [rest.trailers]
+			: [];
+
+	const writer = omdb?.writer ? Object.values(omdb.writer) : [];
 
 	return (
 		<>
@@ -134,7 +159,7 @@ export function Media(_props: Props) {
 							<ArrowLeftIcon className="mr-2 h-4 w-4" /> Back
 						</Button>
 					</div>
-					<div className="container mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-6 lg:px-8">
+					<div className="container mx-auto py-12 md:pt-16 lg:pt-20 px-4 md:px-6 lg:px-8">
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 mt-16">
 							<div className="col-span-1 md:col-span-1">
 								<PosterRotator images={posters} />
@@ -145,23 +170,8 @@ export function Media(_props: Props) {
 								</h1>
 								<p className="text-muted-foreground text-lg mb-4">{year}</p>
 								<p className="text-muted-foreground mb-6">{description}</p>
-								{ratings && ratings.length > 0 && (
-									<div className="flex items-center gap-4 mb-6">
-										<div className="flex items-center gap-1">
-											{[...Array(5)].map((_, index) => (
-												<StarIcon
-													key={getUUID()}
-													className={`w-5 h-5 ${index < Math.round(parseFloat(ratings[0].Value) / 2) ? 'fill-primary' : 'fill-muted stroke-muted-foreground'}`}
-												/>
-											))}
-										</div>
-										<span className="text-muted-foreground">
-											{ratings[0].Value}/10
-										</span>
-									</div>
-								)}
 
-								<div className="grid gap-6">
+								<div className="grid grid-cols-2 gap-6">
 									<div className="grid gap-2">
 										<div className="flex items-center gap-2">
 											<CalendarIcon className="w-5 h-5 fill-muted-foreground" />
@@ -180,26 +190,14 @@ export function Media(_props: Props) {
 											</div>
 										)}
 									</div>
-									<div className="grid grid-cols-2 gap-4 mb-6">
-										{omdb?.director && (
-											<div>
-												<h3 className="text-lg font-medium mb-2">Director</h3>
-												<p className="text-muted-foreground">
-													{Object.values(omdb.director).join(', ')}
-												</p>
-											</div>
-										)}
-										{omdb?.actors && (
-											<div>
-												<h3 className="text-lg font-medium mb-2">Cast</h3>
-												<p className="text-muted-foreground">
-													{Object.values(omdb.actors).join(', ')}
-												</p>
-											</div>
-										)}
-									</div>
+									{ratings && ratings.length > 0 && (
+										<div className="flex items-center gap-4">
+											<RatingsRotator ratings={starRatings} />
+										</div>
+									)}
+
 								</div>
-								<div className="flex flex-col gap-4">
+								<div className="flex flex-col gap-4 mt-6">
 									{trailer && (
 										<Button size="lg" onClick={() => handleUrl(trailerUrl)}>
 											Watch Trailer
@@ -214,137 +212,111 @@ export function Media(_props: Props) {
 					</div>
 				</div>
 
-				<section className="w-full">
-					<div className="container px-4 md:px-6">
-						<div className="space-y-6">
-							<div>
-								<h2 className="text-2xl font-bold tracking-tighter">Plot</h2>
-								<div className="mt-4 text-muted-foreground">
-									<p>{plot}</p>
-								</div>
-							</div>
+				<div className="container flex flex-col gap-6 pb-12">
+					<Separator />
+
+
+					{/* Trailer Rotator */}
+					{trailerVideoIds.length > 0 && (<>
+						<div className="container max-w-screen-sm mx-auto py-6">
+							<TrailerRotator videoIds={trailerVideoIds} />
 						</div>
-					</div>
-				</section>
-
-				<div className="p-6">
-					{ratings?.length && (
-						<div className="space-y-4">
-							<h2 className="text-lg font-semibold tracking-tight">Ratings</h2>
-							<div className="grid grid-cols-2 gap-4">
-								{ratings.map((rating: any) => {
-									return (
-										<div key={rating.Source}>
-											<p>{JSON.stringify(rating)}</p>
-										</div>
-									);
-								})}
-							</div>
-						</div>
-					)}
-
-					{/* <iframe
-						src="https://www.youtube-nocookie.com/embed/skK9CGLrpWY?rel=0&controls=0"
-						width="560"
-						height="315"
-						title="YTTV TrueView NewUsers NFL 23 V1 DR None US EN 10s MP4 VIDEO"
-						frameBorder="0"
-						allowFullScreen
-					/> */}
-
-					{trailerUrl && <p>{trailerUrl}</p>}
-					{rest.trailers && (
-						<div className="grid grid-cols-2 gap-4">
-							{Array.isArray(rest.trailers)
-								? rest.trailers.join(', ')
-								: JSON.stringify(rest.trailers)}
-						</div>
-					)}
-					<div className="flex flex-col gap-4">
-						<div className="flex flex-wrap gap-4">
-							{omdb?.director && (
-								<InfoBlock
-									title="Director"
-									value={Object.values(omdb.director).join(', ')}
-								/>
-							)}
-							{omdb?.actors && (
-								<InfoBlock
-									title="Actors"
-									value={Object.values(omdb.actors).join(', ')}
-								/>
-							)}
-
-							{omdb?.writer && (
-								<InfoBlock
-									title="Writer"
-									value={Object.values(omdb.writer).join(', ')}
-								/>
-							)}
-						</div>
-						<div className="flex flex-wrap gap-4">
-							{omdb?.awards && (
-								<InfoBlock title="Awards" value={omdb?.awards} />
-							)}
-
-							{omdb?.boxoffice && (
-								<InfoBlock title="Box Office" value={omdb?.boxoffice} />
-							)}
-						</div>
-						{tmdb?.overview && plot && <InfoBlock title="Plot" value={plot} />}
-
 						<Separator />
-						<div className="flex flex-wrap gap-4">
-							{omdb?.language && (
-								<InfoBlock title="Language" value={omdb?.language} />
-							)}
+					</>
+					)}
+
+					{tmdb?.overview && plot && (
+						<>
+							<section className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4">
+								<div className='md:flex-1'>
+									<h2 className="text-2xl font-bold tracking-tighter">Plot</h2>
+									<div className="mt-4 text-muted-foreground">
+										<p>{tmdb?.overview}</p>
+									</div>
+								</div>
+
+
+							</section>
+							<Separator />
+						</>
+					)}
+
+					<div className='flex flex-col md:flex-row flex-wrap justify-between gap-6'>
+						<div className="flex flex-col gap-4 md:flex-1">
+							<div className="flex flex-wrap gap-4">
+								{omdb?.actors && (
+									<InfoBlock
+										title="Cast"
+										value={Object.values(omdb.actors).join(', ')}
+									/>
+								)}
+
+
+
+								{writer && (
+									<InfoBlock
+										title={`Writer${writer.length > 1 ? 's' : ''}`}
+										value={writer.join(', ')}
+									/>
+								)}
+
+
+
+								{omdb?.awards && (
+									<InfoBlock title="Awards" value={omdb?.awards} />
+								)}
+
+								{omdb?.dvd && <InfoBlock title="DVD Release" value={omdb?.dvd} />}
+								{omdb?.production && (
+									<InfoBlock title="Production" value={omdb?.production} />
+								)}
+
+
+								{omdb?.website && (
+									<InfoBlock title="Website" value={omdb?.website} />
+								)}
+							</div>
+						</div>
+
+						<div className="relative">
+							<Separator orientation="vertical" className="absolute inset-0 h-full" />
+						</div>
+
+						<div className="flex flex-col gap-4">
 
 							{omdb?.country && (
 								<InfoBlock title="Country" value={omdb?.country} />
 							)}
-						</div>
-						<div className="flex flex-wrap gap-4">
-							{omdb?.released && (
-								<InfoBlock title="Released" value={omdb?.released} />
+							{omdb?.language && (
+								<InfoBlock title="Languages" value={omdb?.language} />
 							)}
-
-							{omdb?.dvd && <InfoBlock title="DVD Release" value={omdb?.dvd} />}
-						</div>
-						<div className="flex flex-wrap gap-4">
-							{omdb?.production && (
-								<InfoBlock title="Production" value={omdb?.production} />
-							)}
-
-							{omdb?.website && (
-								<InfoBlock title="Website" value={omdb?.website} />
-							)}
-
-							{omdb?.imdbvotes && (
-								<InfoBlock title="IMDB Votes" value={omdb?.imdbvotes} />
-							)}
-
-							{omdb?.imdbrating && (
-								<InfoBlock title="IMDB Rating" value={omdb?.imdbrating} />
-							)}
-
-							{omdb?.metascore && (
-								<InfoBlock title="Metascore" value={omdb?.metascore} />
-							)}
-
 							{tmdb?.popularity && (
 								<InfoBlock title="Popularity" value={tmdb?.popularity} />
 							)}
 
-							{tmdb?.vote_count && (
-								<InfoBlock title="TMDB Vote Count" value={tmdb.vote_count} />
-							)}
 
-							{tmdb?.vote_average && (
+						</div>
+
+						<div className="relative">
+							<Separator orientation="vertical" className="absolute inset-0 h-full" />
+						</div>
+
+						<div className="flex flex-col gap-4  md:flex-1">
+
+							{omdb?.director && (
 								<InfoBlock
-									title="TMDB Vote Average"
-									value={tmdb.vote_average}
+									title="Directed By"
+									value={Object.values(omdb.director).join(', ')}
 								/>
 							)}
+							{omdb?.released && (
+								<InfoBlock title="Released" value={omdb?.released} />
+							)}
+							{omdb?.boxoffice && (
+								<InfoBlock title="Box Office" value={omdb?.boxoffice} />
+							)}
+
+
 						</div>
 					</div>
 				</div>
