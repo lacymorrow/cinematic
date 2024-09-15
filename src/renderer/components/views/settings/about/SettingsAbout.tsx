@@ -1,4 +1,4 @@
-import { CardGithub } from '@/renderer/components/pages/settings/about/CardGithub';
+import { CardGithub } from '@/renderer/components/views/settings/about/CardGithub';
 
 export function SettingsAbout() {
 	return (

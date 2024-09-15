@@ -1,11 +1,32 @@
-Cinematic
-===========
->
-> 🎥  A gorgeous Desktop UI for your digital movie collection, works on Mac, Windows, and Linux!
+# Cinematic 🎥
 
-**Have a digital movie collection?**
+A gorgeous Desktop UI for your digital movie collection, powered by Electron and React. Works on Mac, Windows, and Linux!
 
-Cinematic is a desktop app to beautifully organize and automatically retrieve information about your digital movie collection, so you can spend less time searching and more time watching.
+<div align="center">
+
+[![Build Status][github-actions-status]][github-actions-url]
+[![Github Tag][github-tag-image]][github-tag-url]
+
+</div>
+
+## ✨ Features
+
+- 🎭 Filter movies by genre
+- 🚥 Read plotlines and summaries before watching
+- 🎬 Watch multiple trailers
+- 🥃 Jump straight to the IMDB page
+- 🍱 Keep track of recently viewed and watched movies
+- 🍅 Cycle through ratings from IMDB, TMDB, and Metacritic
+- ☔️ Network throttled requests to avoid timeouts
+- 🐠 Built-in caching of genres and movies
+- 🖇 Sort movies by name, popularity, release date, runtime, or randomly
+- 🌙 Dark Mode support
+- 🔄 Auto Updater
+- 💾 Built-in Store with electron-store
+- 🖱️ Context Menu
+- ⌨️ Keyboard Shortcut Manager
+- 🀱 Menu Bar for macOS, Windows, and Linux
+- 🖥️ System Tray
 
 [![Cinematic Light UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo.png)](https://github.com/lacymorrow/cinematic/releases)
 
@@ -20,70 +41,82 @@ Cinematic prefers filenames like `Independence Day [1996].mp4` but will happily 
   <img width="815" height="578" src="https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/cinematic.gif">
 </p>
 
-### Features
+## 🚀 Getting Started
 
-* 🎭   Filter movies by genre
-* 🚥   Read plotlines and summarys before watching
-* 🎬   Watch multiple trailers
-* 🥃   Jump straight to the IMDB page
-* 🍱   Keep track of recently viewed and recently watched
-* 🍅   Cycle through ratings from IMDB, TMDB, and Metacritic
-* ☔️    Network throttled requests to avoid timeouts
-* 🐠   Built-in caching of genres and movies
-* 🖇   Sort movies by name, popularity, release date, runtime, or randomly
+1. Clone this repository
 
-### Information provided
+   ```bash
+   git clone https://github.com/lacymorrow/cinematic.git
+   ```
 
-* Title
-* Plot summary
-* Release date
-* Multiple trailers
-* Poster + backdrop images
-* Genres
-* Ratings from IMDB, TMDB, and Metacritic, and current popularity
-* MPAA rating
-* Actors, Director, Writer
-* Awards
-* Runtime
+2. Go into the repository
 
-## Installation
+   ```bash
+   cd cinematic
+   ```
 
-### [Visit the Releases page to download Cinematic for Windows, OSX, and Linux](https://github.com/lacymorrow/cinematic/releases)
+3. Install dependencies
 
-[![Cinematic Dark UI](https://raw.githubusercontent.com/lacymorrow/cinematic/main/public/demo-dark.png)](https://github.com/lacymorrow/cinematic/releases)
+   ```bash
+   yarn
+   ```
 
-## Design
+4. Start the development server
 
-UI design by [ShadCN](https://ui.shadcn.com)
+   ```bash
+   yarn start
+   ```
 
-> Original interface design by [Steve Hernandez](http://slhernandez.com/2013/09/10/Movie-App/) (No longer used).
+## 📁 Project Structure
 
-* Built with [Electron](https://electronjs.org/)
-* APIs provided by TMDB and OMDB
+- `src/main`: Contains the main process code
+- `src/renderer`: Contains the renderer process code (React components)
+- `src/config`: Contains configuration files
+- `src/utils`: Contains utility functions
 
-## Road map
+## 📜 Available Scripts
 
-**Update Oct. 27, 2019:** Currently refactoring the codebase to make a clear upgrade path to faster, leaner product.
+- `yarn start`: Start the app in development mode
+- `yarn build`: Build the app for production
+- `yarn lint`: Run the linter
+- `yarn test`: Run tests
 
-* [ ] Save images to cache
-* [X] A11y - tab index, keyboard controls
-* [X] Speed boost
-* [X] File open dialog
-* [X] Windows Release
+## Built With
 
-### Need help?
+- [Electron](https://electronjs.org/)
+- [React](https://reactjs.org/)
+- [React Router](https://reacttraining.com/react-router/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn](https://ui.shadcn.com/)
+- [TypeScript](https://www.typescriptlang.org/)
 
-Please post any questions or issues you come across to our [issues page](https://github.com/lacymorrow/cinematic/issues).
+## Development
 
-## BuiltWith
+### Tailwind CSS
 
-* [Electron](https://electronjs.org/)
-* [React](https://reactjs.org/)
-* [React Router](https://reacttraining.com/react-router/)
-* [Tailwind CSS](https://tailwindcss.com/)
-* [Shadcn](https://ui.shadcn.com/)
-* [TypeScript](https://www.typescriptlang.org/)
+We use Tailwind CSS for styling. See the [Tailwind CSS docs](https://tailwindcss.com/docs) for more information.
 
-## License
+Some Tailwind plugins have been added for convenience:
 
-MIT © [Lacy Morrow](https://github.com/lacymorrow)
+- [Tailwind Animate](https://github.com/jamiebuilds/tailwindcss-animate)
+- [Tailwind Container Queries](https://github.com/tailwindlabs/tailwindcss-container-queries)
+- Child selectors to target immediate children like `child:w-xl`
+- Group selectors: `group` (Parent) `group-hover:bg-gray-100` (Child)
+
+### Shadcn
+
+Shadcn is a UI component library for React. See the [Shadcn docs](https://ui.shadcn.com/) for more information.
+Use `npx shadcn-ui@latest add accordion ...` to add a component to your project.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the CC-BY-NC-SA 4.0 License.
+
+[github-actions-status]: https://github.com/lacymorrow/cinematic/workflows/Build/badge.svg
+[github-actions-url]: https://github.com/lacymorrow/cinematic/actions
+[github-tag-image]: https://img.shields.io/github/tag/lacymorrow/cinematic.svg?label=version
+[github-tag-url]: https://github.com/lacymorrow/cinematic/releases/latest

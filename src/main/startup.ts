@@ -5,7 +5,7 @@ import analytics from './analytics';
 import appFlags from './app-flags';
 import appListeners from './app-listeners';
 import { AutoUpdate } from './auto-update';
-import { createChildWindow, createMainWindow } from './create-window';
+import { createMainWindow } from './create-window';
 import debugging from './debugging';
 import errorHandling from './error-handling';
 import kb from './keyboard';
@@ -88,9 +88,7 @@ export const ready = async () => {
 
 export const idle = async () => {
 	sounds.play('STARTUP');
-	windows.childWindow = await createChildWindow();
-
-	// ... do something with your app
+	// windows.childWindow = await createChildWindow();
 
 	Logger.status($init.idle);
 	console.timeLog(app.name, $init.idle);

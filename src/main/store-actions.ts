@@ -1,5 +1,5 @@
 import { MediaType } from '@/types/file';
-import { app } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import Logger from 'electron-log';
 import getUuidByString from 'uuid-by-string';
 import {
@@ -15,14 +15,35 @@ import { throttle } from '../utils/throttle';
 import store, { AppMessageType, HistoryActionType } from './store';
 import tray from './tray';
 import { forEachWindow } from './utils/window-utils';
+import windows from './windows';
 
 const synchronizeApp = (changedSettings?: Partial<SettingsType>) => {
 	// Sync with main
 	if (changedSettings) {
 		const keys = Object.keys(changedSettings);
 
+		if (keys.includes('accentColor') || keys.includes('theme')) {
+			const mainWindow = windows.mainWindow as BrowserWindow | null;
+			if (
+				mainWindow &&
+				!mainWindow.isDestroyed() &&
+				typeof mainWindow.setTitleBarOverlay === 'function'
+			) {
+				mainWindow.setTitleBarOverlay({
+					color: changedSettings.theme === 'dark' ? '#020817' : '#ffffff',
+					symbolColor: changedSettings.accentColor || '#000000',
+				});
+			}
+		}
+
 		if (keys.includes('showDockIcon')) {
-			app.dock[changedSettings.showDockIcon ? 'show' : 'hide']();
+			if (
+				app.dock &&
+				typeof app.dock.show === 'function' &&
+				typeof app.dock.hide === 'function'
+			) {
+				app.dock[changedSettings.showDockIcon ? 'show' : 'hide']();
+			}
 		}
 
 		if (keys.includes('showTrayIcon')) {
