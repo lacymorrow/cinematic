@@ -19,6 +19,7 @@ import RatingsRotator from '@/renderer/components/media/RatingsRotator';
 import TrailerRotator from '@/renderer/components/media/TrailerRotator';
 import { useLibraryContext } from '@/renderer/context/library-context';
 import styles from '@/renderer/styles/effects.module.scss';
+import { Link2Icon } from 'lucide-react';
 
 type Props = {};
 
@@ -198,14 +199,21 @@ export function Media(_props: Props) {
 
 								</div>
 								<div className="flex flex-col gap-4 mt-6">
-									{trailer && (
-										<Button size="lg" onClick={() => handleUrl(trailerUrl)}>
+									<Button size="lg" onClick={handlePlay}>
+										Play Movie
+									</Button>
+									<div className="flex gap-4">
+										{trailer && (
+											<Button className="flex-1" size="lg" variant="outline" onClick={() => handleUrl(trailerUrl)}>
 											Watch Trailer
 										</Button>
 									)}
-									<Button size="lg" variant="outline" onClick={handlePlay}>
-										Play Movie
-									</Button>
+									{omdb?.imdbid && (
+											<Button className={trailer ? "" : "flex-1"} size="lg" variant="outline" onClick={() => handleUrl(`https://www.imdb.com/title/${omdb?.imdbid}`)}>
+											<Link2Icon className="mr-2 h-4 w-4" /> IMDB
+											</Button>
+										)}
+									</div>
 								</div>
 							</div>
 						</div>

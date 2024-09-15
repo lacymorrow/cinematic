@@ -10,7 +10,7 @@ interface Rating {
     votes: number;
 }
 
-const starClasses = "fill-muted stroke-muted-foreground size-6";
+const starClasses = "fill-muted stroke-muted-foreground size-6 opacity-50";
 
 const RatingsRotator: React.FC<{ ratings: Rating[] }> = ({ ratings }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -97,7 +97,7 @@ const RatingsRotator: React.FC<{ ratings: Rating[] }> = ({ ratings }) => {
                     transition={{ duration: 0.5 }}
                     className="flex flex-col items-center justify-center gap-2"
                 >
-                    <div className="flex">
+                    <div className="flex gap-2">
                         {getStarIcons(starCount)}
                     </div>
                     <p className="flex items-center justify-center gap-2">
