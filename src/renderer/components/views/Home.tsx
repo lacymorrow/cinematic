@@ -5,6 +5,8 @@ import { useGlobalContext } from '@/renderer/context/global-context';
 import { Link } from 'react-router-dom';
 import { InputComboboxForm } from '../input/InputComboboxForm';
 
+import styles from '@/renderer/styles/CssModuleExample.module.scss';
+
 export function Home() {
 	const { settings, setSettings } = useGlobalContext();
 
@@ -20,7 +22,26 @@ export function Home() {
 				applications.
 			</p>
 
-			<Card className="w-full max-w-md mx-auto">
+			<div className='flex flew-wrap justify-around gap-md'>
+
+			<Card className={styles.example}>
+				<CardHeader>
+					<CardTitle>Features</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<ul className="list-disc list-inside">
+						<li>Hot-reloading</li>
+						<li>React</li>
+						<li>TypeScript</li>
+						<li>TailwindCSS</li>
+						<li>Shadcn/UI</li>
+						<li>Css Modules</li>
+						<li>React Router</li>
+					</ul>
+				</CardContent>
+			</Card>
+
+			<Card className="w-full max-w-md">
 				<CardHeader>
 					<CardTitle>Quick Settings</CardTitle>
 				</CardHeader>
@@ -41,6 +62,7 @@ export function Home() {
 					</Link>
 				</CardContent>
 			</Card>
+			</div>
 		</div>
 	);
 }
