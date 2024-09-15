@@ -2,7 +2,7 @@
 	"name": "cinematic",
 	"productName": "Cinematic",
 	"appId": "com.lacymorrow.cinematic",
-	"version": "3.0.2",
+	"version": "3.1.0",
 	"description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
 	"license": "CC-BY-NC-SA-4.0",
 	"copyright": "Copyright © Lacy Morrow",
@@ -63,8 +63,8 @@
 		"analyze": "ANALYZE=true npm run build",
 		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package",
 		"version-bump": "node .erb/scripts/version-bump.js",
-		"version-bump:minor": "npx cross-env VERSION_BUMP=minor npm run version-bump",
-		"version-bump:major": "npx cross-env VERSION_BUMP=major npm run version-bump",
+		"version-bump:minor": "npx cross-env VERSION_BUMP=minor npm run version-bump minor",
+		"version-bump:major": "npx cross-env VERSION_BUMP=major npm run version-bump ",
 		"version-bump:patch": "npx cross-env VERSION_BUMP=patch npm run version-bump"
 	},
 	"browserslist": [
@@ -169,6 +169,7 @@
 		"react-router-dom": "^6.26.2",
 		"react-wrap-balancer": "^1.1.1",
 		"sonner": "^1.5.0",
+		"source-map-support": "^0.5.21",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7",
 		"uuid": "^10.0.0",
