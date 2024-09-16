@@ -199,7 +199,7 @@
 		"concurrently": "^9.0.1",
 		"core-js": "^3.38.1",
 		"cross-env": "^7.0.3",
-		"css-loader": "^6.9.1",
+		"css-loader": "^7.1.2",
 		"css-minimizer-webpack-plugin": "^7.0.0",
 		"detect-port": "^1.6.1",
 		"electron": "27.1.0",
