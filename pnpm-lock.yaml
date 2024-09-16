@@ -136,7 +136,7 @@ importers:
         version: 4.0.0
       parse-torrent-filename:
         specifier: github:lacymorrow/parse-torrent-filename
-        version: https://codeload.github.com/lacymorrow/parse-torrent-filename/tar.gz/a5ce8a78eea430661fa230036379e36dd9d79ef1
+        version: git+https://git@github.com:lacymorrow/parse-torrent-filename.git#a5ce8a78eea430661fa230036379e36dd9d79ef1
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -239,8 +239,8 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(electron@27.1.0)
       chalk:
-        specifier: ~4.1.2
-        version: 4.1.2
+        specifier: ~5.3.0
+        version: 5.3.0
       concurrently:
         specifier: ^9.0.1
         version: 9.0.1
@@ -3243,6 +3243,10 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
+  chalk@5.3.0:
+    resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
   char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
     engines: {node: '>=10'}
@@ -6133,8 +6137,8 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
 
-  parse-torrent-filename@https://codeload.github.com/lacymorrow/parse-torrent-filename/tar.gz/a5ce8a78eea430661fa230036379e36dd9d79ef1:
-    resolution: {tarball: https://codeload.github.com/lacymorrow/parse-torrent-filename/tar.gz/a5ce8a78eea430661fa230036379e36dd9d79ef1}
+  parse-torrent-filename@git+https://git@github.com:lacymorrow/parse-torrent-filename.git#a5ce8a78eea430661fa230036379e36dd9d79ef1:
+    resolution: {commit: a5ce8a78eea430661fa230036379e36dd9d79ef1, repo: git@github.com:lacymorrow/parse-torrent-filename.git, type: git}
     version: 1.0.2
 
   parse5-htmlparser2-tree-adapter@6.0.1:
@@ -11632,6 +11636,8 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
+  chalk@5.3.0: {}
+
   char-regex@1.0.2: {}
 
   cheerio-select@1.6.0:
@@ -15096,7 +15102,7 @@ snapshots:
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
 
-  parse-torrent-filename@https://codeload.github.com/lacymorrow/parse-torrent-filename/tar.gz/a5ce8a78eea430661fa230036379e36dd9d79ef1: {}
+  parse-torrent-filename@git+https://git@github.com:lacymorrow/parse-torrent-filename.git#a5ce8a78eea430661fa230036379e36dd9d79ef1: {}
 
   parse5-htmlparser2-tree-adapter@6.0.1:
     dependencies:
