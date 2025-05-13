@@ -15,7 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import RatingsRotator from '@/renderer/components/media/RatingsRotator';
+import RatingsRotator, { Rating } from '@/renderer/components/media/RatingsRotator';
 import TrailerRotator from '@/renderer/components/media/TrailerRotator';
 import { useLibraryContext } from '@/renderer/context/library-context';
 import styles from '@/renderer/styles/effects.module.scss';
@@ -108,21 +108,22 @@ export function Media(_props: Props) {
 	];
 
 	const backgroundImage = <img src={backdrop} alt={title} className="w-full" />;
+
 	const starRatings: Rating[] = [
-		{
+		...(omdb?.imdbrating ? [{
 			name: 'IMDB',
-			score: omdb?.imdbrating,
-			votes: omdb?.imdbvotes,
-		},
-		{
+			score: parseFloat(omdb.imdbrating),
+			votes: omdb?.imdbvotes ? parseInt(omdb.imdbvotes) : undefined,
+		}] : []),
+		...(omdb?.metascore ? [{
 			name: 'Metascore',
-			score: omdb?.metascore,
-		},
-		{
+			score: parseFloat(omdb.metascore),
+		}] : []),
+		...(tmdb?.vote_average ? [{
 			name: 'TMDB',
 			score: tmdb?.vote_average,
 			votes: tmdb?.vote_count,
-		},
+		}] : [])
 	]
 
 	// Extract trailer video IDs from rest.trailers

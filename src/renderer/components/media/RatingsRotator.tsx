@@ -4,10 +4,10 @@ import { StarIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 
-interface Rating {
+export interface Rating {
     name: string;
     score: number;
-    votes: number;
+    votes?: number;
 }
 
 const starClasses = "fill-muted stroke-muted-foreground size-6 opacity-50";
