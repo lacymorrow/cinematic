@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { nav } from '@/renderer/config/nav';
+import { pathSettings } from '@/renderer/config/nav';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { Link } from 'react-router-dom';
 import { InputComboboxForm } from '../input/InputComboboxForm';
@@ -57,7 +57,7 @@ export function Home() {
 						label="Theme"
 						description="Select your preferred application theme."
 					/>
-					<Link to={nav.settings.href} className="block">
+					<Link to={pathSettings} className="block">
 						<Button className="w-full">Go to Settings</Button>
 					</Link>
 				</CardContent>

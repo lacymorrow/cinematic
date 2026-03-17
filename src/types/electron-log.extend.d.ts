@@ -1,5 +1,4 @@
 import 'electron-log';
-import 'electron-log/main';
 
 declare module 'electron-log' {
 	interface LogFunctions {
@@ -7,8 +6,5 @@ declare module 'electron-log' {
 	}
 }
 
-declare module 'electron-log/main' {
-	interface LogFunctions {
-		status(...params: any[]): void;
-	}
-}
+// electron-log/main re-exports from electron-log, so the augmentation
+// above covers both imports. No separate augmentation needed.
