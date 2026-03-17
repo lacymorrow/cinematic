@@ -65,6 +65,8 @@ export function MediaArtwork({
 								{media.poster ? (
 									<img
 										draggable={false}
+										loading="lazy"
+										decoding="async"
 										src={media.poster}
 										alt={media.title}
 										width={width}

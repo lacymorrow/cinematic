@@ -66,7 +66,7 @@ const synchronizeSettings = () =>
 		window.webContents.send(ipcChannels.SETTINGS_UPDATED),
 	);
 
-// Throttle the app update
+// Used by non-library writes (playlists, etc.) that still need throttled sync
 const appWasUpdated = throttle(synchronizeApp, THROTTLE_DELAY);
 
 export const resetStoreSettings = () => {
@@ -145,7 +145,7 @@ export const clearLibrary = () => {
 	store.delete('playlists');
 	store.delete('history');
 	store.delete('appMessageLog');
-	store.delete('settings');
+	// Note: settings intentionally preserved — use resetStoreSettings() to clear those
 
 	synchronizeApp();
 };
@@ -171,8 +171,10 @@ export const getHistory = () => {
 	return store.get('history');
 };
 
+const HISTORY_MAX = 1000;
+
 export const addToHistory = (action: HistoryActionType, id: string) => {
-	const history = store.get('history');
+	let history = store.get('history');
 
 	// check that action or id are different from the last one
 	if (
@@ -183,7 +185,10 @@ export const addToHistory = (action: HistoryActionType, id: string) => {
 		return;
 	}
 
-	console.warn('addToHistory', action, id);
+	// Cap history to prevent unbounded growth — keep the most recent half
+	if (history.length >= HISTORY_MAX) {
+		history = history.slice(-Math.ceil(HISTORY_MAX / 2));
+	}
 
 	history.push({
 		action,
@@ -231,25 +236,60 @@ export const getMedia = (id: string) => {
 	return library[id];
 };
 
-// This is the actual update, no reconciliation is done here
-const upsertMedia = (media: MediaType) => {
-	const library = store.get('library');
-	const { id } = media;
+// --- Batched library writes ---
+// Instead of reading/writing the entire JSON store on every single upsert,
+// we accumulate pending changes in memory and flush them in a batch.
 
-	library[id] = { ...library[id], ...media };
+const BATCH_FLUSH_INTERVAL = 2000; // ms — flush pending writes every 2s
+const pendingWrites = new Map<string, MediaType>();
+let batchTimer: ReturnType<typeof setTimeout> | null = null;
+
+const flushPendingWrites = () => {
+	if (pendingWrites.size === 0) return;
+
+	const library = store.get('library');
+
+	for (const [id, media] of pendingWrites) {
+		library[id] = { ...library[id], ...media };
+	}
+
+	pendingWrites.clear();
 	store.set('library', library);
 
-	// throttled
-	appWasUpdated();
+	// Notify renderer once per batch, not per item
+	synchronizeApp();
+};
+
+const scheduleBatchFlush = () => {
+	if (batchTimer) return; // already scheduled
+	batchTimer = setTimeout(() => {
+		batchTimer = null;
+		flushPendingWrites();
+	}, BATCH_FLUSH_INTERVAL);
+};
+
+// This is the actual update — now batched
+const upsertMedia = (media: MediaType) => {
+	const { id } = media;
+	const existing = pendingWrites.get(id);
+	pendingWrites.set(id, existing ? { ...existing, ...media } : media);
+	scheduleBatchFlush();
 };
 
 const afterUpsertMediaLibrary = (key: string) => {
 	if (throttledFunctions[key]) {
 		throttledFunctions[key]();
 	} else {
-		// create a debounced function with the key so if it's called again with the same key it will cancel the previous call
+		// create a throttled function per key so rapid updates for the same
+		// media id coalesce into a single reconcile
 		throttledFunctions[key] = throttle(() => {
-			const media = getMedia(key);
+			// Read from store (includes any flushed batch data)
+			// plus check pending writes for unflushed updates
+			const stored = getMedia(key);
+			const pending = pendingWrites.get(key);
+			const media = stored
+				? { ...stored, ...(pending || {}) }
+				: pending;
 
 			if (!media) {
 				return;
@@ -264,11 +304,11 @@ const afterUpsertMediaLibrary = (key: string) => {
 		throttledFunctions[key]();
 	}
 };
+
 // This is called if we need to run a reconcile
 export const upsertMediaLibrary = (media: MediaType) => {
 	const { id } = media;
 
-	// todo: not needed?
 	if (!id) {
 		return;
 	}
@@ -329,7 +369,7 @@ export const getCachedObject = (key: string) => {
 	if (cache && Object.hasOwn(cache, key)) {
 		const cached = cache[key];
 		if (cached) {
-			if (cached.cached_at + CACHE_TIMEOUT > Date.now()) {
+			if (Date.now() - cached.cached_at > CACHE_TIMEOUT) {
 				// cache expired
 				Logger.log($messages.cache_expire, key);
 				delete cache[key];
@@ -350,4 +390,6 @@ export const setCachedObject = (key: string, value: any) => {
 		cached_at: Date.now(),
 		value,
 	};
+
+	store.set('cache', cache);
 };

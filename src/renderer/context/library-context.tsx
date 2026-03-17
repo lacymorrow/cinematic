@@ -74,14 +74,23 @@ export function LibraryContextProvider({
 		};
 	}, []);
 
+	// Only reshuffle when the library size changes (new items added/removed),
+	// not on every metadata update to the same items.
+	const librarySize = libraryArray.length;
+
 	const shuffleLibraryArray = useCallback(() => {
 		const shuffled = [...libraryArray];
-		setRandomLibraryArray(shuffled.sort(() => 0.5 - Math.random()));
+		// Fisher-Yates shuffle for unbiased randomization
+		for (let i = shuffled.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+		}
+		setRandomLibraryArray(shuffled);
 	}, [libraryArray]);
 
 	useEffect(() => {
 		setShouldShuffle(true);
-	}, [libraryArray]);
+	}, [librarySize]); // only when count changes
 
 	useEffect(() => {
 		if (shouldShuffle) {

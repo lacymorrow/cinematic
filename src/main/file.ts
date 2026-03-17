@@ -37,13 +37,17 @@ export const scanDirectory = async (directoryPath: string, depth: number) => {
 	// store the path in the settings
 	addPath(directoryPath);
 
-	const files = await fs.readdir(directoryPath, { withFileTypes: true }); // https://stackoverflow.com/a/70328065/939330 - withFileTypes has isDirectory() method
-	files.forEach((file) => {
+	const files = await fs.readdir(directoryPath, { withFileTypes: true });
+
+	// Collect subdirectory promises so we properly await recursive scans
+	const subdirPromises: Promise<void>[] = [];
+
+	for (const file of files) {
 		const { name } = file;
 
 		// Skip dotfiles
 		if (name.startsWith('.')) {
-			return false;
+			continue;
 		}
 
 		const ext = path.extname(name);
@@ -56,12 +60,15 @@ export const scanDirectory = async (directoryPath: string, depth: number) => {
 		} else if (file.isDirectory() && depth < FILE_SCAN_DEPTH) {
 			// Directory
 			if (!DIRECTORY_IGNORE_PATTERN.includes(filename.toLowerCase())) {
-				scanDirectory(filepath, depth + 1);
+				subdirPromises.push(scanDirectory(filepath, depth + 1));
 			} else {
 				Logger.status($messages.ignoreFolder, filename);
 			}
 		}
-	});
+	}
+
+	// Wait for all subdirectory scans to complete
+	await Promise.all(subdirPromises);
 };
 
 // Begin the scanning operation on the movies folder
