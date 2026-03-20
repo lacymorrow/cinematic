@@ -11,13 +11,13 @@ import path from 'path';
 import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
 import { setupContextMenu } from './context-menu';
 import MenuBuilder from './menu';
-import { __assets } from './paths';
+import { __resources } from './paths';
 import { getSetting } from './store-actions';
 import { is, resolveHtmlPath } from './util';
 import windows from './windows';
 
 const getAssetPath = (...paths: string[]): string => {
-	return path.join(__assets, ...paths);
+	return path.join(__resources, ...paths);
 };
 
 const createWindow = (opts?: BrowserWindowConstructorOptions) => {
@@ -57,7 +57,7 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 	};
 
 	options.webPreferences = {
-		// webSecurity: false,
+		webSecurity: !is.development, // Relaxed in dev for local asset loading
 		// Prevent throttling when the window is in the background:
 		// backgroundThrottling: false,
 		// Disable the `auxclick` feature so that `click` events are triggered in
@@ -164,6 +164,7 @@ export const createChildWindow = async () => {
 
 	window.on('ready-to-show', () => {
 		window.show();
+		windows.mainWindow?.focus();
 	});
 
 	// Load the window

@@ -6,7 +6,7 @@ import { net, protocol } from 'electron';
 import Logger from 'electron-log/main';
 import path from 'path';
 import { PROTOCOL } from '../config/config';
-import { __assets } from './paths';
+import { __resources } from './paths';
 
 const register = () => {
 	Logger.status(`Registering file protocol: ${PROTOCOL}`);
@@ -35,7 +35,7 @@ const initialize = () => {
 	protocol.handle(PROTOCOL, (request: any) => {
 		// list all files in the directory
 		const filepath = path
-			.join(__assets, request.url.slice(`${PROTOCOL}://`.length))
+			.join(__resources, request.url.slice(`${PROTOCOL}://`.length))
 			.replace(/\/$/, ''); // remove trailing slash
 		const file = `file://${filepath}`;
 		Logger.info(`Protocol request: ${request.url}; File: ${file}`);

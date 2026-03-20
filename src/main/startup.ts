@@ -20,9 +20,6 @@ import windows from './windows';
 export const startup = () => {
 	console.timeLog(app.name, $init.startup);
 
-	// App CLI flags
-	appFlags.initialize();
-
 	// Initialize logger
 	logger.initialize();
 
@@ -38,9 +35,13 @@ export const startup = () => {
 		// resetApp();
 	}
 
+	// App CLI flags
+	appFlags.initialize();
+
 	// Enable electron debug and source map support
 	debugging.initialize();
 
+	// Register protocol schemes (must be before app.ready)
 	protocol.register();
 
 	// Register app listeners, e.g. `app.on()`
