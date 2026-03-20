@@ -25,8 +25,7 @@ const initialize = async () => {
 	// unhandledRejection : This will catch any thrown errors, or non fatal errors you have successfully handled via throw.
 	// uncaughtException : This only catches fatal errors or errors that would crash your node instance
 
-	return logger.catchErrors();
-
+	// TODO: Uncomment this to report unhandled errors to GitHub
 	// Report unhandled errors using electron-unhandled
 	// await unhandled({
 	// 	showDialog: false, // default: only in production
@@ -39,6 +38,8 @@ const initialize = async () => {
 	// 		});
 	// 	},
 	// });
+
+	return logger.catchErrors();
 };
 
 export default { initialize, reportBody };

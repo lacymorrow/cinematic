@@ -3,8 +3,27 @@
 // https://www.electronjs.org/docs/latest/tutorial/launch-app-from-url-in-another-app
 
 import { net, protocol } from 'electron';
+import Logger from 'electron-log/main';
+import path from 'path';
 import { PROTOCOL } from '../config/config';
-import { notification } from './notifications';
+import { __assets } from './paths';
+
+const register = () => {
+	Logger.status(`Registering file protocol: ${PROTOCOL}`);
+	protocol.registerSchemesAsPrivileged([
+		{
+			scheme: PROTOCOL,
+			privileges: {
+				stream: true, // Important for playing audio
+				// allowServiceWorkers: true,
+				// secure: true,
+				// standard: true,
+				// supportFetchAPI: true,
+				// bypassCSP: true,
+			},
+		},
+	]);
+};
 
 const initialize = () => {
 	if (!protocol?.handle) {
@@ -12,14 +31,16 @@ const initialize = () => {
 		return null;
 	}
 
+	// By default, we serve files from the assets folder
 	protocol.handle(PROTOCOL, (request: any) => {
-		const file = `file://${request.url.slice(`${PROTOCOL}://`.length)}`;
-		notification({
-			title: 'Protocol',
-			body: `Request: ${request.url}; File: ${file}`,
-		});
+		// list all files in the directory
+		const filepath = path
+			.join(__assets, request.url.slice(`${PROTOCOL}://`.length))
+			.replace(/\/$/, ''); // remove trailing slash
+		const file = `file://${filepath}`;
+		Logger.info(`Protocol request: ${request.url}; File: ${file}`);
 		return net.fetch(file);
 	});
 };
 
-export default { initialize };
+export default { initialize, register };

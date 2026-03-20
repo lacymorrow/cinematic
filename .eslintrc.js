@@ -5,7 +5,7 @@ module.exports = {
 	ignorePatterns: ['**/components/ui/**', '**/renderer/lib/**'],
 	rules: {
 		// A temporary hack related to IDE not resolving correct package.json
-		'import/no-extraneous-dependencies': 'off',
+		// 'import/no-extraneous-dependencies': 'off',
 		'react/react-in-jsx-scope': 'off',
 		'react/jsx-filename-extension': 'off',
 		'import/extensions': 'off',

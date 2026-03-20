@@ -29,6 +29,7 @@ export const notification = (options: NotificationOptions) => {
 	// Use either the system notification or the renderer notification
 	if (getSetting('allowNotifications')) {
 		const type = getSetting('notificationType');
+
 		if (type === 'system' || type === 'all') {
 			mainNotification(options);
 		}

@@ -20,6 +20,9 @@ import windows from './windows';
 export const startup = () => {
 	console.timeLog(app.name, $init.startup);
 
+	// App CLI flags
+	appFlags.initialize();
+
 	// Initialize logger
 	logger.initialize();
 
@@ -38,8 +41,7 @@ export const startup = () => {
 	// Enable electron debug and source map support
 	debugging.initialize();
 
-	// App CLI flags
-	appFlags.initialize();
+	protocol.register();
 
 	// Register app listeners, e.g. `app.on()`
 	appListeners.register();
@@ -59,6 +61,9 @@ export const ready = async () => {
 		await debugging.installExtensions();
 	}
 
+	// Register custom protocol like `app://`
+	protocol.initialize();
+
 	// Add remaining app listeners
 	appListeners.ready();
 
@@ -74,9 +79,6 @@ export const ready = async () => {
 	// Setup Tray
 	tray.initialize();
 
-	// Register custom protocol like `app://`
-	protocol.initialize();
-
 	// Auto updates
 	// eslint-disable-next-line no-new
 	new AutoUpdate();
@@ -88,8 +90,19 @@ export const ready = async () => {
 
 export const idle = async () => {
 	sounds.play('STARTUP');
-	// windows.childWindow = await createChildWindow();
+
+	// ... do something with your app
 
 	Logger.status($init.idle);
 	console.timeLog(app.name, $init.idle);
 };
+
+process.on('uncaughtException', (error) => {
+	Logger.error('Uncaught exception:', error);
+	// Optionally, you can show an error dialog to the user here
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+	Logger.error('Unhandled rejection at:', promise, 'reason:', reason);
+	// Optionally, you can show an error dialog to the user here
+});

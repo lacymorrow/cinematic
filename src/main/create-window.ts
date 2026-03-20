@@ -11,13 +11,13 @@ import path from 'path';
 import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
 import { setupContextMenu } from './context-menu';
 import MenuBuilder from './menu';
-import { __resources } from './paths';
+import { __assets } from './paths';
 import { getSetting } from './store-actions';
 import { is, resolveHtmlPath } from './util';
 import windows from './windows';
 
 const getAssetPath = (...paths: string[]): string => {
-	return path.join(__resources, ...paths);
+	return path.join(__assets, ...paths);
 };
 
 const createWindow = (opts?: BrowserWindowConstructorOptions) => {
@@ -57,7 +57,7 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 	};
 
 	options.webPreferences = {
-		webSecurity: !is.development, // Required for loading sounds, comment out if not using sounds
+		// webSecurity: false,
 		// Prevent throttling when the window is in the background:
 		// backgroundThrottling: false,
 		// Disable the `auxclick` feature so that `click` events are triggered in
@@ -67,6 +67,9 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 		preload: app.isPackaged
 			? path.join(__dirname, 'preload.js')
 			: path.join(__dirname, '../../.erb/dll/preload.js'),
+		// Todo: secure
+		// contextIsolation: true, // Ensure context isolation
+		// nodeIntegration: false, // Disable Node.js integration
 	};
 
 	const browserWindow = new BrowserWindow(options);
@@ -124,12 +127,12 @@ export const createMainWindow = async () => {
 		minHeight: 420,
 	};
 
-	if(is.windows){
+	if (is.windows) {
 		options.titleBarOverlay = {
 			color: getSetting('theme') === 'dark' ? '#000000' : '#ffffff',
 			symbolColor: String(getSetting('accentColor')) || '#000000',
-			height: 34
-		  }
+			height: 34,
+		};
 	}
 
 	const window = createWindow(options);
@@ -150,11 +153,17 @@ export const createMainWindow = async () => {
 };
 
 export const createChildWindow = async () => {
-	const window = createWindow({ frame: true });
+	const mainWindowBounds = windows.mainWindow?.getBounds();
+	const options: BrowserWindowConstructorOptions = {
+		frame: true,
+		x: mainWindowBounds ? mainWindowBounds.x + 60 : undefined,
+		y: mainWindowBounds ? mainWindowBounds.y + 60 : undefined,
+	};
+
+	const window = createWindow(options);
 
 	window.on('ready-to-show', () => {
 		window.show();
-		windows.mainWindow?.focus();
 	});
 
 	// Load the window

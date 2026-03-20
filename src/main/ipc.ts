@@ -5,6 +5,7 @@ import { CustomAcceleratorsType } from '../types/keyboard';
 import { getOS } from '../utils/getOS';
 import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
+import { createChildWindow } from './create-window';
 import kb from './keyboard';
 import { notification } from './notifications';
 import { rendererPaths } from './paths';
@@ -27,6 +28,7 @@ import {
 } from './store-actions';
 import { is } from './util';
 import { serializeMenu, triggerMenuItemById } from './utils/menu-utils';
+import windows from './windows';
 
 export default {
 	initialize() {
@@ -152,6 +154,15 @@ export default {
 
 		ipcMain.on(ipcChannels.CLEAR_LIBRARY, () => {
 			clearLibrary();
+		});
+
+		// Open a child window
+		ipcMain.on(ipcChannels.OPEN_CHILD_WINDOW, async () => {
+			if (!windows.childWindow || windows.childWindow.isDestroyed()) {
+				windows.childWindow = await createChildWindow();
+			} else {
+				windows.childWindow.focus();
+			}
 		});
 	},
 };

@@ -1,3 +1,5 @@
+$border-style: dashed;
+
 .example {
-	border-style: dashed;
+	border-style: $border-style;
 }
