@@ -5,7 +5,7 @@ import EXIT_CODES from '../config/exit-codes';
 import { $errors, $init } from '../config/strings';
 import { createMainWindow } from './create-window';
 import keyboard from './keyboard';
-import { getSetting } from './store-actions';
+import { flushPendingWrites, getSetting } from './store-actions';
 import { is } from './util';
 import windows from './windows';
 
@@ -28,6 +28,8 @@ const register = () => {
 	// make use of it to ensure the browser window is completely destroyed.
 	// See https://github.com/electron/electron/issues/5273
 	app.on('before-quit', () => {
+		// Flush any batched library writes before exiting to prevent data loss
+		flushPendingWrites();
 		app.releaseSingleInstanceLock();
 		process.exit(EXIT_CODES.SUCCESS);
 	});

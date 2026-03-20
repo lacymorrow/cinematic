@@ -80,9 +80,27 @@ const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
 	1,
 );
 
+// Merge all collected queue results for a media id and upsert once.
+// Called from both onResult and onQueueError when remaining hits 0.
+const finalizePendingResult = (id: string) => {
+	const entry = pending.get(id);
+	if (!entry || entry.remaining > 0) return;
+
+	const merged: MediaType = {
+		...entry.media,
+		...(entry.omdb && { omdb: entry.omdb }),
+		...(entry.tmdb && { tmdb: entry.tmdb }),
+		...(entry.trailers && { trailers: entry.trailers }),
+	};
+	pending.delete(id);
+	upsertMediaLibrary(merged);
+
+	if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
+		Logger.status($messages.idle);
+	}
+};
+
 // Called when one of the three queues finishes for a given media id.
-// Decrements the remaining counter and, when all three are done,
-// merges results into a single upsert to avoid race conditions.
 const onResult = (
 	id: string,
 	field: 'omdb' | 'tmdb' | 'trailers',
@@ -103,39 +121,15 @@ const onResult = (
 		});
 	}
 
-	if (entry.remaining <= 0) {
-		// All three queues finished — merge and upsert once
-		const merged: MediaType = {
-			...entry.media,
-			...(entry.omdb ? { omdb: entry.omdb } : {}),
-			...(entry.tmdb ? { tmdb: entry.tmdb } : {}),
-			...(entry.trailers ? { trailers: entry.trailers } : {}),
-		};
-		pending.delete(id);
-		upsertMediaLibrary(merged);
-
-		if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
-			Logger.status($messages.idle);
-		}
-	}
+	finalizePendingResult(id);
 };
 
 const onQueueError = (id: string, err: Error | undefined) => {
 	Logger.error($errors.queue, err);
-	// Still decrement so the merged upsert fires with whatever succeeded
 	const entry = pending.get(id);
 	if (entry) {
 		entry.remaining -= 1;
-		if (entry.remaining <= 0) {
-			const merged: MediaType = {
-				...entry.media,
-				...(entry.omdb ? { omdb: entry.omdb } : {}),
-				...(entry.tmdb ? { tmdb: entry.tmdb } : {}),
-				...(entry.trailers ? { trailers: entry.trailers } : {}),
-			};
-			pending.delete(id);
-			upsertMediaLibrary(merged);
-		}
+		finalizePendingResult(id);
 	}
 };
 

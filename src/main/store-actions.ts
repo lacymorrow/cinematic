@@ -244,7 +244,7 @@ const BATCH_FLUSH_INTERVAL = 2000; // ms — flush pending writes every 2s
 const pendingWrites = new Map<string, MediaType>();
 let batchTimer: ReturnType<typeof setTimeout> | null = null;
 
-const flushPendingWrites = () => {
+export const flushPendingWrites = () => {
 	if (pendingWrites.size === 0) return;
 
 	const library = store.get('library');
