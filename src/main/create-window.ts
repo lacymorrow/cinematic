@@ -57,7 +57,7 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 	};
 
 	options.webPreferences = {
-		webSecurity: !is.development, // Required for loading sounds, comment out if not using sounds
+		webSecurity: !is.development, // Relaxed in dev for local asset loading
 		// Prevent throttling when the window is in the background:
 		// backgroundThrottling: false,
 		// Disable the `auxclick` feature so that `click` events are triggered in
@@ -67,6 +67,8 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 		preload: app.isPackaged
 			? path.join(__dirname, 'preload.js')
 			: path.join(__dirname, '../../.erb/dll/preload.js'),
+		contextIsolation: true,
+		nodeIntegration: false,
 	};
 
 	const browserWindow = new BrowserWindow(options);
@@ -124,12 +126,12 @@ export const createMainWindow = async () => {
 		minHeight: 420,
 	};
 
-	if(is.windows){
+	if (is.windows) {
 		options.titleBarOverlay = {
 			color: getSetting('theme') === 'dark' ? '#000000' : '#ffffff',
 			symbolColor: String(getSetting('accentColor')) || '#000000',
-			height: 34
-		  }
+			height: 34,
+		};
 	}
 
 	const window = createWindow(options);
@@ -150,7 +152,14 @@ export const createMainWindow = async () => {
 };
 
 export const createChildWindow = async () => {
-	const window = createWindow({ frame: true });
+	const mainWindowBounds = windows.mainWindow?.getBounds();
+	const options: BrowserWindowConstructorOptions = {
+		frame: true,
+		x: mainWindowBounds ? mainWindowBounds.x + 60 : undefined,
+		y: mainWindowBounds ? mainWindowBounds.y + 60 : undefined,
+	};
+
+	const window = createWindow(options);
 
 	window.on('ready-to-show', () => {
 		window.show();

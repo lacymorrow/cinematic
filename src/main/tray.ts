@@ -8,18 +8,18 @@ import windows from './windows';
 const systemIcon = () => {
 	if (is.macos) {
 		// icon needs to be in format 'xxxTemplate' to work with system theme on mac
-		return 'tray-Template.png';
+		return 'icons/tray-Template.png';
 	}
 
 	if (is.windows) {
 		return 'icon.ico';
 	}
 
-	return 'icon.png';
+	return 'icons/icon.png';
 };
 
 const getIconPath = () => {
-	return path.join(__resources, 'icons', systemIcon());
+	return path.join(__resources, systemIcon());
 };
 
 const initialize = () => {

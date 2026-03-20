@@ -37,6 +37,7 @@ const DELETE_PLAYLIST = 'delete-playlist';
 const OPEN_MEDIA_PATH = 'open-media-path';
 const OPEN_PATH = 'open-path';
 const OPEN_URL = 'open-url';
+const OPEN_CHILD_WINDOW = 'open-child-window';
 
 export const ipcChannels = {
 	// main -> renderer
@@ -73,4 +74,5 @@ export const ipcChannels = {
 	OPEN_MEDIA_PATH,
 	OPEN_PATH,
 	OPEN_URL,
-};
+	OPEN_CHILD_WINDOW,
+} as const;
