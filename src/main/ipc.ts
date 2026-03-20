@@ -156,6 +156,27 @@ export default {
 			clearLibrary();
 		});
 
+		// Window controls for custom titlebar (Windows)
+		ipcMain.on(ipcChannels.WINDOW_MINIMIZE, () => {
+			windows.mainWindow?.minimize();
+		});
+
+		ipcMain.on(ipcChannels.WINDOW_MAXIMIZE, () => {
+			if (windows.mainWindow?.isMaximized()) {
+				windows.mainWindow.unmaximize();
+			} else {
+				windows.mainWindow?.maximize();
+			}
+		});
+
+		ipcMain.on(ipcChannels.WINDOW_CLOSE, () => {
+			windows.mainWindow?.close();
+		});
+
+		ipcMain.handle(ipcChannels.WINDOW_IS_MAXIMIZED, () => {
+			return windows.mainWindow?.isMaximized() ?? false;
+		});
+
 		// Open a child window
 		ipcMain.on(ipcChannels.OPEN_CHILD_WINDOW, async () => {
 			if (!windows.childWindow || windows.childWindow.isDestroyed()) {

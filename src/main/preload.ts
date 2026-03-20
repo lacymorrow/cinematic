@@ -35,6 +35,11 @@ const electronHandler = {
 		ipcRenderer.send(ipcChannels.APP_NOTIFICATION, options),
 	playSound: (sound: string) => ipcRenderer.send(ipcChannels.PLAY_SOUND, sound),
 	openUrl: (url: string) => ipcRenderer.send(ipcChannels.OPEN_URL, url),
+	windowMinimize: () => ipcRenderer.send(ipcChannels.WINDOW_MINIMIZE),
+	windowMaximize: () => ipcRenderer.send(ipcChannels.WINDOW_MAXIMIZE),
+	windowClose: () => ipcRenderer.send(ipcChannels.WINDOW_CLOSE),
+	windowIsMaximized: () =>
+		ipcRenderer.invoke(ipcChannels.WINDOW_IS_MAXIMIZED),
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {
 			if (!channels.includes(channel)) {

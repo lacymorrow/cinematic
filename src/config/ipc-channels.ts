@@ -39,6 +39,12 @@ const OPEN_PATH = 'open-path';
 const OPEN_URL = 'open-url';
 const OPEN_CHILD_WINDOW = 'open-child-window';
 
+// Window controls (renderer -> main)
+const WINDOW_MINIMIZE = 'window-minimize';
+const WINDOW_MAXIMIZE = 'window-maximize';
+const WINDOW_CLOSE = 'window-close';
+const WINDOW_IS_MAXIMIZED = 'window-is-maximized';
+
 export const ipcChannels = {
 	// main -> renderer
 	APP_NOTIFICATION,
@@ -75,4 +81,9 @@ export const ipcChannels = {
 	OPEN_PATH,
 	OPEN_URL,
 	OPEN_CHILD_WINDOW,
+
+	WINDOW_MINIMIZE,
+	WINDOW_MAXIMIZE,
+	WINDOW_CLOSE,
+	WINDOW_IS_MAXIMIZED,
 } as const;
