@@ -7,6 +7,7 @@ const LIBRARY_UPDATED = 'library-updated';
 const SETTINGS_UPDATED = 'settings-updated';
 const APP_STATUS_MESSAGE = 'app-status-message'; // for the renderer to display status messages
 const APP_NOTIFICATION = 'app-notification'; // to display a notification using the OS notification system
+const WINDOW_MAXIMIZED_CHANGE = 'window-maximized-change';
 
 const PRELOAD_SOUNDS = 'preload-sounds';
 const PLAY_SOUND = 'play-sound';
@@ -48,6 +49,7 @@ const WINDOW_IS_MAXIMIZED = 'window-is-maximized';
 export const ipcChannels = {
 	// main -> renderer
 	APP_NOTIFICATION,
+	WINDOW_MAXIMIZED_CHANGE,
 	APP_STATUS_MESSAGE,
 	SETTINGS_UPDATED,
 	LIBRARY_UPDATED,

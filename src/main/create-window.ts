@@ -9,6 +9,7 @@ import {
 import Logger from 'electron-log/main';
 import path from 'path';
 import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
+import { ipcChannels } from '../config/ipc-channels';
 import { setupContextMenu } from './context-menu';
 import MenuBuilder from './menu';
 import { __resources } from './paths';
@@ -130,20 +131,22 @@ export const createMainWindow = async () => {
 	};
 
 	if (is.windows) {
+		const isDarkMode = getSetting('theme') === 'dark';
+		const backgroundColor = isDarkMode ? '#000000' : '#ffffff';
+
 		// On Windows, frame must be true for titleBarStyle + titleBarOverlay to
 		// work.  The base createWindow sets frame: APP_FRAME (false), so we
 		// override it here to get native window controls (minimize/maximize/close)
 		// rendered as an overlay inside the custom titlebar.
 		options.frame = true;
 		options.titleBarOverlay = {
-			color: getSetting('theme') === 'dark' ? '#000000' : '#ffffff',
+			color: backgroundColor,
 			symbolColor: String(getSetting('accentColor')) || '#000000',
 			height: 34,
 		};
 		// Provide a solid background instead of transparency so the window chrome
 		// renders correctly and maximize/snap gestures work.
-		options.backgroundColor =
-			getSetting('theme') === 'dark' ? '#000000' : '#ffffff';
+		options.backgroundColor = backgroundColor;
 	}
 
 	const window = createWindow(options);
@@ -160,10 +163,10 @@ export const createMainWindow = async () => {
 	// Notify the renderer when maximize state changes so custom titlebar
 	// controls can update their icon (maximize ↔ restore).
 	window.on('maximize', () => {
-		window.webContents.send('window-maximized-change', true);
+		window.webContents.send(ipcChannels.WINDOW_MAXIMIZED_CHANGE, true);
 	});
 	window.on('unmaximize', () => {
-		window.webContents.send('window-maximized-change', false);
+		window.webContents.send(ipcChannels.WINDOW_MAXIMIZED_CHANGE, false);
 	});
 
 	// Load the window
