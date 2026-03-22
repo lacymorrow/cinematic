@@ -330,7 +330,8 @@
         "apk",
         "deb",
         "freebsd",
-        "pacman"
+        "pacman",
+        "rpm"
       ],
       "category": "Video"
     },
