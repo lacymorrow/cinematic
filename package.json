@@ -1,379 +1,374 @@
 {
-	"name": "cinematic",
-	"productName": "Cinematic",
-	"appId": "com.lacymorrow.cinematic",
-	"version": "3.1.0",
-	"description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
-	"license": "CC-BY-NC-SA-4.0",
-	"copyright": "Copyright © Lacy Morrow",
-	"repository": "lacymorrow/cinematic",
-	"homepage": "https://lacymorrow.github.io/cinematic",
-	"keywords": [
-		"electron",
-		"boilerplate",
-		"react",
-		"typescript",
-		"ts",
-		"sass",
-		"webpack",
-		"hot",
-		"reload"
-	],
-	"bugs": {
-		"url": "https://github.com/lacymorrow/cinematic/issues",
-		"email": "me@lacymorrow.com"
-	},
-	"author": {
-		"name": "Lacy Morrow",
-		"email": "me@lacymorrow.com",
-		"url": "https://lacymorrow.com"
-	},
-	"contributors": [
-		{
-			"name": "Lacy Morrow",
-			"email": "me@lacymorrow.com",
-			"url": "https://github.com/lacymorrow"
-		},
-		{
-			"name": "Amila Welihinda",
-			"email": "amilajack@gmail.com",
-			"url": "https://github.com/amilajack"
-		}
-	],
-	"main": "./src/main/main.ts",
-	"scripts": {
-		"build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
-		"build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
-		"build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
-		"build:dll": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
-		"postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && npm run build:dll",
-		"lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
-		"lint:fix": "cross-env NODE_ENV=development eslint . --fix --ext .js,.jsx,.ts,.tsx",
-		"package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -mwl --publish never && npm run build:dll",
-		"package:mw": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -mw --publish never && npm run build:dll",
-		"package:mac": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m --publish never && npm run build:dll",
-		"package:linux": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -l --publish never && npm run build:dll",
-		"package:windows": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -w --publish never && npm run build:dll",
-		"rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
-		"start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
-		"start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
-		"start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
-		"start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-		"test": "jest",
-		"analyze": "ANALYZE=true npm run build",
-		"debug-prod": "npx cross-env DEBUG_PROD=true npm run package",
-		"version-bump": "node .erb/scripts/version-bump.js",
-		"version-bump:minor": "npx cross-env npm run version-bump minor",
-		"version-bump:major": "npx cross-env npm run version-bump major",
-		"version-bump:patch": "npx cross-env npm run version-bump patch"
-	},
-	"browserslist": [
-		"extends browserslist-config-erb"
-	],
-	"prettier": {
-		"singleQuote": true,
-		"overrides": [
-			{
-				"files": [
-					".prettierrc",
-					".eslintrc"
-				],
-				"options": {
-					"parser": "json"
-				}
-			}
-		]
-	},
-	"jest": {
-		"moduleDirectories": [
-			"node_modules",
-			"release/app/node_modules",
-			"src"
-		],
-		"moduleFileExtensions": [
-			"js",
-			"jsx",
-			"ts",
-			"tsx",
-			"json"
-		],
-		"moduleNameMapper": {
-			"^@/(.*)$": "<rootDir>/src/$1",
-			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-			"\\.(css|less|sass|scss)$": "identity-obj-proxy"
-		},
-		"setupFiles": [
-			"./.erb/scripts/check-build-exists.ts"
-		],
-		"testEnvironment": "jsdom",
-		"testEnvironmentOptions": {
-			"url": "http://localhost/"
-		},
-		"testPathIgnorePatterns": [
-			"release/app/dist",
-			".erb/dll"
-		],
-		"transform": {
-			"\\.(ts|tsx|js|jsx)$": "ts-jest"
-		}
-	},
-	"dependencies": {
-		"@aptabase/electron": "^0.3.1",
-		"@electron/notarize": "^2.4.0",
-		"@mapbox/react-colorpickr": "^10.3.0",
-		"@radix-ui/react-accordion": "^1.2.0",
-		"@radix-ui/react-alert-dialog": "^1.1.1",
-		"@radix-ui/react-checkbox": "^1.1.1",
-		"@radix-ui/react-context-menu": "^2.2.1",
-		"@radix-ui/react-dialog": "^1.1.1",
-		"@radix-ui/react-dropdown-menu": "^2.1.1",
-		"@radix-ui/react-icons": "^1.3.0",
-		"@radix-ui/react-label": "^2.1.0",
-		"@radix-ui/react-menubar": "^1.1.1",
-		"@radix-ui/react-popover": "^1.1.1",
-		"@radix-ui/react-radio-group": "^1.2.0",
-		"@radix-ui/react-scroll-area": "^1.1.0",
-		"@radix-ui/react-select": "^2.1.1",
-		"@radix-ui/react-separator": "^1.1.0",
-		"@radix-ui/react-slider": "^1.2.0",
-		"@radix-ui/react-slot": "^1.1.0",
-		"@radix-ui/react-switch": "^1.1.0",
-		"@radix-ui/react-tabs": "^1.1.0",
-		"@radix-ui/react-toast": "^1.2.1",
-		"@radix-ui/react-tooltip": "^1.1.2",
-		"@tailwindcss/container-queries": "^0.1.1",
-		"@uiw/react-color-chrome": "^2.3.0",
-		"@uiw/react-color-colorful": "^2.3.0",
-		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
-		"cmdk": "^1.0.0",
-		"electron-debug": "^3.2.0",
-		"electron-log": "^5.2.0",
-		"electron-store": "^8.1.0",
-		"electron-unhandled": "^5.0.0",
-		"electron-updater": "^6.3.4",
-		"fastq": "^1.17.1",
-		"framer-motion": "^11.5.4",
-		"is-online": "^11.0.0",
-		"lucide-react": "^0.441.0",
-		"movie-info": "^3.0.2",
-		"movie-trailer": "^3.2.2",
-		"next-themes": "^0.3.0",
-		"omdbapi": "^4.0.0",
-		"parse-torrent-filename": "github:lacymorrow/parse-torrent-filename",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"react-hook-form": "^7.53.0",
-		"react-is-online-context": "^1.0.2",
-		"react-resizable-panels": "^2.1.3",
-		"react-router-dom": "^6.26.2",
-		"react-wrap-balancer": "^1.1.1",
-		"sonner": "^1.5.0",
-		"source-map-support": "^0.5.21",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7",
-		"uuid": "^10.0.0",
-		"uuid-by-string": "^4.0.0",
-		"zod": "^3.23.8"
-	},
-	"devDependencies": {
-		"@electron/rebuild": "^3.6.0",
-		"@hookform/resolvers": "^3.9.0",
-		"@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
-		"@svgr/webpack": "^8.1.0",
-		"@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
-		"@testing-library/jest-dom": "^6.5.0",
-		"@testing-library/react": "^16.0.1",
-		"@types/jest": "^29.5.13",
-		"@types/node": "22.5.5",
-		"@types/react": "^18.3.5",
-		"@types/react-dom": "^18.3.0",
-		"@types/react-test-renderer": "^18.3.0",
-		"@types/terser-webpack-plugin": "^5.0.4",
-		"@types/uuid": "^10.0.0",
-		"@types/webpack-bundle-analyzer": "^4.7.0",
-		"@typescript-eslint/eslint-plugin": "^8.5.0",
-		"@typescript-eslint/parser": "^8.5.0",
-		"autoprefixer": "^10.4.20",
-		"browserslist-config-erb": "^0.0.3",
-		"chalk": "~4.1.2",
-		"concurrently": "^9.0.1",
-		"core-js": "^3.38.1",
-		"cross-env": "^7.0.3",
-		"css-loader": "^6.9.1",
-		"css-minimizer-webpack-plugin": "^7.0.0",
-		"detect-port": "^1.6.1",
-		"electron": "27.1.0",
-		"electron-builder": "^25.0.5",
-		"electron-devtools-installer": "^3.2.0",
-		"electronmon": "^2.0.3",
-		"eslint": "^9.10.0",
-		"eslint-config-airbnb-base": "^15.0.0",
-		"eslint-config-erb": "^4.1.0",
-		"eslint-import-resolver-typescript": "^3.6.3",
-		"eslint-import-resolver-webpack": "^0.13.9",
-		"eslint-plugin-compat": "^6.0.1",
-		"eslint-plugin-import": "^2.30.0",
-		"eslint-plugin-jest": "^28.8.3",
-		"eslint-plugin-jsx-a11y": "^6.10.0",
-		"eslint-plugin-promise": "^7.1.0",
-		"eslint-plugin-react": "^7.36.1",
-		"eslint-plugin-react-hooks": "^4.6.2",
-		"eslint-plugin-unused-imports": "^4.1.4",
-		"file-loader": "^6.2.0",
-		"html-webpack-plugin": "^5.6.0",
-		"identity-obj-proxy": "^3.0.0",
-		"jest": "^29.7.0",
-		"jest-environment-jsdom": "^29.7.0",
-		"mini-css-extract-plugin": "^2.9.1",
-		"postcss": "^8.4.47",
-		"postcss-loader": "^8.1.1",
-		"prettier": "^3.3.3",
-		"react-refresh": "^0.14.2",
-		"react-test-renderer": "^18.3.1",
-		"rimraf": "^6.0.1",
-		"sass": "^1.78.0",
-		"sass-loader": "^16.0.1",
-		"style-loader": "^4.0.0",
-		"tailwindcss": "^3.4.11",
-		"terser-webpack-plugin": "^5.3.10",
-		"ts-jest": "^29.2.5",
-		"ts-loader": "^9.5.1",
-		"ts-node": "^10.9.2",
-		"tsconfig-paths-webpack-plugin": "^4.1.0",
-		"typescript": "^5.6.2",
-		"url-loader": "^4.1.1",
-		"webpack": "^5.94.0",
-		"webpack-bundle-analyzer": "^4.10.2",
-		"webpack-cli": "^5.1.4",
-		"webpack-dev-server": "^5.1.0",
-		"webpack-merge": "^6.0.1"
-	},
-	"np": {
-		"publish": false,
-		"releaseDraft": true
-	},
-	"build": {
-		"appId": "com.lacymorrow.cinematic",
-		"productName": "Cinematic",
-		"asar": true,
-		"asarUnpack": "**\\*.{node,dll}",
-		"files": [
-			"public",
-			"dist",
-			"node_modules",
-			"package.json"
-		],
-		"afterSign": ".erb/scripts/notarize.js",
-		"mac": {
-			"target": {
-				"target": "default",
-				"arch": [
-					"arm64",
-					"x64",
-					"universal"
-				]
-			},
-			"type": "distribution",
-			"hardenedRuntime": true,
-			"entitlements": "assets/entitlements.mac.plist",
-			"entitlementsInherit": "assets/entitlements.mac.plist",
-			"gatekeeperAssess": false,
-			"category": "public.app-category.utilities",
-			"darkModeSupport": true
-		},
-		"dmg": {
-			"iconSize": 160,
-			"contents": [
-				{
-					"x": 130,
-					"y": 220
-				},
-				{
-					"x": 410,
-					"y": 220,
-					"type": "link",
-					"path": "/Applications"
-				}
-			]
-		},
-		"win": {
-			"target": [
-				"nsis",
-				"portable"
-			],
-			"publish": "github",
-			"verifyUpdateCodeSignature": false
-		},
-		"portable": {
-			"unicode": false,
-			"artifactName": "${productName}-Portable-${version}.${ext}"
-		},
-		"nsis": {
-			"unicode": false,
-			"artifactName": "${productName}-${version}.${ext}",
-			"uninstallDisplayName": "Cinematic"
-		},
-		"appx": {
-			"publisherDisplayName": "Fly5",
-			"applicationId": "Cinematic",
-			"identityName": "2886Fly5.Cinematic",
-			"artifactName": "${productName}.${ext}",
-			"backgroundColor": "#5500ff",
-			"displayName": "Cinematic",
-			"publisher": "CN=C53C0091-1EEB-40B4-8537-082E06A4D328",
-			"showNameOnTiles": true
-		},
-		"linux": {
-			"target": [
-				"AppImage",
-				"apk",
-				"deb",
-				"freebsd",
-				"pacman",
-				"rpm"
-			],
-			"category": "Video"
-		},
-		"snap": {
-			"summary": "A simple, powerful media library manager.",
-			"description": "Organize your media and find what to watch in a beautiful, customizable interface.",
-			"plugs": [
-				"default",
-				"removable-media"
-			],
-			"publish": [
-				"github",
-				"snapStore"
-			]
-		},
-		"directories": {
-			"app": "release/app",
-			"buildResources": "assets",
-			"output": "release/build"
-		},
-		"extraResources": [
-			"./assets/**"
-		],
-		"publish": {
-			"provider": "github",
-			"owner": "lacymorrow",
-			"repo": "cinematic"
-		}
-	},
-	"devEngines": {
-		"node": ">=14.x",
-		"npm": ">=7.x"
-	},
-	"electronmon": {
-		"patterns": [
-			"!**/**",
-			"src/main/**",
-			".erb/dll/**"
-		],
-		"logLevel": "quiet"
-	},
-	"optionalDependencies": {
-		"dmg-license": "^1.0.11"
-	}
+  "name": "cinematic",
+  "productName": "Cinematic",
+  "appId": "com.lacymorrow.cinematic",
+  "version": "3.2.0",
+  "description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
+  "license": "CC-BY-NC-SA-4.0",
+  "copyright": "Copyright © Lacy Morrow",
+  "repository": "lacymorrow/cinematic",
+  "homepage": "https://lacymorrow.github.io/cinematic",
+  "keywords": [
+    "electron",
+    "boilerplate",
+    "react",
+    "typescript",
+    "ts",
+    "sass",
+    "webpack",
+    "hot",
+    "reload"
+  ],
+  "bugs": {
+    "url": "https://github.com/lacymorrow/cinematic/issues",
+    "email": "me@lacymorrow.com"
+  },
+  "author": {
+    "name": "Lacy Morrow",
+    "email": "me@lacymorrow.com",
+    "url": "https://lacymorrow.com"
+  },
+  "contributors": [
+    {
+      "name": "Lacy Morrow",
+      "email": "me@lacymorrow.com",
+      "url": "https://github.com/lacymorrow"
+    },
+    {
+      "name": "Amila Welihinda",
+      "email": "amilajack@gmail.com",
+      "url": "https://github.com/amilajack"
+    }
+  ],
+  "main": "./src/main/main.ts",
+  "scripts": {
+    "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
+    "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
+    "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "build:dll": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
+    "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && npm run build:dll",
+    "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "cross-env NODE_ENV=development eslint . --fix --ext .js,.jsx,.ts,.tsx",
+    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -mwl --publish never && npm run build:dll",
+    "package:mw": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -mw --publish never && npm run build:dll",
+    "package:mac": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -m --publish never && npm run build:dll",
+    "package:linux": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -l --publish never && npm run build:dll",
+    "package:windows": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build -w --publish never && npm run build:dll",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
+    "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
+    "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
+    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
+    "test": "jest",
+    "analyze": "ANALYZE=true npm run build",
+    "debug-prod": "npx cross-env DEBUG_PROD=true npm run package",
+    "version-bump": "node .erb/scripts/version-bump.js",
+    "version-bump:minor": "npx cross-env npm run version-bump minor",
+    "version-bump:major": "npx cross-env npm run version-bump major",
+    "version-bump:patch": "npx cross-env npm run version-bump patch"
+  },
+  "browserslist": [
+    "extends browserslist-config-erb"
+  ],
+  "prettier": {
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": [
+          ".prettierrc",
+          ".eslintrc"
+        ],
+        "options": {
+          "parser": "json"
+        }
+      }
+    ]
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "release/app/node_modules",
+      "src"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "./.erb/scripts/check-build-exists.ts"
+    ],
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
+    "testPathIgnorePatterns": [
+      "release/app/dist",
+      ".erb/dll"
+    ],
+    "transform": {
+      "\\.(ts|tsx|js|jsx)$": "ts-jest"
+    }
+  },
+  "dependencies": {
+    "@aptabase/electron": "^0.3.1",
+    "@electron/notarize": "^2.4.0",
+    "@mapbox/react-colorpickr": "^10.3.0",
+    "@radix-ui/react-accordion": "^1.2.0",
+    "@radix-ui/react-alert-dialog": "^1.1.1",
+    "@radix-ui/react-checkbox": "^1.1.1",
+    "@radix-ui/react-context-menu": "^2.2.1",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-menubar": "^1.1.1",
+    "@radix-ui/react-popover": "^1.1.1",
+    "@radix-ui/react-radio-group": "^1.2.0",
+    "@radix-ui/react-scroll-area": "^1.1.0",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slider": "^1.2.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@uiw/react-color-chrome": "^2.3.0",
+    "@uiw/react-color-colorful": "^2.3.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "electron-debug": "^3.2.0",
+    "electron-log": "^5.2.0",
+    "electron-store": "^8.1.0",
+    "electron-unhandled": "^5.0.0",
+    "electron-updater": "^6.3.4",
+    "fastq": "^1.17.1",
+    "framer-motion": "^11.5.4",
+    "is-online": "^11.0.0",
+    "lucide-react": "^0.441.0",
+    "movie-info": "^3.0.2",
+    "movie-trailer": "^3.2.2",
+    "next-themes": "^0.3.0",
+    "omdbapi": "^4.0.0",
+    "parse-torrent-filename": "github:lacymorrow/parse-torrent-filename",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-is-online-context": "^1.0.2",
+    "react-resizable-panels": "^2.1.3",
+    "react-router-dom": "^6.26.2",
+    "react-wrap-balancer": "^1.1.1",
+    "sonner": "^1.5.0",
+    "source-map-support": "^0.5.21",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0",
+    "uuid-by-string": "^4.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.6.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "@svgr/webpack": "^8.1.0",
+    "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@types/jest": "^29.5.13",
+    "@types/node": "22.5.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-test-renderer": "^18.3.0",
+    "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/uuid": "^10.0.0",
+    "@types/webpack-bundle-analyzer": "^4.7.0",
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
+    "autoprefixer": "^10.4.20",
+    "browserslist-config-erb": "^0.0.3",
+    "chalk": "~4.1.2",
+    "concurrently": "^9.0.1",
+    "core-js": "^3.38.1",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.9.1",
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "detect-port": "^1.6.1",
+    "electron": "27.1.0",
+    "electron-builder": "^25.0.5",
+    "electron-devtools-installer": "^3.2.0",
+    "electronmon": "^2.0.3",
+    "eslint": "^9.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-erb": "^4.1.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-import-resolver-webpack": "^0.13.9",
+    "eslint-plugin-compat": "^6.0.1",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-jest": "^28.8.3",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-promise": "^7.1.0",
+    "eslint-plugin-react": "^7.36.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.6.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "mini-css-extract-plugin": "^2.9.1",
+    "postcss": "^8.4.47",
+    "postcss-loader": "^8.1.1",
+    "prettier": "^3.3.3",
+    "react-refresh": "^0.14.2",
+    "react-test-renderer": "^18.3.1",
+    "rimraf": "^6.0.1",
+    "sass": "^1.78.0",
+    "sass-loader": "^16.0.1",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^3.4.11",
+    "terser-webpack-plugin": "^5.3.10",
+    "ts-jest": "^29.2.5",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "^5.6.2",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.94.0",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-merge": "^6.0.1"
+  },
+  "np": {
+    "publish": false,
+    "releaseDraft": true
+  },
+  "build": {
+    "appId": "com.lacymorrow.cinematic",
+    "productName": "Cinematic",
+    "asar": true,
+    "asarUnpack": "**\\*.{node,dll}",
+    "files": [
+      "public",
+      "dist",
+      "node_modules",
+      "package.json"
+    ],
+    "afterSign": ".erb/scripts/notarize.js",
+    "mac": {
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64",
+          "universal"
+        ]
+      },
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "gatekeeperAssess": false,
+      "category": "public.app-category.utilities",
+      "darkModeSupport": true
+    },
+    "dmg": {
+      "iconSize": 160,
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "publish": "github",
+      "verifyUpdateCodeSignature": false
+    },
+    "portable": {
+      "unicode": false,
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "unicode": false,
+      "artifactName": "${productName}-${version}.${ext}",
+      "uninstallDisplayName": "Cinematic"
+    },
+    "appx": {
+      "publisherDisplayName": "Fly5",
+      "applicationId": "Cinematic",
+      "identityName": "2886Fly5.Cinematic",
+      "artifactName": "${productName}.${ext}",
+      "backgroundColor": "#5500ff",
+      "displayName": "Cinematic",
+      "publisher": "CN=C53C0091-1EEB-40B4-8537-082E06A4D328",
+      "showNameOnTiles": true
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "apk",
+        "deb",
+        "freebsd",
+        "pacman"
+      ],
+      "category": "Video"
+    },
+    "snap": {
+      "summary": "A simple, powerful media library manager.",
+      "description": "Organize your media and find what to watch in a beautiful, customizable interface.",
+      "plugs": [
+        "default",
+        "removable-media"
+      ],
+      "publish": [
+        "github",
+        "snapStore"
+      ]
+    },
+    "directories": {
+      "app": "release/app",
+      "buildResources": "assets",
+      "output": "release/build"
+    },
+    "extraResources": [
+      "./assets/**"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "lacymorrow",
+      "repo": "cinematic"
+    }
+  },
+  "electronmon": {
+    "patterns": [
+      "!**/**",
+      "src/main/**",
+      ".erb/dll/**"
+    ],
+    "logLevel": "quiet"
+  },
+  "optionalDependencies": {
+    "dmg-license": "^1.0.11"
+  }
 }
