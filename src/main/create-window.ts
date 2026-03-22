@@ -9,6 +9,7 @@ import {
 import Logger from 'electron-log/main';
 import path from 'path';
 import { APP_FRAME, APP_HEIGHT, APP_WIDTH } from '../config/config';
+import { ipcChannels } from '../config/ipc-channels';
 import { setupContextMenu } from './context-menu';
 import MenuBuilder from './menu';
 import { __resources } from './paths';
@@ -57,7 +58,7 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 	};
 
 	options.webPreferences = {
-		webSecurity: !is.development, // Required for loading sounds, comment out if not using sounds
+		webSecurity: !is.development, // Relaxed in dev for local asset loading
 		// Prevent throttling when the window is in the background:
 		// backgroundThrottling: false,
 		// Disable the `auxclick` feature so that `click` events are triggered in
@@ -67,6 +68,8 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 		preload: app.isPackaged
 			? path.join(__dirname, 'preload.js')
 			: path.join(__dirname, '../../.erb/dll/preload.js'),
+		contextIsolation: true,
+		nodeIntegration: false,
 	};
 
 	const browserWindow = new BrowserWindow(options);
@@ -114,7 +117,10 @@ export const createMainWindow = async () => {
 		// titleBarOverlay: true, // https://developer.mozilla.org/en-US/docs/Web/API/Window_Controls_Overlay_API
 		trafficLightPosition: { x: 10, y: 9 },
 
-		transparent: true, // Makes the window transparent. Default is false. On Windows, does not work unless the window is frameless.
+		// transparent: true breaks window maximize/snap on Windows 11 because it
+		// removes the WS_THICKFRAME style.  Only enable on macOS where vibrancy
+		// requires it.
+		transparent: !is.windows,
 		// backgroundColor: '#00000000', // transparent hexadecimal or anything with transparency,
 		vibrancy: 'under-window', // appearance-based, titlebar, selection, menu, popover, sidebar, header, sheet, window, hud, fullscreen-ui, tooltip, content, under-window, or under-page.
 
@@ -124,12 +130,23 @@ export const createMainWindow = async () => {
 		minHeight: 420,
 	};
 
-	if(is.windows){
+	if (is.windows) {
+		const isDarkMode = getSetting('theme') === 'dark';
+		const backgroundColor = isDarkMode ? '#000000' : '#ffffff';
+
+		// On Windows, frame must be true for titleBarStyle + titleBarOverlay to
+		// work.  The base createWindow sets frame: APP_FRAME (false), so we
+		// override it here to get native window controls (minimize/maximize/close)
+		// rendered as an overlay inside the custom titlebar.
+		options.frame = true;
 		options.titleBarOverlay = {
-			color: getSetting('theme') === 'dark' ? '#000000' : '#ffffff',
+			color: backgroundColor,
 			symbolColor: String(getSetting('accentColor')) || '#000000',
-			height: 34
-		  }
+			height: 34,
+		};
+		// Provide a solid background instead of transparency so the window chrome
+		// renders correctly and maximize/snap gestures work.
+		options.backgroundColor = backgroundColor;
 	}
 
 	const window = createWindow(options);
@@ -143,6 +160,15 @@ export const createMainWindow = async () => {
 		}
 	});
 
+	// Notify the renderer when maximize state changes so custom titlebar
+	// controls can update their icon (maximize ↔ restore).
+	window.on('maximize', () => {
+		window.webContents.send(ipcChannels.WINDOW_MAXIMIZED_CHANGE, true);
+	});
+	window.on('unmaximize', () => {
+		window.webContents.send(ipcChannels.WINDOW_MAXIMIZED_CHANGE, false);
+	});
+
 	// Load the window
 	window.loadURL(resolveHtmlPath('index.html'));
 
@@ -150,7 +176,14 @@ export const createMainWindow = async () => {
 };
 
 export const createChildWindow = async () => {
-	const window = createWindow({ frame: true });
+	const mainWindowBounds = windows.mainWindow?.getBounds();
+	const options: BrowserWindowConstructorOptions = {
+		frame: true,
+		x: mainWindowBounds ? mainWindowBounds.x + 60 : undefined,
+		y: mainWindowBounds ? mainWindowBounds.y + 60 : undefined,
+	};
+
+	const window = createWindow(options);
 
 	window.on('ready-to-show', () => {
 		window.show();

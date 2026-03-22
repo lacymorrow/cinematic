@@ -10,12 +10,13 @@ jobs:
     # To enable auto publishing to github, update your electron publisher
     # config in package.json > "build" and remove the conditional below
     # MAKE SURE TO REMOVE THE EXCLAMATION MARK FROM THE OWNER NAME BELOW
-    if: ${{ github.repository_owner == 'lacymorrow!' }}
+    if: ${{ github.repository_owner == 'lacymorrow' }}
 
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        # TODO: Add windows and linux to the matrix, We only use one right now to prevent publishing more than once
         os: [macos-latest]
 
     steps:

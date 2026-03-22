@@ -7,6 +7,7 @@ const LIBRARY_UPDATED = 'library-updated';
 const SETTINGS_UPDATED = 'settings-updated';
 const APP_STATUS_MESSAGE = 'app-status-message'; // for the renderer to display status messages
 const APP_NOTIFICATION = 'app-notification'; // to display a notification using the OS notification system
+const WINDOW_MAXIMIZED_CHANGE = 'window-maximized-change';
 
 const PRELOAD_SOUNDS = 'preload-sounds';
 const PLAY_SOUND = 'play-sound';
@@ -37,10 +38,18 @@ const DELETE_PLAYLIST = 'delete-playlist';
 const OPEN_MEDIA_PATH = 'open-media-path';
 const OPEN_PATH = 'open-path';
 const OPEN_URL = 'open-url';
+const OPEN_CHILD_WINDOW = 'open-child-window';
+
+// Window controls (renderer -> main)
+const WINDOW_MINIMIZE = 'window-minimize';
+const WINDOW_MAXIMIZE = 'window-maximize';
+const WINDOW_CLOSE = 'window-close';
+const WINDOW_IS_MAXIMIZED = 'window-is-maximized';
 
 export const ipcChannels = {
 	// main -> renderer
 	APP_NOTIFICATION,
+	WINDOW_MAXIMIZED_CHANGE,
 	APP_STATUS_MESSAGE,
 	SETTINGS_UPDATED,
 	LIBRARY_UPDATED,
@@ -73,4 +82,10 @@ export const ipcChannels = {
 	OPEN_MEDIA_PATH,
 	OPEN_PATH,
 	OPEN_URL,
-};
+	OPEN_CHILD_WINDOW,
+
+	WINDOW_MINIMIZE,
+	WINDOW_MAXIMIZE,
+	WINDOW_CLOSE,
+	WINDOW_IS_MAXIMIZED,
+} as const;

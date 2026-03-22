@@ -5,6 +5,7 @@ import { CustomAcceleratorsType } from '../types/keyboard';
 import { getOS } from '../utils/getOS';
 import { openMediaPathDialog } from './dialog';
 import { scanMedia } from './file';
+import { createChildWindow } from './create-window';
 import kb from './keyboard';
 import { notification } from './notifications';
 import { rendererPaths } from './paths';
@@ -27,6 +28,7 @@ import {
 } from './store-actions';
 import { is } from './util';
 import { serializeMenu, triggerMenuItemById } from './utils/menu-utils';
+import windows from './windows';
 
 export default {
 	initialize() {
@@ -152,6 +154,36 @@ export default {
 
 		ipcMain.on(ipcChannels.CLEAR_LIBRARY, () => {
 			clearLibrary();
+		});
+
+		// Window controls for custom titlebar (Windows)
+		ipcMain.on(ipcChannels.WINDOW_MINIMIZE, () => {
+			windows.mainWindow?.minimize();
+		});
+
+		ipcMain.on(ipcChannels.WINDOW_MAXIMIZE, () => {
+			if (windows.mainWindow?.isMaximized()) {
+				windows.mainWindow.unmaximize();
+			} else {
+				windows.mainWindow?.maximize();
+			}
+		});
+
+		ipcMain.on(ipcChannels.WINDOW_CLOSE, () => {
+			windows.mainWindow?.close();
+		});
+
+		ipcMain.handle(ipcChannels.WINDOW_IS_MAXIMIZED, () => {
+			return windows.mainWindow?.isMaximized() ?? false;
+		});
+
+		// Open a child window
+		ipcMain.on(ipcChannels.OPEN_CHILD_WINDOW, async () => {
+			if (!windows.childWindow || windows.childWindow.isDestroyed()) {
+				windows.childWindow = await createChildWindow();
+			} else {
+				windows.childWindow.focus();
+			}
 		});
 	},
 };

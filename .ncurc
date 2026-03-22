@@ -1,7 +1,10 @@
 {
-	"upgrade": true,
 	"reject": [
 		"chalk",
-		"electron"
+		"css-loader",
+		"electron",
+		"electron-store",
+		"electron-debug",
+		"eslint"
 	]
 }
