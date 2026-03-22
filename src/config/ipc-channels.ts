@@ -49,6 +49,7 @@ const WINDOW_IS_MAXIMIZED = 'window-is-maximized';
 export const ipcChannels = {
 	// main -> renderer
 	APP_NOTIFICATION,
+	APP_UPDATED,
 	WINDOW_MAXIMIZED_CHANGE,
 	APP_STATUS_MESSAGE,
 	SETTINGS_UPDATED,
