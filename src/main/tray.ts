@@ -23,6 +23,10 @@ const getIconPath = () => {
 };
 
 const initialize = () => {
+	if (windows.tray) {
+		return;
+	}
+
 	windows.tray = new ElectronTray(getIconPath());
 
 	const contextMenu = Menu.buildFromTemplate([
