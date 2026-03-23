@@ -1,5 +1,3 @@
-// todo: list view of media (vs grid view)
-// todo: no items placeholder
 import {
 	Table,
 	TableBody,
@@ -15,15 +13,14 @@ import { $media, $ui } from '@/config/strings';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
 import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
-import { ScrollContainer } from '@/renderer/components/ui/ScrollContainer';
 import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { GridIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
-import { getUUID } from '@/utils/getUUID';
 
 import { BookmarkIcon } from '@radix-ui/react-icons';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { VirtuosoGrid, TableVirtuoso } from 'react-virtuoso';
 
 type Props = {
 	items: MediaType[];
@@ -32,6 +29,38 @@ type Props = {
 	addMediaButton?: boolean;
 	NotFound?: React.FC;
 };
+
+const CARD_WIDTH = 250;
+const CARD_HEIGHT = 430; // poster (375) + text (~55)
+const GRID_GAP = 24;
+
+// Custom grid components for VirtuosoGrid
+const GridList = React.forwardRef<
+	HTMLDivElement,
+	React.HTMLAttributes<HTMLDivElement>
+>(({ children, style, ...props }, ref) => (
+	<div
+		ref={ref}
+		{...props}
+		style={{
+			...style,
+			display: 'flex',
+			flexWrap: 'wrap',
+			gap: GRID_GAP,
+			paddingBottom: GRID_GAP,
+		}}
+	/>
+));
+GridList.displayName = 'GridList';
+
+const GridItem: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+	children,
+	...props
+}) => (
+	<div {...props} style={{ width: CARD_WIDTH }}>
+		{children}
+	</div>
+);
 
 export function MediaBrowser({
 	items,
@@ -47,8 +76,35 @@ export function MediaBrowser({
 			viewMode: value as ViewModeType,
 		});
 	};
+
+	const renderGridItem = useCallback(
+		(index: number) => {
+			const media = items[index];
+			if (!media) return null;
+			return (
+				<MediaArtwork
+					media={media}
+					className="w-[250px]"
+					aspectRatio="portrait"
+					width={250}
+					height={375}
+				/>
+			);
+		},
+		[items],
+	);
+
+	// Memoize grid components to prevent re-creation
+	const gridComponents = useMemo(
+		() => ({
+			List: GridList,
+			Item: GridItem,
+		}),
+		[],
+	);
+
 	return (
-		<ScrollContainer>
+		<div className="h-full flex flex-col p-6">
 			{items?.length === 0 ? (
 				<>
 					<SectionHeader
@@ -80,27 +136,27 @@ export function MediaBrowser({
 					</div>
 					<SectionHeader title={title} tagline={tagline} />
 
-					<TabsContent value="grid" className="border-none p-0 outline-none">
-						<div className="flex gap-6 pb-6 flex-wrap">
-							{items?.map((media: MediaType) => (
-								<MediaArtwork
-									key={getUUID()}
-									media={media}
-									className="w-[250px]"
-									aspectRatio="portrait"
-									width={250}
-									height={375}
-								/>
-							))}
-						</div>
+					<TabsContent
+						value="grid"
+						className="border-none p-0 outline-none flex-1 min-h-0"
+					>
+						<VirtuosoGrid
+							totalCount={items.length}
+							components={gridComponents}
+							itemContent={renderGridItem}
+							overscan={600}
+							style={{ height: '100%' }}
+						/>
 					</TabsContent>
 					<TabsContent
 						value="list"
-						className="h-full flex-col border-none p-0 data-[state=active]:flex"
+						className="h-full flex-col border-none p-0 data-[state=active]:flex flex-1 min-h-0"
 					>
-						<Table>
-							<TableCaption>{tagline}</TableCaption>
-							<TableHeader>
+						<TableVirtuoso
+							data={items}
+							style={{ height: '100%' }}
+							overscan={200}
+							fixedHeaderContent={() => (
 								<TableRow>
 									<TableHead className="">{$media.title}</TableHead>
 									<TableHead>{$media.released}</TableHead>
@@ -109,23 +165,21 @@ export function MediaBrowser({
 										{$ui.liked.liked}
 									</TableHead>
 								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{items?.map((media: MediaType) => (
-									<TableRow key={media.id}>
-										<TableCell className="font-medium">{media.title}</TableCell>
-										<TableCell>{media.year}</TableCell>
-										<TableCell>{media.runtime}</TableCell>
-										<TableCell>
-											<BookmarkIcon className="ml-auto" />
-										</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
+							)}
+							itemContent={(_index, media) => (
+								<>
+									<TableCell className="font-medium">{media.title}</TableCell>
+									<TableCell>{media.year}</TableCell>
+									<TableCell>{media.runtime}</TableCell>
+									<TableCell>
+										<BookmarkIcon className="ml-auto" />
+									</TableCell>
+								</>
+							)}
+						/>
 					</TabsContent>
 				</Tabs>
 			)}
-		</ScrollContainer>
+		</div>
 	);
 }

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PROTOCOL } from '@/config/config';
-import { nav } from '@/renderer/config/nav';
+import { pathSettings } from '@/renderer/config/nav';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import styles from '@/renderer/styles/CssModuleExample.module.scss';
 import { Link } from 'react-router-dom';
@@ -62,7 +62,7 @@ export function Home() {
 							label="Theme"
 							description="Select your preferred application theme."
 						/>
-						<Link to={nav.settings.href} className="block">
+						<Link to={pathSettings} className="block">
 							<Button className="w-full mb-2">Go to Settings</Button>
 						</Link>
 						<Button

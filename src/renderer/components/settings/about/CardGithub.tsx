@@ -8,12 +8,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { $app } from '@/config/strings';
+import { $settings } from '@/config/strings';
 import { useCallback } from 'react';
 
 export function CardGithub() {
 	const handleClickStar = useCallback(() => {
-		window?.electron?.openUrl($app.github);
+		window?.electron?.openUrl($settings.app.githubUrl);
 	}, []);
 
 	return (

@@ -23,7 +23,7 @@ import {
 	PlayIcon,
 	PlaylistIcon,
 } from '@/renderer/config/icons';
-import { useGlobalContext } from '@/renderer/context/global-context';
+import { useLibraryContext } from '@/renderer/context/library-context';
 import { MediaType } from '@/types/file';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -43,7 +43,7 @@ export function MediaArtwork({
 	className,
 	...props
 }: MediaArtworkProps) {
-	const { playlistsArray } = useGlobalContext();
+	const { playlistsArray } = useLibraryContext();
 
 	const url = useMemo(() => `/media/${media.id}`, [media.id]);
 
@@ -65,6 +65,8 @@ export function MediaArtwork({
 								{media.poster ? (
 									<img
 										draggable={false}
+										loading="lazy"
+										decoding="async"
 										src={media.poster}
 										alt={media.title}
 										width={width}

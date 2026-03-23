@@ -29,7 +29,7 @@ export const VALID_FILETYPES = [
 	'wmv',
 	'mkv',
 ];
-export const CACHE_TIMEOUT = 3600; // Seconds; 604800 = 7 days; 0 === no caching
+export const CACHE_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // 7 days in ms (Date.now() uses ms)
 
 type PlotLengthType = 'short' | 'full';
 export const PLOT_LENGTH: PlotLengthType = 'full'; // Plot Summary length: "short", "full" - from omdb
@@ -44,7 +44,7 @@ export const APP_MESSAGES_MAX = 100;
 
 /* app-specific */
 // -- affects how app is run and may affect performance
-export const FILE_SCAN_DEPTH = 1; // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
+export const FILE_SCAN_DEPTH = 4; // How many directory levels to recursively search. 0 is a flat directory search. Higher = deeper traversal = more files found
 // export const RETRY_DELAY = 4000; // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 export const DIRECTORY_IGNORE_PATTERN = ['private']; // A lowercase list of movie titles to ignore; ex: sample.avi
 export const FILE_IGNORE_PATTERN = ['sample', 'etrg', 'gopro']; // A lowercase list of movie titles to ignore; ex: sample.avi

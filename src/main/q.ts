@@ -13,6 +13,18 @@ import {
 	upsertMediaLibrary,
 } from './store-actions';
 
+// Track pending results per media id so we can merge all three
+// queue results without overwriting each other
+interface PendingResult {
+	omdb?: OmdbType;
+	tmdb?: TmdbType;
+	trailers?: TrailersType;
+	remaining: number;
+	media: MediaType;
+}
+
+const pending = new Map<string, PendingResult>();
+
 const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
 		Logger.status(`${$messages.fetching_omdb}: ${meta.title}`);
@@ -24,9 +36,9 @@ const qOMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 
 		// Not in cache, fetch and cache
 		const result = await fetchOMDB(meta);
-		setCachedObject(cacheKey, result);
-
-		console.log('result', result);
+		if (result) {
+			setCachedObject(cacheKey, result);
+		}
 		return result;
 	},
 	1,
@@ -42,7 +54,9 @@ const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 		}
 
 		const result = await fetchTMDB(meta);
-		setCachedObject(cacheKey, result);
+		if (result) {
+			setCachedObject(cacheKey, result);
+		}
 		return result;
 	},
 	1,
@@ -51,31 +65,71 @@ const qTMDB: queueAsPromised<SearchMetaType> = fastq.promise(
 const qTrailer: queueAsPromised<SearchMetaType> = fastq.promise(
 	async (meta: SearchMetaType) => {
 		Logger.status(`${$messages.fetching_trailers}: ${meta.title}`);
-		const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`; // trailer-<title>-<year>
+		const cacheKey = `trailer-${meta.title}${meta.year ? `-${meta.year}` : ''}`;
 		const cache = getCachedObject(cacheKey);
 		if (cache) {
 			return cache;
 		}
 
 		const result = await fetchTrailer(meta);
-		setCachedObject(cacheKey, result);
+		if (result) {
+			setCachedObject(cacheKey, result);
+		}
 		return result;
 	},
 	1,
 );
 
-const onQueueError = (err: Error | undefined) => {
-	Logger.error($errors.queue, err);
-};
+// Merge all collected queue results for a media id and upsert once.
+// Called from both onResult and onQueueError when remaining hits 0.
+const finalizePendingResult = (id: string) => {
+	const entry = pending.get(id);
+	if (!entry || entry.remaining > 0) return;
 
-const onQueueSuccess = (result: MediaType) => {
-	if (typeof result === 'object' && result.filepath) {
-		// store result
-		upsertMediaLibrary(result);
-	}
+	const merged: MediaType = {
+		...entry.media,
+		...(entry.omdb && { omdb: entry.omdb }),
+		...(entry.tmdb && { tmdb: entry.tmdb }),
+		...(entry.trailers && { trailers: entry.trailers }),
+	};
+	pending.delete(id);
+	upsertMediaLibrary(merged);
 
 	if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
 		Logger.status($messages.idle);
+	}
+};
+
+// Called when one of the three queues finishes for a given media id.
+const onResult = (
+	id: string,
+	field: 'omdb' | 'tmdb' | 'trailers',
+	result: any,
+) => {
+	const entry = pending.get(id);
+	if (!entry) return;
+
+	if (result) {
+		entry[field] = result;
+	}
+	entry.remaining -= 1;
+
+	// Index genres from OMDB as they arrive
+	if (field === 'omdb' && result?.genre) {
+		Object.values(result.genre).forEach((genre) => {
+			addGenre({ genre: genre as string, id });
+		});
+	}
+
+	finalizePendingResult(id);
+};
+
+const onQueueError = (id: string, err: Error | undefined) => {
+	Logger.error($errors.queue, err);
+	const entry = pending.get(id);
+	if (entry) {
+		entry.remaining -= 1;
+		finalizePendingResult(id);
 	}
 };
 
@@ -85,35 +139,28 @@ const add = (media: MediaType) => {
 		return;
 	}
 
+	const { id } = media;
+
+	// Register pending entry expecting 3 results
+	pending.set(id, {
+		remaining: 3,
+		media,
+	});
+
 	qTrailer
 		.push(media)
-		.then((result: TrailersType) => {
-			return { ...media, trailers: result };
-		})
-		.then(onQueueSuccess)
-		.catch(onQueueError);
+		.then((result: TrailersType) => onResult(id, 'trailers', result))
+		.catch((err) => onQueueError(id, err));
+
 	qTMDB
 		.push(media)
-		.then((result: TmdbType) => {
-			// todo: track queue progress
-			console.log('progress', qTMDB.length());
-			return { ...media, tmdb: result };
-		})
-		.then(onQueueSuccess)
-		.catch(onQueueError);
+		.then((result: TmdbType) => onResult(id, 'tmdb', result))
+		.catch((err) => onQueueError(id, err));
+
 	qOMDB
 		.push(media)
-		.then((result: OmdbType) => {
-			// Index genres
-			if (result?.genre) {
-				Object.values(result.genre).forEach((genre) => {
-					addGenre({ genre, id: media.id });
-				});
-			}
-			return { ...media, omdb: result };
-		})
-		.then(onQueueSuccess)
-		.catch(onQueueError);
+		.then((result: OmdbType) => onResult(id, 'omdb', result))
+		.catch((err) => onQueueError(id, err));
 };
 
 export default { add };

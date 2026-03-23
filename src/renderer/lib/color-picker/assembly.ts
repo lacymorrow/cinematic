@@ -1,3 +1,4 @@
+// @ts-nocheck — vendored/generated color picker assembly, not worth typing
 !(function () {
 	function C() {
 		document.body.appendChild(e.getElementById('svg-symbols'));
