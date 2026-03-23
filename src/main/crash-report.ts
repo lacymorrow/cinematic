@@ -6,7 +6,7 @@ const getIssuesUrl = (): string => {
 	const repo =
 		typeof process.env.GITHUB_REPO === 'string'
 			? process.env.GITHUB_REPO
-			: 'lacymorrow/electron-bones';
+			: 'lacymorrow/cinematic';
 	return `https://github.com/${repo}/issues/new`;
 };
 
