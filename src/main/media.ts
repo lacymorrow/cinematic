@@ -4,7 +4,7 @@ import ptf from 'parse-torrent-filename';
 import getUuidByString from 'uuid-by-string';
 import { PARSE_METHOD } from '../config/config';
 import queue from './q';
-import { getCachedObject, upsertMediaLibrary } from './store-actions';
+import { getCachedObject, isLookupFailed, upsertMediaLibrary } from './store-actions';
 import { fileNameRegex, isDigit } from './util';
 
 export const prettyFileName = (name: string) => {
@@ -102,9 +102,13 @@ export const addMediaToLibrary = (media: FileType) => {
 	upsertMediaLibrary(updatedMedia);
 	Logger.status(`Updated metadata for ${updatedMedia.title}`);
 
-	// If we're missing meta info, add to queue to retrieve it
+	// If we're missing meta info, add to queue to retrieve it.
+	// Skip files whose previous lookups all returned nothing (#88/#89).
 	if (!updatedMedia.tmdb || !updatedMedia.omdb || !updatedMedia.trailers) {
-		// Add to queue to retrieve meta info
-		queue.add(updatedMedia);
+		if (isLookupFailed(updatedMedia.id)) {
+			Logger.status(`Skipping re-queue for ${updatedMedia.title} (previous lookup failed)`);
+		} else {
+			queue.add(updatedMedia);
+		}
 	}
 };

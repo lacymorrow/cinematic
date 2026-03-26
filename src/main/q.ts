@@ -9,6 +9,7 @@ import { OmdbType, TmdbType, TrailersType } from '../types/meta';
 import {
 	addGenre,
 	getCachedObject,
+	markLookupFailed,
 	setCachedObject,
 	upsertMediaLibrary,
 } from './store-actions';
@@ -93,6 +94,13 @@ const finalizePendingResult = (id: string) => {
 		...(entry.trailers && { trailers: entry.trailers }),
 	};
 	pending.delete(id);
+
+	// If all three lookups returned nothing, mark this media so we
+	// don't re-queue it on every launch (fixes #88 / #89).
+	if (!entry.omdb && !entry.tmdb && !entry.trailers) {
+		markLookupFailed(id);
+	}
+
 	upsertMediaLibrary(merged);
 
 	if (qTrailer.idle() && qTMDB.idle() && qOMDB.idle()) {
