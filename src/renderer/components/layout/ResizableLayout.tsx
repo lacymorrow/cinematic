@@ -54,7 +54,7 @@ export function ResizableLayout({
 	const handleLayoutChange = debounce((layout: number[]) => {
 		Logger.status('Save layout', layout);
 		setSettings({
-			sidebarLayout: [40, 60],
+			sidebarLayout: layout,
 		});
 	}, DEBOUNCE_DELAY);
 

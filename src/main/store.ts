@@ -42,6 +42,9 @@ export interface StoreType {
 		[key: string]: CacheType;
 	};
 
+	// Media IDs whose metadata lookups returned nothing — avoids re-queuing on every launch
+	failedLookups: Record<string, number>;
+
 	history: HistoryType[];
 
 	settings: SettingsType;
@@ -63,6 +66,10 @@ const schema: Store.Schema<StoreType> = {
 		default: {},
 	},
 	cache: {
+		type: 'object',
+		default: {},
+	},
+	failedLookups: {
 		type: 'object',
 		default: {},
 	},

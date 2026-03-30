@@ -393,3 +393,25 @@ export const setCachedObject = (key: string, value: any) => {
 
 	store.set('cache', cache);
 };
+
+// Track media IDs whose metadata lookups returned no results.
+// Prevents re-queuing files (e.g. "GoPro.mp4") that will never match.
+const FAILED_LOOKUP_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // retry after 1 week
+
+export const isLookupFailed = (mediaId: string): boolean => {
+	const failed: Record<string, number> = store.get('failedLookups') || {};
+	const ts = failed[mediaId];
+	if (!ts) return false;
+	if (Date.now() - ts > FAILED_LOOKUP_TIMEOUT) {
+		delete failed[mediaId];
+		store.set('failedLookups', failed);
+		return false;
+	}
+	return true;
+};
+
+export const markLookupFailed = (mediaId: string): void => {
+	const failed: Record<string, number> = store.get('failedLookups') || {};
+	failed[mediaId] = Date.now();
+	store.set('failedLookups', failed);
+};
