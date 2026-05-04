@@ -319,8 +319,8 @@ importers:
         specifier: ^6.2.0
         version: 6.2.0(webpack@5.105.4)
       html-webpack-plugin:
-        specifier: ^5.6.0
-        version: 5.6.6(webpack@5.105.4)
+        specifier: ^5.6.7
+        version: 5.6.7(webpack@5.105.4)
       identity-obj-proxy:
         specifier: ^3.0.0
         version: 3.0.0
@@ -5294,8 +5294,8 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  html-webpack-plugin@5.6.6:
-    resolution: {integrity: sha512-bLjW01UTrvoWTJQL5LsMRo1SypHW80FTm12OJRSnr3v6YHNhfe+1r0MYUZJMACxnCHURVnBWRwAsWs2yPU9Ezw==}
+  html-webpack-plugin@5.6.7:
+    resolution: {integrity: sha512-md+vXtdCAe60s1k6AU3dUyMJnDxUyQAwfwPKoLisvgUF1IXjtlLsk2se54+qfL9Mdm26bbwvjJybpNx48NKRLw==}
     engines: {node: '>=10.13.0'}
     peerDependencies:
       '@rspack/core': 0.x || 1.x
@@ -5465,8 +5465,8 @@ packages:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
     engines: {node: '>=10.13.0'}
 
-  ip-address@10.1.1:
-    resolution: {integrity: sha512-1FMu8/N15Ck1BL551Jf42NYIoin2unWjLQ2Fze/DXryJRl5twqtwNHlO39qERGbIOcKYWHdgRryhOC+NG4eaLw==}
+  ip-address@10.2.0:
+    resolution: {integrity: sha512-/+S6j4E9AHvW9SWMSEY9Xfy66O5PWvVEJ08O0y5JGyEKQpojb0K0GKpz/v5HJ/G0vi3D2sjGK78119oXZeE0qA==}
     engines: {node: '>= 12'}
 
   ip-regex@5.0.0:
@@ -6444,8 +6444,8 @@ packages:
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
 
-  node-abi@3.89.0:
-    resolution: {integrity: sha512-6u9UwL0HlAl21+agMN3YAMXcKByMqwGx+pq+P76vii5f7hTPtKDp08/H9py6DY+cfDw7kQNTGEj/rly3IgbNQA==}
+  node-abi@3.90.0:
+    resolution: {integrity: sha512-pZNQT7UnYlMwMBy5N1lV5X/YLTbZM5ncytN3xL7CHEzhDN8uVe0u55yaPUJICIJjaCW8NrM5BFdqr7HLweStNA==}
     engines: {node: '>=10'}
 
   node-abi@4.28.0:
@@ -7964,6 +7964,10 @@ packages:
     resolution: {integrity: sha512-b+u3CEM6FjDHru+nhUSjDofpWSBp2rINziJWgApm72wwGasQ/wKXftZe4tI2Y5HPv6OpzXSZHOFq87H4vfsgsw==}
     engines: {node: '>=6'}
 
+  tapable@2.3.3:
+    resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
+    engines: {node: '>=6'}
+
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
     engines: {node: '>=6'}
@@ -7998,6 +8002,11 @@ packages:
 
   terser@5.46.1:
     resolution: {integrity: sha512-vzCjQO/rgUuK9sf8VJZvjqiqiHFaZLnOiimmUuOKODxWL8mm/xua7viT7aqX7dgPY60otQjUotzFMmCB4VdmqQ==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  terser@5.46.2:
+    resolution: {integrity: sha512-uxfo9fPcSgLDYob/w1FuL0c99MWiJDnv+5qXSQc5+Ki5NjVNsYi66INnMFBjf6uFz6OnX12piJQPF4IpjJTNTw==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -8372,6 +8381,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -9567,7 +9577,7 @@ snapshots:
       detect-libc: 2.1.2
       fs-extra: 10.1.0
       got: 11.8.6
-      node-abi: 3.89.0
+      node-abi: 3.90.0
       node-api-version: 0.2.1
       node-gyp: 9.4.1
       ora: 5.4.1
@@ -13597,7 +13607,7 @@ snapshots:
   enhanced-resolve@5.20.1:
     dependencies:
       graceful-fs: 4.2.11
-      tapable: 2.3.1
+      tapable: 2.3.3
 
   ensure-error@4.0.0: {}
 
@@ -14674,15 +14684,15 @@ snapshots:
       he: 1.2.0
       param-case: 3.0.4
       relateurl: 0.2.7
-      terser: 5.46.1
+      terser: 5.46.2
 
-  html-webpack-plugin@5.6.6(webpack@5.105.4):
+  html-webpack-plugin@5.6.7(webpack@5.105.4):
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       pretty-error: 4.0.0
-      tapable: 2.3.1
+      tapable: 2.3.3
     optionalDependencies:
       webpack: 5.105.4(webpack-cli@5.1.4)
 
@@ -14855,7 +14865,7 @@ snapshots:
 
   interpret@3.1.1: {}
 
-  ip-address@10.1.1: {}
+  ip-address@10.2.0: {}
 
   ip-regex@5.0.0: {}
 
@@ -16009,7 +16019,7 @@ snapshots:
       lower-case: 2.0.2
       tslib: 2.8.1
 
-  node-abi@3.89.0:
+  node-abi@3.90.0:
     dependencies:
       semver: 7.7.4
 
@@ -16655,7 +16665,7 @@ snapshots:
 
   pretty-error@4.0.0:
     dependencies:
-      lodash: 4.17.23
+      lodash: 4.18.1
       renderkid: 3.0.0
 
   pretty-format@27.5.1:
@@ -16962,7 +16972,7 @@ snapshots:
       css-select: 4.3.0
       dom-converter: 0.2.0
       htmlparser2: 6.1.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       strip-ansi: 6.0.1
 
   require-directory@2.1.1: {}
@@ -17317,7 +17327,7 @@ snapshots:
 
   socks@2.8.8:
     dependencies:
-      ip-address: 10.1.1
+      ip-address: 10.2.0
       smart-buffer: 4.2.0
 
   sonner@1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
@@ -17625,6 +17635,8 @@ snapshots:
 
   tapable@2.3.1: {}
 
+  tapable@2.3.3: {}
+
   tar-stream@2.2.0:
     dependencies:
       bl: 4.1.0
@@ -17664,6 +17676,13 @@ snapshots:
       webpack: 5.105.4(webpack-cli@5.1.4)
 
   terser@5.46.1:
+    dependencies:
+      '@jridgewell/source-map': 0.3.11
+      acorn: 8.16.0
+      commander: 2.20.3
+      source-map-support: 0.5.21
+
+  terser@5.46.2:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.16.0
