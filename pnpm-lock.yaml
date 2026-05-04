@@ -193,8 +193,8 @@ importers:
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.72.0(react@18.3.1))
       '@pmmmwh/react-refresh-webpack-plugin':
-        specifier: ^0.5.15
-        version: 0.5.17(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.3)(webpack@5.105.4)
+        specifier: ^0.6.2
+        version: 0.6.2(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.3)(webpack@5.105.4)
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
@@ -1799,18 +1799,18 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@pmmmwh/react-refresh-webpack-plugin@0.5.17':
-    resolution: {integrity: sha512-tXDyE1/jzFsHXjhRZQ3hMl0IVhYe5qula43LDWIhVfjp9G/nT5OQY5AORVOrkEGAUltBJOfOWeETbmhm6kHhuQ==}
-    engines: {node: '>= 10.13'}
+  '@pmmmwh/react-refresh-webpack-plugin@0.6.2':
+    resolution: {integrity: sha512-IhIAD5n4XvGHuL9nAgWfsBR0TdxtjrUWETYKCBHxauYXEv+b+ctEbs9neEgPC7Ecgzv4bpZTBwesAoGDeFymzA==}
+    engines: {node: '>=18.12'}
     peerDependencies:
-      '@types/webpack': 4.x || 5.x
+      '@types/webpack': 5.x
       react-refresh: '>=0.10.0 <1.0.0'
       sockjs-client: ^1.4.0
-      type-fest: '>=0.17.0 <5.0.0'
-      webpack: '>=4.43.0 <6.0.0'
-      webpack-dev-server: 3.x || 4.x || 5.x
+      type-fest: '>=0.17.0 <6.0.0'
+      webpack: ^5.0.0
+      webpack-dev-server: ^4.8.0 || 5.x
       webpack-hot-middleware: 2.x
-      webpack-plugin-serve: 0.x || 1.x
+      webpack-plugin-serve: 1.x
     peerDependenciesMeta:
       '@types/webpack':
         optional: true
@@ -3263,17 +3263,15 @@ packages:
   ajv@8.20.0:
     resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
 
+  anser@2.3.5:
+    resolution: {integrity: sha512-vcZjxvvVoxTeR5XBNJB38oTu/7eDCZlwdz32N1eNgpyPF7j/Z7Idf+CUwQOkKKpJ7RJyjxgLHCM7vdIK0iCNMQ==}
+
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
     engines: {node: '>=8'}
 
   ansi-html-community@0.0.8:
     resolution: {integrity: sha512-1APHAyr3+PCamwNw3bXCPp4HFLONZt/yIH0sZp0/469KWNTEy+qN5jQ3GVX6DMZ1UXAi34yVwtTeaG/HpBuuzw==}
-    engines: {'0': node >= 0.8.0}
-    hasBin: true
-
-  ansi-html@0.0.9:
-    resolution: {integrity: sha512-ozbS3LuenHVxNRh/wdnN16QapUHzauqSomAl1jwwJRRsGwFwtj644lIhxfWu0Fy0acCij2+AEgHvjscq3dlVXg==}
     engines: {'0': node >= 0.8.0}
     hasBin: true
 
@@ -5465,8 +5463,8 @@ packages:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
     engines: {node: '>=10.13.0'}
 
-  ip-address@10.1.1:
-    resolution: {integrity: sha512-1FMu8/N15Ck1BL551Jf42NYIoin2unWjLQ2Fze/DXryJRl5twqtwNHlO39qERGbIOcKYWHdgRryhOC+NG4eaLw==}
+  ip-address@10.2.0:
+    resolution: {integrity: sha512-/+S6j4E9AHvW9SWMSEY9Xfy66O5PWvVEJ08O0y5JGyEKQpojb0K0GKpz/v5HJ/G0vi3D2sjGK78119oXZeE0qA==}
     engines: {node: '>= 12'}
 
   ip-regex@5.0.0:
@@ -6444,8 +6442,8 @@ packages:
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
 
-  node-abi@3.89.0:
-    resolution: {integrity: sha512-6u9UwL0HlAl21+agMN3YAMXcKByMqwGx+pq+P76vii5f7hTPtKDp08/H9py6DY+cfDw7kQNTGEj/rly3IgbNQA==}
+  node-abi@3.90.0:
+    resolution: {integrity: sha512-pZNQT7UnYlMwMBy5N1lV5X/YLTbZM5ncytN3xL7CHEzhDN8uVe0u55yaPUJICIJjaCW8NrM5BFdqr7HLweStNA==}
     engines: {node: '>=10'}
 
   node-abi@4.28.0:
@@ -8372,6 +8370,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -9567,7 +9566,7 @@ snapshots:
       detect-libc: 2.1.2
       fs-extra: 10.1.0
       got: 11.8.6
-      node-abi: 3.89.0
+      node-abi: 3.90.0
       node-api-version: 0.2.1
       node-gyp: 9.4.1
       ora: 5.4.1
@@ -10438,13 +10437,12 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.3)(webpack@5.105.4)':
+  '@pmmmwh/react-refresh-webpack-plugin@0.6.2(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.3)(webpack@5.105.4)':
     dependencies:
-      ansi-html: 0.0.9
+      anser: 2.3.5
       core-js-pure: 3.49.0
       error-stack-parser: 2.1.4
       html-entities: 2.6.0
-      loader-utils: 2.0.4
       react-refresh: 0.14.2
       schema-utils: 4.3.3
       source-map: 0.7.6
@@ -12065,13 +12063,13 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
+  anser@2.3.5: {}
+
   ansi-escapes@4.3.2:
     dependencies:
       type-fest: 0.21.3
 
   ansi-html-community@0.0.8: {}
-
-  ansi-html@0.0.9: {}
 
   ansi-regex@5.0.1: {}
 
@@ -14855,7 +14853,7 @@ snapshots:
 
   interpret@3.1.1: {}
 
-  ip-address@10.1.1: {}
+  ip-address@10.2.0: {}
 
   ip-regex@5.0.0: {}
 
@@ -16009,7 +16007,7 @@ snapshots:
       lower-case: 2.0.2
       tslib: 2.8.1
 
-  node-abi@3.89.0:
+  node-abi@3.90.0:
     dependencies:
       semver: 7.7.4
 
@@ -17317,7 +17315,7 @@ snapshots:
 
   socks@2.8.8:
     dependencies:
-      ip-address: 10.1.1
+      ip-address: 10.2.0
       smart-buffer: 4.2.0
 
   sonner@1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):

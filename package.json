@@ -181,7 +181,7 @@
   "devDependencies": {
     "@electron/rebuild": "^4.0.4",
     "@hookform/resolvers": "^3.9.0",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
     "@svgr/webpack": "^8.1.0",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
     "@testing-library/jest-dom": "^6.5.0",
