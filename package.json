@@ -4,7 +4,7 @@
   "appId": "com.lacymorrow.cinematic",
   "version": "3.2.0",
   "description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
-  "license": "CC-BY-NC-SA-4.0",
+  "license": "FSL-1.1-MIT",
   "copyright": "Copyright © Lacy Morrow",
   "repository": "lacymorrow/cinematic",
   "homepage": "https://lacymorrow.github.io/cinematic",
