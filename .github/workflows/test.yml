@@ -27,6 +27,9 @@ jobs:
       - name: npm test
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # cinematic uses legacy .eslintrc.js; ESLint 9 defaults to flat config.
+          # This flag enables backward-compat mode until migration is done.
+          ESLINT_USE_FLAT_CONFIG: "false"
         run: |
           npm run lint
           npm exec tsc
