@@ -209,6 +209,16 @@ export default class MenuBuilder {
 					id: 'reload',
 				},
 				{
+					label: 'Show Sidebar',
+					accelerator: 'Command+\\',
+					type: 'checkbox',
+					checked: getSetting('showSidebar') as boolean,
+					click: (menuItem) => {
+						setSettings({ showSidebar: menuItem.checked });
+					},
+					id: 'toggleSidebar',
+				},
+				{
 					label: 'Toggle Full Screen',
 					accelerator: 'Ctrl+Command+F',
 					click: () => {
@@ -221,6 +231,16 @@ export default class MenuBuilder {
 		const subMenuViewProd: MenuItemConstructorOptions = {
 			label: 'View',
 			submenu: [
+				{
+					label: 'Show Sidebar',
+					accelerator: 'Command+\\',
+					type: 'checkbox',
+					checked: getSetting('showSidebar') as boolean,
+					click: (menuItem) => {
+						setSettings({ showSidebar: menuItem.checked });
+					},
+					id: 'toggleSidebar',
+				},
 				{
 					label: 'Toggle Full Screen',
 					accelerator: 'Ctrl+Command+F',
@@ -307,6 +327,16 @@ export default class MenuBuilder {
 									id: 'reload',
 								},
 								{
+									label: 'Show &Sidebar',
+									accelerator: 'Ctrl+\\',
+									type: 'checkbox',
+									checked: getSetting('showSidebar') as boolean,
+									click: (menuItem) => {
+										setSettings({ showSidebar: menuItem.checked });
+									},
+									id: 'toggleSidebar',
+								},
+								{
 									label: 'Toggle &Full Screen',
 									accelerator: 'F11',
 									click: () => {
@@ -327,6 +357,16 @@ export default class MenuBuilder {
 								testNotificationMenuItem,
 							]
 						: [
+								{
+									label: 'Show &Sidebar',
+									accelerator: 'Ctrl+\\',
+									type: 'checkbox',
+									checked: getSetting('showSidebar') as boolean,
+									click: (menuItem) => {
+										setSettings({ showSidebar: menuItem.checked });
+									},
+									id: 'toggleSidebar',
+								},
 								{
 									label: 'Toggle &Full Screen',
 									accelerator: 'F11',
