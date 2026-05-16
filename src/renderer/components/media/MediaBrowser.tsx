@@ -14,12 +14,12 @@ import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
 import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
 import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
-import { GridIcon, ListIcon } from '@/renderer/config/icons';
+import { GridIcon, LikedIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 
-import { BookmarkIcon } from '@radix-ui/react-icons';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { VirtuosoGrid, TableVirtuoso } from 'react-virtuoso';
 
 type Props = {
@@ -70,6 +70,7 @@ export function MediaBrowser({
 	NotFound = MediaEmptyPlaceholder,
 }: Props) {
 	const { settings, setSettings } = useGlobalContext();
+	const navigate = useNavigate();
 
 	const handleViewChange = (value: string) => {
 		setSettings({
@@ -102,6 +103,25 @@ export function MediaBrowser({
 		}),
 		[],
 	);
+
+	// Clickable row component for the list view
+	const listTableRow = useMemo(() => {
+		const Row = ({
+			item,
+			...props
+		}: {
+			item?: MediaType;
+			[key: string]: unknown;
+		}) => (
+			<TableRow
+				{...(props as React.HTMLAttributes<HTMLTableRowElement>)}
+				className="cursor-pointer"
+				onClick={() => item && navigate(`/media/${item.id}`)}
+			/>
+		);
+		Row.displayName = 'ListTableRow';
+		return Row;
+	}, [navigate]);
 
 	return (
 		<div className="h-full flex flex-col p-6">
@@ -156,23 +176,46 @@ export function MediaBrowser({
 							data={items}
 							style={{ height: '100%' }}
 							overscan={200}
+							components={{
+								TableRow: listTableRow as React.ComponentType<any>,
+							}}
 							fixedHeaderContent={() => (
 								<TableRow>
-									<TableHead className="">{$media.title}</TableHead>
+									<TableHead className="w-16"></TableHead>
+									<TableHead>{$media.title}</TableHead>
 									<TableHead>{$media.released}</TableHead>
 									<TableHead>{$media.runtime}</TableHead>
-									<TableHead className="text-right">
+									<TableHead>{$media.rating}</TableHead>
+									<TableHead className="w-16 text-right">
 										{$ui.liked.liked}
 									</TableHead>
 								</TableRow>
 							)}
 							itemContent={(_index, media) => (
 								<>
-									<TableCell className="font-medium">{media.title}</TableCell>
+									<TableCell className="w-16 p-1 pl-4">
+										{media.poster ? (
+											<img
+												src={media.poster}
+												alt={media.title}
+												width={36}
+												height={54}
+												loading="lazy"
+												decoding="async"
+												className="rounded object-cover w-9 h-[54px]"
+											/>
+										) : (
+											<div className="w-9 h-[54px] rounded bg-muted" />
+										)}
+									</TableCell>
+									<TableCell className="font-medium">
+										{media.title || media.prettyFileName}
+									</TableCell>
 									<TableCell>{media.year}</TableCell>
 									<TableCell>{media.runtime}</TableCell>
-									<TableCell>
-										<BookmarkIcon className="ml-auto" />
+									<TableCell>{media.rating}</TableCell>
+									<TableCell className="text-right">
+										{media.liked && <LikedIcon className="ml-auto" />}
 									</TableCell>
 								</>
 							)}
