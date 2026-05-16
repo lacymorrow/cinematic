@@ -4,7 +4,7 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ViewModeType } from '@/config/settings';
+import { POSTER_SIZES, ViewModeType } from '@/config/settings';
 import { $media, $ui } from '@/config/strings';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
@@ -29,8 +29,6 @@ type Props = {
 	NotFound?: React.FC;
 };
 
-const CARD_WIDTH = 250;
-const CARD_HEIGHT = 430; // poster (375) + text (~55)
 const GRID_GAP = 24;
 
 // Custom grid components for VirtuosoGrid
@@ -52,15 +50,6 @@ const GridList = React.forwardRef<
 ));
 GridList.displayName = 'GridList';
 
-const GridItem: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
-	children,
-	...props
-}) => (
-	<div {...props} style={{ width: CARD_WIDTH }}>
-		{children}
-	</div>
-);
-
 export function MediaBrowser({
 	items,
 	title,
@@ -70,6 +59,7 @@ export function MediaBrowser({
 }: Props) {
 	const { settings, setSettings } = useGlobalContext();
 	const { selectedMediaIds, toggleMediaSelection, clearSelection } = useLibraryContext();
+	const posterSize = POSTER_SIZES[settings.thumbnailSize] ?? POSTER_SIZES.large;
 	const [playlistDialogMediaId, setPlaylistDialogMediaId] = useState<string | null>(null);
 	const lastSelectedIndexRef = useRef<number>(-1);
 
@@ -150,16 +140,30 @@ export function MediaBrowser({
 			return (
 				<MediaArtwork
 					media={media}
-					className="w-[250px]"
 					aspectRatio="portrait"
-					width={250}
-					height={375}
+					width={posterSize.width}
+					height={posterSize.height}
 					isSelected={selectedMediaIds.has(media.id)}
 					onMediaSelect={handleSelect}
 				/>
 			);
 		},
-		[items, selectedMediaIds, handleSelect],
+		[items, selectedMediaIds, handleSelect, posterSize],
+	);
+
+	const GridItem = useMemo(
+		() =>
+			function GridItemInner({
+				children,
+				...props
+			}: React.HTMLAttributes<HTMLDivElement>) {
+				return (
+					<div {...props} style={{ width: posterSize.width }}>
+						{children}
+					</div>
+				);
+			},
+		[posterSize.width],
 	);
 
 	// Memoize grid components to prevent re-creation
@@ -168,7 +172,7 @@ export function MediaBrowser({
 			List: GridList,
 			Item: GridItem,
 		}),
-		[],
+		[GridItem],
 	);
 
 	return (
