@@ -14,6 +14,8 @@ const electronHandler = {
 	getPlaylists: () => ipcRenderer.invoke(ipcChannels.GET_PLAYLISTS),
 	setMediaLike: (id: string, liked: boolean) =>
 		ipcRenderer.invoke(ipcChannels.SET_MEDIA_LIKE, id, liked),
+	removeFromLibrary: (id: string) =>
+		ipcRenderer.invoke(ipcChannels.REMOVE_FROM_LIBRARY, id),
 	addToPlaylist: (id: string, playlist: string) =>
 		ipcRenderer.invoke(ipcChannels.ADD_TO_PLAYLIST, id, playlist),
 	deletePlaylist: (id: string) =>

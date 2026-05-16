@@ -23,6 +23,7 @@ import {
 	getLibrary,
 	getPlaylists,
 	getSettings,
+	removeFromLibrary,
 	setMediaLike,
 	setSettings,
 } from './store-actions';
@@ -90,6 +91,13 @@ export default {
 			ipcChannels.SET_MEDIA_LIKE,
 			(_event, id: string, liked: boolean) => {
 				setMediaLike(id, liked);
+			},
+		);
+
+		ipcMain.handle(
+			ipcChannels.REMOVE_FROM_LIBRARY,
+			(_event, id: string) => {
+				removeFromLibrary(id);
 			},
 		);
 

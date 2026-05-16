@@ -11,7 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react';
 
-export function DialogContentNewPlaylist({ mediaId }: { mediaId: string }) {
+export function DialogContentNewPlaylist({
+	mediaId,
+	onConfirm,
+}: {
+	mediaId: string;
+	onConfirm?: (playlistName: string) => void;
+}) {
 	const [playlistInput, setPlaylistInput] = React.useState('');
 
 	const handlePlaylistInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +27,11 @@ export function DialogContentNewPlaylist({ mediaId }: { mediaId: string }) {
 	};
 
 	const handleCreatePlaylist = () => {
-		window.electron.addToPlaylist(mediaId, playlistInput);
+		if (onConfirm) {
+			onConfirm(playlistInput);
+		} else {
+			window.electron.addToPlaylist(mediaId, playlistInput);
+		}
 	};
 
 	return (

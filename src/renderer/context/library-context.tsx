@@ -20,6 +20,9 @@ interface LibraryContextType {
 	playlists: CollectionStoreType;
 	playlistsArray: CollectionType;
 	liked: LibraryType;
+	selectedMediaIds: Set<string>;
+	toggleMediaSelection: (id: string, ids?: string[]) => void;
+	clearSelection: () => void;
 }
 
 export const LibraryContext = createContext<LibraryContextType>({
@@ -31,6 +34,9 @@ export const LibraryContext = createContext<LibraryContextType>({
 	playlists: {},
 	playlistsArray: [],
 	liked: [],
+	selectedMediaIds: new Set(),
+	toggleMediaSelection: () => {},
+	clearSelection: () => {},
 });
 
 export function LibraryContextProvider({
@@ -43,6 +49,7 @@ export function LibraryContextProvider({
 	const [playlists, setPlaylists] = useState<CollectionStoreType>({});
 	const [randomLibraryArray, setRandomLibraryArray] = useState<LibraryType>([]);
 	const [shouldShuffle, setShouldShuffle] = useState(false);
+	const [selectedMediaIds, setSelectedMediaIds] = useState<Set<string>>(new Set());
 
 	const libraryArray = useMemo(() => Object.values(library), [library]);
 	const playlistsArray = useMemo(() => Object.values(playlists), [playlists]);
@@ -103,6 +110,25 @@ export function LibraryContextProvider({
 		}
 	}, [shouldShuffle, shuffleLibraryArray]);
 
+	const toggleMediaSelection = useCallback((id: string, rangeIds?: string[]) => {
+		setSelectedMediaIds((prev) => {
+			const next = new Set(prev);
+			if (rangeIds) {
+				// Shift+click range selection
+				rangeIds.forEach((rid) => next.add(rid));
+			} else if (next.has(id)) {
+				next.delete(id);
+			} else {
+				next.add(id);
+			}
+			return next;
+		});
+	}, []);
+
+	const clearSelection = useCallback(() => {
+		setSelectedMediaIds(new Set());
+	}, []);
+
 	const contextValue = useMemo(
 		() => ({
 			library,
@@ -114,6 +140,9 @@ export function LibraryContextProvider({
 			playlists,
 			playlistsArray,
 			liked,
+			selectedMediaIds,
+			toggleMediaSelection,
+			clearSelection,
 		}),
 		[
 			library,
@@ -124,6 +153,9 @@ export function LibraryContextProvider({
 			playlists,
 			playlistsArray,
 			liked,
+			selectedMediaIds,
+			toggleMediaSelection,
+			clearSelection,
 		],
 	);
 
