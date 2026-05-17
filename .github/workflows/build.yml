@@ -30,6 +30,7 @@ jobs:
       - name: Install and build
         run: |
           npm install
+          npx update-browserslist-db@latest --yes
           npm run postinstall
           npm run package:mw
 
@@ -71,6 +72,7 @@ jobs:
       - name: Install and build
         run: |
           npm install
+          npx update-browserslist-db@latest --yes
           npm run postinstall
           npm run package:linux
 
