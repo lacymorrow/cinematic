@@ -329,6 +329,16 @@ export const setMediaLike = (id: string, like: boolean) => {
 	upsertMedia(media);
 };
 
+export const removeFromLibrary = (id: string) => {
+	const library = store.get('library');
+	if (!library[id]) {
+		return;
+	}
+	delete library[id];
+	store.set('library', library);
+	appWasUpdated();
+};
+
 export const getPlaylists = () => {
 	return store.get('playlists');
 };

@@ -32,6 +32,7 @@ const RENDERER_READY = 'renderer-ready';
 const TRIGGER_APP_MENU_ITEM_BY_ID = 'trigger-app-menu-item-by-id';
 
 const SET_MEDIA_LIKE = 'set-media-like';
+const REMOVE_FROM_LIBRARY = 'remove-from-library';
 const ADD_TO_HISTORY = 'add-to-history';
 const ADD_TO_PLAYLIST = 'add-to-playlist';
 const DELETE_PLAYLIST = 'delete-playlist';
@@ -76,6 +77,7 @@ export const ipcChannels = {
 	TRIGGER_APP_MENU_ITEM_BY_ID,
 
 	SET_MEDIA_LIKE,
+	REMOVE_FROM_LIBRARY,
 	ADD_TO_HISTORY,
 	ADD_TO_PLAYLIST,
 	DELETE_PLAYLIST,

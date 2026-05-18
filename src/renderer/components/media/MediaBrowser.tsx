@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Toggle } from '@/renderer/components/ui/toggle';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { DialogContentNewPlaylist } from '@/renderer/components/dialog/DialogContentNewPlaylist';
 import { ViewModeType } from '@/config/settings';
 import { $media, $ui } from '@/config/strings';
 import { DEBOUNCE_DELAY } from '@/renderer/config/config';
@@ -22,10 +24,11 @@ import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
 import { SectionHeader } from '@/renderer/components/ui/SectionHeader';
 import { GridIcon, LikedIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
+import { useLibraryContext } from '@/renderer/context/library-context';
 import { MediaType } from '@/types/file';
 
-import { BookmarkFilledIcon, BookmarkIcon, MagnifyingGlassIcon, Cross2Icon } from '@radix-ui/react-icons';
-import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
+import { BookmarkFilledIcon, BookmarkIcon, CheckIcon, Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VirtuosoGrid, TableVirtuoso } from 'react-virtuoso';
 
@@ -123,12 +126,15 @@ export function MediaBrowser({
 	NotFound = MediaEmptyPlaceholder,
 }: Props) {
 	const { settings, setSettings } = useGlobalContext();
+	const { selectedMediaIds, toggleMediaSelection, clearSelection } = useLibraryContext();
 	const navigate = useNavigate();
 	const [sortKey, setSortKey] = useState<SortKey>('title-asc');
 	const [likedOnly, setLikedOnly] = useState(false);
 	const [searchInput, setSearchInput] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
+	const [playlistDialogMediaId, setPlaylistDialogMediaId] = useState<string | null>(null);
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const lastSelectedIndexRef = useRef<number>(-1);
 
 	useEffect(() => {
 		if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -139,6 +145,17 @@ export function MediaBrowser({
 			if (debounceRef.current) clearTimeout(debounceRef.current);
 		};
 	}, [searchInput]);
+
+	// Clear selection on Escape
+	useEffect(() => {
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape' && selectedMediaIds.size > 0) {
+				clearSelection();
+			}
+		};
+		window.addEventListener('keydown', onKeyDown);
+		return () => window.removeEventListener('keydown', onKeyDown);
+	}, [selectedMediaIds.size, clearSelection]);
 
 	const handleViewChange = (value: string) => {
 		setSettings({
@@ -164,6 +181,58 @@ export function MediaBrowser({
 		return sortItems(result, sortKey);
 	}, [items, searchQuery, likedOnly, sortKey]);
 
+	const handleSelect = useCallback(
+		(id: string, event: React.MouseEvent) => {
+			const index = processedItems.findIndex((m) => m.id === id);
+			if (event.shiftKey && lastSelectedIndexRef.current >= 0) {
+				const start = Math.min(lastSelectedIndexRef.current, index);
+				const end = Math.max(lastSelectedIndexRef.current, index);
+				const rangeIds = processedItems.slice(start, end + 1).map((m) => m.id);
+				toggleMediaSelection(id, rangeIds);
+			} else {
+				toggleMediaSelection(id);
+				lastSelectedIndexRef.current = index;
+			}
+		},
+		[processedItems, toggleMediaSelection],
+	);
+
+	const handleBatchLike = useCallback(() => {
+		selectedMediaIds.forEach((id) => {
+			const media = items.find((m) => m.id === id);
+			if (media) window.electron.setMediaLike(id, !media.liked);
+		});
+	}, [selectedMediaIds, items]);
+
+	const handleBatchAddToPlaylist = useCallback(() => {
+		const firstId = Array.from(selectedMediaIds)[0];
+		if (firstId) setPlaylistDialogMediaId(firstId);
+	}, [selectedMediaIds]);
+
+	const handleBatchRemove = useCallback(() => {
+		selectedMediaIds.forEach((id) => {
+			window.electron.removeFromLibrary(id);
+		});
+		clearSelection();
+	}, [selectedMediaIds, clearSelection]);
+
+	const handleBatchOpen = useCallback(() => {
+		selectedMediaIds.forEach((id) => {
+			const media = items.find((m) => m.id === id);
+			if (media?.filepath) window.electron.openPath(media.filepath);
+		});
+	}, [selectedMediaIds, items]);
+
+	const handleBatchPlaylistConfirm = useCallback(
+		(playlistName: string) => {
+			selectedMediaIds.forEach((id) => {
+				window.electron.addToPlaylist(id, playlistName);
+			});
+			setPlaylistDialogMediaId(null);
+		},
+		[selectedMediaIds],
+	);
+
 	const renderGridItem = useCallback(
 		(index: number) => {
 			const media = processedItems[index];
@@ -175,10 +244,12 @@ export function MediaBrowser({
 					aspectRatio="portrait"
 					width={250}
 					height={375}
+					isSelected={selectedMediaIds.has(media.id)}
+					onMediaSelect={handleSelect}
 				/>
 			);
 		},
-		[processedItems],
+		[processedItems, selectedMediaIds, handleSelect],
 	);
 
 	// Memoize grid components to prevent re-creation
@@ -213,7 +284,7 @@ export function MediaBrowser({
 	const showNoResults = processedItems.length === 0 && (isSearching || likedOnly);
 
 	return (
-		<div className="h-full flex flex-col p-6">
+		<div className="h-full flex flex-col p-6 relative">
 			{items?.length === 0 ? (
 				<>
 					<SectionHeader
@@ -335,6 +406,7 @@ export function MediaBrowser({
 								}}
 								fixedHeaderContent={() => (
 									<TableRow>
+										<TableHead className="w-10" />
 										<TableHead className="w-16"></TableHead>
 										<TableHead>{$media.title}</TableHead>
 										<TableHead>{$media.released}</TableHead>
@@ -347,6 +419,22 @@ export function MediaBrowser({
 								)}
 								itemContent={(_index, media) => (
 									<>
+										<TableCell className="w-10">
+											<button
+												type="button"
+												onClick={(e) => handleSelect(media.id, e)}
+												className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+													selectedMediaIds.has(media.id)
+														? 'bg-primary border-primary'
+														: 'border-muted-foreground hover:border-foreground'
+												}`}
+												aria-label={selectedMediaIds.has(media.id) ? 'Deselect' : 'Select'}
+											>
+												{selectedMediaIds.has(media.id) && (
+													<CheckIcon className="w-3 h-3 text-primary-foreground" />
+												)}
+											</button>
+										</TableCell>
 										<TableCell className="w-16 p-1 pl-4">
 											{media.poster ? (
 												<img
@@ -377,6 +465,64 @@ export function MediaBrowser({
 						)}
 					</TabsContent>
 				</Tabs>
+			)}
+
+			{/* Floating selection toolbar */}
+			{selectedMediaIds.size > 0 && (
+				<div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-popover border shadow-lg text-sm font-medium">
+					<span className="text-muted-foreground pr-2">
+						{selectedMediaIds.size} selected
+					</span>
+					<button
+						type="button"
+						onClick={handleBatchLike}
+						className="px-3 py-1 rounded-full hover:bg-muted transition-colors"
+					>
+						Like
+					</button>
+					<Dialog
+						open={playlistDialogMediaId !== null}
+						onOpenChange={(open) => !open && setPlaylistDialogMediaId(null)}
+					>
+						<DialogTrigger asChild>
+							<button
+								type="button"
+								onClick={handleBatchAddToPlaylist}
+								className="px-3 py-1 rounded-full hover:bg-muted transition-colors"
+							>
+								Add to Playlist
+							</button>
+						</DialogTrigger>
+						{playlistDialogMediaId && (
+							<DialogContentNewPlaylist
+								mediaId={playlistDialogMediaId}
+								onConfirm={handleBatchPlaylistConfirm}
+							/>
+						)}
+					</Dialog>
+					<button
+						type="button"
+						onClick={handleBatchRemove}
+						className="px-3 py-1 rounded-full hover:bg-destructive/10 text-destructive transition-colors"
+					>
+						Remove
+					</button>
+					<button
+						type="button"
+						onClick={handleBatchOpen}
+						className="px-3 py-1 rounded-full hover:bg-muted transition-colors"
+					>
+						Open All
+					</button>
+					<button
+						type="button"
+						onClick={clearSelection}
+						className="ml-1 p-1 rounded-full hover:bg-muted transition-colors text-muted-foreground"
+						aria-label="Clear selection"
+					>
+						<Cross2Icon className="w-4 h-4" />
+					</button>
+				</div>
 			)}
 		</div>
 	);
