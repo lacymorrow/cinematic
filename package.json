@@ -373,5 +373,15 @@
   },
   "optionalDependencies": {
     "dmg-license": "^1.0.11"
-  }
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/lacymorrow"
+    },
+    {
+      "type": "individual",
+      "url": "https://www.buymeacoffee.com/lm"
+    }
+  ]
 }

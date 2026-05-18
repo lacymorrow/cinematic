@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Toggle } from '@/renderer/components/ui/toggle';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { DialogContentNewPlaylist } from '@/renderer/components/dialog/DialogContentNewPlaylist';
-import { ViewModeType } from '@/config/settings';
+import { POSTER_SIZES, ViewModeType } from '@/config/settings';
 import { $media, $ui } from '@/config/strings';
 import { DEBOUNCE_DELAY } from '@/renderer/config/config';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
@@ -50,7 +50,6 @@ type Props = {
 	NotFound?: React.FC;
 };
 
-const CARD_WIDTH = 250;
 const GRID_GAP = 24;
 
 const parseRuntime = (runtime: string | undefined): number => {
@@ -109,15 +108,6 @@ const GridList = React.forwardRef<
 ));
 GridList.displayName = 'GridList';
 
-const GridItem: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
-	children,
-	...props
-}) => (
-	<div {...props} style={{ width: CARD_WIDTH }}>
-		{children}
-	</div>
-);
-
 export function MediaBrowser({
 	items,
 	title,
@@ -128,6 +118,7 @@ export function MediaBrowser({
 	const { settings, setSettings } = useGlobalContext();
 	const { selectedMediaIds, toggleMediaSelection, clearSelection } = useLibraryContext();
 	const navigate = useNavigate();
+	const posterSize = POSTER_SIZES[settings.thumbnailSize] ?? POSTER_SIZES.large;
 	const [sortKey, setSortKey] = useState<SortKey>('title-asc');
 	const [likedOnly, setLikedOnly] = useState(false);
 	const [searchInput, setSearchInput] = useState('');
@@ -240,16 +231,30 @@ export function MediaBrowser({
 			return (
 				<MediaArtwork
 					media={media}
-					className="w-[250px]"
 					aspectRatio="portrait"
-					width={250}
-					height={375}
+					width={posterSize.width}
+					height={posterSize.height}
 					isSelected={selectedMediaIds.has(media.id)}
 					onMediaSelect={handleSelect}
 				/>
 			);
 		},
-		[processedItems, selectedMediaIds, handleSelect],
+		[processedItems, selectedMediaIds, handleSelect, posterSize],
+	);
+
+	const GridItem = useMemo(
+		() =>
+			function GridItemInner({
+				children,
+				...props
+			}: React.HTMLAttributes<HTMLDivElement>) {
+				return (
+					<div {...props} style={{ width: posterSize.width }}>
+						{children}
+					</div>
+				);
+			},
+		[posterSize.width],
 	);
 
 	// Memoize grid components to prevent re-creation
@@ -258,7 +263,7 @@ export function MediaBrowser({
 			List: GridList,
 			Item: GridItem,
 		}),
-		[],
+		[GridItem],
 	);
 
 	// Clickable row component for the list view
