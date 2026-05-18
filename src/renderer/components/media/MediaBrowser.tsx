@@ -11,9 +11,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Toggle } from '@/renderer/components/ui/toggle';
 import { ViewModeType } from '@/config/settings';
 import { $media, $ui } from '@/config/strings';
+import { DEBOUNCE_DELAY } from '@/renderer/config/config';
 import { MediaArtwork } from '@/renderer/components/media/MediaArtwork';
 import { MediaEmptyPlaceholder } from '@/renderer/components/media/MediaEmptyPlaceholder';
 import { ButtonAddMedia } from '@/renderer/components/ui/ButtonAddMedia';
@@ -22,8 +24,8 @@ import { GridIcon, LikedIcon, ListIcon } from '@/renderer/config/icons';
 import { useGlobalContext } from '@/renderer/context/global-context';
 import { MediaType } from '@/types/file';
 
-import { BookmarkFilledIcon, BookmarkIcon } from '@radix-ui/react-icons';
-import React, { useCallback, useMemo, useState } from 'react';
+import { BookmarkFilledIcon, BookmarkIcon, MagnifyingGlassIcon, Cross2Icon } from '@radix-ui/react-icons';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VirtuosoGrid, TableVirtuoso } from 'react-virtuoso';
 
@@ -124,6 +126,19 @@ export function MediaBrowser({
 	const navigate = useNavigate();
 	const [sortKey, setSortKey] = useState<SortKey>('title-asc');
 	const [likedOnly, setLikedOnly] = useState(false);
+	const [searchInput, setSearchInput] = useState('');
+	const [searchQuery, setSearchQuery] = useState('');
+	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	useEffect(() => {
+		if (debounceRef.current) clearTimeout(debounceRef.current);
+		debounceRef.current = setTimeout(() => {
+			setSearchQuery(searchInput);
+		}, DEBOUNCE_DELAY);
+		return () => {
+			if (debounceRef.current) clearTimeout(debounceRef.current);
+		};
+	}, [searchInput]);
 
 	const handleViewChange = (value: string) => {
 		setSettings({
@@ -131,10 +146,23 @@ export function MediaBrowser({
 		});
 	};
 
+	// Search → liked filter → sort pipeline
 	const processedItems = useMemo(() => {
-		const filtered = likedOnly ? items.filter((m) => m.liked) : items;
-		return sortItems(filtered, sortKey);
-	}, [items, sortKey, likedOnly]);
+		let result = items;
+		if (searchQuery.trim()) {
+			const q = searchQuery.toLowerCase();
+			result = result.filter(
+				(m) =>
+					m.title?.toLowerCase().includes(q) ||
+					m.year?.toLowerCase().includes(q) ||
+					m.plot?.toLowerCase().includes(q),
+			);
+		}
+		if (likedOnly) {
+			result = result.filter((m) => m.liked);
+		}
+		return sortItems(result, sortKey);
+	}, [items, searchQuery, likedOnly, sortKey]);
 
 	const renderGridItem = useCallback(
 		(index: number) => {
@@ -181,6 +209,9 @@ export function MediaBrowser({
 		return Row;
 	}, [navigate]);
 
+	const isSearching = searchQuery.trim().length > 0;
+	const showNoResults = processedItems.length === 0 && (isSearching || likedOnly);
+
 	return (
 		<div className="h-full flex flex-col p-6">
 			{items?.length === 0 ? (
@@ -211,6 +242,25 @@ export function MediaBrowser({
 							</TabsTrigger>
 						</TabsList>
 						<div className="flex items-center gap-2 ml-auto">
+							<div className="relative flex items-center">
+								<MagnifyingGlassIcon className="absolute left-2.5 text-muted-foreground h-4 w-4 pointer-events-none" />
+								<Input
+									className="pl-8 pr-8 h-9 w-48 md:w-64"
+									placeholder={$ui.search.placeholder}
+									value={searchInput}
+									onChange={(e) => setSearchInput(e.target.value)}
+								/>
+								{searchInput && (
+									<button
+										type="button"
+										className="absolute right-2 text-muted-foreground hover:text-foreground"
+										onClick={() => setSearchInput('')}
+										aria-label="Clear search"
+									>
+										<Cross2Icon className="h-4 w-4" />
+									</button>
+								)}
+							</div>
 							<Toggle
 								size="sm"
 								pressed={likedOnly}
@@ -242,72 +292,89 @@ export function MediaBrowser({
 							{addMediaButton && <ButtonAddMedia />}
 						</div>
 					</div>
+					{isSearching && (
+						<p className="text-sm text-muted-foreground -mt-4">
+							{$ui.search.resultsCount(processedItems.length, items.length)}
+						</p>
+					)}
 					<SectionHeader title={title} tagline={tagline} />
 
 					<TabsContent
 						value="grid"
 						className="border-none p-0 outline-none flex-1 min-h-0"
 					>
-						<VirtuosoGrid
-							totalCount={processedItems.length}
-							components={gridComponents}
-							itemContent={renderGridItem}
-							overscan={600}
-							style={{ height: '100%' }}
-						/>
+						{showNoResults ? (
+							<p className="text-center text-muted-foreground py-12">
+								{$ui.search.noResults}
+							</p>
+						) : (
+							<VirtuosoGrid
+								totalCount={processedItems.length}
+								components={gridComponents}
+								itemContent={renderGridItem}
+								overscan={600}
+								style={{ height: '100%' }}
+							/>
+						)}
 					</TabsContent>
 					<TabsContent
 						value="list"
 						className="h-full flex-col border-none p-0 data-[state=active]:flex flex-1 min-h-0"
 					>
-						<TableVirtuoso
-							data={processedItems}
-							style={{ height: '100%' }}
-							overscan={200}
-							components={{
-								TableRow: listTableRow as React.ComponentType<any>,
-							}}
-							fixedHeaderContent={() => (
-								<TableRow>
-									<TableHead className="w-16"></TableHead>
-									<TableHead>{$media.title}</TableHead>
-									<TableHead>{$media.released}</TableHead>
-									<TableHead>{$media.runtime}</TableHead>
-									<TableHead>{$media.rating}</TableHead>
-									<TableHead className="w-16 text-right">
-										{$ui.liked.liked}
-									</TableHead>
-								</TableRow>
-							)}
-							itemContent={(_index, media) => (
-								<>
-									<TableCell className="w-16 p-1 pl-4">
-										{media.poster ? (
-											<img
-												src={media.poster}
-												alt={media.title}
-												width={36}
-												height={54}
-												loading="lazy"
-												decoding="async"
-												className="rounded object-cover w-9 h-[54px]"
-											/>
-										) : (
-											<div className="w-9 h-[54px] rounded bg-muted" />
-										)}
-									</TableCell>
-									<TableCell className="font-medium">
-										{media.title || media.prettyFileName}
-									</TableCell>
-									<TableCell>{media.year}</TableCell>
-									<TableCell>{media.runtime}</TableCell>
-									<TableCell>{media.rating}</TableCell>
-									<TableCell className="text-right">
-										{media.liked && <LikedIcon className="ml-auto" />}
-									</TableCell>
-								</>
-							)}
-						/>
+						{showNoResults ? (
+							<p className="text-center text-muted-foreground py-12">
+								{$ui.search.noResults}
+							</p>
+						) : (
+							<TableVirtuoso
+								data={processedItems}
+								style={{ height: '100%' }}
+								overscan={200}
+								components={{
+									TableRow: listTableRow as React.ComponentType<any>,
+								}}
+								fixedHeaderContent={() => (
+									<TableRow>
+										<TableHead className="w-16"></TableHead>
+										<TableHead>{$media.title}</TableHead>
+										<TableHead>{$media.released}</TableHead>
+										<TableHead>{$media.runtime}</TableHead>
+										<TableHead>{$media.rating}</TableHead>
+										<TableHead className="w-16 text-right">
+											{$ui.liked.liked}
+										</TableHead>
+									</TableRow>
+								)}
+								itemContent={(_index, media) => (
+									<>
+										<TableCell className="w-16 p-1 pl-4">
+											{media.poster ? (
+												<img
+													src={media.poster}
+													alt={media.title}
+													width={36}
+													height={54}
+													loading="lazy"
+													decoding="async"
+													className="rounded object-cover w-9 h-[54px]"
+												/>
+											) : (
+												<div className="w-9 h-[54px] rounded bg-muted" />
+											)}
+										</TableCell>
+										<TableCell className="font-medium">
+											{media.title || media.prettyFileName}
+										</TableCell>
+										<TableCell>{media.year}</TableCell>
+										<TableCell>{media.runtime}</TableCell>
+										<TableCell>{media.rating}</TableCell>
+										<TableCell className="text-right">
+											{media.liked && <LikedIcon className="ml-auto" />}
+										</TableCell>
+									</>
+								)}
+							/>
+						)}
 					</TabsContent>
 				</Tabs>
 			)}

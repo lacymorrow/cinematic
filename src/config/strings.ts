@@ -125,6 +125,12 @@ export const $ui = {
 	filter: {
 		likedOnly: 'Liked only',
 	},
+	search: {
+		placeholder: 'Search media...',
+		resultsCount: (count: number, total: number) =>
+			`${count} of ${total} results`,
+		noResults: 'No media matches your search.',
+	},
 };
 
 export const $media = {
