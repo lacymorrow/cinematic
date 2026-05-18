@@ -99,97 +99,107 @@ export function ResizableLayout({
 			onLayout={handleLayoutChange}
 			className="h-full items-stretch"
 		>
-			<ResizablePanel
-				defaultSize={settings.sidebarLayout[0] || defaultLayout[0]}
-				collapsedSize={navCollapsedSize}
-				collapsible
-				minSize={18}
-				maxSize={40}
-				onCollapse={() => handleCollapseExpand(true)}
-				onExpand={() => handleCollapseExpand(false)}
-				className={cn(
-					isCollapsed &&
-						'min-w-[50px] transition-all duration-300 ease-in-out !overflow-auto',
-					'flex flex-col max-w-xs @container z-10',
-				)}
-			>
-				{/* todo: fade out the sidebar */}
-				<ScrollArea className={cn('grow', styles.faded)}>
-					<div className={cn(!isCollapsed && 'p-2 lg:px-4')}>
-						{!isCollapsed && <Header text="Library" />}
-						<Nav isCollapsed={isCollapsed} links={nav} />
+			{settings.showSidebar && (
+				<>
+					<ResizablePanel
+						defaultSize={settings.sidebarLayout[0] || defaultLayout[0]}
+						collapsedSize={navCollapsedSize}
+						collapsible
+						minSize={18}
+						maxSize={40}
+						onCollapse={() => handleCollapseExpand(true)}
+						onExpand={() => handleCollapseExpand(false)}
+						className={cn(
+							isCollapsed &&
+								'min-w-[50px] transition-all duration-300 ease-in-out !overflow-auto',
+							'flex flex-col max-w-xs @container z-10',
+						)}
+					>
+						{/* todo: fade out the sidebar */}
+						<ScrollArea className={cn('grow', styles.faded)}>
+							<div className={cn(!isCollapsed && 'p-2 lg:px-4')}>
+								{!isCollapsed && <Header text="Library" />}
+								<Nav isCollapsed={isCollapsed} links={nav} />
 
-						{settings.visibleSidebarElements?.includes('genres') &&
-							genresArray.length > 0 && (
-								<>
-									{isCollapsed ? <Separator /> : <Header text="Genres" />}
+								{settings.visibleSidebarElements?.includes('genres') &&
+									genresArray.length > 0 && (
+										<>
+											{isCollapsed ? <Separator /> : <Header text="Genres" />}
 
-									<Nav
-										isCollapsed={isCollapsed}
-										links={genresArray.map((genre) => {
-											const genrePath = `/genres/${genre.id}`;
-											return {
-												title: `${genre.name}`,
-												icon: GenresIcon,
-												href: genrePath,
-												label: `${genre.values.length}`,
-												...(pathname === genrePath
-													? { variant: 'default' }
-													: {}),
-											};
-										})}
-									/>
-								</>
-							)}
+											<Nav
+												isCollapsed={isCollapsed}
+												links={genresArray.map((genre) => {
+													const genrePath = `/genres/${genre.id}`;
+													return {
+														title: `${genre.name}`,
+														icon: GenresIcon,
+														href: genrePath,
+														label: `${genre.values.length}`,
+														...(pathname === genrePath
+															? { variant: 'default' }
+															: {}),
+													};
+												})}
+											/>
+										</>
+									)}
 
-						{settings.visibleSidebarElements?.includes('playlists') &&
-							playlistsArray.length > 0 && (
-								<>
-									{isCollapsed ? <Separator /> : <Header text="Playlists" />}
-									<Nav
-										isCollapsed={isCollapsed}
-										links={playlistsArray.map((playlist) => {
-											const playlistPath = `/playlists/${playlist.id}`;
-											return {
-												title: playlist.name,
-												icon: PlaylistIcon,
-												href: playlistPath,
-												label: (
-													<div className="flex items-center gap-2">
-														<span className="transition-transform translate-x-6 group-hover:translate-x-0 group-focus-within:translate-x-0">
-															{playlist.values.length}
-														</span>
-														<DialogDeletePlaylist
-															playlist={playlist}
-															className="w-8 transition-all opacity-0 translate-x-6 group-hover:opacity-90 group-hover:translate-x-0 group-focus-within:opacity-90 group-focus-within:translate-x-0"
-														/>
-													</div>
-												),
-												...(pathname === playlistPath
-													? { variant: 'default' }
-													: {}),
-											};
-										})}
-									/>
-								</>
-							)}
-					</div>
-				</ScrollArea>
-				<div className="shrink-0">
-					<Nav
-						isCollapsed={isCollapsed}
-						links={[
-							{
-								title: 'Settings',
-								icon: SettingsIcon,
-								href: `${pathSettings}/general`,
-								...(pathname === pathSettings ? { variant: 'default' } : {}),
-							},
-						]}
-					/>
-				</div>
-			</ResizablePanel>
-			<ResizableHandle withHandle />
+								{settings.visibleSidebarElements?.includes('playlists') &&
+									playlistsArray.length > 0 && (
+										<>
+											{isCollapsed ? (
+												<Separator />
+											) : (
+												<Header text="Playlists" />
+											)}
+											<Nav
+												isCollapsed={isCollapsed}
+												links={playlistsArray.map((playlist) => {
+													const playlistPath = `/playlists/${playlist.id}`;
+													return {
+														title: playlist.name,
+														icon: PlaylistIcon,
+														href: playlistPath,
+														label: (
+															<div className="flex items-center gap-2">
+																<span className="transition-transform translate-x-6 group-hover:translate-x-0 group-focus-within:translate-x-0">
+																	{playlist.values.length}
+																</span>
+																<DialogDeletePlaylist
+																	playlist={playlist}
+																	className="w-8 transition-all opacity-0 translate-x-6 group-hover:opacity-90 group-hover:translate-x-0 group-focus-within:opacity-90 group-focus-within:translate-x-0"
+																/>
+															</div>
+														),
+														...(pathname === playlistPath
+															? { variant: 'default' }
+															: {}),
+													};
+												})}
+											/>
+										</>
+									)}
+							</div>
+						</ScrollArea>
+						<div className="shrink-0">
+							<Nav
+								isCollapsed={isCollapsed}
+								links={[
+									{
+										title: 'Settings',
+										icon: SettingsIcon,
+										href: `${pathSettings}/general`,
+										...(pathname === pathSettings
+											? { variant: 'default' }
+											: {}),
+									},
+								]}
+							/>
+						</div>
+					</ResizablePanel>
+					<ResizableHandle withHandle />
+				</>
+			)}
 			<ResizablePanel
 				defaultSize={settings.sidebarLayout[1] || defaultLayout[1]}
 				minSize={30}
