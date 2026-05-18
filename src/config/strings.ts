@@ -111,6 +111,20 @@ export const $ui = {
 		grid: 'Grid',
 		list: 'List',
 	},
+	sort: {
+		label: 'Sort',
+		titleAsc: 'Title (A–Z)',
+		titleDesc: 'Title (Z–A)',
+		yearDesc: 'Year (Newest)',
+		yearAsc: 'Year (Oldest)',
+		runtimeDesc: 'Runtime (Longest)',
+		runtimeAsc: 'Runtime (Shortest)',
+		dateAddedDesc: 'Date Added (Newest)',
+		dateAddedAsc: 'Date Added (Oldest)',
+	},
+	filter: {
+		likedOnly: 'Liked only',
+	},
 };
 
 export const $media = {
