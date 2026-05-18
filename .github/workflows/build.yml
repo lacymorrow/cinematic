@@ -30,7 +30,7 @@ jobs:
       - name: Install and build
         run: |
           npm install
-          npm install caniuse-lite@latest
+          npm install browserslist@latest caniuse-lite@latest electron-to-chromium@latest
           npm run postinstall
           npm run package:mw
 
@@ -72,7 +72,7 @@ jobs:
       - name: Install and build
         run: |
           npm install
-          npm install caniuse-lite@latest
+          npm install browserslist@latest caniuse-lite@latest electron-to-chromium@latest
           npm run postinstall
           npm run package:linux
 
