@@ -73,19 +73,23 @@ export function MediaArtwork({
 		if (onMediaSelect) onMediaSelect(media.id, e);
 	};
 
-	const handleLinkClick = (e: React.MouseEvent) => {
-		if ((e.ctrlKey || e.metaKey || e.shiftKey) && onMediaSelect) {
-			e.preventDefault();
-			onMediaSelect(media.id, e);
-		}
+	const { onClick: onClickProp, ...divProps } = props;
+
+	const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		onClickProp?.(e);
+		handleClick(e);
 	};
 
 	return (
-		<div className={cn('relative group/artwork', className)} {...props} onClick={handleClick}>
+		<div
+			className={cn('relative group/artwork', className)}
+			{...divProps}
+			onClick={handleWrapperClick}
+		>
 			<Dialog>
 				<ContextMenu>
 					<ContextMenuTrigger>
-						<Link to={url} className="group" draggable={false} onClick={handleLinkClick}>
+						<Link to={url} className="group" draggable={false}>
 							<div className="overflow-hidden rounded-md relative">
 								{media.poster ? (
 									<img
