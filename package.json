@@ -102,9 +102,6 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy"
     },
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
-    ],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
       "url": "http://localhost/"
@@ -212,7 +209,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electronmon": "^2.0.3",
     "tsx": "^4.19.3",
-    "eslint": "^9.10.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-erb": "^4.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",

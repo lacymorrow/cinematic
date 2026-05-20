@@ -2,7 +2,6 @@
 import {
 	BrowserWindow,
 	BrowserWindowConstructorOptions,
-	IpcMainEvent,
 	app,
 	shell,
 } from 'electron';
@@ -74,8 +73,8 @@ const createWindow = (opts?: BrowserWindowConstructorOptions) => {
 
 	const browserWindow = new BrowserWindow(options);
 
-	browserWindow.on('unresponsive', (event: IpcMainEvent) => {
-		Logger.error(`Window unresponsive: ${event.sender}`);
+	browserWindow.on('unresponsive', () => {
+		Logger.error(`Window unresponsive: ${browserWindow.id}`);
 	});
 
 	browserWindow.webContents.on('did-fail-load', (event: any) => {

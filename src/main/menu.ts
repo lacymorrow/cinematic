@@ -91,7 +91,7 @@ export default class MenuBuilder {
 				label: 'Quit on Close',
 				type: 'checkbox',
 				id: 'quitOnWindowClose',
-				checked: getSetting('quitOnWindowClose'),
+				checked: getSetting('quitOnWindowClose') as boolean,
 				click: () => {
 					setSettings({
 						quitOnWindowClose: !getSetting('quitOnWindowClose'),
@@ -331,7 +331,7 @@ export default class MenuBuilder {
 									accelerator: 'Ctrl+\\',
 									type: 'checkbox',
 									checked: getSetting('showSidebar') as boolean,
-									click: (menuItem) => {
+									click: (menuItem: Electron.MenuItem) => {
 										setSettings({ showSidebar: menuItem.checked });
 									},
 									id: 'toggleSidebar',
@@ -362,7 +362,7 @@ export default class MenuBuilder {
 									accelerator: 'Ctrl+\\',
 									type: 'checkbox',
 									checked: getSetting('showSidebar') as boolean,
-									click: (menuItem) => {
+									click: (menuItem: Electron.MenuItem) => {
 										setSettings({ showSidebar: menuItem.checked });
 									},
 									id: 'toggleSidebar',
@@ -391,6 +391,6 @@ export default class MenuBuilder {
 export const setupDockMenu = () => {
 	if (!is.macos) return;
 	const dockMenu = Menu.buildFromTemplate([aboutMenuItem, quitMenuItem]);
-	app.dock.setMenu(dockMenu);
+	app.dock?.setMenu(dockMenu);
 	dock.initialize();
 };

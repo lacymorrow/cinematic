@@ -106,7 +106,7 @@ export function DisplayForm() {
 																		field.value?.filter(
 																			(value) => value !== item.id,
 																		),
-																  );
+																	);
 														}}
 													/>
 												</FormControl>
@@ -154,7 +154,7 @@ export function DisplayForm() {
 																		field.value?.filter(
 																			(value) => value !== item.id,
 																		),
-																  );
+																	);
 														}}
 													/>
 												</FormControl>

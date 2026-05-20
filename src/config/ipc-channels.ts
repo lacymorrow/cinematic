@@ -7,6 +7,7 @@ const LIBRARY_UPDATED = 'library-updated';
 const SETTINGS_UPDATED = 'settings-updated';
 const APP_STATUS_MESSAGE = 'app-status-message'; // for the renderer to display status messages
 const APP_NOTIFICATION = 'app-notification'; // to display a notification using the OS notification system
+const APP_UPDATED = 'app-updated'; // duplicated in src/main/keyboard.ts to avoid circular imports
 const WINDOW_MAXIMIZED_CHANGE = 'window-maximized-change';
 
 const PRELOAD_SOUNDS = 'preload-sounds';

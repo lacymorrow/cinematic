@@ -5,7 +5,7 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { ipcChannels } from '../config/ipc-channels';
 import { SettingsType } from '../config/settings';
 
-const channels = Object.values(ipcChannels);
+const channels: readonly string[] = Object.values(ipcChannels);
 
 const electronHandler = {
 	isMac: process.platform === 'darwin',
@@ -40,8 +40,7 @@ const electronHandler = {
 	windowMinimize: () => ipcRenderer.send(ipcChannels.WINDOW_MINIMIZE),
 	windowMaximize: () => ipcRenderer.send(ipcChannels.WINDOW_MAXIMIZE),
 	windowClose: () => ipcRenderer.send(ipcChannels.WINDOW_CLOSE),
-	windowIsMaximized: () =>
-		ipcRenderer.invoke(ipcChannels.WINDOW_IS_MAXIMIZED),
+	windowIsMaximized: () => ipcRenderer.invoke(ipcChannels.WINDOW_IS_MAXIMIZED),
 	ipcRenderer: {
 		invoke(channel: string, ...args: unknown[]) {
 			if (!channels.includes(channel)) {
@@ -67,11 +66,19 @@ const electronHandler = {
 				ipcRenderer.removeListener(channel, subscription);
 			};
 		},
-		once(channel: string, func: (...args: unknown[]) => void) {
+		once(
+			channel: string,
+			func: (...args: unknown[]) => void,
+		): (() => void) | undefined {
 			if (!channels.includes(channel)) {
-				return;
+				return undefined;
 			}
-			ipcRenderer.once(channel, (_event, ...args) => func(...args));
+			const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+				func(...args);
+			ipcRenderer.once(channel, subscription);
+			return () => {
+				ipcRenderer.removeListener(channel, subscription);
+			};
 		},
 		removeAllListeners(channel: string) {
 			ipcRenderer.removeAllListeners(channel);

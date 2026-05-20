@@ -6,7 +6,7 @@ import {
 	ArrowLeftIcon,
 	CalendarIcon,
 	ClockIcon,
-	IdCardIcon
+	IdCardIcon,
 } from '@radix-ui/react-icons';
 import Logger from 'electron-log/renderer';
 import { useEffect } from 'react';
@@ -15,7 +15,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import RatingsRotator, { Rating } from '@/renderer/components/media/RatingsRotator';
+import RatingsRotator, {
+	Rating,
+} from '@/renderer/components/media/RatingsRotator';
 import TrailerRotator from '@/renderer/components/media/TrailerRotator';
 import { useLibraryContext } from '@/renderer/context/library-context';
 import styles from '@/renderer/styles/effects.module.scss';
@@ -110,21 +112,33 @@ export function Media(_props: Props) {
 	const backgroundImage = <img src={backdrop} alt={title} className="w-full" />;
 
 	const starRatings: Rating[] = [
-		...(omdb?.imdbrating ? [{
-			name: 'IMDB',
-			score: parseFloat(omdb.imdbrating),
-			votes: omdb?.imdbvotes ? parseInt(omdb.imdbvotes) : undefined,
-		}] : []),
-		...(omdb?.metascore ? [{
-			name: 'Metascore',
-			score: parseFloat(omdb.metascore),
-		}] : []),
-		...(tmdb?.vote_average ? [{
-			name: 'TMDB',
-			score: tmdb?.vote_average,
-			votes: tmdb?.vote_count,
-		}] : [])
-	]
+		...(omdb?.imdbrating
+			? [
+					{
+						name: 'IMDB',
+						score: parseFloat(omdb.imdbrating),
+						votes: omdb?.imdbvotes ? parseInt(omdb.imdbvotes) : undefined,
+					},
+				]
+			: []),
+		...(omdb?.metascore
+			? [
+					{
+						name: 'Metascore',
+						score: parseFloat(omdb.metascore),
+					},
+				]
+			: []),
+		...(tmdb?.vote_average
+			? [
+					{
+						name: 'TMDB',
+						score: tmdb?.vote_average,
+						votes: tmdb?.vote_count,
+					},
+				]
+			: []),
+	];
 
 	// Extract trailer video IDs from rest.trailers
 	const trailerVideoIds: string[] = Array.isArray(rest.trailers)
@@ -197,7 +211,6 @@ export function Media(_props: Props) {
 											<RatingsRotator ratings={starRatings} />
 										</div>
 									)}
-
 								</div>
 								<div className="flex flex-col gap-4 mt-6">
 									<Button size="lg" onClick={handlePlay}>
@@ -205,13 +218,27 @@ export function Media(_props: Props) {
 									</Button>
 									<div className="flex gap-4">
 										{trailer && (
-											<Button className="flex-1" size="lg" variant="outline" onClick={() => handleUrl(trailerUrl)}>
-											Watch Trailer
-										</Button>
-									)}
-									{omdb?.imdbid && (
-											<Button className={trailer ? "" : "flex-1"} size="lg" variant="outline" onClick={() => handleUrl(`https://www.imdb.com/title/${omdb?.imdbid}`)}>
-											<Link2Icon className="mr-2 h-4 w-4" /> IMDB
+											<Button
+												className="flex-1"
+												size="lg"
+												variant="outline"
+												onClick={() => handleUrl(trailerUrl)}
+											>
+												Watch Trailer
+											</Button>
+										)}
+										{omdb?.imdbid && (
+											<Button
+												className={trailer ? '' : 'flex-1'}
+												size="lg"
+												variant="outline"
+												onClick={() =>
+													handleUrl(
+														`https://www.imdb.com/title/${omdb?.imdbid}`,
+													)
+												}
+											>
+												<Link2Icon className="mr-2 h-4 w-4" /> IMDB
 											</Button>
 										)}
 									</div>
@@ -224,33 +251,31 @@ export function Media(_props: Props) {
 				<div className="container flex flex-col gap-6 pb-12">
 					<Separator />
 
-
 					{/* Trailer Rotator */}
-					{trailerVideoIds.length > 0 && (<>
-						<div className="container max-w-screen-sm mx-auto py-6">
-							<TrailerRotator videoIds={trailerVideoIds} />
-						</div>
-						<Separator />
-					</>
+					{trailerVideoIds.length > 0 && (
+						<>
+							<div className="container max-w-screen-sm mx-auto py-6">
+								<TrailerRotator videoIds={trailerVideoIds} />
+							</div>
+							<Separator />
+						</>
 					)}
 
 					{tmdb?.overview && plot && (
 						<>
 							<section className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4">
-								<div className='md:flex-1'>
+								<div className="md:flex-1">
 									<h2 className="text-2xl font-bold tracking-tighter">Plot</h2>
 									<div className="mt-4 text-muted-foreground">
 										<p>{tmdb?.overview}</p>
 									</div>
 								</div>
-
-
 							</section>
 							<Separator />
 						</>
 					)}
 
-					<div className='flex flex-col md:flex-row flex-wrap justify-between gap-6'>
+					<div className="flex flex-col md:flex-row flex-wrap justify-between gap-6">
 						<div className="flex flex-col gap-4 md:flex-1">
 							<div className="flex flex-wrap gap-4">
 								{omdb?.actors && (
@@ -260,8 +285,6 @@ export function Media(_props: Props) {
 									/>
 								)}
 
-
-
 								{writer && (
 									<InfoBlock
 										title={`Writer${writer.length > 1 ? 's' : ''}`}
@@ -269,17 +292,16 @@ export function Media(_props: Props) {
 									/>
 								)}
 
-
-
 								{omdb?.awards && (
 									<InfoBlock title="Awards" value={omdb?.awards} />
 								)}
 
-								{omdb?.dvd && <InfoBlock title="DVD Release" value={omdb?.dvd} />}
+								{omdb?.dvd && (
+									<InfoBlock title="DVD Release" value={omdb?.dvd} />
+								)}
 								{omdb?.production && (
 									<InfoBlock title="Production" value={omdb?.production} />
 								)}
-
 
 								{omdb?.website && (
 									<InfoBlock title="Website" value={omdb?.website} />
@@ -288,11 +310,13 @@ export function Media(_props: Props) {
 						</div>
 
 						<div className="relative">
-							<Separator orientation="vertical" className="absolute inset-0 h-full" />
+							<Separator
+								orientation="vertical"
+								className="absolute inset-0 h-full"
+							/>
 						</div>
 
 						<div className="flex flex-col gap-4">
-
 							{omdb?.country && (
 								<InfoBlock title="Country" value={omdb?.country} />
 							)}
@@ -302,16 +326,16 @@ export function Media(_props: Props) {
 							{tmdb?.popularity && (
 								<InfoBlock title="Popularity" value={tmdb?.popularity} />
 							)}
-
-
 						</div>
 
 						<div className="relative">
-							<Separator orientation="vertical" className="absolute inset-0 h-full" />
+							<Separator
+								orientation="vertical"
+								className="absolute inset-0 h-full"
+							/>
 						</div>
 
 						<div className="flex flex-col gap-4  md:flex-1">
-
 							{omdb?.director && (
 								<InfoBlock
 									title="Directed By"
@@ -324,8 +348,6 @@ export function Media(_props: Props) {
 							{omdb?.boxoffice && (
 								<InfoBlock title="Box Office" value={omdb?.boxoffice} />
 							)}
-
-
 						</div>
 					</div>
 				</div>

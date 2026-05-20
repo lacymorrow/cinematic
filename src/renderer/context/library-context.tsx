@@ -49,7 +49,9 @@ export function LibraryContextProvider({
 	const [playlists, setPlaylists] = useState<CollectionStoreType>({});
 	const [randomLibraryArray, setRandomLibraryArray] = useState<LibraryType>([]);
 	const [shouldShuffle, setShouldShuffle] = useState(false);
-	const [selectedMediaIds, setSelectedMediaIds] = useState<Set<string>>(new Set());
+	const [selectedMediaIds, setSelectedMediaIds] = useState<Set<string>>(
+		new Set(),
+	);
 
 	const libraryArray = useMemo(() => Object.values(library), [library]);
 	const playlistsArray = useMemo(() => Object.values(playlists), [playlists]);
@@ -60,10 +62,18 @@ export function LibraryContextProvider({
 	);
 
 	useEffect(() => {
+		let isMounted = true;
+
 		const synchronizeLibrary = async () => {
-			setLibrary(await window.electron.getLibrary());
-			setGenres(await window.electron.getGenres());
-			setPlaylists(await window.electron.getPlaylists());
+			const [library, genres, playlists] = await Promise.all([
+				window.electron.getLibrary(),
+				window.electron.getGenres(),
+				window.electron.getPlaylists(),
+			]);
+			if (!isMounted) return;
+			setLibrary(library);
+			setGenres(genres);
+			setPlaylists(playlists);
 		};
 
 		// Listen for library updates from the main process
@@ -75,6 +85,7 @@ export function LibraryContextProvider({
 		synchronizeLibrary();
 
 		return () => {
+			isMounted = false;
 			window.electron.ipcRenderer.removeAllListeners(
 				ipcChannels.LIBRARY_UPDATED,
 			);
@@ -110,20 +121,23 @@ export function LibraryContextProvider({
 		}
 	}, [shouldShuffle, shuffleLibraryArray]);
 
-	const toggleMediaSelection = useCallback((id: string, rangeIds?: string[]) => {
-		setSelectedMediaIds((prev) => {
-			const next = new Set(prev);
-			if (rangeIds) {
-				// Shift+click range selection
-				rangeIds.forEach((rid) => next.add(rid));
-			} else if (next.has(id)) {
-				next.delete(id);
-			} else {
-				next.add(id);
-			}
-			return next;
-		});
-	}, []);
+	const toggleMediaSelection = useCallback(
+		(id: string, rangeIds?: string[]) => {
+			setSelectedMediaIds((prev) => {
+				const next = new Set(prev);
+				if (rangeIds) {
+					// Shift+click range selection
+					rangeIds.forEach((rid) => next.add(rid));
+				} else if (next.has(id)) {
+					next.delete(id);
+				} else {
+					next.add(id);
+				}
+				return next;
+			});
+		},
+		[],
+	);
 
 	const clearSelection = useCallback(() => {
 		setSelectedMediaIds(new Set());

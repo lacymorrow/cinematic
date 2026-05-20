@@ -1,8 +1,4 @@
-import {
-	TableCell,
-	TableHead,
-	TableRow,
-} from '@/components/ui/table';
+import { TableCell, TableHead, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
 	Select,
@@ -27,8 +23,20 @@ import { useGlobalContext } from '@/renderer/context/global-context';
 import { useLibraryContext } from '@/renderer/context/library-context';
 import { MediaType } from '@/types/file';
 
-import { BookmarkFilledIcon, BookmarkIcon, CheckIcon, Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+	BookmarkFilledIcon,
+	BookmarkIcon,
+	CheckIcon,
+	Cross2Icon,
+	MagnifyingGlassIcon,
+} from '@radix-ui/react-icons';
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VirtuosoGrid, TableVirtuoso } from 'react-virtuoso';
 
@@ -116,14 +124,17 @@ export function MediaBrowser({
 	NotFound = MediaEmptyPlaceholder,
 }: Props) {
 	const { settings, setSettings } = useGlobalContext();
-	const { selectedMediaIds, toggleMediaSelection, clearSelection } = useLibraryContext();
+	const { selectedMediaIds, toggleMediaSelection, clearSelection } =
+		useLibraryContext();
 	const navigate = useNavigate();
 	const posterSize = POSTER_SIZES[settings.thumbnailSize] ?? POSTER_SIZES.large;
 	const [sortKey, setSortKey] = useState<SortKey>('title-asc');
 	const [likedOnly, setLikedOnly] = useState(false);
 	const [searchInput, setSearchInput] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
-	const [playlistDialogMediaId, setPlaylistDialogMediaId] = useState<string | null>(null);
+	const [playlistDialogMediaId, setPlaylistDialogMediaId] = useState<
+		string | null
+	>(null);
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const lastSelectedIndexRef = useRef<number>(-1);
 
@@ -268,25 +279,28 @@ export function MediaBrowser({
 
 	// Clickable row component for the list view
 	const listTableRow = useMemo(() => {
-		const Row = ({
+		function Row({
 			item,
 			...props
 		}: {
 			item?: MediaType;
 			[key: string]: unknown;
-		}) => (
-			<TableRow
-				{...(props as React.HTMLAttributes<HTMLTableRowElement>)}
-				className="cursor-pointer"
-				onClick={() => item && navigate(`/media/${item.id}`)}
-			/>
-		);
+		}) {
+			return (
+				<TableRow
+					{...(props as React.HTMLAttributes<HTMLTableRowElement>)}
+					className="cursor-pointer"
+					onClick={() => item && navigate(`/media/${item.id}`)}
+				/>
+			);
+		}
 		Row.displayName = 'ListTableRow';
 		return Row;
 	}, [navigate]);
 
 	const isSearching = searchQuery.trim().length > 0;
-	const showNoResults = processedItems.length === 0 && (isSearching || likedOnly);
+	const showNoResults =
+		processedItems.length === 0 && (isSearching || likedOnly);
 
 	return (
 		<div className="h-full flex flex-col p-6 relative">
@@ -350,19 +364,32 @@ export function MediaBrowser({
 									<BookmarkIcon className="h-4 w-4" />
 								)}
 							</Toggle>
-							<Select value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
+							<Select
+								value={sortKey}
+								onValueChange={(v) => setSortKey(v as SortKey)}
+							>
 								<SelectTrigger className="h-9 w-44 text-sm">
 									<SelectValue placeholder={$ui.sort.label} />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="title-asc">{$ui.sort.titleAsc}</SelectItem>
-									<SelectItem value="title-desc">{$ui.sort.titleDesc}</SelectItem>
+									<SelectItem value="title-desc">
+										{$ui.sort.titleDesc}
+									</SelectItem>
 									<SelectItem value="year-desc">{$ui.sort.yearDesc}</SelectItem>
 									<SelectItem value="year-asc">{$ui.sort.yearAsc}</SelectItem>
-									<SelectItem value="runtime-desc">{$ui.sort.runtimeDesc}</SelectItem>
-									<SelectItem value="runtime-asc">{$ui.sort.runtimeAsc}</SelectItem>
-									<SelectItem value="date-added-desc">{$ui.sort.dateAddedDesc}</SelectItem>
-									<SelectItem value="date-added-asc">{$ui.sort.dateAddedAsc}</SelectItem>
+									<SelectItem value="runtime-desc">
+										{$ui.sort.runtimeDesc}
+									</SelectItem>
+									<SelectItem value="runtime-asc">
+										{$ui.sort.runtimeAsc}
+									</SelectItem>
+									<SelectItem value="date-added-desc">
+										{$ui.sort.dateAddedDesc}
+									</SelectItem>
+									<SelectItem value="date-added-asc">
+										{$ui.sort.dateAddedAsc}
+									</SelectItem>
 								</SelectContent>
 							</Select>
 							{addMediaButton && <ButtonAddMedia />}
@@ -412,7 +439,7 @@ export function MediaBrowser({
 								fixedHeaderContent={() => (
 									<TableRow>
 										<TableHead className="w-10" />
-										<TableHead className="w-16"></TableHead>
+										<TableHead className="w-16" />
 										<TableHead>{$media.title}</TableHead>
 										<TableHead>{$media.released}</TableHead>
 										<TableHead>{$media.runtime}</TableHead>
@@ -433,7 +460,9 @@ export function MediaBrowser({
 														? 'bg-primary border-primary'
 														: 'border-muted-foreground hover:border-foreground'
 												}`}
-												aria-label={selectedMediaIds.has(media.id) ? 'Deselect' : 'Select'}
+												aria-label={
+													selectedMediaIds.has(media.id) ? 'Deselect' : 'Select'
+												}
 											>
 												{selectedMediaIds.has(media.id) && (
 													<CheckIcon className="w-3 h-3 text-primary-foreground" />

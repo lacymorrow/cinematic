@@ -81,11 +81,20 @@ export function MediaArtwork({
 	};
 
 	return (
-		<div className={cn('relative group/artwork', className)} {...props} onClick={handleClick}>
+		<div
+			className={cn('relative group/artwork', className)}
+			{...props}
+			onClick={handleClick}
+		>
 			<Dialog>
 				<ContextMenu>
 					<ContextMenuTrigger>
-						<Link to={url} className="group" draggable={false} onClick={handleLinkClick}>
+						<Link
+							to={url}
+							className="group"
+							draggable={false}
+							onClick={handleLinkClick}
+						>
 							<div className="overflow-hidden rounded-md relative">
 								{media.poster ? (
 									<img
@@ -126,7 +135,9 @@ export function MediaArtwork({
 										)}
 										aria-label={isSelected ? 'Deselect' : 'Select'}
 									>
-										{isSelected && <CheckIcon className="w-3 h-3 text-primary-foreground" />}
+										{isSelected && (
+											<CheckIcon className="w-3 h-3 text-primary-foreground" />
+										)}
 									</button>
 								)}
 							</div>
