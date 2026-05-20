@@ -106,8 +106,8 @@ export function MediaArtwork({
 									/>
 								) : (
 									<MoviePlaceholder
+										style={{ width }}
 										className={cn(
-											`w-[${width}px]`,
 											aspectRatio === 'portrait' ? 'h-[375px]' : 'h-[150px]',
 											isSelected && 'ring-2 ring-primary ring-offset-2',
 										)}
@@ -168,7 +168,13 @@ export function MediaArtwork({
 									<>
 										<ContextMenuSeparator />
 										{playlistsArray.map((playlist) => (
-											<ContextMenuItem key={playlist.id} className="flex gap-2">
+											<ContextMenuItem
+												key={playlist.id}
+												className="flex gap-2"
+												onClick={() =>
+													window.electron.addToPlaylist(media.id, playlist.name)
+												}
+											>
 												<PlaylistIcon />
 												{playlist.name}
 											</ContextMenuItem>
