@@ -73,29 +73,23 @@ export function MediaArtwork({
 		if (onMediaSelect) onMediaSelect(media.id, e);
 	};
 
-	const handleLinkClick = (e: React.MouseEvent) => {
-		if ((e.ctrlKey || e.metaKey || e.shiftKey) && onMediaSelect) {
-			e.preventDefault();
-			onMediaSelect(media.id, e);
-		}
+	const { onClick: onClickProp, ...divProps } = props;
+
+	const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		onClickProp?.(e);
+		handleClick(e);
 	};
 
 	return (
-		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- wrapping element is decorative; keyboard activation lives on the inner <Link>.
 		<div
 			className={cn('relative group/artwork', className)}
-			{...props}
-			onClick={handleClick}
+			{...divProps}
+			onClick={handleWrapperClick}
 		>
 			<Dialog>
 				<ContextMenu>
 					<ContextMenuTrigger>
-						<Link
-							to={url}
-							className="group"
-							draggable={false}
-							onClick={handleLinkClick}
-						>
+						<Link to={url} className="group" draggable={false}>
 							<div className="overflow-hidden rounded-md relative">
 								{media.poster ? (
 									<img
@@ -116,8 +110,8 @@ export function MediaArtwork({
 									/>
 								) : (
 									<MoviePlaceholder
-										style={{ width }}
 										className={cn(
+											`w-[${width}px]`,
 											aspectRatio === 'portrait' ? 'h-[375px]' : 'h-[150px]',
 											isSelected && 'ring-2 ring-primary ring-offset-2',
 										)}
@@ -136,9 +130,7 @@ export function MediaArtwork({
 										)}
 										aria-label={isSelected ? 'Deselect' : 'Select'}
 									>
-										{isSelected && (
-											<CheckIcon className="w-3 h-3 text-primary-foreground" />
-										)}
+										{isSelected && <CheckIcon className="w-3 h-3 text-primary-foreground" />}
 									</button>
 								)}
 							</div>
@@ -180,13 +172,7 @@ export function MediaArtwork({
 									<>
 										<ContextMenuSeparator />
 										{playlistsArray.map((playlist) => (
-											<ContextMenuItem
-												key={playlist.id}
-												className="flex gap-2"
-												onClick={() =>
-													window.electron.addToPlaylist(media.id, playlist.name)
-												}
-											>
+											<ContextMenuItem key={playlist.id} className="flex gap-2">
 												<PlaylistIcon />
 												{playlist.name}
 											</ContextMenuItem>
