@@ -73,8 +73,19 @@ export function MediaArtwork({
 		if (onMediaSelect) onMediaSelect(media.id, e);
 	};
 
+	const { onClick: onClickProp, ...divProps } = props;
+
+	const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		onClickProp?.(e);
+		handleClick(e);
+	};
+
 	return (
-		<div className={cn('relative group/artwork', className)} {...props} onClick={handleClick}>
+		<div
+			className={cn('relative group/artwork', className)}
+			{...divProps}
+			onClick={handleWrapperClick}
+		>
 			<Dialog>
 				<ContextMenu>
 					<ContextMenuTrigger>
