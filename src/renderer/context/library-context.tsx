@@ -65,15 +65,15 @@ export function LibraryContextProvider({
 		let isMounted = true;
 
 		const synchronizeLibrary = async () => {
-			const [library, genres, playlists] = await Promise.all([
+			const [nextLibrary, nextGenres, nextPlaylists] = await Promise.all([
 				window.electron.getLibrary(),
 				window.electron.getGenres(),
 				window.electron.getPlaylists(),
 			]);
 			if (!isMounted) return;
-			setLibrary(library);
-			setGenres(genres);
-			setPlaylists(playlists);
+			setLibrary(nextLibrary);
+			setGenres(nextGenres);
+			setPlaylists(nextPlaylists);
 		};
 
 		// Listen for library updates from the main process

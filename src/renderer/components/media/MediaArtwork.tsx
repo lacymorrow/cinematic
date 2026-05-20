@@ -81,6 +81,7 @@ export function MediaArtwork({
 	};
 
 	return (
+		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- wrapping element is decorative; keyboard activation lives on the inner <Link>.
 		<div
 			className={cn('relative group/artwork', className)}
 			{...props}

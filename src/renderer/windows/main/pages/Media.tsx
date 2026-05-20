@@ -117,7 +117,7 @@ export function Media(_props: Props) {
 					{
 						name: 'IMDB',
 						score: parseFloat(omdb.imdbrating),
-						votes: omdb?.imdbvotes ? parseInt(omdb.imdbvotes) : undefined,
+						votes: omdb?.imdbvotes ? parseInt(omdb.imdbvotes, 10) : undefined,
 					},
 				]
 			: []),
@@ -141,11 +141,12 @@ export function Media(_props: Props) {
 	];
 
 	// Extract trailer video IDs from rest.trailers
-	const trailerVideoIds: string[] = Array.isArray(rest.trailers)
-		? rest.trailers
-		: rest.trailers
-			? [rest.trailers]
-			: [];
+	let trailerVideoIds: string[] = [];
+	if (Array.isArray(rest.trailers)) {
+		trailerVideoIds = rest.trailers;
+	} else if (rest.trailers) {
+		trailerVideoIds = [rest.trailers];
+	}
 
 	const writer = omdb?.writer ? Object.values(omdb.writer) : [];
 

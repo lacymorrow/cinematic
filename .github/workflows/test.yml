@@ -24,14 +24,13 @@ jobs:
         run: |
           npm install
 
-      - name: npm test
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm exec tsc -- --noEmit
+
+      - name: Test
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # TODO: re-enable lint once eslint-config-erb is updated for ESLint 9
-          # npm run lint
-          # TODO: re-enable tsc once pre-existing type errors are resolved (missing @types, dock undefined, ipc-channels shorthand)
-          # npm exec tsc
-          # TODO: re-enable tests once jest setupFile check-build-exists can run (requires npm run build:main + build:renderer first)
-          # npm test
-          echo "CI setup complete - full validation requires webpack build step"
+        run: npm test

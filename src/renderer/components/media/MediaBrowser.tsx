@@ -255,6 +255,7 @@ export function MediaBrowser({
 
 	const GridItem = useMemo(
 		() =>
+			// eslint-disable-next-line react/no-unstable-nested-components -- component identity is stabilized via useMemo on the relevant dep.
 			function GridItemInner({
 				children,
 				...props
@@ -279,6 +280,7 @@ export function MediaBrowser({
 
 	// Clickable row component for the list view
 	const listTableRow = useMemo(() => {
+		// eslint-disable-next-line react/no-unstable-nested-components -- component identity is stabilized via useMemo on `navigate`.
 		function Row({
 			item,
 			...props
@@ -436,6 +438,7 @@ export function MediaBrowser({
 								components={{
 									TableRow: listTableRow as React.ComponentType<any>,
 								}}
+								// eslint-disable-next-line react/no-unstable-nested-components -- render prop, not a real component definition.
 								fixedHeaderContent={() => (
 									<TableRow>
 										<TableHead className="w-10" />
@@ -449,6 +452,7 @@ export function MediaBrowser({
 										</TableHead>
 									</TableRow>
 								)}
+								// eslint-disable-next-line react/no-unstable-nested-components -- render prop, not a real component definition.
 								itemContent={(_index, media) => (
 									<>
 										<TableCell className="w-10">

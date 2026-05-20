@@ -135,6 +135,9 @@ export function GlobalContextProvider({
 				ipcChannels.APP_NOTIFICATION,
 			);
 		};
+		// Run-once setup intentionally captures the initial settings; live updates
+		// to `settings.allowSounds` flow through SETTINGS_UPDATED handling above.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Electron API functions

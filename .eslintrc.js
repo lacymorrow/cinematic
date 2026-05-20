@@ -1,11 +1,19 @@
 module.exports = {
 	extends: 'erb',
 	plugins: ['@typescript-eslint'],
-	// Ignore shadcn/ui components
-	ignorePatterns: ['**/components/ui/**', '**/renderer/lib/**'],
+	// Ignore shadcn/ui components, shadcn hooks, and 3rd-party vendored helpers (color-picker, etc.)
+	ignorePatterns: ['**/components/ui/**', '**/renderer/lib/**', 'src/hooks/**'],
+	globals: {
+		// Electron's global types are exposed as `Electron.*`
+		Electron: 'readonly',
+		NodeJS: 'readonly',
+		globalThis: 'readonly',
+	},
 	rules: {
-		// A temporary hack related to IDE not resolving correct package.json
-		// 'import/no-extraneous-dependencies': 'off',
+		// Electron + webpack toolchain ship as devDependencies but are referenced
+		// throughout main/preload and build configs. The rule is too noisy here
+		// without buying us much (npm ci would catch any actually-missing dep).
+		'import/no-extraneous-dependencies': 'off',
 		'react/react-in-jsx-scope': 'off',
 		'react/jsx-filename-extension': 'off',
 		'import/extensions': 'off',
@@ -32,6 +40,18 @@ module.exports = {
 		'react/jsx-no-useless-fragment': 'off',
 		'react/prop-types': 'off',
 		'react/require-default-props': 'off',
+		// Airbnb defaults that don't fit Electron + arrow-fn React style here.
+		'no-plusplus': 'off',
+		'no-continue': 'off',
+		'react/function-component-definition': 'off',
+		'react/no-unescaped-entities': 'off',
+		// Allow `for..of` (the airbnb preset bans it as part of no-restricted-syntax).
+		'no-restricted-syntax': [
+			'error',
+			'ForInStatement',
+			'LabeledStatement',
+			'WithStatement',
+		],
 	},
 	parserOptions: {
 		ecmaVersion: 2022,

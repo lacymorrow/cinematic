@@ -41,6 +41,7 @@ const TrailerRotator: React.FC<TrailerRotatorProps> = ({
 				{videoIds.length > 1 && (
 					<>
 						<button
+							type="button"
 							onClick={handlePrev}
 							className="bg-primary-foreground bg-opacity-50 hover:bg-opacity-75 text-primary rounded-full p-2 focus:outline-none"
 							aria-label="Previous Trailer"
@@ -76,6 +77,7 @@ const TrailerRotator: React.FC<TrailerRotatorProps> = ({
 				{videoIds.length > 1 && (
 					<>
 						<button
+							type="button"
 							onClick={handleNext}
 							className="bg-primary-foreground bg-opacity-50 hover:bg-opacity-75 text-primary rounded-full p-2 focus:outline-none"
 							aria-label="Next Trailer"
@@ -87,9 +89,10 @@ const TrailerRotator: React.FC<TrailerRotatorProps> = ({
 			</div>
 
 			<div className="flex justify-center mt-4 space-x-4">
-				{videoIds.map((_, index) => (
+				{videoIds.map((videoId, index) => (
 					<button
-						key={index}
+						key={videoId ?? index}
+						type="button"
 						onClick={() => setCurrentIndex(index)}
 						className={cn(
 							'w-3 h-3 p-1 rounded-full',

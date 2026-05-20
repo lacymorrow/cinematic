@@ -98,10 +98,16 @@
       "json"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "^@/(.*)$": "<rootDir>/src/$1"
     },
+    "setupFiles": [
+      "./.erb/scripts/jest-setup.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "./.erb/scripts/jest-setup-after-framework.ts"
+    ],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
       "url": "http://localhost/"
@@ -110,9 +116,15 @@
       "release/app/dist",
       ".erb/dll"
     ],
+    "modulePathIgnorePatterns": [
+      "release/app"
+    ],
     "transform": {
       "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "dependencies": {
     "@aptabase/electron": "^0.3.1",
