@@ -56,7 +56,6 @@ export const preload = (basepath = '') => {
 
 export const play = ({ name, path }: { name: string; path: string }) => {
 	const sound = name.toUpperCase();
-	console.info(`Playing sound: ${name}, path: ${path}`);
 
 	let audio: HTMLAudioElement | undefined = cache[sound];
 	if (!audio) {
