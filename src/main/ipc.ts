@@ -94,12 +94,9 @@ export default {
 			},
 		);
 
-		ipcMain.handle(
-			ipcChannels.REMOVE_FROM_LIBRARY,
-			(_event, id: string) => {
-				removeFromLibrary(id);
-			},
-		);
+		ipcMain.handle(ipcChannels.REMOVE_FROM_LIBRARY, (_event, id: string) => {
+			removeFromLibrary(id);
+		});
 
 		ipcMain.handle(
 			ipcChannels.ADD_TO_PLAYLIST,

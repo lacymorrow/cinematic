@@ -98,12 +98,15 @@
       "json"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "^@/(.*)$": "<rootDir>/src/$1"
     },
     "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
+      "./.erb/scripts/jest-setup.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "./.erb/scripts/jest-setup-after-framework.ts"
     ],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
@@ -113,9 +116,15 @@
       "release/app/dist",
       ".erb/dll"
     ],
+    "modulePathIgnorePatterns": [
+      "release/app"
+    ],
     "transform": {
       "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "dependencies": {
     "@aptabase/electron": "^0.3.1",
@@ -186,6 +195,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
     "@svgr/webpack": "^8.1.0",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@types/jest": "^30.0.0",
@@ -212,7 +222,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electronmon": "^2.0.3",
     "tsx": "^4.19.3",
-    "eslint": "^9.10.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-erb": "^4.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
@@ -229,7 +239,7 @@
     "html-webpack-plugin": "^5.6.7",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.3.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-jsdom": "^30.0.0",
     "mini-css-extract-plugin": "^2.10.2",
     "postcss": "^8.5.12",
     "postcss-loader": "^8.1.1",

@@ -15,7 +15,7 @@ import { addPath } from './store-actions';
 import { ignorePattern } from './util';
 
 // scan a file and add it to the movies state
-export const scanFile = async (media: FileType) => {
+export const scanFile = (media: FileType) => {
 	const { ext, filename, filepath } = media;
 
 	// create a pretty file extension
@@ -78,13 +78,16 @@ export const scanMedia = async (mediaPath: string) => {
 	// check if movies folder exists, readable, and is directory
 	const stats = await fs.stat(mediaPath).catch((err) => {
 		Logger.error($errors.inaccessiblePath, err);
+		return null;
 	});
 
-	if (stats?.isDirectory()) {
+	if (!stats) return;
+
+	if (stats.isDirectory()) {
 		// scan movies folder
 		// todo: reset movies state here, since we are beginning a new scan
 		await scanDirectory(mediaPath, 0);
-	} else if (stats?.isFile()) {
+	} else if (stats.isFile()) {
 		const ext = path.extname(mediaPath);
 		const filename = path.basename(mediaPath, ext); // Remove the extension
 

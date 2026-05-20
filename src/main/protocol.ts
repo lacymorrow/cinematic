@@ -32,11 +32,18 @@ const initialize = () => {
 	}
 
 	// By default, we serve files from the assets folder
-	protocol.handle(PROTOCOL, (request: any) => {
-		// list all files in the directory
+	protocol.handle(PROTOCOL, (request: Request) => {
 		const filepath = path
 			.join(__resources, request.url.slice(`${PROTOCOL}://`.length))
 			.replace(/\/$/, ''); // remove trailing slash
+
+		// Prevent path traversal outside of resources directory
+		const resolved = path.resolve(filepath);
+		if (!resolved.startsWith(path.resolve(__resources))) {
+			Logger.warn(`Blocked path traversal attempt: ${request.url}`);
+			return new Response('Forbidden', { status: 403 });
+		}
+
 		const file = `file://${filepath}`;
 		Logger.info(`Protocol request: ${request.url}; File: ${file}`);
 		return net.fetch(file);

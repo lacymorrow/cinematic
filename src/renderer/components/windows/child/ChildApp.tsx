@@ -12,20 +12,14 @@ import '@/renderer/styles/globals.scss';
 
 // Component to display a single setting
 function SettingItem({ name, value }: { name: string; value: any }) {
+	let variant: 'success' | 'destructive' | 'default' = 'default';
+	if (typeof value === 'boolean') {
+		variant = value ? 'success' : 'destructive';
+	}
 	return (
 		<div className="flex justify-between items-center py-3 border-b last:border-b-0">
 			<span className="font-medium">{name}</span>
-			<Badge
-				variant={
-					typeof value === 'boolean'
-						? value
-							? 'success'
-							: 'destructive'
-						: 'default'
-				}
-			>
-				{value.toString()}
-			</Badge>
+			<Badge variant={variant}>{value.toString()}</Badge>
 		</div>
 	);
 }

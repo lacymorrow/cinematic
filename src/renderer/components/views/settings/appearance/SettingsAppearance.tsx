@@ -4,7 +4,11 @@ import { InputColor } from '@/renderer/components/input/InputColor';
 import { ThemeForm } from '@/renderer/components/views/settings/appearance/ThemeForm';
 import { useGlobalContext } from '@/renderer/context/global-context';
 
-const THUMBNAIL_SIZE_OPTIONS: { value: ThumbnailSizeType; label: string; description: string }[] = [
+const THUMBNAIL_SIZE_OPTIONS: {
+	value: ThumbnailSizeType;
+	label: string;
+	description: string;
+}[] = [
 	{ value: 'small', label: 'Small', description: '150px' },
 	{ value: 'medium', label: 'Medium', description: '200px' },
 	{ value: 'large', label: 'Large', description: '250px' },
@@ -59,7 +63,9 @@ export function SettingsAppearance() {
 							}`}
 						>
 							<span className="font-medium">{label}</span>
-							<span className="text-xs text-muted-foreground">{description}</span>
+							<span className="text-xs text-muted-foreground">
+								{description}
+							</span>
 						</button>
 					))}
 				</div>

@@ -1,12 +1,20 @@
+import React from 'react';
 import { cn } from '@/lib/utils';
 
-export function MoviePlaceholder({ className }: { className?: string }) {
+export function MoviePlaceholder({
+	className,
+	style,
+}: {
+	className?: string;
+	style?: React.CSSProperties;
+}) {
 	return (
 		<div
 			className={cn(
 				'flex flex-col items-center justify-center h-full',
 				className,
 			)}
+			style={style}
 		>
 			<svg
 				className="w-16 h-16 text-gray-400"

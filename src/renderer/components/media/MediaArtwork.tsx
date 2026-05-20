@@ -81,6 +81,7 @@ export function MediaArtwork({
 	};
 
 	return (
+		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- wrapping element is decorative; keyboard activation lives on the inner <Link>.
 		<div
 			className={cn('relative group/artwork', className)}
 			{...divProps}
@@ -130,7 +131,9 @@ export function MediaArtwork({
 										)}
 										aria-label={isSelected ? 'Deselect' : 'Select'}
 									>
-										{isSelected && <CheckIcon className="w-3 h-3 text-primary-foreground" />}
+										{isSelected && (
+											<CheckIcon className="w-3 h-3 text-primary-foreground" />
+										)}
 									</button>
 								)}
 							</div>

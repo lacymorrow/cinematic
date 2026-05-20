@@ -163,8 +163,7 @@ export const addPath = (path: string) => {
 		return;
 	}
 
-	settings.paths.push(path);
-	store.set('settings', settings);
+	store.set('settings', { ...settings, paths: [...settings.paths, path] });
 };
 
 export const getHistory = () => {
@@ -287,9 +286,7 @@ const afterUpsertMediaLibrary = (key: string) => {
 			// plus check pending writes for unflushed updates
 			const stored = getMedia(key);
 			const pending = pendingWrites.get(key);
-			const media = stored
-				? { ...stored, ...(pending || {}) }
-				: pending;
+			const media = stored ? { ...stored, ...(pending || {}) } : pending;
 
 			if (!media) {
 				return;

@@ -10,6 +10,7 @@ import React, {
 	useContext,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from 'react';
 
@@ -21,6 +22,7 @@ import {
 import { $messages } from '@/config/strings';
 import { play, preload } from '@/renderer/lib/sounds';
 import { AppInfoType } from '@/types/app';
+import { RendererNotificationOptions } from '@/types/notification';
 import { CustomAcceleratorsType } from '@/types/keyboard';
 import Logger from 'electron-log';
 import { MenuItemConstructorOptions } from 'electron/renderer';
@@ -60,6 +62,11 @@ export function GlobalContextProvider({
 	const [keybinds, setCurrentKeybinds] =
 		useState<CustomAcceleratorsType>(DEFAULT_KEYBINDS);
 
+	const settingsRef = useRef(settings);
+	useEffect(() => {
+		settingsRef.current = settings;
+	}, [settings]);
+
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
 		const synchronizeSettings = async () => {
@@ -88,11 +95,22 @@ export function GlobalContextProvider({
 		// Create notifications using the renderer
 		window.electron.ipcRenderer.on(
 			ipcChannels.APP_NOTIFICATION,
-			({ title, body, action }: any) => {
+			(...args: unknown[]) => {
+				const { title, body, action } = args[0] as RendererNotificationOptions;
 				toast(title, {
 					...(body ? { description: body } : {}),
 					...(action ? { action } : {}),
 				});
+			},
+		);
+
+		// Setup listener to play sounds. Reads from settingsRef so that runtime
+		// updates to allowSounds are honored without re-registering the listener.
+		window.electron.ipcRenderer.on(
+			ipcChannels.PLAY_SOUND,
+			(...args: unknown[]) => {
+				if (!settingsRef.current.allowSounds) return;
+				play({ name: args[0] as string, path: '' });
 			},
 		);
 
@@ -101,19 +119,9 @@ export function GlobalContextProvider({
 			.invoke(ipcChannels.GET_APP_INFO)
 			.then((info) => {
 				setAppInfo(info);
-				return info;
-			})
-			.then(() => {
-				// SOUNDS
 				preload();
-
-				// Setup listener to play sounds
-				window.electron.ipcRenderer.on(ipcChannels.PLAY_SOUND, (sound: any) => {
-					if (!settings.allowSounds) return;
-					play({ name: sound, path: '' });
-				});
 			})
-			.catch(console.error);
+			.catch(Logger.error);
 
 		// Request initial data when the app loads
 		synchronizeSettings();

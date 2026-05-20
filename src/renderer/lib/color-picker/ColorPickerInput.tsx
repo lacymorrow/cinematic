@@ -3,6 +3,10 @@ import '@/renderer/lib/color-picker/assembly.min.css';
 import '@/renderer/lib/color-picker/color-picker.css';
 import ColorPicker from '@mapbox/react-colorpickr';
 
+type ColorPickerOnChange = Parameters<
+	NonNullable<React.ComponentProps<typeof ColorPicker>['onChange']>
+>[0];
+
 export function ColorPickerInput({
 	value,
 	onChange,
@@ -10,9 +14,9 @@ export function ColorPickerInput({
 	value?: string;
 	onChange?: (color: string) => void;
 }) {
-	const handleChange = (color: string) => {
+	const handleChange = (color: ColorPickerOnChange) => {
 		if (onChange) {
-			onChange(color);
+			onChange((color as { hex?: string }).hex ?? '');
 		}
 	};
 
@@ -21,7 +25,7 @@ export function ColorPickerInput({
 			<ColorPicker
 				initialValue={value}
 				colorSpace="hex"
-				onChange={console.log}
+				onChange={handleChange}
 				eyedropper
 			/>
 		</>

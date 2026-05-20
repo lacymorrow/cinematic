@@ -54,7 +54,10 @@ export function PosterRotator({
 		<button
 			title={$actions.rotatePoster}
 			type="button"
-			className={cn('relative h-[375px] aspect-[3/4.5] group overflow-hidden hover:scale-105 transition-all duration-200 hover:brightness-50', className)}
+			className={cn(
+				'relative h-[375px] aspect-[3/4.5] group overflow-hidden hover:scale-105 transition-all duration-200 hover:brightness-50',
+				className,
+			)}
 			onClick={handleRotate}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}

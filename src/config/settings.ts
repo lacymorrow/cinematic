@@ -3,7 +3,10 @@ import { CustomAcceleratorsType } from '@/types/keyboard';
 export type ThemeType = 'system' | 'light' | 'dark';
 export type ThumbnailSizeType = 'small' | 'medium' | 'large';
 
-export const POSTER_SIZES: Record<ThumbnailSizeType, { width: number; height: number }> = {
+export const POSTER_SIZES: Record<
+	ThumbnailSizeType,
+	{ width: number; height: number }
+> = {
 	small: { width: 150, height: 225 },
 	medium: { width: 200, height: 300 },
 	large: { width: 250, height: 375 },
