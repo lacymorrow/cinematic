@@ -10,6 +10,7 @@ import React, {
 	useContext,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from 'react';
 
@@ -61,6 +62,11 @@ export function GlobalContextProvider({
 	const [keybinds, setCurrentKeybinds] =
 		useState<CustomAcceleratorsType>(DEFAULT_KEYBINDS);
 
+	const settingsRef = useRef(settings);
+	useEffect(() => {
+		settingsRef.current = settings;
+	}, [settings]);
+
 	useEffect(() => {
 		// Create handler for receiving asynchronous messages from the main process
 		const synchronizeSettings = async () => {
@@ -98,11 +104,12 @@ export function GlobalContextProvider({
 			},
 		);
 
-		// Setup listener to play sounds
+		// Setup listener to play sounds. Reads from settingsRef so that runtime
+		// updates to allowSounds are honored without re-registering the listener.
 		window.electron.ipcRenderer.on(
 			ipcChannels.PLAY_SOUND,
 			(...args: unknown[]) => {
-				if (!settings.allowSounds) return;
+				if (!settingsRef.current.allowSounds) return;
 				play({ name: args[0] as string, path: '' });
 			},
 		);
@@ -135,9 +142,6 @@ export function GlobalContextProvider({
 				ipcChannels.APP_NOTIFICATION,
 			);
 		};
-		// Run-once setup intentionally captures the initial settings; live updates
-		// to `settings.allowSounds` flow through SETTINGS_UPDATED handling above.
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Electron API functions
