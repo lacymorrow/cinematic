@@ -21,7 +21,7 @@ export function ColorPickerInput({
 			<ColorPicker
 				initialValue={value}
 				colorSpace="hex"
-				onChange={console.log}
+				onChange={handleChange}
 				eyedropper
 			/>
 		</>

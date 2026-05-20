@@ -71,7 +71,7 @@ export function InputComboboxForm({
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		onChange?.(data.itemValue);
 	}
-	console.log(items);
+
 	return (
 		<Form {...form}>
 			<form className="space-y-6">
