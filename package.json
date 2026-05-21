@@ -6,7 +6,10 @@
   "description": "A simple, powerful media library manager. For Mac, Windows, and Linux.",
   "license": "FSL-1.1-MIT",
   "copyright": "Copyright © Lacy Morrow",
-  "repository": "lacymorrow/cinematic",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lacymorrow/cinematic.git"
+  },
   "homepage": "https://lacymorrow.github.io/cinematic",
   "keywords": [
     "electron",
