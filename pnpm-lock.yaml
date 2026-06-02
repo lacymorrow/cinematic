@@ -280,8 +280,8 @@ importers:
         specifier: ^26.8.1
         version: 26.8.1(electron-builder-squirrel-windows@26.8.1)
       electron-devtools-installer:
-        specifier: ^3.2.0
-        version: 3.2.1
+        specifier: ^4.0.0
+        version: 4.0.0
       electronmon:
         specifier: ^2.0.3
         version: 2.0.4
@@ -4451,8 +4451,8 @@ packages:
   electron-debug@3.2.0:
     resolution: {integrity: sha512-7xZh+LfUvJ52M9rn6N+tPuDw6oRAjxUj9SoxAZfJ0hVCXhZCsdkrSt7TgXOiWiEOBgEV8qwUIO/ScxllsPS7ow==}
 
-  electron-devtools-installer@3.2.1:
-    resolution: {integrity: sha512-FaCi+oDCOBTw0gJUsuw5dXW32b2Ekh5jO8lI1NRCQigo3azh2VogsIi0eelMVrP1+LkN/bewyH3Xoo1USjO0eQ==}
+  electron-devtools-installer@4.0.0:
+    resolution: {integrity: sha512-9Tntu/jtfSn0n6N/ZI6IdvRqXpDyLQiDuuIbsBI+dL+1Ef7C8J2JwByw58P3TJiNeuqyV3ZkphpNWuZK5iSY2w==}
 
   electron-is-accelerator@0.1.2:
     resolution: {integrity: sha512-fLGSAjXZtdn1sbtZxx52+krefmtNuVwnJCV2gNiVt735/ARUboMl8jnNC9fZEqQdlAv2ZrETfmBUsoQci5evJA==}
@@ -13316,11 +13316,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron-devtools-installer@3.2.1:
+  electron-devtools-installer@4.0.0:
     dependencies:
-      rimraf: 3.0.2
-      semver: 7.7.4
-      tslib: 2.8.1
       unzip-crx-3: 0.2.0
 
   electron-is-accelerator@0.1.2: {}
