@@ -209,7 +209,7 @@
     "@types/terser-webpack-plugin": "^5.0.4",
     "@types/uuid": "^11.0.0",
     "@types/webpack-bundle-analyzer": "^4.7.0",
-    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
     "@typescript-eslint/parser": "^8.5.0",
     "autoprefixer": "^10.4.20",
     "browserslist-config-erb": "^0.0.3",
