@@ -256,7 +256,7 @@
     "tailwindcss": "^3.4.11",
     "terser-webpack-plugin": "^5.3.10",
     "ts-jest": "^29.2.5",
-    "ts-loader": "^9.5.1",
+    "ts-loader": "^9.6.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.6.2",

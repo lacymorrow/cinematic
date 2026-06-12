@@ -379,8 +379,8 @@ importers:
         specifier: ^29.2.5
         version: 29.4.6(@babel/core@7.29.7)(@jest/transform@30.3.0)(@jest/types@30.4.1)(babel-jest@30.3.0(@babel/core@7.29.7))(jest-util@30.4.1)(jest@30.3.0(@types/node@22.5.5)(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.9.3)))(typescript@5.9.3)
       ts-loader:
-        specifier: ^9.5.1
-        version: 9.5.4(typescript@5.9.3)(webpack@5.105.4)
+        specifier: ^9.6.0
+        version: 9.6.0(loader-utils@2.0.4)(typescript@5.9.3)(webpack@5.105.4)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.5.5)(typescript@5.9.3)
@@ -4709,6 +4709,10 @@ packages:
     resolution: {integrity: sha512-Qohcme7V1inbAfvjItgw0EaxVX5q2rdVEZHRBrEQdRZTssLDGsL8Lwrznl8oQ/6kuTJONLaDcGjkNP247XEhcA==}
     engines: {node: '>=10.13.0'}
 
+  enhanced-resolve@5.23.0:
+    resolution: {integrity: sha512-yJN/BOOLxcOW2aQgeif9mSnaUB8KtvmMMp56oA1kx1CRfBKbhZm2pJ+NBY+3eOboHxix8lfjWpHE0Ei5U8RbSA==}
+    engines: {node: '>=10.13.0'}
+
   ensure-error@4.0.0:
     resolution: {integrity: sha512-7Xenn3+R6tp2UqAbH9Jqs6QCSABQok+1VAhaPaF0jjm3iuhVHCblfBh18nYtpm3K9/V4Jpxz1JIqFZyrjstBtw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -7653,8 +7657,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.8.1:
-    resolution: {integrity: sha512-rkVq3IXh+4FDGch+KwzX3aV9W3kO54GyEgpvBzSyctDA6Xtd7RJQV1xmXbeQp5v7+VzLOfVqiutSE6GICgPFvg==}
+  semver@7.8.2:
+    resolution: {integrity: sha512-c8jsqUZm3omBOI66G90z1Dyw5z622G8oLG+omfsHBJf3CWQTlOcwOjvOG6wtiNfW6anKm/eA39LMwMtMez2TiQ==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -8209,12 +8213,16 @@ packages:
       jest-util:
         optional: true
 
-  ts-loader@9.5.4:
-    resolution: {integrity: sha512-nCz0rEwunlTZiy6rXFByQU1kVVpCIgUpc/psFiKVrUwrizdnIbRFu8w7bxhUF0X613DYwT4XzrZHpVyMe758hQ==}
+  ts-loader@9.6.0:
+    resolution: {integrity: sha512-dsJO0S+T7grTDWTc4a0nTygXGjKncVUpx8Y+af8EvI/D5WgTJby5UEk5eoMCB9EcLQmnvitqh99MqtjtHgAwFQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
+      loader-utils: '*'
       typescript: '*'
-      webpack: ^5.0.0
+      webpack: ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      loader-utils:
+        optional: true
 
   ts-node@10.9.2:
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
@@ -11833,7 +11841,7 @@ snapshots:
       graphemer: 1.4.0
       ignore: 5.3.2
       natural-compare: 1.4.0
-      semver: 7.8.0
+      semver: 7.8.2
       ts-api-utils: 1.4.3(typescript@5.9.3)
     optionalDependencies:
       typescript: 5.9.3
@@ -11981,7 +11989,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.8.1
+      semver: 7.8.2
       ts-api-utils: 1.4.3(typescript@5.9.3)
     optionalDependencies:
       typescript: 5.9.3
@@ -11996,7 +12004,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.57.2
       debug: 4.4.3
       minimatch: 10.2.4
-      semver: 7.8.0
+      semver: 7.8.2
       tinyglobby: 0.2.15
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
@@ -12028,7 +12036,7 @@ snapshots:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.9.3)
       eslint: 8.57.1
       eslint-scope: 5.1.1
-      semver: 7.8.1
+      semver: 7.8.2
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -12042,7 +12050,7 @@ snapshots:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.9.3)
       eslint: 8.57.1
-      semver: 7.8.0
+      semver: 7.8.2
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -13173,7 +13181,7 @@ snapshots:
       json-schema-typed: 7.0.3
       onetime: 5.1.2
       pkg-up: 3.1.0
-      semver: 7.8.0
+      semver: 7.8.2
 
   confusing-browser-globals@1.0.11: {}
 
@@ -13780,6 +13788,11 @@ snapshots:
       graceful-fs: 4.2.11
       tapable: 2.3.3
 
+  enhanced-resolve@5.23.0:
+    dependencies:
+      graceful-fs: 4.2.11
+      tapable: 2.3.3
+
   ensure-error@4.0.0: {}
 
   entities@2.2.0: {}
@@ -14079,7 +14092,7 @@ snapshots:
       eslint: 8.57.1
       find-up: 5.0.0
       lodash.memoize: 4.1.2
-      semver: 7.8.0
+      semver: 7.8.2
 
   eslint-plugin-compat@7.0.2(eslint@8.57.1):
     dependencies:
@@ -14716,7 +14729,7 @@ snapshots:
       es6-error: 4.1.1
       matcher: 3.0.0
       roarr: 2.15.4
-      semver: 7.8.1
+      semver: 7.8.2
       serialize-error: 7.0.1
     optional: true
 
@@ -15054,7 +15067,7 @@ snapshots:
 
   is-bun-module@2.0.0:
     dependencies:
-      semver: 7.8.0
+      semver: 7.8.2
 
   is-callable@1.2.7: {}
 
@@ -15549,7 +15562,7 @@ snapshots:
       jest-message-util: 30.3.0
       jest-util: 30.3.0
       pretty-format: 30.3.0
-      semver: 7.8.1
+      semver: 7.8.2
       synckit: 0.11.12
     transitivePeerDependencies:
       - supports-color
@@ -17159,7 +17172,7 @@ snapshots:
 
   semver@7.8.0: {}
 
-  semver@7.8.1: {}
+  semver@7.8.2: {}
 
   semver@7.8.2: {}
 
@@ -17293,7 +17306,7 @@ snapshots:
 
   simple-update-notifier@2.0.0:
     dependencies:
-      semver: 7.8.0
+      semver: 7.8.2
 
   sirv@3.0.2:
     dependencies:
@@ -17792,15 +17805,17 @@ snapshots:
       babel-jest: 30.3.0(@babel/core@7.29.7)
       jest-util: 30.4.1
 
-  ts-loader@9.5.4(typescript@5.9.3)(webpack@5.105.4):
+  ts-loader@9.6.0(loader-utils@2.0.4)(typescript@5.9.3)(webpack@5.105.4):
     dependencies:
       chalk: 4.1.2
-      enhanced-resolve: 5.20.1
+      enhanced-resolve: 5.23.0
       micromatch: 4.0.8
-      semver: 7.7.4
+      semver: 7.8.2
       source-map: 0.7.6
       typescript: 5.9.3
       webpack: 5.105.4(webpack-cli@5.1.4)
+    optionalDependencies:
+      loader-utils: 2.0.4
 
   ts-node@10.9.2(@types/node@22.5.5)(typescript@5.9.3):
     dependencies:
